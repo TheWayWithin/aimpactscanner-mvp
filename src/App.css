@@ -1,0 +1,98 @@
+/* src/App.css - AI Search Mastery Brand Styles */
+
+/* Import Google Fonts - Inter, Source Sans Pro, JetBrains Mono */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* Primary Brand Colors */
+:root {
+  --mastery-blue: #1E3A8A;        /* Primary brand elements, headers, CTAs */
+  --ai-silver: #64748B;           /* Supporting text, borders, accents */
+  --authority-white: #FFFFFF;     /* Clean backgrounds, content areas */
+  --framework-black: #0F172A;     /* Body text, strong contrast */
+
+  /* Secondary Colors */
+  --innovation-teal: #0891B2;     /* Interactive elements, links, highlights */
+  --success-green: #059669;       /* Positive indicators, improvements */
+  --warning-amber: #D97706;       /* Attention, areas needing improvement */
+  --error-red: #DC2626;           /* Critical issues, urgent attention */
+
+  /* Typography Variables */
+  --font-primary: 'Inter', sans-serif;
+  --font-secondary: 'Source Sans Pro', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Basic Body Styles for Brand Fonts and Colors */
+body {
+  font-family: var(--font-secondary);
+  color: var(--framework-black);
+  background-color: var(--authority-white);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* Container for the entire application */
+.aimpactscanner-app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Align content to top */
+  padding-top: 40px; /* Some top padding */
+  box-sizing: border-box;
+}
+
+/* Brand Header Styles */
+.brand-header {
+  background-color: var(--mastery-blue);
+  color: var(--authority-white);
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.brand-title {
+  font-family: var(--font-primary);
+  font-weight: 700; /* Bold */
+  font-size: 2.5em; /* Larger for impact */
+  margin: 0;
+  color: var(--authority-white);
+}
+
+.brand-subtitle {
+  font-family: var(--font-primary);
+  font-weight: 500; /* Medium */
+  font-size: 1.1em;
+  color: var(--ai-silver);
+  margin-top: 5px;
+}
+
+/* Main Content Area */
+.brand-main-content {
+  flex-grow: 1; /* Allows it to take available space */
+  padding: 40px 20px;
+  text-align: center;
+  max-width: 800px;
+  width: 100%;
+}
+
+.brand-intro-text {
+  font-family: var(--font-secondary);
+  font-size: 1.2em;
+  color: var(--framework-black);
+}
+
+/* Brand Footer Styles */
+.brand-footer {
+  background-color: var(--framework-black);
+  color: var(--ai-silver);
+  width: 100%;
+  padding: 15px 0;
+  text-align: center;
+  font-family: var(--font-secondary);
+  font-size: 0.9em;
+}
