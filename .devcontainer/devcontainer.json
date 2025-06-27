@@ -1,17 +1,22 @@
-// .devcontainer/devcontainer.json
+// .devcontainer/devcontainer.json - COMPLETE CONFIGURATION
 {
-  "name": "AImpactScanner Codespace",
+  "name": "AImpactScanner Dev Environment",
   "image": "mcr.microsoft.com/vscode/devcontainers/universal:latest",
   "features": {
-    "ghcr.io/devcontainers-contrib/features/supabase-cli:1": {}
+    // Supabase CLI for database migrations, functions deployment
+    "ghcr.io/devcontainers-contrib/features/supabase-cli:1": {},
+    // Railway CLI for backend deployment (Node.js services)
+    "ghcr.io/railwayapp/railway-devcontainers/railway-cli:1": {},
+    // Netlify CLI for frontend deployment
+    "ghcr.io/devcontainers/features/netlify-cli:1": {}
   },
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "npm install", // Install frontend dependencies automatically
   "portsAttributes": {
     "5173": {
       "label": "Frontend (Vite)",
       "onAutoForward": "notify"
     },
-    "9999": { // Supabase local functions
+    "9999": {
       "label": "Supabase Functions (Local)",
       "onAutoForward": "notify"
     }
@@ -19,8 +24,35 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "denoland.vscode-deno"
-      ]
+        "denoland.vscode-deno", // For Supabase Edge Functions (Deno)
+        "dbaeumer.vscode-eslint", // Code linting
+        "esbenp.prettier-vscode", // Code formatting
+        "eamodio.gitlens", // Enhanced Git features
+        "ms-azuretools.vscode-docker", // Docker integration (useful for local dev/testing)
+        "mikestead.dotenv", // .env file syntax highlighting
+        "formulahendry.auto-rename-tag", // Auto rename paired HTML/JSX tags
+        "CoenraadS.bracket-pair-colorizer-2", // Colorize matching brackets
+        "wayou.vscode-todo-highlight" // Highlight TODO/FIXME comments
+      ],
+      "settings": {
+        // Settings to ensure consistent formatting and linting
+        "editor.formatOnSave": true,
+        "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[javascriptreact]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        }
+      }
     }
   }
 }
