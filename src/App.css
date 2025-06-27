@@ -8,7 +8,9 @@
 /* Primary Brand Colors */
 :root {
   --mastery-blue: #1E3A8A;        /* Primary brand elements, headers, CTAs */
+  --mastery-blue-light: rgba(30, 58, 138, 0.05); /* Lighter shade for backgrounds */
   --ai-silver: #64748B;           /* Supporting text, borders, accents */
+  --ai-silver-light: rgba(100, 116, 139, 0.2); /* Lighter shade for backgrounds */
   --authority-white: #FFFFFF;     /* Clean backgrounds, content areas */
   --framework-black: #0F172A;     /* Body text, strong contrast */
 
@@ -45,7 +47,7 @@ body {
   box-sizing: border-box;
 }
 
-/* Brand Header Styles */
+/* Brand Header Styles (Already defined and working for App.jsx) */
 .brand-header {
   background-color: var(--mastery-blue);
   color: var(--authority-white);
@@ -57,15 +59,15 @@ body {
 
 .brand-title {
   font-family: var(--font-primary);
-  font-weight: 700; /* Bold */
-  font-size: 2.5em; /* Larger for impact */
+  font-weight: 700;
+  font-size: 2.5em;
   margin: 0;
   color: var(--authority-white);
 }
 
 .brand-subtitle {
   font-family: var(--font-primary);
-  font-weight: 500; /* Medium */
+  font-weight: 500;
   font-size: 1.1em;
   color: var(--ai-silver);
   margin-top: 5px;
@@ -73,7 +75,7 @@ body {
 
 /* Main Content Area */
 .brand-main-content {
-  flex-grow: 1; /* Allows it to take available space */
+  flex-grow: 1;
   padding: 40px 20px;
   text-align: center;
   max-width: 800px;
@@ -95,4 +97,46 @@ body {
   text-align: center;
   font-family: var(--font-secondary);
   font-size: 0.9em;
+}
+
+/* Button Hover Effect (already working for Auth.jsx) */
+.aimpactscanner-app-container button:hover:not(:disabled) {
+  background-color: var(--hover-bg-color, var(--mastery-blue));
+}
+
+/* --- Custom Classes for Analysis Progress Component (Direct Application) --- */
+
+/* --- Custom Classes for Analysis Progress Component (Direct Application) --- */
+
+.analysis-progress-container-style {
+  background-color: var(--authority-white) !important; /* ADD !important */
+  border: 1px solid var(--ai-silver) !important; /* ADD !important */
+}
+
+.progress-bar-track-style {
+  background-color: var(--ai-silver-light) !important; /* ADD !important */
+}
+
+.progress-bar-fill-style {
+  background-color: var(--innovation-teal) !important; /* ADD !important */
+}
+
+.framework-insight-box-style {
+  border-left: 4px solid var(--mastery-blue) !important; /* ADD !important */
+  background-color: var(--mastery-blue-light) !important; /* ADD !important */
+}
+
+.framework-insight-title-style {
+  color: var(--mastery-blue) !important; /* ADD !important */
+}
+
+.framework-insight-text-style {
+  color: var(--framework-black) !important; /* ADD !important */
+}
+
+.framework-text-color {
+    color: var(--framework-black) !important; /* ADD !important */
+}
+.innovation-teal-text-color {
+    color: var(--innovation-teal) !important; /* ADD !important */
 }
