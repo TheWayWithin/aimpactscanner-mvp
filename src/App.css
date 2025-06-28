@@ -1,4 +1,4 @@
-/* src/App.css - AI Search Mastery Brand Styles */
+/* src/App.css - AI Search Mastery Brand Styles (With AnalysisProgress custom classes) */
 
 /* Import Google Fonts - Inter, Source Sans Pro, JetBrains Mono */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -99,44 +99,42 @@ body {
   font-size: 0.9em;
 }
 
-/* Button Hover Effect (already working for Auth.jsx) */
+/* Button Hover Effect (working for Auth.jsx) */
 .aimpactscanner-app-container button:hover:not(:disabled) {
   background-color: var(--hover-bg-color, var(--mastery-blue));
 }
 
-/* --- Custom Classes for Analysis Progress Component (Direct Application) --- */
-
-/* --- Custom Classes for Analysis Progress Component (Direct Application) --- */
+/* --- Custom Classes for Analysis Progress Component --- */
 
 .analysis-progress-container-style {
-  background-color: var(--authority-white) !important; /* ADD !important */
-  border: 1px solid var(--ai-silver) !important; /* ADD !important */
+  background-color: var(--authority-white);
+  border: 1px solid var(--ai-silver);
 }
 
 .progress-bar-track-style {
-  background-color: var(--ai-silver-light) !important; /* ADD !important */
+  background-color: var(--ai-silver-light);
 }
 
 .progress-bar-fill-style {
-  background-color: var(--innovation-teal) !important; /* ADD !important */
+  background-color: var(--innovation-teal);
 }
 
 .framework-insight-box-style {
-  border-left: 4px solid var(--mastery-blue) !important; /* ADD !important */
-  background-color: var(--mastery-blue-light) !important; /* ADD !important */
+  border-left: 4px solid var(--mastery-blue);
+  background-color: var(--mastery-blue-light);
 }
 
 .framework-insight-title-style {
-  color: var(--mastery-blue) !important; /* ADD !important */
+  color: var(--mastery-blue);
 }
 
 .framework-insight-text-style {
-  color: var(--framework-black) !important; /* ADD !important */
+  color: var(--framework-black);
 }
 
 .framework-text-color {
-    color: var(--framework-black) !important; /* ADD !important */
+    color: var(--framework-black);
 }
 .innovation-teal-text-color {
-    color: var(--innovation-teal) !important; /* ADD !important */
+    color: var(--innovation-teal);
 }
