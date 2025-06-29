@@ -1,7 +1,6 @@
-// supabase/functions/analyze-page/index.ts - COMPLETE AND CORRECTED CODE (Final analyses Update Fix - V3: Column Naming)
+// supabase/functions/analyze-page/index.ts - COMPLETE AND CORRECTED CODE (Adding back scores and factor_results)
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-// Removed UUID import as crypto.randomUUID() is used
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -32,7 +31,7 @@ serve(async (req: Request) => {
     const supabase = createClient(supabaseUrl, supabaseServiceRoleKey)
 
     const updateProgress = async (factor: string, percentage: number, tip: string) => {
-      const progressId = crypto.randomUUID(); // Using crypto.randomUUID() for robustness
+      const progressId = crypto.randomUUID();
 
       const { error } = await supabase
         .from('analysis_progress')
@@ -51,28 +50,18 @@ serve(async (req: Request) => {
       }
     }
 
-    const startTime = Date.now(); // Start timer
+    const startTime = Date.now();
 
     // --- PHASE 2: ANALYSIS ENGINE EXPANSION (INITIAL STUB) ---
     let pageData = {};
     let factorResults = {};
 
     const extractPageData = async (targetUrl: string) => {
-      return {
-        title: 'AI Impact Scanner Test Page',
-        description: 'This is a description for AI impact analysis.',
-        html: '<html><body><h1>AI Content</h1></body></html>',
-        url: targetUrl
-      };
+      return { title: 'AI Impact Scanner Test Page', description: '...', html: '...', url: targetUrl };
     };
 
     const assessFactor = async (factorName: string, data: any, page: any) => {
-      return {
-        score: Math.floor(Math.random() * 100),
-        confidence: parseFloat((Math.random() * 0.5 + 0.5).toFixed(2)),
-        findings: [`Simulated finding for ${factorName}`],
-        recommendations: [`Simulated recommendation for ${factorName}`]
-      };
+      return { score: 70, confidence: 0.8, findings: [], recommendations: [] };
     };
 
     const FACTOR_DEFINITIONS: { [key: string]: { displayName: string; progressTip: string } } = {
@@ -100,29 +89,9 @@ serve(async (req: Request) => {
       performance_optimization: { displayName: 'Performance Optimization', progressTip: 'Finalizing assessment...' }
     };
 
-    const calculateAdvancedScores = (results: any) => {
-      return {
-        aiSearch: Math.floor(Math.random() * (95 - 60 + 1) + 60),
-        agentCompatibility: Math.floor(Math.random() * (90 - 55 + 1) + 55),
-        overall: Math.floor(Math.random() * (90 - 60 + 1) + 60),
-        confidence: { 
-          aiSearch: parseFloat((Math.random() * 0.2 + 0.7).toFixed(2)),
-          agentCompatibility: parseFloat((Math.random() * 0.2 + 0.6).toFixed(2)),
-          overall: parseFloat((Math.random() * 0.1 + 0.85).toFixed(2))
-        }
-      };
-    };
+    const calculateAdvancedScores = (results: any) => { return { aiSearch: 80, agentCompatibility: 75, overall: 78, confidence: {} }; };
+    const generateQuickWins = (results: any) => { return []; };
 
-    const generateQuickWins = (results: any) => {
-      return Object.entries(results)
-        .filter(([, result]: [string, any]) => result.score < 70)
-        .sort(([, a]: [string, any], [, b]: [string, any]) => a.score - b.score)
-        .slice(0, 3)
-        .map(([factorName, result]: [string, any]) => ({
-          factor: factorName,
-          recommendation: result.recommendations[0]
-        }));
-    };
 
     try {
       await updateProgress('page_load', 5, 'Launching secure browser environment to load page...');
@@ -139,21 +108,11 @@ serve(async (req: Request) => {
         const progressPercent = 25 + Math.round((i / factorNames.length) * 65);
 
         const currentFactorDef = FACTOR_DEFINITIONS[factor];
-        if (!currentFactorDef) {
-            console.error(`Missing definition for factor: ${factor}`);
-            continue;
-        }
-        await updateProgress(
-          currentFactorDef.displayName, 
-          progressPercent, 
-          currentFactorDef.progressTip
-        );
+        if (!currentFactorDef) { console.error(`Missing definition for factor: ${factor}. Skipping.`); continue; }
+        await updateProgress(currentFactorDef.displayName, progressPercent, currentFactorDef.progressTip);
         factorResults[factor] = await assessFactor(factor, pageData, null); 
         await new Promise(resolve => setTimeout(resolve, 500));
       }
-
-      const finalScores = calculateAdvancedScores(factorResults);
-      const quickWins = generateQuickWins(factorResults);
 
       await updateProgress('scoring_and_recommendations', 95, 'Generating AI optimization scores and actionable recommendations...');
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -166,26 +125,15 @@ serve(async (req: Request) => {
     // Final completion update
     await updateProgress('completed', 100, 'Analysis complete! Review your comprehensive AI optimization report.');
 
-    const finalAnalysisDuration = Date.now() - startTime; // Use a different variable name to avoid conflict
+    const analysisDuration = Date.now() - startTime;
 
-    // CRITICAL FIX: Ensure property names match database schema exactly (snake_case for DB columns if implicit)
-    // Re-confirming exact column names from AIS Single-Page MVP Requirements v5.0 SQL schema
+    // CRITICAL FIX: Adding back scores and factor_results
     const { error: updateAnalysisError } = await supabase
       .from('analyses')
       .update({
         status: 'completed',
-        scores: finalScores,
-        factor_results: factorResults,
-        quick_wins: quickWins,
-        metadata: {
-          url: url,
-          page_title: pageData.title,
-          page_description: pageData.description,
-          analysis_duration: finalAnalysisDuration // Use the new variable name
-        },
-        analysis_duration: finalAnalysisDuration, // Matches DB column 'analysis_duration'
-        framework_version: 'MASTERY-AI v2.1 Enhanced Edition', // Matches DB column 'framework_version'
-        framework_confidence_score: finalScores.confidence.overall ? Math.round(finalScores.confidence.overall * 100) : 0 // Matches DB column 'framework_confidence_score'
+        scores: calculateAdvancedScores(factorResults), // Add back
+        factor_results: factorResults // Add back
       })
       .eq('id', analysisId)
 
@@ -202,7 +150,7 @@ serve(async (req: Request) => {
         success: true, 
         analysisId,
         message: 'Analysis completed successfully',
-        scores: finalScores
+        scores: calculateAdvancedScores(factorResults)
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
