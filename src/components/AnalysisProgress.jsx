@@ -1,4 +1,4 @@
-// src/components/AnalysisProgress.jsx - COMPLETE AND CORRECTED CODE (Final Insight Box Border Fix)
+AnalysisProgress// src/components/AnalysisProgress.jsx - COMPLETE AND CORRECTED CODE (Final Insight Box Border Fix)
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
@@ -23,13 +23,19 @@ function AnalysisProgress({ analysisId }) {
           table: 'analysis_progress',
           filter: `analysis_id=eq.${analysisId}`, // Filter for this specific analysis
         },
+        // --- THIS IS THE CORRECTED CALLBACK FUNCTION ---
         (payload) => {
           const newProgress = payload.new;
-          if (newProgress) {
-            setProgress(newProgress.progress_percentage);
-            setCurrentFactor(newProgress.current_factor);
-            setEducationalTip(newProgress.educational_content?.tip || ''); // Update tip from real-time
-            console.log("Real-time progress update:", newProgress); // For debugging
+
+          // This new check ensures the progress_percent exists before we try to use it.
+          if (newProgress && typeof newProgress.progress_percent === 'number') {
+            setProgress(newProgress.progress_percent);
+            setCurrentFactor(newProgress.stage || 'Processing...'); // Use 'stage' column from schema
+            setEducationalTip(newProgress.educational_content || 'Analyzing factor...'); // Direct text field
+            console.log("Real-time progress update:", newProgress);
+          } else {
+            // This will help debug if we ever get unexpected data, without crashing the app.
+            console.warn('Received invalid or incomplete progress payload:', payload);
           }
         }
       )
