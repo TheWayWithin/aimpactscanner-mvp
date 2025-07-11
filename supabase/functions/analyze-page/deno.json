@@ -1,3 +1,10 @@
 {
-  "imports": {}
+  "imports": {},
+  "permissions": {
+    "allow-net": true,
+    "allow-read": true,
+    "allow-env": true,
+    "allow-run": true,
+    "allow-write": true
+  }
 }
