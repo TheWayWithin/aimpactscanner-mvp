@@ -5,9 +5,12 @@ import { supabase } from './lib/supabaseClient';
 
 import Auth from './components/Auth';
 import AnalysisProgress from './components/AnalysisProgress';
+import ResultsDashboard from './components/ResultsDashboard';
+import MockResultsDashboard from './components/MockResultsDashboard';
 
 function App() {
   const [session, setSession] = useState(null);
+  const [currentView, setCurrentView] = useState('analysis'); // 'analysis' or 'results'
   // Consistent ID for testing analysis. Note: this is the ID for the 'analyses' record.
   const testAnalysisId = "00000000-0000-0000-0000-000000000001";
   const testUrl = "https://www.example.com/ai-impact-test"; // URL to pass for analysis
@@ -103,15 +106,61 @@ function App() {
         <p className="brand-subtitle">by AI Search Mastery</p>
       </header>
       <main className="brand-main-content">
-        <AnalysisProgress analysisId={testAnalysisId} />
+        {/* Navigation */}
+        <div className="mb-6 flex space-x-4">
+          <button
+            onClick={() => setCurrentView('analysis')}
+            className={`px-4 py-2 rounded-md font-semibold transition-colors ${
+              currentView === 'analysis' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            Analysis Progress
+          </button>
+          <button
+            onClick={() => setCurrentView('results')}
+            className={`px-4 py-2 rounded-md font-semibold transition-colors ${
+              currentView === 'results' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            Results Dashboard
+          </button>
+          <button
+            onClick={() => setCurrentView('mock')}
+            className={`px-4 py-2 rounded-md font-semibold transition-colors ${
+              currentView === 'mock' 
+                ? 'bg-yellow-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            Mock Results (Test)
+          </button>
+        </div>
 
-        <button
-          onClick={startAnalysis}
-          className="mt-4 font-primary font-semibold py-2 px-4 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ backgroundColor: 'var(--mastery-blue)', color: 'var(--authority-white)', '--hover-bg-color': 'var(--innovation-teal)' }}
-        >
-          Start New AI Scan (Test)
-        </button>
+        {/* Content */}
+        {currentView === 'analysis' && (
+          <div>
+            <AnalysisProgress analysisId={testAnalysisId} />
+            <button
+              onClick={startAnalysis}
+              className="mt-4 font-primary font-semibold py-2 px-4 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ backgroundColor: 'var(--mastery-blue)', color: 'var(--authority-white)', '--hover-bg-color': 'var(--innovation-teal)' }}
+            >
+              Start New AI Scan (Test)
+            </button>
+          </div>
+        )}
+
+        {currentView === 'results' && (
+          <ResultsDashboard analysisId={testAnalysisId} />
+        )}
+
+        {currentView === 'mock' && (
+          <MockResultsDashboard />
+        )}
 
         <button
           onClick={() => supabase.auth.signOut()}
