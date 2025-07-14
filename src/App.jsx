@@ -7,13 +7,14 @@ import Auth from './components/Auth';
 import AnalysisProgress from './components/AnalysisProgress';
 import ResultsDashboard from './components/ResultsDashboard';
 import MockResultsDashboard from './components/MockResultsDashboard';
+import URLInput from './components/URLInput';
 
 function App() {
   const [session, setSession] = useState(null);
-  const [currentView, setCurrentView] = useState('analysis'); // 'analysis' or 'results'
-  // Consistent ID for testing analysis. Note: this is the ID for the 'analyses' record.
-  const testAnalysisId = "00000000-0000-0000-0000-000000000001";
-  const testUrl = "https://www.example.com/ai-impact-test"; // URL to pass for analysis
+  const [currentView, setCurrentView] = useState('input'); // 'input', 'analysis', or 'results'
+  const [currentAnalysisId, setCurrentAnalysisId] = useState(null);
+  const [currentUrl, setCurrentUrl] = useState('');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   useEffect(() => {
     // Fetch the current session
@@ -32,12 +33,21 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const startAnalysis = async () => {
+  const startAnalysis = async (url) => {
     if (!session || !session.user) {
       console.error("User session not valid to start analysis.");
       alert("Please log in to start an analysis. Your session might have expired.");
       return;
     }
+
+    if (!url) {
+      console.error("No URL provided for analysis");
+      alert("Please provide a URL to analyze");
+      return;
+    }
+
+    setIsAnalyzing(true);
+    setCurrentUrl(url);
 
     try {
         const userId = session.user.id;
@@ -56,19 +66,23 @@ function App() {
         }
         console.log("Logged-in user ensured in public.users table:", userId);
 
-        // Create or ensure the analyses record exists in the 'analyses' table.
-        // The Edge Function will only update this record later.
+        // Generate a unique analysis ID
+        const analysisId = crypto.randomUUID();
+        setCurrentAnalysisId(analysisId);
+
+        // Create the analyses record in the 'analyses' table.
+        // The Edge Function will update this record later.
         const { error: upsertAnalysisError } = await supabase
             .from('analyses')
-            .upsert({
-                id: testAnalysisId,
+            .insert({
+                id: analysisId,
                 user_id: userId,
-                url: testUrl,
+                url: url,
                 scores: { "overall": 0, "aiSearch": 0, "agentCompatibility": 0, "confidence": {} },
                 factor_results: {},
                 framework_version: 'MASTERY-AI v2.1 Enhanced Edition',
                 status: 'pending' // Initial status
-            }, { onConflict: 'id', ignoreDuplicates: true });
+            });
 
         if (upsertAnalysisError) {
             throw upsertAnalysisError;
@@ -78,9 +92,9 @@ function App() {
         // Call the deployed Supabase Edge Function to initiate the analysis.
         const { data, error: invokeError } = await supabase.functions.invoke('analyze-page', {
             body: {
-                url: testUrl,
-                analysisId: testAnalysisId, // CRITICAL FIX: Pass as 'analysisId'
-                userId: userId // CRITICAL FIX: Pass as 'userId'
+                url: url,
+                analysisId: analysisId, // Pass the generated analysis ID
+                userId: userId // Pass the user ID
             }
         });
 
@@ -88,10 +102,15 @@ function App() {
             throw invokeError;
         }
         console.log('Analysis initiated via Edge Function:', data);
+        
+        // Switch to analysis view to show progress
+        setCurrentView('analysis');
 
     } catch (error) {
         console.error('Error starting analysis:', error);
         alert(`Error starting analysis: ${error.message}`);
+    } finally {
+        setIsAnalyzing(false);
     }
   };
 
@@ -109,12 +128,23 @@ function App() {
         {/* Navigation */}
         <div className="mb-6 flex space-x-4">
           <button
+            onClick={() => setCurrentView('input')}
+            className={`px-4 py-2 rounded-md font-semibold transition-colors ${
+              currentView === 'input' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            New Analysis
+          </button>
+          <button
             onClick={() => setCurrentView('analysis')}
             className={`px-4 py-2 rounded-md font-semibold transition-colors ${
               currentView === 'analysis' 
                 ? 'bg-blue-600 text-white' 
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
+            disabled={!currentAnalysisId}
           >
             Analysis Progress
           </button>
@@ -125,6 +155,7 @@ function App() {
                 ? 'bg-blue-600 text-white' 
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
+            disabled={!currentAnalysisId}
           >
             Results Dashboard
           </button>
@@ -141,21 +172,25 @@ function App() {
         </div>
 
         {/* Content */}
-        {currentView === 'analysis' && (
+        {currentView === 'input' && (
+          <URLInput onAnalyze={startAnalysis} isAnalyzing={isAnalyzing} />
+        )}
+
+        {currentView === 'analysis' && currentAnalysisId && (
           <div>
-            <AnalysisProgress analysisId={testAnalysisId} />
-            <button
-              onClick={startAnalysis}
-              className="mt-4 font-primary font-semibold py-2 px-4 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ backgroundColor: 'var(--mastery-blue)', color: 'var(--authority-white)', '--hover-bg-color': 'var(--innovation-teal)' }}
-            >
-              Start New AI Scan (Test)
-            </button>
+            <AnalysisProgress analysisId={currentAnalysisId} />
+            {currentUrl && (
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  <span className="font-medium">Analyzing:</span> {currentUrl}
+                </p>
+              </div>
+            )}
           </div>
         )}
 
-        {currentView === 'results' && (
-          <ResultsDashboard analysisId={testAnalysisId} />
+        {currentView === 'results' && currentAnalysisId && (
+          <ResultsDashboard analysisId={currentAnalysisId} />
         )}
 
         {currentView === 'mock' && (
