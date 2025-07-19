@@ -72,7 +72,9 @@ export class AnalysisEngine {
     
     // Helper function for progress updates
     const updateProgress = async (factorNumber: number, factorName: string, educationalContent: string) => {
+      console.log(`🎯 updateProgress called for factor ${factorNumber}: ${factorName}`);
       if (progressCallback) {
+        console.log(`📞 Calling progress callback for factor ${factorNumber}`);
         const progress = Math.round((factorNumber / 10) * 80) + 10; // 10% start + 80% for factors
         await progressCallback(
           `analyzing_${factorName.toLowerCase().replace(/\s+/g, '_')}`,
@@ -80,8 +82,12 @@ export class AnalysisEngine {
           `Analyzing: ${factorName}`,
           educationalContent
         );
+        console.log(`⏱️ Starting 1-second delay after factor ${factorNumber}`);
         // Longer delay to ensure progress update is visible to frontend
         await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log(`✅ Delay completed for factor ${factorNumber}`);
+      } else {
+        console.log(`❌ No progress callback available for factor ${factorNumber}`);
       }
     };
     

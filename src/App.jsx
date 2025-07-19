@@ -91,22 +91,28 @@ function App() {
         }
         console.log("Analyses record ensured (created or already existed) for user:", userId);
 
-        // Call the deployed Supabase Edge Function to initiate the analysis.
-        const { data, error: invokeError } = await supabase.functions.invoke('analyze-page', {
+        // Switch to analysis view IMMEDIATELY to show progress
+        setCurrentView('analysis');
+
+        // Call the deployed Supabase Edge Function to initiate the analysis (non-blocking)
+        // Don't await this so the UI can show progress in real-time
+        supabase.functions.invoke('analyze-page', {
             body: {
                 url: url,
                 analysisId: analysisId, // Pass the generated analysis ID
                 userId: userId // Pass the user ID
             }
+        }).then(({ data, error: invokeError }) => {
+            if (invokeError) {
+                console.error('Edge Function error:', invokeError);
+                alert(`Analysis error: ${invokeError.message}`);
+            } else {
+                console.log('Analysis completed via Edge Function:', data);
+            }
+        }).catch(error => {
+            console.error('Analysis error:', error);
+            alert(`Error during analysis: ${error.message}`);
         });
-
-        if (invokeError) {
-            throw invokeError;
-        }
-        console.log('Analysis initiated via Edge Function:', data);
-        
-        // Switch to analysis view to show progress
-        setCurrentView('analysis');
 
     } catch (error) {
         console.error('Error starting analysis:', error);

@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    console.log('=== REAL ANALYSIS PHASE A START ===');
+    console.log('=== REAL ANALYSIS PHASE A START - VERSION 2025-07-19-DEBUG ===');
     
     const requestBody = await req.json();
     const { url, userId, analysisId } = requestBody;
@@ -115,9 +115,9 @@ serve(async (req) => {
       .from('analysis_progress')
       .insert({
         analysis_id: analysisId,
-        stage: 'analysis',
-        progress_percent: 70,
-        message: `Analyzed ${analysisResult.factors.length} factors`,
+        stage: 'storing_results',
+        progress_percent: 95,
+        message: 'Storing results and calculating scores...',
         educational_content: 'Factor analysis complete. Now storing results and calculating final score.'
       });
     
