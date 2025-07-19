@@ -10,7 +10,34 @@ function AnalysisProgress({ analysisId }) {
   useEffect(() => {
     if (!analysisId) return;
 
+    console.log('🔄 AnalysisProgress: Setting up subscription for analysisId:', analysisId);
     setEducationalTip('Launching secure browser environment...'); // Set initial tip for visual feedback
+
+    // First, check for any existing progress
+    const checkExistingProgress = async () => {
+      try {
+        const { data: existingProgress, error } = await supabase
+          .from('analysis_progress')
+          .select('*')
+          .eq('analysis_id', analysisId)
+          .order('created_at', { ascending: false })
+          .limit(1);
+          
+        if (error) {
+          console.error('❌ Error fetching existing progress:', error);
+        } else if (existingProgress && existingProgress.length > 0) {
+          const latest = existingProgress[0];
+          console.log('📊 Found existing progress:', latest);
+          setProgress(latest.progress_percent || 0);
+          setCurrentFactor(latest.message || 'Processing...');
+          setEducationalTip(latest.educational_content || 'Analyzing...');
+        }
+      } catch (error) {
+        console.error('❌ Exception checking existing progress:', error);
+      }
+    };
+    
+    checkExistingProgress();
 
     // Subscribe to real-time changes on the analysis_progress table
     const channel = supabase
@@ -25,24 +52,32 @@ function AnalysisProgress({ analysisId }) {
         },
         // --- THIS IS THE CORRECTED CALLBACK FUNCTION ---
         (payload) => {
+          console.log('📨 Received progress payload:', payload);
           const newProgress = payload.new;
 
           // This new check ensures the progress_percent exists before we try to use it.
           if (newProgress && typeof newProgress.progress_percent === 'number') {
+            console.log(`📊 Progress update: ${newProgress.progress_percent}% - ${newProgress.stage}`);
             setProgress(newProgress.progress_percent);
             // Convert stage to readable format
             const readableStage = newProgress.message || 
                                 (newProgress.stage || 'Processing...').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
             setCurrentFactor(readableStage);
             setEducationalTip(newProgress.educational_content || 'Analyzing factor...'); // Direct text field
-            console.log("Real-time progress update:", newProgress);
+            console.log("✅ Real-time progress update applied:", {
+              progress: newProgress.progress_percent,
+              stage: readableStage,
+              tip: newProgress.educational_content
+            });
           } else {
             // This will help debug if we ever get unexpected data, without crashing the app.
-            console.warn('Received invalid or incomplete progress payload:', payload);
+            console.warn('⚠️ Received invalid or incomplete progress payload:', payload);
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('📡 Subscription status:', status);
+      });
 
     // Clean up the subscription when the component unmounts
     return () => {
