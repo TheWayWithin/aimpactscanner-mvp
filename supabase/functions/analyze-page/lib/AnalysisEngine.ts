@@ -92,12 +92,36 @@ export class AnalysisEngine {
       const authorResult = await this.analyzeAuthor(pageData.content);
       factors.push(authorResult);
       
+      // Factor 5: Contact Information (A.3.2) - Content analysis
+      const contactResult = await this.analyzeContact(url, pageData.content);
+      factors.push(contactResult);
+      
+      // Factor 6: Heading Hierarchy (S.1.1) - Content analysis
+      const headingsResult = await this.analyzeHeadings(pageData.content);
+      factors.push(headingsResult);
+      
+      // Factor 7: Structured Data Detection (AI.2.1) - Content analysis
+      const structuredDataResult = await this.analyzeStructuredData(pageData.content);
+      factors.push(structuredDataResult);
+      
+      // Factor 8: FAQ Schema Analysis (AI.2.3) - Content analysis
+      const faqResult = await this.analyzeFAQ(pageData.content);
+      factors.push(faqResult);
+      
+      // Factor 9: Image Alt Text Analysis (M.2.3) - Content analysis
+      const imageResult = await this.analyzeImages(pageData.content);
+      factors.push(imageResult);
+      
+      // Factor 10: Word Count Analysis (S.3.1) - Content analysis
+      const wordCountResult = await this.analyzeWordCount(pageData.content);
+      factors.push(wordCountResult);
+      
       // Calculate overall score
       const overall_score = this.calculateOverallScore(factors);
       const processing_time_ms = Date.now() - startTime;
       
-      console.log(`✅ Instant analysis completed in ${processing_time_ms}ms`);
-      console.log(`📊 Analyzed ${factors.length} factors with overall score: ${overall_score}`);
+      console.log(`✅ Phase A analysis completed in ${processing_time_ms}ms`);
+      console.log(`📊 Analyzed ${factors.length}/10 factors with overall score: ${overall_score}`);
       
       return {
         factors,
@@ -559,33 +583,763 @@ export class AnalysisEngine {
     }
   }
 
-  private async analyzeContact(url: string, links: string[]): Promise<FactorResult> {
-    // TODO: Implement contact information detection
-    throw new Error('Contact analysis not implemented yet');
+  // Factor Implementation: Contact Information Detection (A.3.2)
+  private async analyzeContact(url: string, content: string): Promise<FactorResult> {
+    const startTime = Date.now();
+    
+    try {
+      let score = 0;
+      let confidence = 80;
+      const evidence = [];
+      const recommendations = [];
+      
+      // Extract links from content (simple approach for MVP)
+      const linkPattern = /<a[^>]*href=["']([^"']*)["'][^>]*>/gi;
+      const links = [];
+      let linkMatch;
+      while ((linkMatch = linkPattern.exec(content)) !== null) {
+        links.push(linkMatch[1]);
+      }
+      
+      // Check for contact page links
+      const contactPagePatterns = [
+        /\/contact\/?$/i,
+        /\/contact-us\/?$/i,
+        /\/get-in-touch\/?$/i,
+        /\/reach-us\/?$/i,
+        /\/about\/?$/i
+      ];
+      
+      const hasContactPage = links.some(link => 
+        contactPagePatterns.some(pattern => pattern.test(link))
+      );
+      
+      if (hasContactPage) {
+        score += 40;
+        evidence.push('Contact page link found');
+      }
+      
+      // Check for email links and addresses
+      const emailPattern = /(?:mailto:|[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,})/gi;
+      const emailMatches = content.match(emailPattern);
+      
+      if (emailMatches && emailMatches.length > 0) {
+        score += 30;
+        evidence.push(`${emailMatches.length} email contact(s) found`);
+      }
+      
+      // Check for phone numbers
+      const phonePatterns = [
+        /tel:[+\d\-\(\)\s]+/gi,
+        /\(\d{3}\)\s*\d{3}-\d{4}/g,
+        /\d{3}-\d{3}-\d{4}/g,
+        /\+\d{1,3}\s*\d{3,}/g
+      ];
+      
+      let phoneCount = 0;
+      for (const pattern of phonePatterns) {
+        const matches = content.match(pattern);
+        if (matches) {
+          phoneCount += matches.length;
+        }
+      }
+      
+      if (phoneCount > 0) {
+        score += 20;
+        evidence.push(`${phoneCount} phone contact(s) found`);
+      }
+      
+      // Check for physical address indicators
+      const addressPatterns = [
+        /\d+\s+[A-Za-z0-9\s]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Way|Court|Ct|Place|Pl)/i,
+        /\d{5}(?:-\d{4})?/g // ZIP codes
+      ];
+      
+      const hasAddress = addressPatterns.some(pattern => pattern.test(content));
+      if (hasAddress) {
+        score += 10;
+        evidence.push('Address information detected');
+      }
+      
+      // Provide recommendations based on score
+      if (score === 0) {
+        evidence.push('No contact information found');
+        recommendations.push('Add a contact page to improve trust signals');
+        recommendations.push('Include email contact information');
+        recommendations.push('Consider adding phone number for direct contact');
+        recommendations.push('Add physical address if applicable to business');
+      } else if (score < 60) {
+        recommendations.push('Add more contact methods for better accessibility');
+        recommendations.push('Ensure contact information is easy to find');
+      } else {
+        evidence.push('Good contact information coverage');
+      }
+      
+      return {
+        factor_id: 'A.3.2',
+        factor_name: 'Contact Information',
+        pillar: 'A',
+        phase: 'instant',
+        score: Math.min(score, 100),
+        confidence,
+        weight: 1.0,
+        evidence,
+        recommendations,
+        processing_time_ms: Date.now() - startTime
+      };
+      
+    } catch (error) {
+      console.error('Contact analysis failed:', error);
+      
+      return {
+        factor_id: 'A.3.2',
+        factor_name: 'Contact Information',
+        pillar: 'A',
+        phase: 'instant',
+        score: 0,
+        confidence: 0,
+        weight: 1.0,
+        evidence: [`Error analyzing contact information: ${error.message}`],
+        recommendations: ['Unable to analyze contact information - please check manually'],
+        processing_time_ms: Date.now() - startTime
+      };
+    }
   }
 
-  private async analyzeHeadings(headings: any[]): Promise<FactorResult> {
-    // TODO: Implement heading hierarchy analysis
-    throw new Error('Headings analysis not implemented yet');
+  // Factor Implementation: Heading Hierarchy Analysis (S.1.1)
+  private async analyzeHeadings(content: string): Promise<FactorResult> {
+    const startTime = Date.now();
+    
+    try {
+      let score = 0;
+      let confidence = 90;
+      const evidence = [];
+      const recommendations = [];
+      
+      // Extract headings from HTML content
+      const headingPattern = /<h([1-6])[^>]*>(.*?)<\/h[1-6]>/gi;
+      const headings = [];
+      let headingMatch;
+      
+      while ((headingMatch = headingPattern.exec(content)) !== null) {
+        headings.push({
+          level: parseInt(headingMatch[1]),
+          text: headingMatch[2].replace(/<[^>]*>/g, '').trim(),
+          wordCount: headingMatch[2].replace(/<[^>]*>/g, '').trim().split(/\s+/).length
+        });
+      }
+      
+      if (headings.length === 0) {
+        return {
+          factor_id: 'S.1.1',
+          factor_name: 'Heading Hierarchy',
+          pillar: 'S',
+          phase: 'instant',
+          score: 0,
+          confidence: 100,
+          weight: 1.0,
+          evidence: ['No headings found on page'],
+          recommendations: [
+            'Add proper heading structure (H1, H2, H3) to organize content',
+            'Use H1 for main topic, H2 for sections, H3 for subsections',
+            'Include keywords naturally in headings'
+          ],
+          processing_time_ms: Date.now() - startTime
+        };
+      }
+      
+      // Check for H1
+      const h1Count = headings.filter(h => h.level === 1).length;
+      if (h1Count === 1) {
+        score += 25;
+        evidence.push('Single H1 tag found (optimal)');
+      } else if (h1Count > 1) {
+        score += 10;
+        evidence.push(`${h1Count} H1 tags found (should be 1)`);
+        recommendations.push('Use only one H1 tag per page for best SEO');
+      } else {
+        recommendations.push('Add an H1 tag for the main page topic');
+      }
+      
+      // Check hierarchy logic
+      let hierarchyScore = 0;
+      let lastLevel = 0;
+      let hierarchyBreaks = 0;
+      
+      for (const heading of headings) {
+        if (lastLevel === 0) {
+          lastLevel = heading.level;
+          continue;
+        }
+        
+        const levelJump = heading.level - lastLevel;
+        if (levelJump > 1) {
+          hierarchyBreaks++;
+        }
+        lastLevel = heading.level;
+      }
+      
+      if (hierarchyBreaks === 0) {
+        hierarchyScore = 25;
+        evidence.push('Proper heading hierarchy maintained');
+      } else {
+        hierarchyScore = Math.max(0, 25 - (hierarchyBreaks * 5));
+        evidence.push(`${hierarchyBreaks} hierarchy breaks found`);
+        recommendations.push('Fix heading hierarchy (don\'t skip levels, e.g., H1→H3)');
+      }
+      score += hierarchyScore;
+      
+      // Check heading content quality
+      const avgWordCount = headings.reduce((sum, h) => sum + h.wordCount, 0) / headings.length;
+      if (avgWordCount >= 2 && avgWordCount <= 8) {
+        score += 25;
+        evidence.push('Headings have appropriate length');
+      } else if (avgWordCount < 2) {
+        score += 10;
+        recommendations.push('Make headings more descriptive (2-8 words ideal)');
+      } else {
+        score += 15;
+        recommendations.push('Shorten headings for better scannability');
+      }
+      
+      // Check for content structure
+      const totalHeadings = headings.length;
+      if (totalHeadings >= 3) {
+        score += 25;
+        evidence.push(`${totalHeadings} headings provide good content structure`);
+      } else {
+        score += 10;
+        recommendations.push('Add more headings to improve content structure');
+      }
+      
+      evidence.unshift(`Heading structure: ${headings.map(h => `H${h.level}`).join(', ')}`);
+      
+      return {
+        factor_id: 'S.1.1',
+        factor_name: 'Heading Hierarchy',
+        pillar: 'S',
+        phase: 'instant',
+        score: Math.min(score, 100),
+        confidence,
+        weight: 1.0,
+        evidence,
+        recommendations,
+        processing_time_ms: Date.now() - startTime
+      };
+      
+    } catch (error) {
+      console.error('Heading analysis failed:', error);
+      
+      return {
+        factor_id: 'S.1.1',
+        factor_name: 'Heading Hierarchy',
+        pillar: 'S',
+        phase: 'instant',
+        score: 0,
+        confidence: 0,
+        weight: 1.0,
+        evidence: [`Error analyzing headings: ${error.message}`],
+        recommendations: ['Unable to analyze heading structure - please check manually'],
+        processing_time_ms: Date.now() - startTime
+      };
+    }
   }
 
-  private async analyzeStructuredData(structuredData: any): Promise<FactorResult> {
-    // TODO: Implement structured data analysis
-    throw new Error('Structured data analysis not implemented yet');
+  // Factor Implementation: Structured Data Detection (AI.2.1)
+  private async analyzeStructuredData(content: string): Promise<FactorResult> {
+    const startTime = Date.now();
+    
+    try {
+      let score = 0;
+      let confidence = 70;
+      const evidence = [];
+      const recommendations = [];
+      
+      // Extract JSON-LD structured data
+      const jsonLdMatches = content.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/gis);
+      let jsonLdData = [];
+      
+      if (jsonLdMatches) {
+        for (const match of jsonLdMatches) {
+          try {
+            const scriptContent = match.replace(/<script[^>]*>|<\/script>/gi, '').trim();
+            const parsed = JSON.parse(scriptContent);
+            jsonLdData.push(parsed);
+          } catch (e) {
+            evidence.push('⚠ Invalid JSON-LD found');
+          }
+        }
+      }
+      
+      if (jsonLdData.length > 0) {
+        score += 40;
+        confidence = 95;
+        evidence.push(`${jsonLdData.length} JSON-LD structured data block(s) found`);
+        
+        // Check for common schemas
+        const schemas = jsonLdData.flatMap(item => {
+          if (Array.isArray(item)) return item.map(i => i['@type']).filter(Boolean);
+          return item['@type'] ? [item['@type']] : [];
+        });
+        
+        const uniqueSchemas = [...new Set(schemas)];
+        if (uniqueSchemas.length > 0) {
+          score += 30;
+          evidence.push(`Schemas: ${uniqueSchemas.join(', ')}`);
+        }
+        
+        // Bonus for high-value schemas
+        const valuableSchemas = ['Article', 'BlogPosting', 'Person', 'Organization', 'WebSite', 'FAQPage', 'Product', 'Event'];
+        const hasValuableSchema = uniqueSchemas.some(schema => valuableSchemas.includes(schema));
+        if (hasValuableSchema) {
+          score += 20;
+          evidence.push('Contains high-value schema types');
+        }
+      }
+      
+      // Check for microdata
+      const microdataPattern = /itemscope|itemtype|itemprop/i;
+      if (microdataPattern.test(content)) {
+        score += 10;
+        evidence.push('Microdata markup detected');
+      }
+      
+      // Check for RDFa
+      const rdfaPattern = /typeof=|property=|resource=/i;
+      if (rdfaPattern.test(content)) {
+        score += 5;
+        evidence.push('RDFa markup detected');
+      }
+      
+      // Check for OpenGraph tags
+      const ogPattern = /<meta[^>]*property=["']og:[^"']*["'][^>]*>/i;
+      if (ogPattern.test(content)) {
+        score += 5;
+        evidence.push('OpenGraph metadata detected');
+      }
+      
+      // Check for Twitter Card tags
+      const twitterPattern = /<meta[^>]*name=["']twitter:[^"']*["'][^>]*>/i;
+      if (twitterPattern.test(content)) {
+        score += 5;
+        evidence.push('Twitter Card metadata detected');
+      }
+      
+      // Provide recommendations based on score
+      if (score === 0) {
+        evidence.push('No structured data found');
+        recommendations.push('Add JSON-LD structured data to help AI understand your content');
+        recommendations.push('Implement Article or BlogPosting schema for content pages');
+        recommendations.push('Add Organization schema for business information');
+        recommendations.push('Consider FAQPage schema for question-answer content');
+      } else if (score < 70) {
+        recommendations.push('Expand structured data with additional relevant schemas');
+        recommendations.push('Ensure all structured data is valid and complete');
+        recommendations.push('Add OpenGraph and Twitter Card metadata for social sharing');
+      } else {
+        evidence.push('Excellent structured data implementation');
+      }
+      
+      return {
+        factor_id: 'AI.2.1',
+        factor_name: 'Structured Data Detection',
+        pillar: 'AI',
+        phase: 'instant',
+        score: Math.min(score, 100),
+        confidence,
+        weight: 1.0,
+        evidence: evidence.length ? evidence : ['No structured data found'],
+        recommendations,
+        processing_time_ms: Date.now() - startTime
+      };
+      
+    } catch (error) {
+      console.error('Structured data analysis failed:', error);
+      
+      return {
+        factor_id: 'AI.2.1',
+        factor_name: 'Structured Data Detection',
+        pillar: 'AI',
+        phase: 'instant',
+        score: 0,
+        confidence: 0,
+        weight: 1.0,
+        evidence: [`Error analyzing structured data: ${error.message}`],
+        recommendations: ['Unable to analyze structured data - please check manually'],
+        processing_time_ms: Date.now() - startTime
+      };
+    }
   }
 
-  private async analyzeFAQ(structuredData: any): Promise<FactorResult> {
-    // TODO: Implement FAQ schema analysis
-    throw new Error('FAQ analysis not implemented yet');
+  // Factor Implementation: FAQ Schema Analysis (AI.2.3)
+  private async analyzeFAQ(content: string): Promise<FactorResult> {
+    const startTime = Date.now();
+    
+    try {
+      let score = 0;
+      let confidence = 85;
+      const evidence = [];
+      const recommendations = [];
+      
+      // Extract JSON-LD structured data for FAQ analysis
+      const jsonLdMatches = content.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/gis);
+      let structuredData = [];
+      
+      if (jsonLdMatches) {
+        for (const match of jsonLdMatches) {
+          try {
+            const scriptContent = match.replace(/<script[^>]*>|<\/script>/gi, '').trim();
+            const parsed = JSON.parse(scriptContent);
+            structuredData.push(parsed);
+          } catch (e) {
+            // Ignore invalid JSON-LD for FAQ analysis
+          }
+        }
+      }
+      
+      // Check for FAQ schema in structured data
+      const faqSchema = structuredData.find(item => item['@type'] === 'FAQPage');
+      if (faqSchema) {
+        score += 50;
+        evidence.push('FAQPage schema detected');
+        
+        if (faqSchema.mainEntity && Array.isArray(faqSchema.mainEntity)) {
+          const questionCount = faqSchema.mainEntity.length;
+          score += 30;
+          evidence.push(`${questionCount} structured questions found`);
+          
+          if (questionCount >= 3) {
+            score += 20;
+            evidence.push('Comprehensive FAQ content');
+          }
+        }
+      }
+      
+      // Check for Question schema
+      const questionSchemas = structuredData.filter(item => item['@type'] === 'Question');
+      if (questionSchemas.length > 0) {
+        score += 25;
+        evidence.push(`${questionSchemas.length} Question schema(s) found`);
+      }
+      
+      // Check for FAQ patterns in HTML
+      const faqPatterns = [
+        /<h[1-6][^>]*>.*\?.*<\/h[1-6]>/gi,
+        /class=["'][^"']*faq[^"']*["']/gi,
+        /frequently asked questions/gi,
+        /<details[^>]*>.*<summary[^>]*>.*\?.*<\/summary>/gi
+      ];
+      
+      let htmlFaqScore = 0;
+      for (const pattern of faqPatterns) {
+        const matches = content.match(pattern);
+        if (matches) {
+          htmlFaqScore += 10;
+          evidence.push(`FAQ pattern detected (${matches.length} instances)`);
+        }
+      }
+      score += Math.min(htmlFaqScore, 30);
+      
+      // Check for question words
+      const questionWords = ['what', 'why', 'how', 'when', 'where', 'who'];
+      const questionPattern = new RegExp(`\\b(${questionWords.join('|')})\\b.*\\?`, 'gi');
+      const questionMatches = content.match(questionPattern);
+      
+      if (questionMatches && questionMatches.length >= 3) {
+        score += 20;
+        evidence.push(`${questionMatches.length} question patterns in content`);
+      } else if (questionMatches && questionMatches.length > 0) {
+        score += 10;
+        evidence.push(`${questionMatches.length} question pattern(s) in content`);
+      }
+      
+      // Provide recommendations based on score
+      if (score === 0) {
+        evidence.push('No FAQ content detected');
+        recommendations.push('Add FAQ section to address common user questions');
+        recommendations.push('Implement FAQPage structured data for better AI understanding');
+        recommendations.push('Include question-answer pairs relevant to your content');
+        recommendations.push('Use clear question formats (What, Why, How, etc.)');
+      } else if (score < 70) {
+        recommendations.push('Expand FAQ content with more comprehensive questions');
+        recommendations.push('Add structured data markup for existing FAQ content');
+        recommendations.push('Ensure answers are detailed and helpful');
+      } else {
+        evidence.push('Excellent FAQ implementation');
+      }
+      
+      return {
+        factor_id: 'AI.2.3',
+        factor_name: 'FAQ Schema Analysis',
+        pillar: 'AI',
+        phase: 'instant',
+        score: Math.min(score, 100),
+        confidence,
+        weight: 1.0,
+        evidence: evidence.length ? evidence : ['No FAQ content detected'],
+        recommendations,
+        processing_time_ms: Date.now() - startTime
+      };
+      
+    } catch (error) {
+      console.error('FAQ analysis failed:', error);
+      
+      return {
+        factor_id: 'AI.2.3',
+        factor_name: 'FAQ Schema Analysis',
+        pillar: 'AI',
+        phase: 'instant',
+        score: 0,
+        confidence: 0,
+        weight: 1.0,
+        evidence: [`Error analyzing FAQ content: ${error.message}`],
+        recommendations: ['Unable to analyze FAQ content - please check manually'],
+        processing_time_ms: Date.now() - startTime
+      };
+    }
   }
 
-  private async analyzeImages(images: any[]): Promise<FactorResult> {
-    // TODO: Implement image alt text analysis
-    throw new Error('Images analysis not implemented yet');
+  // Factor Implementation: Image Alt Text Analysis (M.2.3)
+  private async analyzeImages(content: string): Promise<FactorResult> {
+    const startTime = Date.now();
+    
+    try {
+      let score = 0;
+      let confidence = 90;
+      const evidence = [];
+      const recommendations = [];
+      
+      // Extract images from HTML content
+      const imagePattern = /<img[^>]*>/gi;
+      const imageMatches = content.match(imagePattern) || [];
+      
+      if (imageMatches.length === 0) {
+        return {
+          factor_id: 'M.2.3',
+          factor_name: 'Image Alt Text Analysis',
+          pillar: 'M',
+          phase: 'instant',
+          score: 100, // No images means no accessibility issues
+          confidence: 100,
+          weight: 1.0,
+          evidence: ['No images found on page'],
+          recommendations: [],
+          processing_time_ms: Date.now() - startTime
+        };
+      }
+      
+      const totalImages = imageMatches.length;
+      let imagesWithAlt = 0;
+      let decorativeImages = 0;
+      let totalAltLength = 0;
+      let suspiciousAlt = 0;
+      
+      for (const img of imageMatches) {
+        const altMatch = img.match(/alt=["']([^"']*)["']/i);
+        if (altMatch) {
+          const altText = altMatch[1];
+          if (altText === '') {
+            decorativeImages++;
+          } else {
+            imagesWithAlt++;
+            totalAltLength += altText.length;
+            
+            // Check for keyword stuffing
+            const words = altText.toLowerCase().split(/\s+/);
+            const uniqueWords = new Set(words);
+            if (words.length > 5 && uniqueWords.size / words.length < 0.6) {
+              suspiciousAlt++;
+            }
+          }
+        }
+      }
+      
+      // Calculate alt text coverage
+      const coverage = (imagesWithAlt / totalImages) * 100;
+      
+      if (coverage === 100) {
+        score = 100;
+        evidence.push(`All ${totalImages} images have alt text`);
+      } else if (coverage >= 80) {
+        score = 80;
+        evidence.push(`${imagesWithAlt}/${totalImages} images have alt text (${coverage.toFixed(0)}%)`);
+        recommendations.push('Add alt text to remaining images');
+      } else if (coverage >= 60) {
+        score = 60;
+        evidence.push(`⚠ ${imagesWithAlt}/${totalImages} images have alt text (${coverage.toFixed(0)}%)`);
+        recommendations.push('Improve alt text coverage for better accessibility');
+      } else {
+        score = Math.max(20, coverage * 0.5);
+        evidence.push(`❌ Only ${imagesWithAlt}/${totalImages} images have alt text (${coverage.toFixed(0)}%)`);
+        recommendations.push('Add alt text to images for accessibility and AI understanding');
+      }
+      
+      // Check alt text quality
+      if (imagesWithAlt > 0) {
+        const avgAltLength = totalAltLength / imagesWithAlt;
+        
+        if (avgAltLength >= 10 && avgAltLength <= 125) {
+          evidence.push('Alt text length is appropriate');
+        } else if (avgAltLength < 10) {
+          recommendations.push('Make alt text more descriptive (10-125 characters recommended)');
+        } else {
+          recommendations.push('Shorten alt text for better usability (10-125 characters recommended)');
+        }
+        
+        if (suspiciousAlt > 0) {
+          recommendations.push('Avoid keyword stuffing in alt text - focus on describing the image');
+        }
+      }
+      
+      if (decorativeImages > 0) {
+        evidence.push(`${decorativeImages} decorative images properly marked with empty alt`);
+      }
+      
+      return {
+        factor_id: 'M.2.3',
+        factor_name: 'Image Alt Text Analysis',
+        pillar: 'M',
+        phase: 'instant',
+        score,
+        confidence,
+        weight: 1.0,
+        evidence,
+        recommendations,
+        processing_time_ms: Date.now() - startTime
+      };
+      
+    } catch (error) {
+      console.error('Image analysis failed:', error);
+      
+      return {
+        factor_id: 'M.2.3',
+        factor_name: 'Image Alt Text Analysis',
+        pillar: 'M',
+        phase: 'instant',
+        score: 0,
+        confidence: 0,
+        weight: 1.0,
+        evidence: [`Error analyzing images: ${error.message}`],
+        recommendations: ['Unable to analyze image alt text - please check manually'],
+        processing_time_ms: Date.now() - startTime
+      };
+    }
   }
 
+  // Factor Implementation: Word Count Analysis (S.3.1)
   private async analyzeWordCount(content: string): Promise<FactorResult> {
-    // TODO: Implement word count analysis
-    throw new Error('Word count analysis not implemented yet');
+    const startTime = Date.now();
+    
+    try {
+      let score = 0;
+      let confidence = 95;
+      const evidence = [];
+      const recommendations = [];
+      
+      // Clean content - remove script, style, and excessive whitespace
+      const cleanContent = content
+        .replace(/<script[^>]*>.*?<\/script>/gis, '')
+        .replace(/<style[^>]*>.*?<\/style>/gis, '')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      
+      if (!cleanContent) {
+        return {
+          factor_id: 'S.3.1',
+          factor_name: 'Word Count Analysis',
+          pillar: 'S',
+          phase: 'instant',
+          score: 0,
+          confidence: 100,
+          weight: 1.0,
+          evidence: ['No readable content found'],
+          recommendations: [
+            'Add substantial textual content to your page',
+            'Aim for at least 300 words for basic topics',
+            'Provide comprehensive information on your subject'
+          ],
+          processing_time_ms: Date.now() - startTime
+        };
+      }
+      
+      const words = cleanContent.split(/\s+/).filter(word => word.length > 0);
+      const wordCount = words.length;
+      
+      evidence.push(`Word count: ${wordCount} words`);
+      
+      // Score based on word count ranges
+      if (wordCount >= 1500) {
+        score = 100;
+        evidence.push('Comprehensive content length');
+      } else if (wordCount >= 1000) {
+        score = 90;
+        evidence.push('Good content depth');
+      } else if (wordCount >= 600) {
+        score = 75;
+        evidence.push('Adequate content length');
+      } else if (wordCount >= 300) {
+        score = 60;
+        evidence.push('⚠ Minimal content length');
+        recommendations.push('Consider expanding content for better AI understanding');
+      } else if (wordCount >= 150) {
+        score = 40;
+        evidence.push('⚠ Very short content');
+        recommendations.push('Add more detailed information (aim for 300+ words)');
+      } else {
+        score = 20;
+        evidence.push('❌ Insufficient content');
+        recommendations.push('Significantly expand content with detailed information');
+      }
+      
+      // Additional content quality indicators
+      const sentences = cleanContent.split(/[.!?]+/).filter(s => s.trim().length > 10);
+      const avgWordsPerSentence = wordCount / sentences.length;
+      
+      if (avgWordsPerSentence >= 10 && avgWordsPerSentence <= 25) {
+        evidence.push('Good sentence structure and readability');
+      } else if (avgWordsPerSentence < 10) {
+        recommendations.push('Consider using more detailed sentences');
+      } else {
+        recommendations.push('Break up long sentences for better readability');
+      }
+      
+      // Check for content structure indicators
+      const paragraphs = cleanContent.split(/\n\s*\n/).filter(p => p.trim().length > 50);
+      if (paragraphs.length >= 3) {
+        evidence.push(`${paragraphs.length} substantial paragraphs detected`);
+      } else if (wordCount > 300) {
+        recommendations.push('Break content into more paragraphs for better structure');
+      }
+      
+      return {
+        factor_id: 'S.3.1',
+        factor_name: 'Word Count Analysis',
+        pillar: 'S',
+        phase: 'instant',
+        score,
+        confidence,
+        weight: 1.0,
+        evidence,
+        recommendations,
+        processing_time_ms: Date.now() - startTime
+      };
+      
+    } catch (error) {
+      console.error('Word count analysis failed:', error);
+      
+      return {
+        factor_id: 'S.3.1',
+        factor_name: 'Word Count Analysis',
+        pillar: 'S',
+        phase: 'instant',
+        score: 0,
+        confidence: 0,
+        weight: 1.0,
+        evidence: [`Error analyzing word count: ${error.message}`],
+        recommendations: ['Unable to analyze content length - please check manually'],
+        processing_time_ms: Date.now() - startTime
+      };
+    }
   }
 }

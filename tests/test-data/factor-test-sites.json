@@ -1,0 +1,208 @@
+{
+  "testSites": {
+    "wellStructured": {
+      "primary": "https://docs.github.com",
+      "description": "Comprehensive documentation site with good structure",
+      "expectedFactors": {
+        "https": 100,
+        "title": "80-95",
+        "metaDescription": "70-90",
+        "author": "40-70",
+        "contact": "60-85",
+        "headings": "85-100",
+        "structuredData": "70-90",
+        "faq": "60-85",
+        "images": "80-95",
+        "wordCount": "90-100"
+      }
+    },
+    "corporate": {
+      "primary": "https://github.com",
+      "description": "Corporate site with good optimization",
+      "expectedFactors": {
+        "https": 100,
+        "title": "70-90",
+        "metaDescription": "60-80",
+        "author": "30-50",
+        "contact": "70-90",
+        "headings": "75-90",
+        "structuredData": "80-95",
+        "faq": "40-70",
+        "images": "70-85",
+        "wordCount": "60-80"
+      }
+    },
+    "helpCenter": {
+      "primary": "https://help.github.com",
+      "description": "Help center with FAQ content",
+      "expectedFactors": {
+        "https": 100,
+        "title": "75-90",
+        "metaDescription": "70-85",
+        "author": "40-60",
+        "contact": "80-95",
+        "headings": "80-95",
+        "structuredData": "60-80",
+        "faq": "85-100",
+        "images": "70-90",
+        "wordCount": "85-100"
+      }
+    },
+    "minimal": {
+      "primary": "https://example.com",
+      "description": "Minimal site for testing basic functionality",
+      "expectedFactors": {
+        "https": 100,
+        "title": "30-50",
+        "metaDescription": "10-30",
+        "author": "0-20",
+        "contact": "0-20",
+        "headings": "20-40",
+        "structuredData": "0-20",
+        "faq": "0-20",
+        "images": "80-100",
+        "wordCount": "20-40"
+      }
+    },
+    "ecommerce": {
+      "primary": "https://shop.github.com",
+      "description": "E-commerce site with product focus",
+      "expectedFactors": {
+        "https": 100,
+        "title": "80-95",
+        "metaDescription": "75-90",
+        "author": "20-40",
+        "contact": "85-100",
+        "headings": "70-85",
+        "structuredData": "85-100",
+        "faq": "50-75",
+        "images": "60-80",
+        "wordCount": "50-70"
+      }
+    }
+  },
+  "edgeCases": {
+    "slowLoading": {
+      "url": "https://httpstat.us/timeout",
+      "description": "Timeout testing",
+      "expectedBehavior": "graceful_timeout"
+    },
+    "httpOnly": {
+      "url": "http://example.com",
+      "description": "HTTP-only site for HTTPS testing",
+      "expectedFactors": {
+        "https": 0
+      }
+    },
+    "malformedUrls": [
+      "not-a-url",
+      "ftp://invalid-protocol.com",
+      "https://",
+      "://missing-protocol.com"
+    ],
+    "specialCharacters": {
+      "url": "https://example.com/path/with spaces and & symbols",
+      "description": "URL with special characters"
+    }
+  },
+  "factorSpecificTests": {
+    "contactInformation": {
+      "withContact": [
+        "https://github.com/contact",
+        "https://help.github.com/en/contact"
+      ],
+      "withoutContact": [
+        "https://example.com"
+      ],
+      "multipleContactMethods": [
+        "https://github.com/contact"
+      ]
+    },
+    "headingHierarchy": {
+      "goodStructure": [
+        "https://docs.github.com/en/get-started"
+      ],
+      "poorStructure": [
+        "https://example.com"
+      ],
+      "singlePageApp": [
+        "https://github.com"
+      ]
+    },
+    "structuredData": {
+      "withJsonLd": [
+        "https://github.com",
+        "https://docs.github.com"
+      ],
+      "withoutStructuredData": [
+        "https://example.com"
+      ],
+      "mixedFormats": [
+        "https://help.github.com"
+      ]
+    },
+    "faqContent": {
+      "withFAQ": [
+        "https://help.github.com",
+        "https://docs.github.com/en/support"
+      ],
+      "withoutFAQ": [
+        "https://example.com",
+        "https://github.com"
+      ],
+      "informalQA": [
+        "https://docs.github.com"
+      ]
+    },
+    "imageAltText": {
+      "imageHeavy": [
+        "https://github.com"
+      ],
+      "noImages": [
+        "https://example.com"
+      ],
+      "mixedAltText": [
+        "https://docs.github.com"
+      ]
+    },
+    "wordCount": {
+      "longForm": [
+        "https://docs.github.com/en/get-started/quickstart/hello-world"
+      ],
+      "shortForm": [
+        "https://example.com"
+      ],
+      "medium": [
+        "https://github.com/about"
+      ]
+    }
+  },
+  "performanceTests": {
+    "concurrentUrls": [
+      "https://github.com",
+      "https://docs.github.com",
+      "https://help.github.com",
+      "https://example.com"
+    ],
+    "heavyContent": [
+      "https://docs.github.com"
+    ],
+    "lightContent": [
+      "https://example.com"
+    ]
+  },
+  "crossBrowserTests": {
+    "chromium": {
+      "specific": [],
+      "expected": "full_functionality"
+    },
+    "firefox": {
+      "specific": [],
+      "expected": "full_functionality"
+    },
+    "webkit": {
+      "specific": [],
+      "expected": "full_functionality"
+    }
+  }
+}
