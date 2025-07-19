@@ -53,7 +53,7 @@ serve(async (req) => {
     console.log('Analysis status updated to processing');
     
     // Initial progress update
-    await supabase
+    const { data: initialProgress, error: initialError } = await supabase
       .from('analysis_progress')
       .insert({
         analysis_id: analysisId,
@@ -61,12 +61,21 @@ serve(async (req) => {
         progress_percent: 10,
         message: 'Starting Phase A analysis...',
         educational_content: 'Phase A provides instant analysis of 10 critical factors for AI search optimization'
-      });
+      })
+      .select()
+      .single();
+      
+    if (initialError) {
+      console.error('❌ Initial progress insert error:', initialError);
+    } else {
+      console.log('✅ Initial progress inserted:', initialProgress);
+    }
     
     // Create progress callback for real-time updates
     const progressCallback = async (stage: string, progress: number, message: string, educationalContent: string) => {
       try {
-        await supabase
+        console.log(`🔄 Attempting progress update: ${progress}% - ${stage}`);
+        const { data, error } = await supabase
           .from('analysis_progress')
           .insert({
             analysis_id: analysisId,
@@ -75,9 +84,14 @@ serve(async (req) => {
             message,
             educational_content: educationalContent
           });
-        console.log(`📊 Progress update: ${progress}% - ${stage}`);
+        
+        if (error) {
+          console.error('❌ Progress update database error:', error);
+        } else {
+          console.log(`✅ Progress update successful: ${progress}% - ${stage}`, data);
+        }
       } catch (error) {
-        console.error('Progress update error:', error);
+        console.error('❌ Progress update exception:', error);
         // Continue analysis even if progress update fails
       }
     };

@@ -80,6 +80,8 @@ export class AnalysisEngine {
           `Analyzing: ${factorName}`,
           educationalContent
         );
+        // Small delay to ensure progress update is processed before continuing
+        await new Promise(resolve => setTimeout(resolve, 200));
       }
     };
     
