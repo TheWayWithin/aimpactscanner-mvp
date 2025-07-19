@@ -78,13 +78,15 @@ function App() {
                 id: analysisId,
                 user_id: userId,
                 url: url,
-                scores: { "overall": 0, "aiSearch": 0, "agentCompatibility": 0, "confidence": {} },
-                factor_results: {},
-                framework_version: 'MASTERY-AI v2.1 Enhanced Edition',
-                status: 'pending' // Initial status
+                status: 'pending', // Initial status
+                scores: {}, // Add empty scores object to satisfy database constraint
+                factor_results: [] // Add empty factor results array to satisfy database constraint
             });
 
         if (upsertAnalysisError) {
+            console.error("Analysis insert error details:", upsertAnalysisError);
+            console.error("Analysis insert error message:", upsertAnalysisError.message);
+            console.error("Analysis insert error code:", upsertAnalysisError.code);
             throw upsertAnalysisError;
         }
         console.log("Analyses record ensured (created or already existed) for user:", userId);
@@ -111,6 +113,38 @@ function App() {
         alert(`Error starting analysis: ${error.message}`);
     } finally {
         setIsAnalyzing(false);
+    }
+  };
+
+  const setupDatabase = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('setup-tables');
+      if (error) {
+        console.error('Database setup error:', error);
+        alert('Database setup failed: ' + error.message);
+      } else {
+        console.log('Database setup successful:', data);
+        alert('Database setup completed successfully!');
+      }
+    } catch (error) {
+      console.error('Database setup error:', error);
+      alert('Database setup failed: ' + error.message);
+    }
+  };
+
+  const diagnoseDatabase = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('diagnose-db');
+      if (error) {
+        console.error('Database diagnosis error:', error);
+        alert('Database diagnosis failed: ' + error.message);
+      } else {
+        console.log('Database diagnosis:', data);
+        alert('Database diagnosis completed! Check console for details.');
+      }
+    } catch (error) {
+      console.error('Database diagnosis error:', error);
+      alert('Database diagnosis failed: ' + error.message);
     }
   };
 
@@ -197,13 +231,29 @@ function App() {
           <MockResultsDashboard />
         )}
 
-        <button
-          onClick={() => supabase.auth.signOut()}
-          className="mt-4 ml-4 font-primary font-semibold py-2 px-4 rounded-md hover:opacity-90 transition-opacity duration-200"
-          style={{ backgroundColor: 'var(--innovation-teal)', color: 'var(--authority-white)' }}
-        >
-          Sign Out (Temporary)
-        </button>
+        <div className="mt-6 flex space-x-2">
+          <button
+            onClick={diagnoseDatabase}
+            className="font-primary font-semibold py-2 px-4 rounded-md hover:opacity-90 transition-opacity duration-200"
+            style={{ backgroundColor: 'var(--mastery-blue)', color: 'var(--authority-white)' }}
+          >
+            Check Database
+          </button>
+          <button
+            onClick={setupDatabase}
+            className="font-primary font-semibold py-2 px-4 rounded-md hover:opacity-90 transition-opacity duration-200"
+            style={{ backgroundColor: 'var(--framework-black)', color: 'var(--authority-white)' }}
+          >
+            Setup Database
+          </button>
+          <button
+            onClick={() => supabase.auth.signOut()}
+            className="font-primary font-semibold py-2 px-4 rounded-md hover:opacity-90 transition-opacity duration-200"
+            style={{ backgroundColor: 'var(--innovation-teal)', color: 'var(--authority-white)' }}
+          >
+            Sign Out
+          </button>
+        </div>
       </main>
       <footer className="brand-footer">
         <p>&copy; 2025 AI Search Mastery. All rights reserved.</p>
