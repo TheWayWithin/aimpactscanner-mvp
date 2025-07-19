@@ -96,6 +96,10 @@ serve(async (req) => {
       }
     };
 
+    // Test progress callback before analysis
+    console.log('🧪 Testing progress callback...');
+    await progressCallback('test', 5, 'Testing progress system...', 'This is a test to verify progress updates are working.');
+    
     // Run real Phase A analysis with progress updates
     console.log('🔍 Starting real factor analysis...');
     const analysisResult = await analysisEngine.analyzeInstantFactors(url, progressCallback);

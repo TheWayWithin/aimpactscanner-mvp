@@ -8,7 +8,10 @@ function AnalysisProgress({ analysisId }) {
   const [educationalTip, setEducationalTip] = useState('Launching secure browser environment...'); // Ensure initial tip for display
 
   useEffect(() => {
-    if (!analysisId) return;
+    if (!analysisId) {
+      console.log('⚠️ No analysisId provided to AnalysisProgress');
+      return;
+    }
 
     console.log('🔄 AnalysisProgress: Setting up subscription for analysisId:', analysisId);
     setEducationalTip('Launching secure browser environment...'); // Set initial tip for visual feedback
@@ -28,9 +31,20 @@ function AnalysisProgress({ analysisId }) {
         } else if (existingProgress && existingProgress.length > 0) {
           const latest = existingProgress[0];
           console.log('📊 Found existing progress:', latest);
+          console.log('📊 Progress fields:', {
+            progress_percent: latest.progress_percent,
+            stage: latest.stage,
+            message: latest.message,
+            educational_content: latest.educational_content
+          });
           setProgress(latest.progress_percent || 0);
-          setCurrentFactor(latest.message || 'Processing...');
+          setCurrentFactor(latest.message || latest.stage || 'Processing...');
           setEducationalTip(latest.educational_content || 'Analyzing...');
+          
+          // If analysis is already complete, show that immediately
+          if (latest.progress_percent === 100) {
+            console.log('✅ Analysis already complete - showing final state');
+          }
         }
       } catch (error) {
         console.error('❌ Exception checking existing progress:', error);
