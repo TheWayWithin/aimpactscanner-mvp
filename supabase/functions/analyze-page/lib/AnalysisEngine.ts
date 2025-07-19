@@ -80,21 +80,24 @@ export class AnalysisEngine {
           `Analyzing: ${factorName}`,
           educationalContent
         );
-        // Small delay to ensure progress update is processed before continuing
-        await new Promise(resolve => setTimeout(resolve, 200));
+        // Longer delay to ensure progress update is visible to frontend
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
     };
     
     try {
       console.log(`🔍 Starting instant analysis for: ${url}`);
+      console.log(`📞 Progress callback available: ${!!progressCallback}`);
       
       // Fetch the webpage content for analysis
       const pageData = await this.fetchPageData(url);
       
       // Factor 1: HTTPS Security (AI.1.1) - Protocol analysis
+      console.log('🔍 Starting Factor 1: HTTPS Security');
       await updateProgress(1, 'HTTPS Security', 'Checking if your site uses secure HTTPS protocol - essential for AI search rankings and user trust.');
       const httpsResult = await this.analyzeHTTPS(url);
       factors.push(httpsResult);
+      console.log('✅ Completed Factor 1: HTTPS Security');
       
       // Factor 2: Title Optimization (AI.1.2) - Content analysis
       await updateProgress(2, 'Title Optimization', 'Analyzing your page title for length, keywords, and AI search optimization best practices.');
