@@ -63,9 +63,28 @@ serve(async (req) => {
         educational_content: 'Phase A provides instant analysis of 10 critical factors for AI search optimization'
       });
     
-    // Run real Phase A analysis
+    // Create progress callback for real-time updates
+    const progressCallback = async (stage: string, progress: number, message: string, educationalContent: string) => {
+      try {
+        await supabase
+          .from('analysis_progress')
+          .insert({
+            analysis_id: analysisId,
+            stage,
+            progress_percent: progress,
+            message,
+            educational_content: educationalContent
+          });
+        console.log(`📊 Progress update: ${progress}% - ${stage}`);
+      } catch (error) {
+        console.error('Progress update error:', error);
+        // Continue analysis even if progress update fails
+      }
+    };
+
+    // Run real Phase A analysis with progress updates
     console.log('🔍 Starting real factor analysis...');
-    const analysisResult = await analysisEngine.analyzeInstantFactors(url);
+    const analysisResult = await analysisEngine.analyzeInstantFactors(url, progressCallback);
     
     if (!analysisResult.success) {
       throw new Error(`Analysis failed: ${analysisResult.error}`);

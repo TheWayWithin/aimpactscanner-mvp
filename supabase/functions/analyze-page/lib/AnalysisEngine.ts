@@ -66,9 +66,22 @@ export class AnalysisEngine {
   }
 
   // Phase A: Instant Analysis (4 factors initially, <15 seconds)
-  async analyzeInstantFactors(url: string): Promise<AnalysisResult> {
+  async analyzeInstantFactors(url: string, progressCallback?: (stage: string, progress: number, message: string, educationalContent: string) => Promise<void>): Promise<AnalysisResult> {
     const startTime = Date.now();
     const factors: FactorResult[] = [];
+    
+    // Helper function for progress updates
+    const updateProgress = async (factorNumber: number, factorName: string, educationalContent: string) => {
+      if (progressCallback) {
+        const progress = Math.round((factorNumber / 10) * 80) + 10; // 10% start + 80% for factors
+        await progressCallback(
+          `analyzing_${factorName.toLowerCase().replace(/\s+/g, '_')}`,
+          progress,
+          `Analyzing: ${factorName}`,
+          educationalContent
+        );
+      }
+    };
     
     try {
       console.log(`🔍 Starting instant analysis for: ${url}`);
@@ -77,42 +90,52 @@ export class AnalysisEngine {
       const pageData = await this.fetchPageData(url);
       
       // Factor 1: HTTPS Security (AI.1.1) - Protocol analysis
+      await updateProgress(1, 'HTTPS Security', 'Checking if your site uses secure HTTPS protocol - essential for AI search rankings and user trust.');
       const httpsResult = await this.analyzeHTTPS(url);
       factors.push(httpsResult);
       
       // Factor 2: Title Optimization (AI.1.2) - Content analysis
+      await updateProgress(2, 'Title Optimization', 'Analyzing your page title for length, keywords, and AI search optimization best practices.');
       const titleResult = await this.analyzeTitle(pageData.title);
       factors.push(titleResult);
       
       // Factor 3: Meta Description (AI.1.3) - Content analysis  
+      await updateProgress(3, 'Meta Description Quality', 'Evaluating your meta description for search snippet optimization and user engagement factors.');
       const metaResult = await this.analyzeMetaDescription(pageData.metaDescription);
       factors.push(metaResult);
       
       // Factor 4: Author Information (A.2.1) - Content analysis
+      await updateProgress(4, 'Author Information', 'Detecting author bylines and credibility signals that establish expertise and trustworthiness.');
       const authorResult = await this.analyzeAuthor(pageData.content);
       factors.push(authorResult);
       
       // Factor 5: Contact Information (A.3.2) - Content analysis
+      await updateProgress(5, 'Contact Information', 'Scanning for contact methods (email, phone, address) that build trust and authority signals.');
       const contactResult = await this.analyzeContact(url, pageData.content);
       factors.push(contactResult);
       
       // Factor 6: Heading Hierarchy (S.1.1) - Content analysis
+      await updateProgress(6, 'Heading Hierarchy', 'Analyzing your heading structure (H1-H6) for semantic organization and content accessibility.');
       const headingsResult = await this.analyzeHeadings(pageData.content);
       factors.push(headingsResult);
       
       // Factor 7: Structured Data Detection (AI.2.1) - Content analysis
+      await updateProgress(7, 'Structured Data', 'Checking for JSON-LD, microdata, and schema markup that helps AI understand your content.');
       const structuredDataResult = await this.analyzeStructuredData(pageData.content);
       factors.push(structuredDataResult);
       
       // Factor 8: FAQ Schema Analysis (AI.2.3) - Content analysis
+      await updateProgress(8, 'FAQ Content', 'Identifying question-answer patterns and FAQ structured data for enhanced AI comprehension.');
       const faqResult = await this.analyzeFAQ(pageData.content);
       factors.push(faqResult);
       
       // Factor 9: Image Alt Text Analysis (M.2.3) - Content analysis
+      await updateProgress(9, 'Image Accessibility', 'Evaluating image alt text coverage and quality for accessibility and AI image understanding.');
       const imageResult = await this.analyzeImages(pageData.content);
       factors.push(imageResult);
       
       // Factor 10: Word Count Analysis (S.3.1) - Content analysis
+      await updateProgress(10, 'Content Depth', 'Analyzing content length, readability, and depth for comprehensive topic coverage.');
       const wordCountResult = await this.analyzeWordCount(pageData.content);
       factors.push(wordCountResult);
       

@@ -30,7 +30,10 @@ function AnalysisProgress({ analysisId }) {
           // This new check ensures the progress_percent exists before we try to use it.
           if (newProgress && typeof newProgress.progress_percent === 'number') {
             setProgress(newProgress.progress_percent);
-            setCurrentFactor(newProgress.stage || 'Processing...'); // Use 'stage' column from schema
+            // Convert stage to readable format
+            const readableStage = newProgress.message || 
+                                (newProgress.stage || 'Processing...').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            setCurrentFactor(readableStage);
             setEducationalTip(newProgress.educational_content || 'Analyzing factor...'); // Direct text field
             console.log("Real-time progress update:", newProgress);
           } else {
