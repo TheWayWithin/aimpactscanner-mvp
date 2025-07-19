@@ -1,5 +1,5 @@
 # AImpactScanner Claude Code Prompts
-## Updated July 11, 2025 - MVP Foundation Complete
+## Updated July 16, 2025 - MVP Foundation Complete + Testing Framework
 
 ## Current Project State
 
@@ -9,6 +9,7 @@
 - **Database Integration**: RLS policies fixed, service role permissions working
 - **Two-Phase Architecture**: Foundation ready for enhanced factor implementation
 - **Documentation**: Complete PRD v8.0, TAD v1.0, Factor Guide, MVP Checklist
+- **Testing Framework**: Comprehensive test suite ready for Phase A development
 
 ### Critical Lessons Learned
 
@@ -27,6 +28,79 @@
 - **Solution**: Two-phase approach (instant + background) with simplified mock for MVP
 - **Next**: Implement queue-based architecture for production
 
+#### Testing Framework Implementation (COMPLETE)
+- **Achievement**: Comprehensive test suite with unit, integration, E2E, and performance tests
+- **Coverage**: Factor validation, database operations, real-time progress, concurrent users
+- **Environment**: Proper UUID handling, test data management, cleanup automation
+- **Commands**: Easy-to-use npm scripts for different test scenarios
+
+## Testing Framework
+
+### Test Environment Setup ✅
+The project now includes a complete testing framework supporting test-driven development:
+
+```bash
+# Quick setup and validation
+npm run test:setup     # Initialize test environment
+npm run test:summary   # Get current status overview
+
+# Development workflow
+npm run test:unit -- --watch  # TDD for factor implementation
+npm run test:db        # Database operations validation
+npm run test:progress  # Real-time progress tracking
+npm run test:coverage  # Coverage analysis
+npm run test:ui        # Visual test dashboard
+```
+
+### Test Categories
+
+#### Unit Tests (`npm run test:unit`)
+- **Purpose**: Individual factor validation
+- **Coverage**: All 10 Phase A factors with mock implementations
+- **Performance**: <2 seconds per factor
+- **Validation**: Data structure, scoring logic, edge cases
+
+#### Integration Tests (`npm run test:integration`)
+- **Purpose**: Complete analysis workflow
+- **Coverage**: Database operations, Edge Functions, real-time progress
+- **Performance**: <30 seconds for full workflow
+- **Validation**: End-to-end user experience
+
+#### Performance Tests (`npm run test:performance`)
+- **Purpose**: Load testing and concurrent user validation
+- **Coverage**: 20+ concurrent users, timeout handling, memory management
+- **Performance**: <15 seconds Phase A, <45 seconds complete
+- **Validation**: Production readiness
+
+### Test-Driven Development Workflow
+
+#### Factor Implementation Pattern
+```bash
+# 1. Start with failing test
+npm run test:unit -- --watch
+
+# 2. Implement factor in Edge Function
+# Edit: supabase/functions/analyze-page/lib/AnalysisEngine.ts
+
+# 3. Validate with integration tests
+npm run test:integration
+
+# 4. Performance validation
+npm run test:performance
+```
+
+#### Database Testing
+```bash
+# Validate database operations
+npm run test:db
+
+# Test real-time progress
+npm run test:progress
+
+# Edge Function integration
+npm run test:edge
+```
+
 ## Enhanced Development Prompts
 
 ### Two-Phase Analysis Development
@@ -42,9 +116,30 @@ Refer to Factor Implementation Guide v1.0 for exact specifications and code exam
 Implement [factor name] following the Factor Implementation Guide v1.0. Use the provided TypeScript code, ensure proper error handling with circuit breakers, and include educational content. Test with mock data first, then integrate real analysis logic.
 ```
 
+### Test-Driven Factor Development
+```
+Implement [factor name] using test-driven development:
+1. Start with: npm run test:unit -- --watch
+2. Review existing mock implementation in tests/unit/factors.test.js
+3. Implement real factor in Edge Function
+4. Validate with integration tests: npm run test:integration
+5. Performance check: npm run test:performance
+```
+
 ### Real-Time Progress Enhancement
 ```
 Enhance the working real-time progress system with [specific feature]. Current system uses Supabase subscriptions with educational content. Maintain the proven pattern of progress_percent, stage, message, and educational_content fields.
+```
+
+### Testing Validation
+```
+Validate [component/feature] with comprehensive testing:
+- Unit tests: npm run test:unit
+- Database operations: npm run test:db  
+- Real-time progress: npm run test:progress
+- Integration workflow: npm run test:integration
+- Performance targets: npm run test:performance
+Monitor for <15s Phase A completion and proper error handling.
 ```
 
 ## Development Prompts
@@ -113,6 +208,14 @@ Debug this error: [error message]. Check related files and suggest fixes.
 ### Feature Implementation
 ```
 Implement [specific feature] following our existing patterns and brand guidelines.
+```
+
+### Test Environment Check
+```
+Verify test environment status and run appropriate tests:
+- Environment: npm run test:setup
+- Status: npm run test:summary  
+- Quick validation: npm run test:db && npm run test:progress
 ```
 
 ## Context-Specific Prompts
@@ -249,6 +352,22 @@ Ensure service role policies exist for INSERT/UPDATE operations.
 /src/components/
 ├── AnalysisProgress.jsx        # Working real-time progress
 └── Auth.jsx                    # Existing auth pattern
+
+/tests/                         # Complete testing framework
+├── setup/
+│   ├── test-config.js         # Test configuration and utilities
+│   └── database-setup.js      # Database setup and validation
+├── test-data/
+│   └── urls.json             # Test URLs for various scenarios
+├── unit/
+│   └── factors.test.js       # Factor validation tests
+├── integration/
+│   └── analysis-flow.test.js # Complete workflow tests
+├── e2e/
+│   └── user-flow.test.js     # End-to-end user experience
+├── performance/
+│   └── load-tests.js         # Performance and concurrent user tests
+└── test-summary.js           # Test status monitoring tool
 ```
 
 ### Database Tables
@@ -260,3 +379,6 @@ Ensure service role policies exist for INSERT/UPDATE operations.
 ### Key Configuration Files
 - `supabase/config.toml`: Edge Function settings
 - `supabase/migrations/003_service_role_policies.sql`: Critical RLS fixes
+- `.env.test`: Test environment variables
+- `vitest.config.js`: Test framework configuration
+- `tests/README.md`: Complete testing documentation

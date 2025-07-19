@@ -1,0 +1,77 @@
+{
+  "test_urls": {
+    "basic_sites": [
+      {
+        "url": "https://example.com",
+        "description": "Simple static site",
+        "expected_factors": {
+          "https": 100,
+          "title": 50,
+          "meta_description": 30
+        }
+      },
+      {
+        "url": "https://github.com",
+        "description": "Complex modern site",
+        "expected_factors": {
+          "https": 100,
+          "title": 85,
+          "meta_description": 80,
+          "structured_data": 70
+        }
+      }
+    ],
+    "edge_cases": [
+      {
+        "url": "http://neverssl.com",
+        "description": "HTTP-only site",
+        "expected_factors": {
+          "https": 0,
+          "title": 60
+        }
+      },
+      {
+        "url": "https://httpstat.us/500",
+        "description": "Error response",
+        "expected_factors": null,
+        "should_fail": true
+      }
+    ],
+    "performance_tests": [
+      {
+        "url": "https://wikipedia.org",
+        "description": "Large content site",
+        "timeout_target": 12000
+      },
+      {
+        "url": "https://news.ycombinator.com",
+        "description": "Fast loading site",
+        "timeout_target": 8000
+      }
+    ],
+    "factor_validation": [
+      {
+        "url": "https://schema.org",
+        "description": "Rich structured data",
+        "test_factors": ["structured_data", "faq_schema"]
+      },
+      {
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML",
+        "description": "Good heading hierarchy",
+        "test_factors": ["headings", "content_structure"]
+      }
+    ]
+  },
+  "test_scenarios": {
+    "concurrent_analysis": {
+      "description": "Test multiple analyses simultaneously",
+      "urls": ["https://example.com", "https://github.com", "https://stackoverflow.com"],
+      "concurrent_count": 5
+    },
+    "timeout_tests": {
+      "description": "Test Edge Function timeout handling",
+      "slow_urls": ["https://httpstat.us/200?sleep=10000"],
+      "timeout_limit": 15000
+    }
+  }
+}
