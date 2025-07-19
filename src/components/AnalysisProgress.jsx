@@ -55,42 +55,72 @@ function AnalysisProgress({ analysisId }) {
 
     // Subscribe to real-time changes on the analysis_progress table
     const channel = supabase
-      .channel(`analysis_progress:${analysisId}`)
+      .channel(`analysis_progress_${analysisId}`, {
+        config: {
+          broadcast: { self: true },
+          presence: { key: analysisId }
+        }
+      })
       .on(
         'postgres_changes',
         {
-          event: '*', // Listen for all events (INSERT, UPDATE)
-          schema: 'public',
+          event: 'INSERT', // Focus on INSERT events for new progress
+          schema: 'public', 
           table: 'analysis_progress',
-          filter: `analysis_id=eq.${analysisId}`, // Filter for this specific analysis
+          filter: `analysis_id=eq.${analysisId}`,
         },
-        // --- THIS IS THE CORRECTED CALLBACK FUNCTION ---
         (payload) => {
-          console.log('📨 Received progress payload:', payload);
+          console.log('📨 Received INSERT progress payload:', payload);
           const newProgress = payload.new;
 
-          // This new check ensures the progress_percent exists before we try to use it.
           if (newProgress && typeof newProgress.progress_percent === 'number') {
-            console.log(`📊 Progress update: ${newProgress.progress_percent}% - ${newProgress.stage}`);
+            console.log(`📊 Real-time progress update: ${newProgress.progress_percent}% - ${newProgress.stage}`);
             setProgress(newProgress.progress_percent);
-            // Convert stage to readable format
             const readableStage = newProgress.message || 
                                 (newProgress.stage || 'Processing...').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
             setCurrentFactor(readableStage);
-            setEducationalTip(newProgress.educational_content || 'Analyzing factor...'); // Direct text field
+            setEducationalTip(newProgress.educational_content || 'Analyzing factor...');
             console.log("✅ Real-time progress update applied:", {
               progress: newProgress.progress_percent,
               stage: readableStage,
               tip: newProgress.educational_content
             });
           } else {
-            // This will help debug if we ever get unexpected data, without crashing the app.
-            console.warn('⚠️ Received invalid or incomplete progress payload:', payload);
+            console.warn('⚠️ Received invalid progress payload:', payload);
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE', // Also listen for updates
+          schema: 'public',
+          table: 'analysis_progress', 
+          filter: `analysis_id=eq.${analysisId}`,
+        },
+        (payload) => {
+          console.log('📨 Received UPDATE progress payload:', payload);
+          // Handle updates the same way
+          const newProgress = payload.new;
+          if (newProgress && typeof newProgress.progress_percent === 'number') {
+            setProgress(newProgress.progress_percent);
+            const readableStage = newProgress.message || 
+                                (newProgress.stage || 'Processing...').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            setCurrentFactor(readableStage);
+            setEducationalTip(newProgress.educational_content || 'Analyzing factor...');
+            console.log("✅ UPDATE progress applied:", newProgress.progress_percent + '%');
           }
         }
       )
       .subscribe((status) => {
         console.log('📡 Subscription status:', status);
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Successfully subscribed to real-time progress updates');
+        } else if (status === 'CLOSED') {
+          console.warn('⚠️ Subscription closed - attempting to reconnect...');
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('❌ Subscription error - please check RLS policies');
+        }
       });
 
     // Clean up the subscription when the component unmounts
