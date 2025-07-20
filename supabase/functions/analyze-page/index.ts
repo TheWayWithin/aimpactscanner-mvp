@@ -3,6 +3,7 @@ import { corsHeaders } from '../_shared/cors.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { AnalysisEngine } from './lib/AnalysisEngine.ts'
 import { CircuitBreaker } from './lib/CircuitBreaker.ts'
+import { TierManager } from './lib/TierManager.ts'
 
 serve(async (req) => {
   // Handle CORS
@@ -11,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    console.log('=== REAL ANALYSIS PHASE A START - VERSION 2025-07-19-DEBUG ===');
+    console.log('=== COFFEE TIER ANALYSIS START - VERSION 2025-07-21 ===');
     
     const requestBody = await req.json();
     const { url, userId, analysisId } = requestBody;
@@ -34,6 +35,34 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
     
     console.log('Supabase client created');
+
+    // Initialize tier manager and validate access
+    const tierManager = new TierManager(supabase);
+    const accessCheck = await tierManager.validateAnalysisAccess(userId);
+    
+    console.log('🔍 Tier access check:', accessCheck);
+    
+    // Return tier-specific response if access denied
+    if (!accessCheck.allowed) {
+      console.log('❌ Analysis blocked - tier limit reached');
+      
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: accessCheck.message,
+          tier: accessCheck.tier,
+          upgradeRequired: accessCheck.upgradeRequired,
+          remainingAnalyses: accessCheck.remainingAnalyses,
+          subscriptionExpired: accessCheck.subscriptionExpired
+        }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    console.log(`✅ Analysis approved for ${accessCheck.tier} tier user`);
     
     // Initialize Analysis Engine with Circuit Breaker
     const analysisEngine = new AnalysisEngine();
@@ -160,6 +189,17 @@ serve(async (req) => {
     }
     
     console.log('Analysis completed successfully');
+    
+    // Record usage analytics and increment counters
+    console.log('📊 Recording usage analytics...');
+    await tierManager.recordUsage({
+      userId: userId,
+      analysisId: analysisId,
+      tier: accessCheck.tier,
+      analysisType: 'phase_a',
+      processingTime: analysisResult.processing_time_ms,
+      success: true
+    });
     
     // Final progress update
     await supabase
