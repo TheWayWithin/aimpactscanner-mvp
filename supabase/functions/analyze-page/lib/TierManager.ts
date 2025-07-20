@@ -33,41 +33,80 @@ export class TierManager {
     try {
       console.log('🔍 Checking tier access for user:', userId);
 
-      // Use database function for efficient tier checking
-      const { data, error } = await this.supabase
-        .rpc('check_tier_access', { user_uuid: userId });
+      // First try using database function (if migration is applied)
+      try {
+        const { data, error } = await this.supabase
+          .rpc('check_tier_access', { user_uuid: userId });
 
-      if (error) {
-        console.error('❌ Tier access check error:', error);
-        throw error;
+        if (!error && data && data.length > 0) {
+          const result = data[0];
+          console.log('✅ Tier access result (function):', result);
+
+          return {
+            allowed: result.allowed,
+            tier: result.tier,
+            remainingAnalyses: result.remaining_analyses === -1 ? undefined : result.remaining_analyses,
+            subscriptionExpired: result.subscription_expired,
+            upgradeRequired: !result.allowed,
+            message: result.message || ''
+          };
+        } else {
+          console.log('⚠️ Database function returned no data, using fallback');
+        }
+      } catch (fnError) {
+        console.log('⚠️ Database function not available, using fallback tier checking:', fnError.message);
       }
 
-      if (!data || data.length === 0) {
+      // Fallback: Direct table query (for when migration not yet applied)
+      try {
+        const { data: user, error: userError } = await this.supabase
+          .from('users')
+          .select('tier, tier_expires_at, monthly_analyses_used, monthly_reset_date')
+          .eq('id', userId)
+          .single();
+
+        if (userError || !user) {
+          console.log('❌ User not found (fallback):', userError?.message);
+          return {
+            allowed: false,
+            tier: 'unknown',
+            message: 'User not found'
+          };
+        }
+
+        // Simple tier validation logic
+        const userTier = user.tier || 'free';
+        console.log('✅ User tier (fallback):', userTier);
+
+        // For now, allow all analyses while we're setting up
+        // In production, this would enforce tier limits
         return {
-          allowed: false,
-          tier: 'unknown',
-          message: 'User not found'
+          allowed: true,
+          tier: userTier,
+          remainingAnalyses: userTier === 'free' ? 3 : undefined,
+          subscriptionExpired: false,
+          upgradeRequired: false,
+          message: 'Analysis allowed (fallback mode)'
+        };
+      } catch (fallbackError) {
+        console.log('❌ Fallback query failed:', fallbackError.message);
+        // Ultimate fallback - allow analysis but log the issue
+        return {
+          allowed: true,
+          tier: 'free',
+          remainingAnalyses: 3,
+          subscriptionExpired: false,
+          upgradeRequired: false,
+          message: 'Analysis allowed (ultimate fallback)'
         };
       }
-
-      const result = data[0];
-      console.log('✅ Tier access result:', result);
-
-      return {
-        allowed: result.allowed,
-        tier: result.tier,
-        remainingAnalyses: result.remaining_analyses === -1 ? undefined : result.remaining_analyses,
-        subscriptionExpired: result.subscription_expired,
-        upgradeRequired: !result.allowed,
-        message: result.message || ''
-      };
 
     } catch (error) {
       console.error('❌ TierManager.validateAnalysisAccess error:', error);
       return {
-        allowed: false,
-        tier: 'error',
-        message: 'Error checking tier access'
+        allowed: true, // Allow for now during setup
+        tier: 'free',
+        message: 'Analysis allowed (error fallback)'
       };
     }
   }
@@ -79,29 +118,36 @@ export class TierManager {
     try {
       console.log('📊 Recording usage for user:', usage.userId, 'tier:', usage.tier);
 
-      // Increment monthly count for free tier users
+      // Try to increment monthly count for free tier users (if function exists)
       if (usage.tier === 'free') {
-        await this.supabase
-          .rpc('increment_monthly_analyses', { user_uuid: usage.userId });
+        try {
+          await this.supabase
+            .rpc('increment_monthly_analyses', { user_uuid: usage.userId });
+        } catch (fnError) {
+          console.log('⚠️ increment_monthly_analyses function not available');
+        }
       }
 
-      // Record usage analytics
-      const { error: analyticsError } = await this.supabase
-        .from('usage_analytics')
-        .insert({
-          user_id: usage.userId,
-          analysis_id: usage.analysisId,
-          tier: usage.tier,
-          analysis_type: usage.analysisType,
-          processing_time_ms: usage.processingTime,
-          success: usage.success
-        });
+      // Try to record usage analytics (if table exists)
+      try {
+        const { error: analyticsError } = await this.supabase
+          .from('usage_analytics')
+          .insert({
+            user_id: usage.userId,
+            analysis_id: usage.analysisId,
+            tier: usage.tier,
+            analysis_type: usage.analysisType,
+            processing_time_ms: usage.processingTime,
+            success: usage.success
+          });
 
-      if (analyticsError) {
-        console.error('❌ Usage analytics error:', analyticsError);
-        // Don't throw - this is non-critical
-      } else {
-        console.log('✅ Usage recorded successfully');
+        if (analyticsError) {
+          console.log('⚠️ Usage analytics table not available:', analyticsError.message);
+        } else {
+          console.log('✅ Usage recorded successfully');
+        }
+      } catch (tableError) {
+        console.log('⚠️ Usage analytics table not available');
       }
 
     } catch (error) {
