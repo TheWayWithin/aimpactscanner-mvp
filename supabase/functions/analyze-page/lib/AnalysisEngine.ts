@@ -539,16 +539,22 @@ export class AnalysisEngine {
       const evidence = [];
       const recommendations = [];
       
-      // Clean HTML for text analysis
-      const cleanContent = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      // Clean HTML and remove JSON-LD structured data to avoid false positives
+      let cleanContent = content
+        .replace(/<script[^>]*type=["']application\/ld\+json["'][^>]*>.*?<\/script>/gis, '') // Remove JSON-LD
+        .replace(/<script[^>]*>.*?<\/script>/gis, '') // Remove other scripts
+        .replace(/<style[^>]*>.*?<\/style>/gis, '') // Remove styles
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
       
-      // Author detection patterns
+      // More specific author detection patterns
       const authorPatterns = [
-        /by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/gi,
-        /author[:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/gi,
-        /written\s+by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/gi,
-        /created\s+by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/gi,
-        /@([A-Za-z][A-Za-z0-9_]+)/g, // Social handles
+        /(?:^|\s)by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})(?:\s|$|[,.!?])/gi,
+        /author:\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})(?:\s|$|[,.!?])/gi,
+        /written\s+by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})(?:\s|$|[,.!?])/gi,
+        /created\s+by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})(?:\s|$|[,.!?])/gi,
+        /posted\s+by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})(?:\s|$|[,.!?])/gi,
       ];
       
       const foundAuthors = new Set();
@@ -558,9 +564,15 @@ export class AnalysisEngine {
         for (const match of matches) {
           if (match[1]) {
             const author = match[1].trim();
-            // Filter out common false positives
-            if (!author.match(/^(the|and|or|but|with|from|about|news|blog|post|article|page|site|home|contact|login|register)$/i)) {
-              foundAuthors.add(author);
+            // Enhanced false positive filtering
+            const falsePositives = /^(the|and|or|but|with|from|about|news|blog|post|article|page|site|home|contact|login|register|context|type|json|data|schema|website|company|business|service|content|information|details|policy|terms|conditions|copyright|reserved|rights|all|some|other|more|less|most|best|top|new|old|first|last|next|previous|back|forward|up|down|left|right|here|there|now|then|today|yesterday|tomorrow|this|that|these|those|what|when|where|why|how|who|which|each|every|any|all|none|one|two|three|four|five|search|find|help|support|faq|guide|tutorial|example|demo|test|sample|null|undefined|true|false|yes|no|ok|error|success|failure|loading|wait|please|thank|thanks|welcome|hello|goodbye|see|view|read|click|link|url|http|https|www|com|org|net|edu|gov|mil|int|eu|co|uk|de|fr|es|it|jp|cn|in|au|ca|br|ru|kr|mx|tr|za|se|no|dk|fi|nl|be|at|ch|pl|cz|sk|hu|ro|bg|hr|si|ee|lv|lt|lu|mt|cy|ie|pt|gr|is|li|mc|sm|va|ad|md|by|ua|rs|me|mk|al|ba|xk|calculator|finance|financial|money|dollar|cost|price|rate|percent|calculation)$/i;
+            
+            if (!falsePositives.test(author) && author.length >= 2 && author.length <= 50) {
+              // Additional validation: must look like a real name
+              const namePattern = /^[A-Z][a-z]+(?:\s+[A-Z][a-z]*\.?){0,3}$/;
+              if (namePattern.test(author)) {
+                foundAuthors.add(author);
+              }
             }
           }
         }
@@ -693,7 +705,7 @@ export class AnalysisEngine {
       );
       
       if (hasContactPage) {
-        score += 40;
+        score += 60; // Increased base score - contact page is fundamental
         evidence.push('Contact page link found');
       }
       
@@ -702,16 +714,42 @@ export class AnalysisEngine {
       const emailMatches = content.match(emailPattern);
       
       if (emailMatches && emailMatches.length > 0) {
-        score += 30;
+        score += 25; // Bonus for email availability
         evidence.push(`${emailMatches.length} email contact(s) found`);
       }
       
-      // Check for phone numbers
+      // Check for phone numbers (international support)
       const phonePatterns = [
+        // Tel links
         /tel:[+\d\-\(\)\s]+/gi,
+        
+        // US formats
         /\(\d{3}\)\s*\d{3}-\d{4}/g,
         /\d{3}-\d{3}-\d{4}/g,
-        /\+\d{1,3}\s*\d{3,}/g
+        /\d{3}\.\d{3}\.\d{4}/g,
+        
+        // International formats with country codes
+        /\+\d{1,4}[\s\-]?\(?\d{1,4}\)?[\s\-]?\d{1,4}[\s\-]?\d{1,4}[\s\-]?\d{0,4}/g,
+        
+        // UK formats
+        /\b(?:\+44\s?|0)(?:\d{2}\s?\d{4}\s?\d{4}|\d{3}\s?\d{3}\s?\d{4}|\d{4}\s?\d{6})/g,
+        
+        // European formats
+        /\b(?:\+33|0)\s?[1-9](?:[\s\.-]?\d{2}){4}/g, // France
+        /\b(?:\+49|0)\s?\d{2,4}[\s\/-]?\d{2,8}/g,    // Germany
+        /\b(?:\+39|0)\s?\d{2,4}[\s\/-]?\d{6,8}/g,    // Italy
+        
+        // Australia/NZ
+        /\b(?:\+61|0)\s?[2-478]\s?\d{4}\s?\d{4}/g,   // Australia
+        /\b(?:\+64|0)\s?[2-9]\s?\d{3}\s?\d{4}/g,     // New Zealand
+        
+        // Asian formats
+        /\b(?:\+81|0)\s?\d{1,4}[\s\-]?\d{1,4}[\s\-]?\d{4}/g, // Japan
+        /\b(?:\+86|0)\s?1[3-9]\d[\s\-]?\d{4}[\s\-]?\d{4}/g,  // China mobile
+        /\b(?:\+91|0)\s?[6-9]\d{9}/g,                         // India
+        
+        // General fallback for phone-like patterns with context
+        /\b(?:phone|tel|call|mobile|cell|fax)\s*:?\s*[\+\d\(\)\s\-\.]{7,20}/gi
       ];
       
       let phoneCount = 0;
@@ -723,20 +761,49 @@ export class AnalysisEngine {
       }
       
       if (phoneCount > 0) {
-        score += 20;
+        score += 15; // Bonus for phone availability  
         evidence.push(`${phoneCount} phone contact(s) found`);
       }
       
-      // Check for physical address indicators
+      // Check for physical address indicators (international support)
       const addressPatterns = [
-        /\d+\s+[A-Za-z0-9\s]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Way|Court|Ct|Place|Pl)/i,
-        /\d{5}(?:-\d{4})?/g // ZIP codes
+        // US street addresses (number + street name + suffix)
+        /\b\d+\s+[A-Za-z][A-Za-z\s]{2,30}(?:Street|St\.?|Avenue|Ave\.?|Road|Rd\.?|Boulevard|Blvd\.?|Drive|Dr\.?|Lane|Ln\.?|Way|Court|Ct\.?|Place|Pl\.?|Circle|Cir\.?|Parkway|Pkwy\.?)\b/i,
+        
+        // UK/International street addresses (number + street name + suffix)
+        /\b\d+\s+[A-Za-z][A-Za-z\s]{2,30}(?:Street|Road|Lane|Close|Drive|Avenue|Way|Place|Gardens?|Square|Crescent|Terrace|Grove|Rise|View|Park|Hill|Green|Court|Mews|Walk|Row|Gate|Bridge|Cross|End|Side|Vale|Fields?|Heath|Common|Mill|Farm|House|Cottage|Manor|Lodge|Hall|Tower|Centre|Center)\b/i,
+        
+        // Postal codes in context (US ZIP, UK, Canada, etc.)
+        /\b(?:zip|postal|post|mail|address|location|office|headquarters|hq|mailing)\s*:?\s*(?:\d{5}(?:-\d{4})?|[A-Z]\d[A-Z]\s*\d[A-Z]\d|[A-Z]{1,2}\d{1,2}[A-Z]?\s*\d[A-Z]{2}|[A-Z]\d{4}|[A-Z]{2}\d{2}\s*\d[A-Z]{2})\b/gi,
+        
+        // International postal code formats
+        /\b[A-Za-z\s]{2,25},\s*(?:[A-Z]{2}\s+\d{5}(?:-\d{4})?|[A-Z]\d[A-Z]\s*\d[A-Z]\d|[A-Z]{1,2}\d{1,2}[A-Z]?\s*\d[A-Z]{2}|[A-Z]\d{4}|[A-Z]{2}\d{2}\s*\d[A-Z]{2}|\d{4,5})\b/i,
+        
+        // PO Box addresses (international variations)
+        /\b(?:P\.?O\.?\s*Box|Post(?:al)?\s*Box|Box|Postbox|Boîte\s*Postale|Casella\s*Postale|Apartado|Postfach)\s+\d+/i,
+        
+        // Address with context keywords (international)
+        /\b(?:address|location|office|headquarters|hq|visit\s*us|find\s*us|our\s*office|head\s*office|registered\s*office|correspondence|mail\s*to|send\s*to|ship\s*to|billing|delivery)\s*:?\s*[A-Za-z0-9\s,.-]{10,80}(?:Street|St|Road|Rd|Lane|Ln|Avenue|Ave|Drive|Dr|Boulevard|Blvd|Place|Pl|Close|Way|Square|Crescent|Terrace|Grove|Rise|View|Park|Hill|Green|Court|Mews|Walk|Row|Gate|Bridge|Cross|End|Side|Vale|Fields?|Heath|Common|Mill|Farm|House|Cottage|Manor|Lodge|Hall|Tower|Centre|Center|Straße|Str|Gasse|Platz|Weg|Allee|Ring|Damm|Ufer|Berg|Tal|Hof|Markt|Kirchgasse|Hauptstraße|Rue|Avenue|Boulevard|Place|Impasse|Allée|Quai|Pont|Via|Corso|Piazza|Viale|Largo|Vicolo|Strada|Calle|Plaza|Avenida|Paseo|Carrera|Rua|Praça|Travessa|Alameda|Estrada)/i,
+        
+        // Country-specific formats
+        /\b[A-Za-z\s]{2,25},\s*(?:UK|United\s*Kingdom|England|Scotland|Wales|Ireland|Canada|Australia|Germany|France|Italy|Spain|Netherlands|Belgium|Switzerland|Austria|Sweden|Norway|Denmark|Finland|Poland|Czech|Slovakia|Hungary|Portugal|Greece|Turkey|Japan|Korea|Singapore|Malaysia|Thailand|India|China|Brazil|Mexico|Argentina|Chile|Colombia|Peru|Ecuador|Venezuela|South\s*Africa|Egypt|Morocco|Nigeria|Kenya|Ghana|Israel|UAE|Saudi\s*Arabia|Qatar|Kuwait|Bahrain|Oman|Jordan|Lebanon|Cyprus|Malta|Luxembourg|Lithuania|Latvia|Estonia|Slovenia|Croatia|Serbia|Bulgaria|Romania|Ukraine|Russia|Belarus|Kazakhstan)\b/i
       ];
       
-      const hasAddress = addressPatterns.some(pattern => pattern.test(content));
-      if (hasAddress) {
+      let addressFound = false;
+      let addressDetails = [];
+      
+      for (const pattern of addressPatterns) {
+        const matches = content.match(pattern);
+        if (matches && matches.length > 0) {
+          addressFound = true;
+          // Don't expose actual addresses for privacy
+          addressDetails.push(`${matches.length} address indicator(s)`);
+        }
+      }
+      
+      if (addressFound) {
         score += 10;
-        evidence.push('Address information detected');
+        evidence.push(`Address information detected: ${addressDetails.join(', ')}`);
       }
       
       // Provide recommendations based on score
@@ -839,11 +906,21 @@ export class AnalysisEngine {
         recommendations.push('Add an H1 tag for the main page topic');
       }
       
-      // Check hierarchy logic
+      // Enhanced hierarchy analysis with structure quality
       let hierarchyScore = 0;
       let lastLevel = 0;
       let hierarchyBreaks = 0;
+      let structureIssues = 0;
       
+      // Count heading levels using simple approach
+      let h1Count = 0, h2Count = 0, h3Count = 0;
+      for (const heading of headings) {
+        if (heading.level === 1) h1Count++;
+        else if (heading.level === 2) h2Count++;
+        else if (heading.level === 3) h3Count++;
+      }
+      
+      // Check for level skipping
       for (const heading of headings) {
         if (lastLevel === 0) {
           lastLevel = heading.level;
@@ -857,14 +934,39 @@ export class AnalysisEngine {
         lastLevel = heading.level;
       }
       
-      if (hierarchyBreaks === 0) {
+      // Analyze heading distribution quality
+      const totalHeadings = headings.length;
+      const h3Percentage = Math.round((h3Count / totalHeadings) * 100);
+      
+      // Check for structural issues
+      if (h3Percentage > 70) {
+        structureIssues++;
+        evidence.push('⚠ ' + h3Percentage + '% of headings are H3 (suggests poor content organization)');
+        recommendations.push('Consider promoting some H3s to H2 for better section structure');
+      }
+      
+      if (h2Count > 8) {
+        structureIssues++;
+        evidence.push('⚠ ' + h2Count + ' H2 sections may indicate overly fragmented content');
+        recommendations.push('Consider grouping related H2 sections under broader topics');
+      }
+      
+      // Calculate hierarchy score based on structure quality
+      if (hierarchyBreaks === 0 && structureIssues === 0) {
         hierarchyScore = 25;
-        evidence.push('Proper heading hierarchy maintained');
+        evidence.push('Excellent heading hierarchy and structure');
+      } else if (hierarchyBreaks === 0 && structureIssues === 1) {
+        hierarchyScore = 20;
+        evidence.push('Good hierarchy with minor structural issues');
+      } else if (hierarchyBreaks === 0 && structureIssues >= 2) {
+        hierarchyScore = 15;
+        evidence.push('Hierarchy maintained but structure needs improvement');
       } else {
-        hierarchyScore = Math.max(0, 25 - (hierarchyBreaks * 5));
-        evidence.push(`${hierarchyBreaks} hierarchy breaks found`);
+        hierarchyScore = Math.max(5, 25 - (hierarchyBreaks * 5) - (structureIssues * 3));
+        evidence.push(hierarchyBreaks + ' hierarchy breaks and ' + structureIssues + ' structural issues found');
         recommendations.push('Fix heading hierarchy (don\'t skip levels, e.g., H1→H3)');
       }
+      
       score += hierarchyScore;
       
       // Check heading content quality
@@ -880,14 +982,25 @@ export class AnalysisEngine {
         recommendations.push('Shorten headings for better scannability');
       }
       
-      // Check for content structure
+      // Check for content structure balance
       const totalHeadings = headings.length;
-      if (totalHeadings >= 3) {
+      if (totalHeadings >= 3 && totalHeadings <= 15) {
         score += 25;
         evidence.push(`${totalHeadings} headings provide good content structure`);
+      } else if (totalHeadings > 15 && totalHeadings <= 25) {
+        score += 20;
+        evidence.push(`${totalHeadings} headings provide detailed structure`);
+        recommendations.push('Consider consolidating some headings for better readability');
+      } else if (totalHeadings > 25) {
+        score += 15;
+        evidence.push(`${totalHeadings} headings may be excessive for content organization`);
+        recommendations.push('Simplify heading structure - too many headings can hurt readability');
+      } else if (totalHeadings === 2) {
+        score += 15;
+        recommendations.push('Add more headings to improve content structure');
       } else {
         score += 10;
-        recommendations.push('Add more headings to improve content structure');
+        recommendations.push('Add proper heading structure for better content organization');
       }
       
       evidence.unshift(`Heading structure: ${headings.map(h => `H${h.level}`).join(', ')}`);
@@ -1471,13 +1584,21 @@ export class AnalysisEngine {
       
       evidence.push(`Word count: ${wordCount} words`);
       
-      // Score based on word count ranges
-      if (wordCount >= 1500) {
-        score = 100;
-        evidence.push('Comprehensive content length');
+      // Detect page type for contextual scoring
+      const isUtilityPage = /calculator|tool|converter|generator|checker|analyzer|validator|form/i.test(content);
+      const isArticlePage = /<article>|blog|tutorial|guide|how-to|step-by-step/i.test(content);
+      
+      // Score based on word count ranges with context awareness
+      if (wordCount >= 2000) {
+        score = isArticlePage ? 100 : 85;
+        evidence.push(isArticlePage ? 'Comprehensive content length' : 'Very detailed content (may be excessive for utility pages)');
+        if (!isArticlePage) recommendations.push('Consider if all content is necessary for user task completion');
+      } else if (wordCount >= 1500) {
+        score = isArticlePage ? 95 : 80;
+        evidence.push(isArticlePage ? 'Excellent content depth' : 'Detailed content (good for complex utilities)');
       } else if (wordCount >= 1000) {
-        score = 90;
-        evidence.push('Good content depth');
+        score = isUtilityPage ? 90 : 85;
+        evidence.push(isUtilityPage ? 'Good content depth for utility page' : 'Good content depth');
       } else if (wordCount >= 600) {
         score = 75;
         evidence.push('Adequate content length');
@@ -1507,12 +1628,20 @@ export class AnalysisEngine {
         recommendations.push('Break up long sentences for better readability');
       }
       
-      // Check for content structure indicators
-      const paragraphs = cleanContent.split(/\n\s*\n/).filter(p => p.trim().length > 50);
-      if (paragraphs.length >= 3) {
-        evidence.push(`${paragraphs.length} substantial paragraphs detected`);
-      } else if (wordCount > 300) {
+      // Check for content structure indicators (improved for HTML)
+      const pTagMatches = content.match(/<p[^>]*>([^<]+|<[^/p][^>]*>[^<]*<\/[^>]*>)*<\/p>/gi) || [];
+      const substantialParagraphs = pTagMatches.filter(p => {
+        const textContent = p.replace(/<[^>]*>/g, '').trim();
+        return textContent.length > 50;
+      });
+      
+      if (substantialParagraphs.length >= 3) {
+        evidence.push(substantialParagraphs.length + ' substantial paragraphs detected');
+      } else if (wordCount > 400) {
         recommendations.push('Break content into more paragraphs for better structure');
+        if (substantialParagraphs.length <= 1) {
+          evidence.push('⚠ Content appears to lack paragraph structure');
+        }
       }
       
       return {
