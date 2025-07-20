@@ -28,7 +28,10 @@
     "test:playwright": "npx playwright test",
     "test:playwright:ui": "npx playwright test --ui",
     "test:playwright:debug": "npx playwright test --debug",
-    "test:playwright:report": "npx playwright show-report"
+    "test:playwright:report": "npx playwright show-report",
+    "verify:migration": "node scripts/verify-coffee-tier-migration.js",
+    "verify:steps": "node scripts/verify-step-by-step.js",
+    "setup:coffee-tier": "node scripts/verify-coffee-tier-migration.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.51.0",
