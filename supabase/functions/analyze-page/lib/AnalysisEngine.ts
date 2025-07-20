@@ -47,12 +47,29 @@ export class AnalysisEngine {
       const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
       const title = titleMatch ? titleMatch[1].trim() : '';
       
-      // Extract meta description
-      const metaMatch = html.match(/<meta[^>]*name=["\']description["\'][^>]*content=["\']([^"']*)["\'][^>]*>/i);
-      const metaDescription = metaMatch ? metaMatch[1].trim() : '';
+      // Extract meta description - try multiple patterns
+      let metaDescription = '';
       
-      // Extract basic content (simplified)
-      const content = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      // Standard meta description
+      let metaMatch = html.match(/<meta[^>]*name=["\']description["\'][^>]*content=["\']([^"']*)["\'][^>]*>/i);
+      if (!metaMatch) {
+        // Try reversed order (content before name)
+        metaMatch = html.match(/<meta[^>]*content=["\']([^"']*)["\'][^>]*name=["\']description["\'][^>]*>/i);
+      }
+      if (!metaMatch) {
+        // Try with property instead of name (Open Graph)
+        metaMatch = html.match(/<meta[^>]*property=["\']og:description["\'][^>]*content=["\']([^"']*)["\'][^>]*>/i);
+      }
+      if (!metaMatch) {
+        // Try Twitter description
+        metaMatch = html.match(/<meta[^>]*name=["\']twitter:description["\'][^>]*content=["\']([^"']*)["\'][^>]*>/i);
+      }
+      
+      metaDescription = metaMatch ? metaMatch[1].trim() : '';
+      
+      // Extract content while preserving structured data
+      // Keep script tags for structured data analysis, then clean for content analysis
+      const content = html; // Keep full HTML for structured data detection
       
       console.log(`✅ Page data extracted - Title: "${title.substring(0, 50)}...", Meta: "${metaDescription.substring(0, 50)}..."`);
       
@@ -112,7 +129,7 @@ export class AnalysisEngine {
       
       // Factor 3: Meta Description (AI.1.3) - Content analysis  
       await updateProgress(3, 'Meta Description Quality', 'Evaluating your meta description for search snippet optimization and user engagement factors.');
-      const metaResult = await this.analyzeMetaDescription(pageData.metaDescription);
+      const metaResult = await this.analyzeMetaDescription(pageData.metaDescription, pageData.title);
       factors.push(metaResult);
       
       // Factor 4: Author Information (A.2.1) - Content analysis
@@ -266,21 +283,21 @@ export class AnalysisEngine {
         evidence.push(`Title length: ${length} characters`);
         evidence.push(`Title: "${title}"`);
         
-        // Length scoring (optimal: 50-60 chars)
+        // Length scoring (optimal: 50-60 chars, but be more generous for clear titles)
         if (length >= 50 && length <= 60) {
           score += 40; // Optimal length
           evidence.push('Title length is optimal for search results');
         } else if (length >= 40 && length <= 70) {
-          score += 30; // Good length
-          evidence.push('Title length is acceptable');
+          score += 35; // Good length
+          evidence.push('Title length is good for search results');
         } else if (length >= 30 && length <= 80) {
-          score += 20; // Okay length
-          evidence.push('Title length could be optimized');
-          if (length < 40) recommendations.push('Consider making title longer for better keyword coverage');
-          if (length > 70) recommendations.push('Consider shortening title to prevent truncation in search results');
+          score += 25; // Acceptable length
+          evidence.push('Title length is acceptable');
+          if (length < 50) recommendations.push('Consider making title longer for better keyword coverage');
+          if (length > 60) recommendations.push('Consider shortening title to prevent truncation in search results');
         } else {
-          score += 10; // Poor length
-          evidence.push('Title length is not optimal');
+          score += 15; // Poor length
+          evidence.push('Title length needs optimization');
           if (length < 30) recommendations.push('Title is too short - add more descriptive keywords');
           if (length > 80) recommendations.push('Title is too long - will be truncated in search results');
         }
@@ -291,28 +308,44 @@ export class AnalysisEngine {
         const wordCount = title.split(/\s+/).length;
         const hasCommonWords = /\b(how|what|why|best|guide|tips|complete|ultimate|2024|2025)\b/i.test(title);
         
-        if (wordCount >= 4 && wordCount <= 12) {
-          score += 20;
+        // Base scoring for descriptive content
+        if (wordCount >= 3 && wordCount <= 12) {
+          score += 25; // Good base score for descriptive titles
           evidence.push('Good word count for readability');
         } else {
-          score += 10;
-          if (wordCount < 4) recommendations.push('Add more descriptive words to title');
+          score += 15;
+          if (wordCount < 3) recommendations.push('Add more descriptive words to title');
           if (wordCount > 12) recommendations.push('Simplify title for better readability');
         }
         
-        if (hasNumbers) {
+        // Brand presence (common in good titles)
+        const hasBrand = /[-|:]\s*[A-Z][a-zA-Z]+/.test(title) || /[A-Z][a-zA-Z]+\s*[-|:]/.test(title);
+        if (hasBrand) {
           score += 15;
+          evidence.push('Includes brand name for recognition');
+        }
+        
+        // Descriptive keywords (better than generic power words)
+        const hasDescriptiveWords = /\b(calculators?|tools?|free|online|guides?|services?|apps?|platforms?|solutions?)\b/i.test(title);
+        if (hasDescriptiveWords) {
+          score += 15;
+          evidence.push('Contains descriptive, relevant keywords');
+        }
+        
+        // Engagement elements (bonus, not required)
+        if (hasNumbers) {
+          score += 10;
           evidence.push('Includes numbers for specificity');
         }
         
         if (hasSpecialChars) {
-          score += 10;
+          score += 8;
           evidence.push('Uses engaging special characters');
         }
         
         if (hasCommonWords) {
-          score += 15;
-          evidence.push('Contains high-value keywords');
+          score += 12;
+          evidence.push('Contains high-value engagement keywords');
         }
         
         // Cap at 100
@@ -364,7 +397,7 @@ export class AnalysisEngine {
   }
 
   // Factor Implementation: Meta Description (AI.1.3)
-  private async analyzeMetaDescription(metaDescription: string): Promise<FactorResult> {
+  private async analyzeMetaDescription(metaDescription: string, pageTitle?: string): Promise<FactorResult> {
     const startTime = Date.now();
     
     try {
@@ -376,8 +409,16 @@ export class AnalysisEngine {
       if (!metaDescription) {
         score = 0;
         evidence.push('No meta description found');
+        evidence.push('Meta descriptions improve click-through rates from search results');
+        
+        // Enhanced recommendations based on context
         recommendations.push('Add a meta description between 150-160 characters');
-        recommendations.push('Include target keywords and call-to-action');
+        recommendations.push('Include your main value proposition and target keywords');
+        recommendations.push('End with a call-to-action to encourage clicks');
+        if (pageTitle) {
+          recommendations.push(`Consider expanding on your title: "${pageTitle.substring(0, 50)}..."`);
+        }
+        recommendations.push('Meta descriptions directly impact search result appearance');
       } else {
         const length = metaDescription.length;
         evidence.push(`Meta description length: ${length} characters`);
@@ -498,6 +539,9 @@ export class AnalysisEngine {
       const evidence = [];
       const recommendations = [];
       
+      // Clean HTML for text analysis
+      const cleanContent = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      
       // Author detection patterns
       const authorPatterns = [
         /by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/gi,
@@ -510,7 +554,7 @@ export class AnalysisEngine {
       const foundAuthors = new Set();
       
       for (const pattern of authorPatterns) {
-        const matches = content.matchAll(pattern);
+        const matches = cleanContent.matchAll(pattern);
         for (const match of matches) {
           if (match[1]) {
             const author = match[1].trim();
@@ -910,24 +954,60 @@ export class AnalysisEngine {
         confidence = 95;
         evidence.push(`${jsonLdData.length} JSON-LD structured data block(s) found`);
         
-        // Check for common schemas
-        const schemas = jsonLdData.flatMap(item => {
-          if (Array.isArray(item)) return item.map(i => i['@type']).filter(Boolean);
-          return item['@type'] ? [item['@type']] : [];
-        });
+        // Check for common schemas (including nested structures)
+        const schemas = [];
+        
+        const extractSchemas = (obj) => {
+          if (!obj) return;
+          
+          if (Array.isArray(obj)) {
+            obj.forEach(extractSchemas);
+          } else if (typeof obj === 'object') {
+            if (obj['@type']) {
+              if (Array.isArray(obj['@type'])) {
+                schemas.push(...obj['@type']);
+              } else {
+                schemas.push(obj['@type']);
+              }
+            }
+            
+            // Check @graph property (common in complex structures)
+            if (obj['@graph']) {
+              extractSchemas(obj['@graph']);
+            }
+            
+            // Recursively check other object properties for nested schemas
+            Object.values(obj).forEach(value => {
+              if (typeof value === 'object') {
+                extractSchemas(value);
+              }
+            });
+          }
+        };
+        
+        jsonLdData.forEach(extractSchemas);
         
         const uniqueSchemas = [...new Set(schemas)];
         if (uniqueSchemas.length > 0) {
           score += 30;
-          evidence.push(`Schemas: ${uniqueSchemas.join(', ')}`);
+          evidence.push(`${uniqueSchemas.length} schema types found: ${uniqueSchemas.join(', ')}`);
+          
+          // Bonus for multiple schema types (comprehensive implementation)
+          if (uniqueSchemas.length >= 4) {
+            score += 20;
+            evidence.push('Comprehensive multi-schema implementation');
+          } else if (uniqueSchemas.length >= 2) {
+            score += 10;
+            evidence.push('Multiple schema types implemented');
+          }
         }
         
         // Bonus for high-value schemas
-        const valuableSchemas = ['Article', 'BlogPosting', 'Person', 'Organization', 'WebSite', 'FAQPage', 'Product', 'Event'];
-        const hasValuableSchema = uniqueSchemas.some(schema => valuableSchemas.includes(schema));
-        if (hasValuableSchema) {
-          score += 20;
-          evidence.push('Contains high-value schema types');
+        const valuableSchemas = ['Article', 'BlogPosting', 'Person', 'Organization', 'WebSite', 'FAQPage', 'Product', 'Event', 'BreadcrumbList', 'ItemList', 'CollectionPage'];
+        const foundValuableSchemas = uniqueSchemas.filter(schema => valuableSchemas.includes(schema));
+        if (foundValuableSchemas.length > 0) {
+          score += Math.min(foundValuableSchemas.length * 5, 20); // 5 points per valuable schema, max 20
+          evidence.push(`High-value schemas: ${foundValuableSchemas.join(', ')}`);
         }
       }
       
@@ -1020,31 +1100,71 @@ export class AnalysisEngine {
       let structuredData = [];
       
       if (jsonLdMatches) {
+        console.log(`🔍 Found ${jsonLdMatches.length} JSON-LD scripts for FAQ analysis`);
         for (const match of jsonLdMatches) {
           try {
             const scriptContent = match.replace(/<script[^>]*>|<\/script>/gi, '').trim();
             const parsed = JSON.parse(scriptContent);
-            structuredData.push(parsed);
+            
+            // Handle both single objects and arrays
+            if (Array.isArray(parsed)) {
+              structuredData.push(...parsed);
+            } else {
+              structuredData.push(parsed);
+            }
           } catch (e) {
-            // Ignore invalid JSON-LD for FAQ analysis
+            console.log('⚠️ Invalid JSON-LD in FAQ analysis:', e.message);
           }
         }
       }
       
-      // Check for FAQ schema in structured data
-      const faqSchema = structuredData.find(item => item['@type'] === 'FAQPage');
+      console.log(`📊 FAQ Analysis: Found ${structuredData.length} structured data items`);
+      structuredData.forEach((item, index) => {
+        console.log(`📋 Item ${index}: @type = ${item['@type']}`);
+      });
+      
+      // Check for FAQ schema in structured data (handle various formats)
+      let faqSchema = structuredData.find(item => item['@type'] === 'FAQPage');
+      
+      // Also check within array items if main item has @graph
+      if (!faqSchema) {
+        for (const item of structuredData) {
+          if (item['@graph'] && Array.isArray(item['@graph'])) {
+            faqSchema = item['@graph'].find(subItem => subItem['@type'] === 'FAQPage');
+            if (faqSchema) break;
+          }
+        }
+      }
       if (faqSchema) {
         score += 50;
         evidence.push('FAQPage schema detected');
+        console.log(`✅ FAQ Schema found with mainEntity: ${!!faqSchema.mainEntity}`);
         
         if (faqSchema.mainEntity && Array.isArray(faqSchema.mainEntity)) {
           const questionCount = faqSchema.mainEntity.length;
           score += 30;
           evidence.push(`${questionCount} structured questions found`);
+          console.log(`📝 ${questionCount} questions in FAQ schema`);
           
-          if (questionCount >= 3) {
-            score += 20;
+          // Enhanced scoring for comprehensive FAQ implementations
+          if (questionCount >= 10) {
+            score += 30; // Bonus for extensive FAQ (10+ questions)
+            evidence.push('Extensive FAQ implementation');
+          } else if (questionCount >= 5) {
+            score += 25; // Good implementation (5-9 questions)
             evidence.push('Comprehensive FAQ content');
+          } else if (questionCount >= 3) {
+            score += 20; // Basic implementation (3-4 questions)
+            evidence.push('Good FAQ content');
+          }
+          
+          // Additional bonus for quality indicators
+          const hasDetailedAnswers = faqSchema.mainEntity.some(q => 
+            q.acceptedAnswer && q.acceptedAnswer.text && q.acceptedAnswer.text.length > 100
+          );
+          if (hasDetailedAnswers) {
+            score += 10;
+            evidence.push('Detailed, comprehensive answers detected');
           }
         }
       }
@@ -1074,30 +1194,58 @@ export class AnalysisEngine {
       }
       score += Math.min(htmlFaqScore, 30);
       
-      // Check for question words
+      // Check for question patterns in FAQ context (more strict)
       const questionWords = ['what', 'why', 'how', 'when', 'where', 'who'];
       const questionPattern = new RegExp(`\\b(${questionWords.join('|')})\\b.*\\?`, 'gi');
       const questionMatches = content.match(questionPattern);
       
-      if (questionMatches && questionMatches.length >= 3) {
-        score += 20;
-        evidence.push(`${questionMatches.length} question patterns in content`);
-      } else if (questionMatches && questionMatches.length > 0) {
-        score += 10;
-        evidence.push(`${questionMatches.length} question pattern(s) in content`);
+      // Only count questions if they appear in FAQ-like context or sufficient quantity
+      let contextualQuestions = 0;
+      
+      if (questionMatches) {
+        // Check if questions appear near FAQ indicators
+        const faqContextWords = ['faq', 'frequently', 'asked', 'question', 'answer', 'help', 'support'];
+        const faqContextPattern = new RegExp(`\\b(${faqContextWords.join('|')})\\b`, 'gi');
+        const hasNearbyFaqContext = faqContextPattern.test(content);
+        
+        if (hasNearbyFaqContext || questionMatches.length >= 5) {
+          // Either FAQ context exists OR many questions (suggesting FAQ-like content)
+          contextualQuestions = questionMatches.length;
+          
+          if (contextualQuestions >= 5) {
+            score += 20;
+            evidence.push(`${contextualQuestions} question patterns in FAQ-like context`);
+          } else if (contextualQuestions >= 3) {
+            score += 15;
+            evidence.push(`${contextualQuestions} question patterns detected`);
+          } else {
+            score += 5;
+            evidence.push(`${contextualQuestions} question pattern(s) in content`);
+          }
+        } else {
+          // Questions found but no FAQ context - likely incidental content
+          evidence.push(`${questionMatches.length} incidental question(s) found (not FAQ context)`);
+        }
       }
       
       // Provide recommendations based on score
       if (score === 0) {
         evidence.push('No FAQ content detected');
-        recommendations.push('Add FAQ section to address common user questions');
+        recommendations.push('Consider adding FAQ section to address common user questions');
         recommendations.push('Implement FAQPage structured data for better AI understanding');
-        recommendations.push('Include question-answer pairs relevant to your content');
+        recommendations.push('Include question-answer pairs relevant to your specific domain');
         recommendations.push('Use clear question formats (What, Why, How, etc.)');
+      } else if (score < 30) {
+        // Low score - likely incidental questions, not real FAQ
+        recommendations.push('Current questions appear to be incidental rather than structured FAQ');
+        recommendations.push('Consider creating dedicated FAQ section with common user questions');
+        recommendations.push('Add FAQPage structured data if you implement FAQ content');
+        recommendations.push('Ensure FAQ answers are comprehensive and helpful');
       } else if (score < 70) {
         recommendations.push('Expand FAQ content with more comprehensive questions');
         recommendations.push('Add structured data markup for existing FAQ content');
         recommendations.push('Ensure answers are detailed and helpful');
+        recommendations.push('Consider organizing FAQ by categories or topics');
       } else {
         evidence.push('Excellent FAQ implementation');
       }
@@ -1148,16 +1296,37 @@ export class AnalysisEngine {
       const imageMatches = content.match(imagePattern) || [];
       
       if (imageMatches.length === 0) {
+        // No images found - this could be good or indicate missed opportunities
+        // Score based on content type analysis
+        const isLikelyArticle = content.includes('<article>') || 
+                               content.includes('article') || 
+                               content.match(/<h[1-6][^>]*>/gi)?.length > 3;
+        
+        let noImageScore = 75; // Default neutral score
+        let noImageConfidence = 70; // Lower confidence since no analysis performed
+        const noImageEvidence = ['No images found on page'];
+        const noImageRecommendations = [];
+        
+        if (isLikelyArticle) {
+          noImageScore = 60; // Articles typically benefit from images
+          noImageRecommendations.push('Consider adding relevant images to enhance content engagement');
+          noImageRecommendations.push('Images can improve user experience and AI understanding');
+          noImageEvidence.push('Page appears to be article-style content that could benefit from images');
+        } else {
+          noImageScore = 80; // Simple pages may not need images
+          noImageEvidence.push('Page type may not require images');
+        }
+        
         return {
           factor_id: 'M.2.3',
           factor_name: 'Image Alt Text Analysis',
           pillar: 'M',
           phase: 'instant',
-          score: 100, // No images means no accessibility issues
-          confidence: 100,
+          score: noImageScore,
+          confidence: noImageConfidence,
           weight: 1.0,
-          evidence: ['No images found on page'],
-          recommendations: [],
+          evidence: noImageEvidence,
+          recommendations: noImageRecommendations,
           processing_time_ms: Date.now() - startTime
         };
       }
