@@ -31,7 +31,10 @@
     "test:playwright:report": "npx playwright show-report",
     "verify:migration": "node scripts/verify-coffee-tier-migration.js",
     "verify:steps": "node scripts/verify-step-by-step.js",
-    "setup:coffee-tier": "node scripts/verify-coffee-tier-migration.js"
+    "setup:coffee-tier": "node scripts/verify-coffee-tier-migration.js",
+    "deploy:functions": "npx supabase functions deploy analyze-page && npx supabase functions deploy create-checkout-session && npx supabase functions deploy stripe-webhook",
+    "deploy:production": "npm run build && npm run deploy:functions",
+    "coffee:status": "node scripts/verify-step-by-step.js && echo '\n🎯 Coffee Tier Status: Ready for Production Revenue Generation!'"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.51.0",
