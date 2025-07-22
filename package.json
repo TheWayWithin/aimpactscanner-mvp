@@ -27,6 +27,9 @@
     "test:summary": "node tests/test-summary.js",
     "test:playwright": "npx playwright test",
     "test:playwright:ui": "npx playwright test --ui",
+    "coffee:test": "node scripts/test-coffee-tier-stripe.js",
+    "coffee:status": "node scripts/verify-coffee-tier-migration.js",
+    "deploy:functions": "supabase functions deploy --no-verify-jwt",
     "test:playwright:debug": "npx playwright test --debug",
     "test:playwright:report": "npx playwright show-report",
     "verify:migration": "node scripts/verify-coffee-tier-migration.js",
@@ -34,7 +37,9 @@
     "setup:coffee-tier": "node scripts/verify-coffee-tier-migration.js",
     "deploy:functions": "npx supabase functions deploy analyze-page && npx supabase functions deploy create-checkout-session && npx supabase functions deploy stripe-webhook",
     "deploy:production": "npm run build && npm run deploy:functions",
-    "coffee:status": "node scripts/verify-step-by-step.js && echo '\n🎯 Coffee Tier Status: Ready for Production Revenue Generation!'"
+    "coffee:status": "node scripts/verify-step-by-step.js && echo '\n🎯 Coffee Tier Status: Ready for Production Revenue Generation!'",
+    "coffee:test": "node scripts/test-coffee-tier-stripe.js",
+    "coffee:setup-guide": "cat scripts/setup-stripe-test-mode.md"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.51.0",

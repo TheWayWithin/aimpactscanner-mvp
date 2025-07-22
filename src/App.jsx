@@ -108,6 +108,14 @@ function App() {
                 alert(`Analysis error: ${invokeError.message}`);
             } else {
                 console.log('Analysis completed via Edge Function:', data);
+                console.log('Analysis Response Details:', JSON.stringify(data, null, 2));
+                
+                // Show success message to user
+                if (data && data.success) {
+                    alert(`Analysis completed! Tier: ${data.tier}, Remaining: ${data.remainingAnalyses}`);
+                } else {
+                    alert('Analysis completed, but response format unexpected. Check console for details.');
+                }
             }
         }).catch(error => {
             console.error('Analysis error:', error);
