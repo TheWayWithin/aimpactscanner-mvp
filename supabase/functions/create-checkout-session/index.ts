@@ -70,10 +70,8 @@ serve(async (req) => {
         },
         body: new URLSearchParams({
           email: user.email,
-          metadata: JSON.stringify({
-            user_id: userId,
-            tier: tier
-          })
+          'metadata[user_id]': userId,
+          'metadata[tier]': tier
         })
       });
 
