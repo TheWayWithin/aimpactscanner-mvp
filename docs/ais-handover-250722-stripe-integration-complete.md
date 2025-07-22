@@ -83,14 +83,14 @@ VITE_SUPABASE_URL="https://pdmtvkcxnqysujnpcnyh.supabase.co"
 VITE_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 
 # Stripe (newly configured)
-VITE_STRIPE_PUBLISHABLE_KEY="pk_test_51KSrA8IiC84gpR8HQigkan8leo0CZH17LZ79UekwG6WNs2pVjPdzvleqk1PMehsSqAeE7Du9MAuJnCjw9KvOrYgZ00lKwEIPEU"
-VITE_STRIPE_COFFEE_PRICE_ID="price_1RnS6tIiC84gpR8HClA4uC1a"
+VITE_STRIPE_PUBLISHABLE_KEY="pk_test_[YOUR_ACTUAL_PUBLISHABLE_KEY]"
+VITE_STRIPE_COFFEE_PRICE_ID="price_[YOUR_ACTUAL_PRICE_ID]"
 ```
 
 ### **Backend Configuration (Supabase Edge Functions Secrets)**
 ```bash
-STRIPE_SECRET_KEY="sk_test_51KSrA8IiC84gpR8Hr5xam5CY8DBaO59GCk7dBjD8cvMiLq7fboBDPS2veb8AqH5j8VMJQgkmhMj7zGUCVzAMSvYI009Df0JVX0"
-STRIPE_WEBHOOK_SECRET="whsec_5Jh6bZ9fmhZYDcwyOUJD0jRLuQFr8isj"
+STRIPE_SECRET_KEY="sk_test_[YOUR_ACTUAL_SECRET_KEY]"
+STRIPE_WEBHOOK_SECRET="whsec_[YOUR_ACTUAL_WEBHOOK_SECRET]"
 SUPABASE_URL="https://pdmtvkcxnqysujnpcnyh.supabase.co"
 SUPABASE_SERVICE_ROLE_KEY="[existing service role key]"
 ```
@@ -98,9 +98,9 @@ SUPABASE_SERVICE_ROLE_KEY="[existing service role key]"
 ### **Stripe Dashboard Configuration**
 - **Account**: Aisearchmastery (test mode enabled)
 - **Product**: AImpactScanner Coffee Tier ($5.00 USD Monthly)
-- **Price ID**: `price_1RnS6tIiC84gpR8HClA4uC1a`
+- **Price ID**: `price_[YOUR_ACTUAL_PRICE_ID]`
 - **Webhook Endpoint**: `https://pdmtvkcxnqysujnpcnyh.supabase.co/functions/v1/stripe-webhook`
-- **Customer ID Format**: `cus_SivTcMrisNrOwu` (example from working test)
+- **Customer ID Format**: `cus_[EXAMPLE_CUSTOMER_ID]` (example from working test)
 
 ---
 
@@ -122,10 +122,10 @@ npm run test:summary    # Overall system status
 4. **Monitor webhooks**: Supabase Dashboard → Edge Functions → stripe-webhook → Logs
 
 ### **Test User Information**
-- **User ID**: `e8fda207-946e-48dc-87c4-909cfde3f543`
-- **Email**: `jamie.watters.mail@icloud.com`
+- **User ID**: `[EXAMPLE_USER_ID]`
+- **Email**: `[TEST_EMAIL_ADDRESS]`
 - **Current Tier**: `coffee` (upgraded successfully)
-- **Stripe Customer**: `cus_SivTcMrisNrOwu`
+- **Stripe Customer**: `cus_[EXAMPLE_CUSTOMER_ID]`
 
 ---
 
