@@ -29,7 +29,6 @@
     "test:playwright:ui": "npx playwright test --ui",
     "coffee:test": "node scripts/test-coffee-tier-stripe.js",
     "coffee:status": "node scripts/verify-coffee-tier-migration.js",
-    "deploy:functions": "supabase functions deploy --no-verify-jwt",
     "test:playwright:debug": "npx playwright test --debug",
     "test:playwright:report": "npx playwright show-report",
     "verify:migration": "node scripts/verify-coffee-tier-migration.js",

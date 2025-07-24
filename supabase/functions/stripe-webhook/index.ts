@@ -21,9 +21,19 @@ serve(async (req) => {
     
     console.log('Webhook secret configured:', !!STRIPE_WEBHOOK_SECRET);
     
-    // Temporarily disable signature verification for testing
-    // TODO: Implement proper HMAC verification for production
-    console.log('Webhook signature check temporarily disabled for testing');
+    // Verify webhook signature for security
+    if (!STRIPE_WEBHOOK_SECRET) {
+      console.error('Webhook secret not configured - rejecting request');
+      return new Response('Webhook secret not configured', { status: 500 });
+    }
+    
+    const isValidSignature = await verifyStripeSignature(body, signature, STRIPE_WEBHOOK_SECRET);
+    if (!isValidSignature) {
+      console.error('Invalid webhook signature');
+      return new Response('Invalid signature', { status: 401 });
+    }
+    
+    console.log('Webhook signature verified successfully');
     
     // Parse the event
     const event = JSON.parse(body);
@@ -80,19 +90,56 @@ async function verifyStripeSignature(
   secret: string
 ): Promise<boolean> {
   try {
-    // Simple signature verification for demo
-    // In production, use proper Stripe signature verification
+    // Parse Stripe signature header
     const elements = signature.split(',');
     const timestamp = elements.find(e => e.startsWith('t='))?.split('=')[1];
     const signatureHash = elements.find(e => e.startsWith('v1='))?.split('=')[1];
     
     if (!timestamp || !signatureHash) {
+      console.error('Missing timestamp or signature hash');
       return false;
     }
     
-    // For demo purposes, we'll accept any signature
-    // In production, implement proper HMAC verification
-    console.log('Webhook signature verified (demo mode)');
+    // Check timestamp to prevent replay attacks (within 5 minutes)
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const webhookTimestamp = parseInt(timestamp, 10);
+    const timeDifference = Math.abs(currentTimestamp - webhookTimestamp);
+    
+    if (timeDifference > 300) { // 5 minutes
+      console.error('Webhook timestamp too old:', timeDifference, 'seconds');
+      return false;
+    }
+    
+    // Create the signed payload string
+    const signedPayload = `${timestamp}.${payload}`;
+    
+    // Compute HMAC-SHA256 signature
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(secret);
+    const messageData = encoder.encode(signedPayload);
+    
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyData,
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    );
+    
+    const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
+    const computedSignature = Array.from(new Uint8Array(signatureBuffer))
+      .map(byte => byte.toString(16).padStart(2, '0'))
+      .join('');
+    
+    // Compare signatures using constant-time comparison
+    if (computedSignature !== signatureHash) {
+      console.error('Signature mismatch');
+      console.error('Expected:', signatureHash);
+      console.error('Computed:', computedSignature);
+      return false;
+    }
+    
+    console.log('Webhook signature verified successfully');
     return true;
     
   } catch (error) {
