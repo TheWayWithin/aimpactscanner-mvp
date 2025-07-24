@@ -27,8 +27,6 @@
     "test:summary": "node tests/test-summary.js",
     "test:playwright": "npx playwright test",
     "test:playwright:ui": "npx playwright test --ui",
-    "coffee:test": "node scripts/test-coffee-tier-stripe.js",
-    "coffee:status": "node scripts/verify-coffee-tier-migration.js",
     "test:playwright:debug": "npx playwright test --debug",
     "test:playwright:report": "npx playwright show-report",
     "verify:migration": "node scripts/verify-coffee-tier-migration.js",
