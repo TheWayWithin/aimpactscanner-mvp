@@ -1,6 +1,5 @@
 [build]
   # Build configuration for React + Vite
-  command = "npm ci && npm run build"
   publish = "dist"
 
 [build.environment]
