@@ -55,12 +55,7 @@ function AnalysisProgress({ analysisId }) {
 
     // Subscribe to real-time changes on the analysis_progress table
     const channel = supabase
-      .channel(`analysis_progress_${analysisId}`, {
-        config: {
-          broadcast: { self: true },
-          presence: { key: analysisId }
-        }
-      })
+      .channel(`analysis_progress_${analysisId}`)
       .on(
         'postgres_changes',
         {
