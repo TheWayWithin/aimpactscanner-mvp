@@ -192,11 +192,11 @@ function App() {
                 console.log('Analysis completed via Edge Function:', data);
                 console.log('Analysis Response Details:', JSON.stringify(data, null, 2));
                 
-                // Show success message to user
+                // Log success message (no popup needed - real-time progress shows completion)
                 if (data && data.success) {
-                    alert(`Analysis completed! Tier: ${data.tier}, Remaining: ${data.remainingAnalyses}`);
+                    console.log(`✅ Analysis completed! Tier: ${data.tier}, Remaining: ${data.remainingAnalyses}`);
                 } else {
-                    alert('Analysis completed, but response format unexpected. Check console for details.');
+                    console.log('Analysis completed, but response format unexpected. Check console for details.');
                 }
             }
         }).catch(error => {
