@@ -211,37 +211,6 @@ function App() {
     }
   };
 
-  const setupDatabase = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke('setup-tables');
-      if (error) {
-        console.error('Database setup error:', error);
-        alert('Database setup failed: ' + error.message);
-      } else {
-        console.log('Database setup successful:', data);
-        alert('Database setup completed successfully!');
-      }
-    } catch (error) {
-      console.error('Database setup error:', error);
-      alert('Database setup failed: ' + error.message);
-    }
-  };
-
-  const diagnoseDatabase = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke('diagnose-db');
-      if (error) {
-        console.error('Database diagnosis error:', error);
-        alert('Database diagnosis failed: ' + error.message);
-      } else {
-        console.log('Database diagnosis:', data);
-        alert('Database diagnosis completed! Check console for details.');
-      }
-    } catch (error) {
-      console.error('Database diagnosis error:', error);
-      alert('Database diagnosis failed: ' + error.message);
-    }
-  };
 
   if (!session) {
     return <Auth />;
@@ -386,22 +355,6 @@ function App() {
           </div>
         )}
 
-        <div className="mt-6 flex space-x-2">
-          <button
-            onClick={diagnoseDatabase}
-            className="font-primary font-semibold py-2 px-4 rounded-md hover:opacity-90 transition-opacity duration-200"
-            style={{ backgroundColor: 'var(--mastery-blue)', color: 'var(--authority-white)' }}
-          >
-            Check Database
-          </button>
-          <button
-            onClick={setupDatabase}
-            className="font-primary font-semibold py-2 px-4 rounded-md hover:opacity-90 transition-opacity duration-200"
-            style={{ backgroundColor: 'var(--framework-black)', color: 'var(--authority-white)' }}
-          >
-            Setup Database
-          </button>
-        </div>
       </main>
       <footer className="brand-footer">
         <p>&copy; 2025 AI Search Mastery. All rights reserved.</p>
