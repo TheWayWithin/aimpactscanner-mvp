@@ -63,6 +63,9 @@ serve(async (req) => {
     // Start analysis with real progress updates
     await updateProgress('initialization', 10, 'Initializing analysis engine...', 'Setting up secure analysis environment...');
     
+    // Brief delay to ensure frontend subscription is ready
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
     // Simulate factor analysis with realistic progress
     const factors = [
       { name: 'HTTPS Security', score: Math.floor(70 + Math.random() * 30) },
@@ -107,8 +110,8 @@ serve(async (req) => {
           processing_time_ms: 150 + Math.floor(Math.random() * 100)
         });
       
-      // Small delay to show real-time progress
-      await new Promise(resolve => setTimeout(resolve, 200));
+      // Delay to show real-time progress and ensure updates propagate
+      await new Promise(resolve => setTimeout(resolve, 800));
     }
     
     await updateProgress('finalization', 95, 'Finalizing results...', 'Calculating overall optimization score...');
