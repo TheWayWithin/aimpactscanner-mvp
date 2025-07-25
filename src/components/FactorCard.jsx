@@ -228,12 +228,12 @@ function FactorCard({ factor, pillarColor }) {
                 Analysis Date
               </span>
               <div className="text-sm font-medium" style={{ color: '#0F172A' }}>
-                {factor.created_at ? new Date(factor.created_at).toLocaleDateString('en-US', {
+                {factor.created_at ? new Intl.DateTimeFormat('en-US', {
                   timeZone: 'America/New_York',
                   month: 'short',
                   day: 'numeric',
                   year: 'numeric'
-                }) : 'Unknown'}
+                }).format(new Date(factor.created_at)) : 'Unknown'}
               </div>
             </div>
             <div>
@@ -241,12 +241,12 @@ function FactorCard({ factor, pillarColor }) {
                 Analysis Time
               </span>
               <div className="text-sm font-medium" style={{ color: '#0F172A' }}>
-                {factor.created_at ? new Date(factor.created_at).toLocaleTimeString('en-US', {
+                {factor.created_at ? new Intl.DateTimeFormat('en-US', {
                   timeZone: 'America/New_York',
                   hour: 'numeric',
                   minute: '2-digit',
                   hour12: true
-                }) + ' ET' : 'Unknown'}
+                }).format(new Date(factor.created_at)) + ' ET' : 'Unknown'}
               </div>
             </div>
           </div>
