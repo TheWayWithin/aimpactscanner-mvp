@@ -10,10 +10,29 @@ function Auth() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    // Validate email before sending
+    if (!email || !email.trim()) {
+      setMessage('Please enter your email address to continue.');
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setMessage('Please enter a valid email address.');
+      return;
+    }
+
     try {
       setLoading(true);
       setMessage('');
-      const { error } = await supabase.auth.signInWithOtp({ email });
+      
+      const { error } = await supabase.auth.signInWithOtp({ 
+        email: email.trim().toLowerCase(),
+        options: {
+          redirectTo: `${window.location.origin}`
+        }
+      });
 
       if (error) {
         throw error;
@@ -57,6 +76,7 @@ function Auth() {
             onChange={(e) => setEmail(e.target.value)}
             aria-label="Email address for sign in"
             disabled={loading}
+            required
           />
           <button
             className="w-full font-primary font-semibold py-2 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
