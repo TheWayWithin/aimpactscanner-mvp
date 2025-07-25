@@ -241,12 +241,27 @@ function FactorCard({ factor, pillarColor }) {
                 Analysis Time
               </span>
               <div className="text-sm font-medium" style={{ color: '#0F172A' }}>
-                {factor.created_at ? new Intl.DateTimeFormat('en-US', {
-                  timeZone: 'America/New_York',
-                  hour: 'numeric',
-                  minute: '2-digit',
-                  hour12: true
-                }).format(new Date(factor.created_at)) + ' ET' : 'Unknown'}
+                {factor.created_at ? (() => {
+                  // Debug: log the original timestamp
+                  console.log('Original timestamp:', factor.created_at);
+                  const date = new Date(factor.created_at);
+                  console.log('Parsed date (UTC):', date.toISOString());
+                  
+                  // Force Eastern Time conversion by subtracting 4 hours (EDT) or 5 hours (EST)
+                  const now = new Date();
+                  const isEDT = now.getTimezoneOffset() < new Date(now.getFullYear(), 0, 1).getTimezoneOffset();
+                  const offsetHours = isEDT ? 4 : 5; // EDT is UTC-4, EST is UTC-5
+                  
+                  const easternTime = new Date(date.getTime() - (offsetHours * 60 * 60 * 1000));
+                  const timeString = easternTime.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                  });
+                  
+                  console.log('Eastern Time:', timeString);
+                  return timeString + ' ET';
+                })() : 'Unknown'}
               </div>
             </div>
           </div>
