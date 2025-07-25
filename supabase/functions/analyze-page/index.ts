@@ -100,7 +100,7 @@ serve(async (req) => {
           analysis_id: analysisId,
           factor_id: `FACTOR.${i + 1}.${i + 1}`,
           factor_name: factor.name,
-          pillar: i < 3 ? 'AI' : i < 6 ? 'Authority' : 'Machine',
+          pillar: i < 3 ? 'AI' : i < 6 ? 'A' : 'M',
           phase: 'instant',
           score: factor.score,
           confidence: 85 + Math.floor(Math.random() * 15),
