@@ -225,10 +225,15 @@ function FactorCard({ factor, pillarColor }) {
           <div className="grid grid-cols-2 gap-4 pt-2 border-t" style={{ borderColor: '#E2E8F0' }}>
             <div>
               <span className="text-xs font-medium" style={{ color: '#64748B' }}>
-                Phase
+                Analysis Date
               </span>
               <div className="text-sm font-medium" style={{ color: '#0F172A' }}>
-                {factor.phase === 'instant' ? 'Phase A (Instant)' : 'Phase B (Background)'}
+                {factor.created_at ? new Date(factor.created_at).toLocaleDateString('en-US', {
+                  timeZone: 'America/New_York',
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric'
+                }) : 'Unknown'}
               </div>
             </div>
             <div>
@@ -236,7 +241,12 @@ function FactorCard({ factor, pillarColor }) {
                 Analysis Time
               </span>
               <div className="text-sm font-medium" style={{ color: '#0F172A' }}>
-                {factor.created_at ? new Date(factor.created_at).toLocaleTimeString() : 'Unknown'}
+                {factor.created_at ? new Date(factor.created_at).toLocaleTimeString('en-US', {
+                  timeZone: 'America/New_York',
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  hour12: true
+                }) + ' ET' : 'Unknown'}
               </div>
             </div>
           </div>
