@@ -137,7 +137,9 @@ serve(async (req) => {
       analysisId,
       factors: factors.length,
       overall_score: overallScore,
-      processing_time_ms: 2000 + factors.length * 200
+      processing_time_ms: 2000 + factors.length * 200,
+      tier: 'coffee',
+      remainingAnalyses: 'unlimited'
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
