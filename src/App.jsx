@@ -6,7 +6,6 @@ import { supabase } from './lib/supabaseClient';
 import Auth from './components/Auth';
 import AnalysisProgress from './components/AnalysisProgress';
 import ResultsDashboard from './components/ResultsDashboard';
-import MockResultsDashboard from './components/MockResultsDashboard';
 import URLInput from './components/URLInput';
 import TierIndicator from './components/TierIndicator';
 import TierSelection from './components/TierSelection';
@@ -313,16 +312,6 @@ function App() {
             Results Dashboard
           </button>
           <button
-            onClick={() => setCurrentView('mock')}
-            className={`px-4 py-2 rounded-md font-semibold transition-colors ${
-              currentView === 'mock' 
-                ? 'bg-yellow-600 text-white' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            Mock Results (Test)
-          </button>
-          <button
             onClick={() => setCurrentView('pricing')}
             className={`px-4 py-2 rounded-md font-semibold transition-colors ${
               currentView === 'pricing' 
@@ -364,10 +353,6 @@ function App() {
 
         {currentView === 'results' && currentAnalysisId && (
           <ResultsDashboard analysisId={currentAnalysisId} />
-        )}
-
-        {currentView === 'mock' && (
-          <MockResultsDashboard />
         )}
 
         {currentView === 'pricing' && (
