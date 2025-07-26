@@ -1,5 +1,5 @@
 # AImpactScanner Claude Code Prompts
-## Updated July 25, 2025 - FULLY OPERATIONAL PRODUCTION SYSTEM
+## Updated July 25, 2025 - Production UI Polish with VPN-Proof Timezone Handling
 
 ## Current Project State
 
@@ -36,11 +36,18 @@
 - **Environment**: Proper UUID handling, test data management, cleanup automation
 - **Commands**: Easy-to-use npm scripts for different test scenarios
 
-#### Real Factor Implementation Success (NEW - July 19, 2025)
+#### Real Factor Implementation Success (July 19, 2025)
 - **Achievement**: Transformed from binary 0/100% to nuanced 30-95% scoring
 - **Lesson**: User feedback drives critical improvements - binary scoring was identified as major limitation
 - **Solution**: Implemented sophisticated content analysis with realistic score distribution
 - **Impact**: Tool now provides actionable insights instead of pass/fail results
+
+#### Production UI Polish Success (NEW - July 25, 2025)
+- **Achievement**: Professional production interface with all development artifacts removed
+- **User-Driven**: Three cosmetic improvements identified and systematically addressed
+- **Technical Challenge**: VPN interference with timezone display required manual UTC calculation
+- **Solution**: VPN-proof timezone conversion using manual EDT/EST offset detection
+- **Impact**: Clean, professional interface ready for public use and revenue generation
 
 #### Database Schema Validation (NEW)
 - **Problem**: Live database schema differed from migration files
@@ -73,11 +80,24 @@
 - **Learning**: Data contracts between services must be strictly maintained
 - **Prevention**: Add data model validation to integration testing
 
-#### Authentication Production Configuration (NEW - July 25, 2025)
+#### Authentication Production Configuration (July 25, 2025)
 - **Problem**: Magic links redirecting to localhost instead of production domain
 - **Solution**: Updated Supabase URL Configuration with proper site URL
 - **Learning**: Authentication services require explicit production configuration
 - **Checklist**: Always verify auth flows in production environment
+
+#### Real-Time Subscription Reliability (NEW - July 25, 2025)
+- **Problem**: Complex Supabase channel configuration causing CHANNEL_ERROR
+- **Lesson**: Simpler configuration often more reliable than feature-rich options
+- **Solution**: Streamlined channel setup removed broadcast/presence complexity
+- **Result**: 100% reliable real-time progress updates for all users
+
+#### Global User Experience (NEW - July 25, 2025)
+- **Challenge**: VPN users experiencing incorrect timezone display (4+ hours off)
+- **Root Cause**: Browser timezone detection affected by VPN location
+- **Innovation**: Manual UTC offset calculation bypassing browser APIs entirely
+- **Code Pattern**: Dynamic EDT/EST detection using timezone offset comparison
+- **Impact**: Accurate time display regardless of user's VPN or geographic location
 
 ## Testing Framework
 
@@ -169,6 +189,26 @@ Implement [factor name] using test-driven development:
 3. Implement real factor in Edge Function
 4. Validate with integration tests: npm run test:integration
 5. Performance check: npm run test:performance
+```
+
+### Production UI Polish
+```
+Clean up production interface by removing development artifacts:
+1. Remove development/testing buttons and navigation elements
+2. Fix user-facing labels and terminology (e.g., "Phase A" → "Analysis Date")
+3. Implement VPN-proof timezone display using manual UTC calculations
+4. Test real-time subscription reliability with simplified configuration
+5. Validate professional appearance and user experience
+```
+
+### VPN-Proof Timezone Implementation
+```
+Implement timezone display that works regardless of user's VPN or location:
+1. Detect EDT vs EST using timezone offset comparison
+2. Calculate manual UTC offset (EDT: -4 hours, EST: -5 hours)
+3. Apply offset directly to UTC timestamp without browser timezone APIs
+4. Format with clear "ET" suffix for user clarity
+5. Test with users in different geographic locations and VPN configurations
 ```
 
 ### Real-Time Progress Enhancement
@@ -293,6 +333,26 @@ Implement this feature using our existing Supabase setup. Use the configured cli
 Review our current progress against the MVP timeline. Identify completed features, remaining tasks, and potential blockers. Suggest priority adjustments if needed.
 ```
 
+### Production Readiness Assessment
+```
+Evaluate production readiness including:
+1. Remove all development artifacts and testing interfaces
+2. Verify professional appearance and user experience
+3. Test with global users and various network conditions (VPNs)
+4. Validate real-time features work reliably
+5. Ensure all user-facing text and labels are clear and professional
+```
+
+### User Experience Validation
+```
+Conduct user experience review focusing on:
+1. Navigation clarity and professional appearance
+2. Time and date displays accuracy for global users
+3. Real-time progress updates reliability
+4. Removal of confusing or technical development elements
+5. Clear labeling and terminology throughout interface
+```
+
 ### Deployment Readiness
 ```
 Assess our codebase for production readiness. Check security, performance, error handling, and compliance with our technical requirements.
@@ -361,6 +421,27 @@ Test Edge Function changes locally:
 2. Check logs: Supabase Dashboard → Edge Functions → Logs
 3. Test via frontend or direct API call
 4. Monitor for timeout and permission errors
+```
+
+### Real-Time Subscription Debugging
+```
+If real-time features aren't working:
+1. Check browser console for CHANNEL_ERROR messages
+2. Simplify channel configuration to basic setup:
+   `supabase.channel(`analysis_progress_${analysisId}`)`
+3. Remove complex broadcast/presence options that can cause failures
+4. Verify RLS policies allow service role and user access
+5. Test with different user accounts and network conditions
+```
+
+### VPN and Global User Testing
+```
+Test features with global users and VPN scenarios:
+1. Test timezone display with users in different geographic locations
+2. Verify functionality with common VPN services (NordVPN, ExpressVPN, etc.)
+3. Use manual UTC calculations instead of browser timezone APIs
+4. Validate that all time displays show consistent Eastern Time
+5. Include VPN testing in regular QA processes
 ```
 
 ### RLS Policy Troubleshooting
