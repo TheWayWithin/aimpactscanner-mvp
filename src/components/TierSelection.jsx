@@ -94,7 +94,7 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
     }
     
     if (currentTier === tier.id) {
-      return 'w-full py-3 px-4 border border-gray-300 rounded-md text-gray-500 bg-gray-100 cursor-not-allowed text-sm font-medium';
+      return 'w-full py-3 px-4 border-2 border-green-500 rounded-md text-green-700 bg-green-50 cursor-default text-sm font-medium flex items-center justify-center';
     }
     
     if (tier.highlight) {
@@ -106,7 +106,14 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
 
   const getButtonText = (tier) => {
     if (tier.comingSoon) return 'Coming Soon';
-    if (currentTier === tier.id) return 'Current Plan';
+    if (currentTier === tier.id) return (
+      <>
+        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+        Active Plan
+      </>
+    );
     if (loading) return 'Processing...';
     return tier.cta;
   };
@@ -122,11 +129,11 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {tiers.map((tier) => (
           <div
             key={tier.id}
-            className={`relative rounded-lg border-2 p-6 transition-all hover:shadow-lg ${
+            className={`relative rounded-lg border-2 p-6 transition-all hover:shadow-lg flex flex-col min-h-[500px] ${
               tier.highlight
                 ? 'border-blue-500 bg-blue-50 transform scale-105'
                 : 'border-gray-200 bg-white'
@@ -134,8 +141,8 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
           >
             {tier.popular && (
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  Most Popular
+                <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap">
+                  Popular
                 </span>
               </div>
             )}
@@ -165,7 +172,7 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
               )}
             </div>
 
-            <ul className="space-y-3 mb-6">
+            <ul className="space-y-3 mb-6 flex-grow">
               {tier.features.map((feature, index) => (
                 <li key={index} className="flex items-start text-sm text-gray-700">
                   <svg
@@ -179,7 +186,9 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  {feature}
+                  <span className="break-words hyphens-auto leading-relaxed">
+                    {feature}
+                  </span>
                 </li>
               ))}
             </ul>
