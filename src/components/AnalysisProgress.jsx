@@ -1,5 +1,5 @@
 AnalysisProgress// src/components/AnalysisProgress.jsx - COMPLETE AND CORRECTED CODE (Final Insight Box Border Fix)
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
 function AnalysisProgress({ analysisId, onAnalysisComplete }) {
@@ -7,6 +7,48 @@ function AnalysisProgress({ analysisId, onAnalysisComplete }) {
   const [currentFactor, setCurrentFactor] = useState('Initializing analysis...');
   const [educationalTip, setEducationalTip] = useState('Launching secure browser environment...'); // Ensure initial tip for display
   const [isCompleted, setIsCompleted] = useState(false); // Track completion to prevent multiple triggers
+  const pollingIntervalRef = useRef(null); // Track fallback polling with ref
+
+  // Fallback polling function when real-time subscription fails
+  const startFallbackPolling = () => {
+    console.log('🔄 Starting fallback polling for progress updates');
+    const pollInterval = setInterval(async () => {
+      try {
+        const { data: latestProgress, error } = await supabase
+          .from('analysis_progress')
+          .select('*')
+          .eq('analysis_id', analysisId)
+          .order('created_at', { ascending: false })
+          .limit(1);
+          
+        if (error) {
+          console.error('❌ Polling error:', error);
+        } else if (latestProgress && latestProgress.length > 0) {
+          const latest = latestProgress[0];
+          console.log('📊 Polling progress update:', latest.progress_percent + '%');
+          
+          setProgress(latest.progress_percent || 0);
+          const readableStage = latest.message || latest.stage || 'Processing...';
+          setCurrentFactor(readableStage);
+          setEducationalTip(latest.educational_content || 'Analyzing...');
+          
+          // Check for completion
+          handleCompletion(latest.progress_percent);
+          
+          // Stop polling if completed
+          if (latest.progress_percent === 100) {
+            console.log('✅ Polling detected completion - stopping fallback polling');
+            clearInterval(pollInterval);
+            pollingIntervalRef.current = null;
+          }
+        }
+      } catch (error) {
+        console.error('❌ Polling exception:', error);
+      }
+    }, 1000); // Poll every 1 second
+    
+    pollingIntervalRef.current = pollInterval;
+  };
 
   // Handle analysis completion with smooth transition
   const handleCompletion = (progressPercent) => {
@@ -70,18 +112,19 @@ function AnalysisProgress({ analysisId, onAnalysisComplete }) {
     checkExistingProgress();
 
     // Subscribe to real-time changes on the analysis_progress table
+    // SIMPLIFIED CONFIGURATION: Based on lessons learned, complex configs cause CHANNEL_ERROR
     const channel = supabase
       .channel(`analysis_progress_${analysisId}`)
       .on(
         'postgres_changes',
         {
-          event: 'INSERT', // Focus on INSERT events for new progress
+          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
           schema: 'public', 
           table: 'analysis_progress',
           filter: `analysis_id=eq.${analysisId}`,
         },
         (payload) => {
-          console.log('📨 Received INSERT progress payload:', payload);
+          console.log('📨 Received progress payload:', payload);
           const newProgress = payload.new;
 
           if (newProgress && typeof newProgress.progress_percent === 'number') {
@@ -104,31 +147,6 @@ function AnalysisProgress({ analysisId, onAnalysisComplete }) {
           }
         }
       )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE', // Also listen for updates
-          schema: 'public',
-          table: 'analysis_progress', 
-          filter: `analysis_id=eq.${analysisId}`,
-        },
-        (payload) => {
-          console.log('📨 Received UPDATE progress payload:', payload);
-          // Handle updates the same way
-          const newProgress = payload.new;
-          if (newProgress && typeof newProgress.progress_percent === 'number') {
-            setProgress(newProgress.progress_percent);
-            const readableStage = newProgress.message || 
-                                (newProgress.stage || 'Processing...').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-            setCurrentFactor(readableStage);
-            setEducationalTip(newProgress.educational_content || 'Analyzing factor...');
-            console.log("✅ UPDATE progress applied:", newProgress.progress_percent + '%');
-            
-            // Check for completion on UPDATE events too
-            handleCompletion(newProgress.progress_percent);
-          }
-        }
-      )
       .subscribe((status) => {
         console.log('📡 Subscription status:', status);
         if (status === 'SUBSCRIBED') {
@@ -136,13 +154,20 @@ function AnalysisProgress({ analysisId, onAnalysisComplete }) {
         } else if (status === 'CLOSED') {
           console.warn('⚠️ Subscription closed - attempting to reconnect...');
         } else if (status === 'CHANNEL_ERROR') {
-          console.error('❌ Subscription error - please check RLS policies');
+          console.error('❌ Subscription error - starting fallback polling');
+          // Start fallback polling if real-time subscription fails
+          startFallbackPolling();
         }
       });
 
-    // Clean up the subscription when the component unmounts
+    // Clean up the subscription and polling when the component unmounts
     return () => {
       supabase.removeChannel(channel);
+      if (pollingIntervalRef.current) {
+        console.log('🧹 Cleaning up fallback polling');
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
     };
   }, [analysisId]);
 
