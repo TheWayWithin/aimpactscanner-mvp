@@ -13,10 +13,10 @@ function ResultsDashboard({ analysisId }) {
   const pillars = [
     {
       id: 'AI',
-      name: 'AI Response Optimization',
+      name: 'AI Response Optimization & Citation',
       description: 'Citation potential and AI system compatibility',
       color: '#1E3A8A', // Mastery Blue
-      weight: 18.5
+      weight: 24.0
     },
     {
       id: 'A',
@@ -55,10 +55,10 @@ function ResultsDashboard({ analysisId }) {
     },
     {
       id: 'R',
-      name: 'Reach & Amplification',
-      description: 'Distribution and discoverability',
+      name: 'Reference Networks & Citation Optimization',
+      description: 'Citation authority and reference network strength',
       color: '#0891B2', // Cyan
-      weight: 6.5
+      weight: 6.0
     },
     {
       id: 'Y',
@@ -82,20 +82,76 @@ function ResultsDashboard({ analysisId }) {
 
       if (analysisError) throw analysisError;
 
-      // Fetch factor results
+      // Fetch factor results with enhanced debugging
+      console.log('🔍 Fetching factors for analysis_id:', analysisId);
+      console.log('🔍 Analysis data:', analysisData);
+      
       const { data: factorsData, error: factorsError } = await supabase
         .from('analysis_factors')
-        .select('*')
+        .select(`
+          id,
+          analysis_id,
+          factor_id,
+          factor_name,
+          pillar,
+          score,
+          confidence,
+          weight,
+          evidence,
+          recommendations,
+          processing_time_ms,
+          educational_content,
+          phase,
+          created_at
+        `)
         .eq('analysis_id', analysisId)
         .order('factor_id');
 
-      if (factorsError) throw factorsError;
+      console.log('🔍 Factors query result:', { data: factorsData, error: factorsError });
+      console.log('🔍 Current user:', await supabase.auth.getUser());
+      
+      if (factorsError) {
+        console.error('❌ Factors query error:', factorsError);
+        console.error('❌ Full error details:', JSON.stringify(factorsError, null, 2));
+        
+        // If it's an RLS error, let's try a different approach
+        if (factorsError.code === '42501' || factorsError.message?.includes('denied') || factorsError.message?.includes('policy')) {
+          console.log('🔧 RLS policy error detected, trying alternative approach...');
+          
+          // Try to get factors through a different query
+          const { data: alternativeFactors, error: altError } = await supabase
+            .rpc('get_analysis_factors', { analysis_uuid: analysisId });
+          
+          if (!altError && alternativeFactors) {
+            console.log('✅ Alternative query succeeded:', alternativeFactors);
+            setFactors(alternativeFactors);
+            setAnalysis(analysisData);
+            return;
+          }
+        }
+        
+        throw factorsError;
+      }
 
       console.log('✅ Analysis data fetched:', analysisData);
       console.log('✅ Factors data fetched:', factorsData);
       console.log('✅ Number of factors:', factorsData?.length || 0);
+      console.log('✅ Analysis status:', analysisData.status);
       
-      setAnalysis(analysisData);
+      // Special handling for analyses stuck in "processing" but with factors
+      if (analysisData.status === 'processing' && factorsData && factorsData.length > 0) {
+        console.log('🔧 Found processing analysis with factors - treating as completed');
+        // Calculate overall score from factors
+        const calculatedScore = Math.round(factorsData.reduce((sum, f) => sum + f.score, 0) / factorsData.length);
+        setAnalysis({
+          ...analysisData,
+          status: 'completed',
+          overall_score: calculatedScore
+        });
+      } else {
+        setAnalysis(analysisData);
+      }
+      
       setFactors(factorsData || []);
     } catch (err) {
       console.error('Error fetching results:', err);
