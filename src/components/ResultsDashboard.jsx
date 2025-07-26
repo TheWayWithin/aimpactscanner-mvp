@@ -91,6 +91,10 @@ function ResultsDashboard({ analysisId }) {
 
       if (factorsError) throw factorsError;
 
+      console.log('✅ Analysis data fetched:', analysisData);
+      console.log('✅ Factors data fetched:', factorsData);
+      console.log('✅ Number of factors:', factorsData?.length || 0);
+      
       setAnalysis(analysisData);
       setFactors(factorsData || []);
     } catch (err) {
