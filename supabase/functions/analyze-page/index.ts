@@ -661,7 +661,7 @@ serve(async (req) => {
       );
       
       // Insert factor result with real analysis data
-      await supabase
+      const insertResult = await supabase
         .from('analysis_factors')
         .insert({
           analysis_id: analysisId,
@@ -677,6 +677,12 @@ serve(async (req) => {
           processing_time_ms: 200 + Math.floor(Math.random() * 100),
           educational_content: `${factor.name} is essential for AI optimization and search visibility.`
         });
+      
+      if (insertResult.error) {
+        console.error(`Error inserting factor ${factor.name}:`, insertResult.error);
+      } else {
+        console.log(`✅ Successfully inserted factor: ${factor.name} (Score: ${factor.score})`);
+      }
       
       // Delay to show real-time progress and ensure updates propagate
       await new Promise(resolve => setTimeout(resolve, 800));
