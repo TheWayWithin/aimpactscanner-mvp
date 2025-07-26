@@ -87,6 +87,12 @@ function App() {
     }
   };
 
+  // Handle analysis completion - automatically navigate to results
+  const handleAnalysisComplete = () => {
+    console.log('✅ Analysis completed - auto-navigating to results dashboard');
+    setCurrentView('results');
+  };
+
   const startAnalysis = async (url) => {
     if (!session || !session.user) {
       console.error("User session not valid to start analysis.");
@@ -309,7 +315,10 @@ function App() {
 
         {currentView === 'analysis' && currentAnalysisId && (
           <div>
-            <AnalysisProgress analysisId={currentAnalysisId} />
+            <AnalysisProgress 
+              analysisId={currentAnalysisId} 
+              onAnalysisComplete={handleAnalysisComplete}
+            />
             {currentUrl && (
               <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                 <p className="text-sm text-blue-800">

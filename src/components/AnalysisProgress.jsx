@@ -2,10 +2,28 @@ AnalysisProgress// src/components/AnalysisProgress.jsx - COMPLETE AND CORRECTED 
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
-function AnalysisProgress({ analysisId }) {
+function AnalysisProgress({ analysisId, onAnalysisComplete }) {
   const [progress, setProgress] = useState(0);
   const [currentFactor, setCurrentFactor] = useState('Initializing analysis...');
   const [educationalTip, setEducationalTip] = useState('Launching secure browser environment...'); // Ensure initial tip for display
+  const [isCompleted, setIsCompleted] = useState(false); // Track completion to prevent multiple triggers
+
+  // Handle analysis completion with smooth transition
+  const handleCompletion = (progressPercent) => {
+    if (progressPercent === 100 && !isCompleted && onAnalysisComplete) {
+      setIsCompleted(true);
+      setCurrentFactor('Analysis Complete!');
+      setEducationalTip('Great work! Your comprehensive analysis is ready. Redirecting to results dashboard...');
+      
+      console.log('🎉 Analysis reached 100% - preparing auto-navigation');
+      
+      // Add a brief delay for user to see completion state before auto-navigation
+      setTimeout(() => {
+        console.log('🔄 Auto-navigating to results dashboard');
+        onAnalysisComplete();
+      }, 2500); // 2.5 second delay for smooth UX
+    }
+  };
 
   useEffect(() => {
     if (!analysisId) {
@@ -41,10 +59,8 @@ function AnalysisProgress({ analysisId }) {
           setCurrentFactor(latest.message || latest.stage || 'Processing...');
           setEducationalTip(latest.educational_content || 'Analyzing...');
           
-          // If analysis is already complete, show that immediately
-          if (latest.progress_percent === 100) {
-            console.log('✅ Analysis already complete - showing final state');
-          }
+          // Check for completion on existing progress
+          handleCompletion(latest.progress_percent);
         }
       } catch (error) {
         console.error('❌ Exception checking existing progress:', error);
@@ -80,6 +96,9 @@ function AnalysisProgress({ analysisId }) {
               stage: readableStage,
               tip: newProgress.educational_content
             });
+            
+            // Check for completion on real-time updates
+            handleCompletion(newProgress.progress_percent);
           } else {
             console.warn('⚠️ Received invalid progress payload:', payload);
           }
@@ -104,6 +123,9 @@ function AnalysisProgress({ analysisId }) {
             setCurrentFactor(readableStage);
             setEducationalTip(newProgress.educational_content || 'Analyzing factor...');
             console.log("✅ UPDATE progress applied:", newProgress.progress_percent + '%');
+            
+            // Check for completion on UPDATE events too
+            handleCompletion(newProgress.progress_percent);
           }
         }
       )
