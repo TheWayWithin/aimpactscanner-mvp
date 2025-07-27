@@ -20,6 +20,8 @@ function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [upgradeMessage, setUpgradeMessage] = useState('');
   const [userTier, setUserTier] = useState('free');
+  const [dashboardData, setDashboardData] = useState(null);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   // Upgrade handler hooks
   const handleUpgradeSuccess = (message) => {
@@ -53,12 +55,23 @@ function App() {
     // Listen for auth state changes (e.g., login, logout)
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       if (session?.user?.id) {
+        // Update login tracking when user signs in
+        try {
+          await supabase.rpc('update_user_tracking', { 
+            user_uuid: session.user.id 
+          });
+        } catch (error) {
+          console.log('Note: Could not update login tracking:', error.message);
+        }
+        
         fetchUserTier(session.user.id);
       } else {
         setUserTier('free');
+        setDashboardData(null);
+        setShowWelcome(false);
       }
     });
 
@@ -66,24 +79,45 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Fetch user tier from database
-  const fetchUserTier = async (userId) => {
+  // Fetch user dashboard data including tier and welcome status
+  const fetchUserDashboardData = async (userId) => {
     try {
+      // Use our new database function to get comprehensive dashboard data
       const { data, error } = await supabase
-        .from('users')
-        .select('tier')
-        .eq('id', userId)
-        .single();
+        .rpc('get_user_dashboard_data', { user_uuid: userId });
 
       if (error) {
-        console.log('User not found in database, defaulting to free tier');
+        console.log('Error fetching dashboard data, using defaults:', error);
         setUserTier('free');
-      } else {
-        setUserTier(data.tier || 'free');
+        setDashboardData(null);
+        setShowWelcome(false);
+      } else if (data && data.length > 0) {
+        const userData = data[0];
+        setUserTier(userData.user_tier || 'free');
+        setDashboardData(userData);
+        
+        // Show welcome for first-time users, but check if already dismissed
+        const welcomeDismissed = localStorage.getItem(`welcome_dismissed_${userId}`);
+        setShowWelcome(userData.is_first_time && !welcomeDismissed);
       }
     } catch (error) {
-      console.error('Error fetching user tier:', error);
+      console.error('Error fetching dashboard data:', error);
       setUserTier('free');
+      setDashboardData(null);
+      setShowWelcome(false);
+    }
+  };
+
+  // Legacy function for backward compatibility
+  const fetchUserTier = async (userId) => {
+    await fetchUserDashboardData(userId);
+  };
+
+  // Handle welcome banner dismissal
+  const handleWelcomeDismiss = () => {
+    if (session?.user?.id) {
+      localStorage.setItem(`welcome_dismissed_${session.user.id}`, 'true');
+      setShowWelcome(false);
     }
   };
 
@@ -248,6 +282,45 @@ function App() {
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
               <span className="text-green-800 font-medium">{upgradeMessage}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Welcome Banner for First-Time Users */}
+        {showWelcome && (
+          <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="flex items-start justify-between">
+              <div className="flex">
+                <svg className="h-6 w-6 text-blue-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10l1.28 10.24a1 1 0 01-.99 1.12H6.71a1 1 0 01-.99-1.12L7 4zM9 9v1m6-1v1" />
+                </svg>
+                <div>
+                  <h3 className="text-blue-900 font-semibold mb-1">Welcome to AImpactScanner! 🎉</h3>
+                  <p className="text-blue-800 text-sm mb-2">
+                    You're ready to optimize your website for AI search engines. Our framework-compliant analysis 
+                    provides evidence-based recommendations to improve your AI search visibility.
+                  </p>
+                  <div className="text-blue-700 text-sm">
+                    <p className="mb-1">
+                      <span className="font-medium">Free Plan:</span> {dashboardData?.monthly_used || 0}/3 analyses used this month
+                    </p>
+                    {userTier === 'free' && (
+                      <p>
+                        <span className="font-medium">Pro Tip:</span> Upgrade to Coffee Tier ($5/month) for unlimited analyses
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={handleWelcomeDismiss}
+                className="text-blue-400 hover:text-blue-600 ml-4"
+                aria-label="Dismiss welcome message"
+              >
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
             </div>
           </div>
         )}
