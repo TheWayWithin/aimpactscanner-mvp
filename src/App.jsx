@@ -82,15 +82,14 @@ function App() {
   // Fetch user dashboard data including tier and welcome status
   const fetchUserDashboardData = async (userId) => {
     try {
-      // Use our new database function to get comprehensive dashboard data
+      // Try new function first, fallback to old method if it fails
       const { data, error } = await supabase
         .rpc('get_user_dashboard_data', { user_uuid: userId });
 
       if (error) {
-        console.log('Error fetching dashboard data, using defaults:', error);
-        setUserTier('free');
-        setDashboardData(null);
-        setShowWelcome(false);
+        console.log('Dashboard function failed, using fallback method:', error);
+        // Fallback to direct user query
+        await fetchUserTierFallback(userId);
       } else if (data && data.length > 0) {
         const userData = data[0];
         setUserTier(userData.user_tier || 'free');
@@ -99,9 +98,47 @@ function App() {
         // Show welcome for first-time users, but check if already dismissed
         const welcomeDismissed = localStorage.getItem(`welcome_dismissed_${userId}`);
         setShowWelcome(userData.is_first_time && !welcomeDismissed);
+      } else {
+        // No data returned, use fallback
+        await fetchUserTierFallback(userId);
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
+      await fetchUserTierFallback(userId);
+    }
+  };
+
+  // Fallback method using direct database query
+  const fetchUserTierFallback = async (userId) => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('tier, created_at')
+        .eq('id', userId)
+        .single();
+
+      if (error) {
+        console.log('User not found in database, defaulting to free tier');
+        setUserTier('free');
+        setDashboardData(null);
+        setShowWelcome(false);
+      } else {
+        setUserTier(data.tier || 'free');
+        
+        // Simple first-time check: created within last 30 minutes
+        const createdTime = new Date(data.created_at);
+        const isFirstTime = (new Date() - createdTime) < (30 * 60 * 1000);
+        const welcomeDismissed = localStorage.getItem(`welcome_dismissed_${userId}`);
+        
+        setDashboardData({ 
+          user_tier: data.tier || 'free',
+          monthly_used: 0,
+          is_first_time: isFirstTime 
+        });
+        setShowWelcome(isFirstTime && !welcomeDismissed);
+      }
+    } catch (error) {
+      console.error('Error in fallback tier fetch:', error);
       setUserTier('free');
       setDashboardData(null);
       setShowWelcome(false);
