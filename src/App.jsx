@@ -12,6 +12,7 @@ import TierSelection from './components/TierSelection';
 import AccountDashboard from './components/AccountDashboard';
 import DiagnosticTest from './components/DiagnosticTest';
 import EnvCheck from './components/EnvCheck';
+import SimpleConnectivityTest from './components/SimpleConnectivityTest';
 import { useUpgrade } from './components/UpgradeHandler';
 
 function App() {
@@ -299,10 +300,17 @@ function App() {
   };
 
 
+  // Debug: Always show session status
+  console.log('App render - Session:', session);
+  console.log('App render - User:', session?.user);
+
   // If no session or session without user, show auth
   if (!session || !session.user || !session.user.id) {
+    console.log('No valid session, showing Auth component');
     return <Auth />;
   }
+
+  console.log('Valid session found, showing main app');
 
   return (
     <div className="aimpactscanner-app-container">
@@ -442,6 +450,7 @@ function App() {
         {currentView === 'input' && (
           <div>
             <EnvCheck />
+            <SimpleConnectivityTest />
             <URLInput onAnalyze={startAnalysis} isAnalyzing={isAnalyzing} />
             <div className="mt-6">
               <DiagnosticTest session={session} />
