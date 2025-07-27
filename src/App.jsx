@@ -5,6 +5,7 @@ import { supabase } from './lib/supabaseClient';
 
 import Auth from './components/Auth';
 import AnalysisProgress from './components/AnalysisProgress';
+import SimpleAnalysisProgress from './components/SimpleAnalysisProgress';
 import ResultsDashboard from './components/ResultsDashboard';
 import URLInput from './components/URLInput';
 import TierIndicator from './components/TierIndicator';
@@ -420,17 +421,11 @@ function App() {
 
         {currentView === 'analysis' && currentAnalysisId && (
           <div>
-            <AnalysisProgress 
-              analysisId={currentAnalysisId} 
+            <SimpleAnalysisProgress 
+              analysisId={currentAnalysisId}
+              url={currentUrl}
               onAnalysisComplete={handleAnalysisComplete}
             />
-            {currentUrl && (
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-800">
-                  <span className="font-medium">Analyzing:</span> {currentUrl}
-                </p>
-              </div>
-            )}
           </div>
         )}
 
