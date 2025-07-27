@@ -10,6 +10,7 @@ import URLInput from './components/URLInput';
 import TierIndicator from './components/TierIndicator';
 import TierSelection from './components/TierSelection';
 import AccountDashboard from './components/AccountDashboard';
+import DiagnosticTest from './components/DiagnosticTest';
 import { useUpgrade } from './components/UpgradeHandler';
 
 function App() {
@@ -438,7 +439,12 @@ function App() {
 
         {/* Content */}
         {currentView === 'input' && (
-          <URLInput onAnalyze={startAnalysis} isAnalyzing={isAnalyzing} />
+          <div>
+            <URLInput onAnalyze={startAnalysis} isAnalyzing={isAnalyzing} />
+            <div className="mt-6">
+              <DiagnosticTest session={session} />
+            </div>
+          </div>
         )}
 
         {currentView === 'analysis' && currentAnalysisId && (
