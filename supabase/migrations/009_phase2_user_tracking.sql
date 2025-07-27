@@ -64,8 +64,8 @@ BEGIN
     LEFT JOIN analyses a ON u.last_analysis_id = a.id
     WHERE u.id = user_uuid;
     
-    -- Check if first-time user (created within last 5 minutes)
-    is_first_time := (user_created_at > NOW() - INTERVAL '5 minutes');
+    -- Check if first-time user (created within last 30 minutes for realistic testing)
+    is_first_time := (user_created_at > NOW() - INTERVAL '30 minutes');
     
     -- Calculate usage percentage for free tier
     IF user_tier = 'free' THEN
