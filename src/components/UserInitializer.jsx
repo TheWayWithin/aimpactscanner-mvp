@@ -20,15 +20,26 @@ function UserInitializer({ session, onUserReady }) {
 
       console.log('Initializing user:', userId, userEmail);
 
-      // First check if user exists
-      const { data: existingUser, error: checkError } = await supabase
+      // Add timeout promise
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('User initialization timeout after 10 seconds')), 10000)
+      );
+
+      // First check if user exists with timeout
+      console.log('Checking if user exists in database...');
+      const checkPromise = supabase
         .from('users')
         .select('id, email, tier, monthly_analyses_used')
         .eq('id', userId)
         .single();
 
+      const { data: existingUser, error: checkError } = await Promise.race([checkPromise, timeoutPromise]);
+
+      console.log('Database check result:', { existingUser, checkError });
+
       if (checkError && checkError.code !== 'PGRST116') {
         // PGRST116 = no rows returned, which is expected for new users
+        console.log('Database check error:', checkError);
         throw checkError;
       }
 
@@ -40,8 +51,8 @@ function UserInitializer({ session, onUserReady }) {
         console.log('User does not exist, creating...');
         setStatus('creating');
 
-        // Create user in database
-        const { data: newUser, error: createError } = await supabase
+        // Create user in database with timeout
+        const createPromise = supabase
           .from('users')
           .insert({
             id: userId,
@@ -53,7 +64,10 @@ function UserInitializer({ session, onUserReady }) {
           .select()
           .single();
 
+        const { data: newUser, error: createError } = await Promise.race([createPromise, timeoutPromise]);
+
         if (createError) {
+          console.log('User creation error:', createError);
           throw createError;
         }
 
@@ -97,12 +111,24 @@ function UserInitializer({ session, onUserReady }) {
         <div className="text-red-800">
           <div className="font-semibold">Account Setup Error</div>
           <div className="text-sm mt-1">{error}</div>
-          <button 
-            onClick={initializeUser}
-            className="mt-2 px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
-          >
-            Try Again
-          </button>
+          <div className="mt-2 space-x-2">
+            <button 
+              onClick={initializeUser}
+              className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+            >
+              Try Again
+            </button>
+            <button 
+              onClick={() => {
+                console.log('Bypassing user initialization - proceeding with default data');
+                setStatus('ready');
+                onUserReady?.({ tier: 'free', monthly_analyses_used: 0 });
+              }}
+              className="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700"
+            >
+              Skip & Continue
+            </button>
+          </div>
         </div>
       </div>
     );
