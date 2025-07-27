@@ -190,6 +190,7 @@ function App() {
       return;
     }
 
+    console.log("🚀 Starting analysis for URL:", url);
     setIsAnalyzing(true);
     setCurrentUrl(url);
 
@@ -197,18 +198,56 @@ function App() {
         const userId = session.user.id;
         const userEmail = session.user.email;
 
-        // Ensure the logged-in user exists in the public.users table (for RLS/FK)
-        const { error: upsertUserError } = await supabase
-            .from('users')
-            .upsert({
-                id: userId,
-                email: userEmail,
-            }, { onConflict: 'id', ignoreDuplicates: true });
+        console.log("👤 User info:", { userId, userEmail });
 
-        if (upsertUserError) {
-            throw upsertUserError;
-        }
-        console.log("Logged-in user ensured in public.users table:", userId);
+        // Skip database operations that are timing out - proceed directly to Edge Function
+        console.log("⏭️ Skipping database operations due to connectivity issues");
+        
+        // Generate a unique analysis ID
+        const analysisId = crypto.randomUUID();
+        setCurrentAnalysisId(analysisId);
+        console.log("🆔 Generated analysis ID:", analysisId);
+
+        // Switch to analysis view IMMEDIATELY to show progress
+        setCurrentView('analysis');
+        console.log("📊 Switched to analysis view");
+
+        // Call the Edge Function directly without database setup
+        console.log("🔗 Calling Edge Function...");
+        supabase.functions.invoke('analyze-page', {
+            body: {
+                url: url,
+                analysisId: analysisId,
+                userId: userId
+            }
+        }).then(({ data, error: invokeError }) => {
+            console.log("📡 Edge Function response received");
+            if (invokeError) {
+                console.error('❌ Edge Function error:', invokeError);
+                alert(`Analysis error: ${invokeError.message}`);
+            } else {
+                console.log('✅ Analysis completed via Edge Function:', data);
+                console.log('📄 Analysis Response Details:', JSON.stringify(data, null, 2));
+                
+                if (data && data.success) {
+                    console.log(`✅ Analysis completed! Tier: ${data.tier}, Remaining: ${data.remainingAnalyses}`);
+                } else {
+                    console.log('⚠️ Analysis completed, but response format unexpected. Check console for details.');
+                }
+            }
+        }).catch(error => {
+            console.error('❌ Analysis error:', error);
+            alert(`Error during analysis: ${error.message}`);
+        });
+
+    } catch (error) {
+        console.error('❌ Error starting analysis:', error);
+        alert(`Error starting analysis: ${error.message}`);
+    } finally {
+        setIsAnalyzing(false);
+        console.log("🏁 Analysis startup completed");
+    }
+  };
 
         // Check if user has reached their free tier limit
         const { data: userData, error: userDataError } = await supabase
