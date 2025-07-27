@@ -7,6 +7,7 @@ import Auth from './components/Auth';
 import AnalysisProgress from './components/AnalysisProgress';
 import SimpleAnalysisProgress from './components/SimpleAnalysisProgress';
 import ResultsDashboard from './components/ResultsDashboard';
+import SimpleResultsDashboard from './components/SimpleResultsDashboard';
 import URLInput from './components/URLInput';
 import TierIndicator from './components/TierIndicator';
 import TierSelection from './components/TierSelection';
@@ -430,7 +431,10 @@ function App() {
         )}
 
         {currentView === 'results' && currentAnalysisId && (
-          <ResultsDashboard analysisId={currentAnalysisId} />
+          <SimpleResultsDashboard 
+            analysisId={currentAnalysisId} 
+            url={currentUrl}
+          />
         )}
 
         {currentView === 'pricing' && (
