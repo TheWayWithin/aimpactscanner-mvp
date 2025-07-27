@@ -46,9 +46,17 @@ function App() {
   useEffect(() => {
     // Fetch the current session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session?.user?.id) {
+      // Validate session has required data
+      if (session && session.user && session.user.id && session.user.email) {
+        setSession(session);
         fetchUserTier(session.user.id);
+      } else if (session) {
+        // Invalid/corrupted session - clear it
+        console.log('Invalid session detected, clearing...');
+        supabase.auth.signOut();
+        setSession(null);
+      } else {
+        setSession(null);
       }
     });
 
@@ -289,7 +297,8 @@ function App() {
   };
 
 
-  if (!session) {
+  // If no session or session without user, show auth
+  if (!session || !session.user || !session.user.id) {
     return <Auth />;
   }
 
@@ -303,7 +312,16 @@ function App() {
         <div className="flex items-center space-x-4">
           <TierIndicator user={session?.user} onUpgrade={handleUpgrade} />
           <button
-            onClick={() => supabase.auth.signOut()}
+            onClick={async () => {
+              await supabase.auth.signOut();
+              // Force clear local state
+              setSession(null);
+              setUserTier('free');
+              setDashboardData(null);
+              setShowWelcome(false);
+              setCurrentAnalysisId(null);
+              setCurrentView('input');
+            }}
             className="text-sm bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded transition-colors"
           >
             Sign Out
