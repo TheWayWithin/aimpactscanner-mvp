@@ -13,6 +13,7 @@ import AccountDashboard from './components/AccountDashboard';
 import DiagnosticTest from './components/DiagnosticTest';
 import EnvCheck from './components/EnvCheck';
 import SimpleConnectivityTest from './components/SimpleConnectivityTest';
+import UserInitializer from './components/UserInitializer';
 import { useUpgrade } from './components/UpgradeHandler';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
   const [userTier, setUserTier] = useState('free');
   const [dashboardData, setDashboardData] = useState(null);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [userReady, setUserReady] = useState(false);
 
   // Upgrade handler hooks
   const handleUpgradeSuccess = (message) => {
@@ -331,6 +333,7 @@ function App() {
               setShowWelcome(false);
               setCurrentAnalysisId(null);
               setCurrentView('input');
+              setUserReady(false);
             }}
             className="text-sm bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded transition-colors"
           >
@@ -339,6 +342,15 @@ function App() {
         </div>
       </header>
       <main className="brand-main-content">
+        {/* User Initialization */}
+        <UserInitializer 
+          session={session} 
+          onUserReady={(userData) => {
+            setUserReady(true);
+            setUserTier(userData.tier || 'free');
+            fetchUserDashboardData(session.user.id);
+          }} 
+        />
         {/* Success Message */}
         {upgradeMessage && (
           <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-4">
