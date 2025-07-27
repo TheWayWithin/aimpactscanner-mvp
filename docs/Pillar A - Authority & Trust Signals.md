@@ -1,23 +1,23 @@
 ---
-title: "MASTERY-AI Framework v3.1 - Pillar A: Authority & Trust Signals"
+title: "MASTERY-AI Framework v3.1.1 - Pillar A: Authority & Trust Signals"
 author: "Jamie Watters"
-version: "3.1.0"
-date: "2025-06-25"
+version: "3.1.1"
+date: "2025-07-03"
 document_type: "framework"
 original_created_date: "2025-06-25"
 status: "draft"
 project: "mastery_framework"
 priority: "high"
 folder_path: "framework_development/"
-related_documents: ["mastery_ai_framework_v3_1_main.md"]
-tags: ["framework", "pillar", "authority", "trust", "credibility", "expertise"]
+related_documents: ["mastery_ai_framework_v3_1_1_main.md"]
+tags: ["framework", "pillar", "authority", "trust", "credibility", "expertise", "3.1.1"]
 description: "Comprehensive specification for Authority & Trust Signals pillar focusing on credibility and expertise validation"
 ---
 
 # Pillar A: Authority & Trust Signals
 ## Foundation for AI System Trust and Citation
 
-**Framework Weight**: 18% (Decreased from 19% in v2.1)  
+**Framework Weight**: 17.9% (Decreased from 19% in v2.1)  
 **Total Atomic Factors**: 15 factors across 3 sub-pillars  
 **Strategic Priority**: High - Critical foundation for AI trust and citation
 
@@ -39,16 +39,16 @@ The enhanced pillar maintains its focus on proven authority building strategies 
 
 The Authority & Trust Signals pillar incorporates three comprehensive sub-pillars that address the complete spectrum of authority and trust signal optimization:
 
-### Sub-Pillar Weight Distribution (18% total pillar weight)
+### Sub-Pillar Weight Distribution (17.9% total pillar weight)
 
 | Sub-Pillar | Name | Weight | Factors | Focus Area |
 |------------|------|--------|---------|------------|
 | **A.1** | Professional Credentials & Expertise | 45% (8.1% framework) | 6 | Formal qualifications and expertise validation |
-| **A.2** | Institutional Authority & Affiliations | 35% (6.3% framework) | 5 | Organizational credibility and associations |
+| **A.2** | Institutional Authority & Affiliations | 35% (6.2% framework) | 5 | Organizational credibility and associations |
 | **A.3** | Trust Signal Optimization | 20% (3.6% framework) | 4 | Transparency and reliability indicators |
 
-**Total Sub-Pillar Weights**: 100%  
-**Total Framework Contribution**: 18%
+**Total Sub-Pillar Weights**: 100.0% (Mathematically Validated)  
+**Framework Weight Allocation**: 17.9% total framework weight
 
 ---
 

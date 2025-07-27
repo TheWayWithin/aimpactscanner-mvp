@@ -9,63 +9,63 @@ function ResultsDashboard({ analysisId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // MASTERY-AI Pillar configuration
+  // Official MASTERY-AI Framework v3.1.1 Pillar configuration
   const pillars = [
     {
       id: 'AI',
       name: 'AI Response Optimization & Citation',
-      description: 'Citation potential and AI system compatibility',
+      description: 'Citation potential and AI system compatibility with MCP integration',
       color: '#1E3A8A', // Mastery Blue
-      weight: 24.0
+      weight: 23.8 // Official framework weight
     },
     {
       id: 'A',
-      name: 'Authority Signals',
+      name: 'Authority & Trust Signals',
       description: 'Credibility and expertise demonstration',
       color: '#059669', // Emerald
-      weight: 16.0
+      weight: 17.9 // Official framework weight
     },
     {
       id: 'M',
-      name: 'Machine Readability',
-      description: 'Technical infrastructure and accessibility',
+      name: 'Machine Readability & Technical Infrastructure',
+      description: 'Technical infrastructure and accessibility with LLMs.txt support',
       color: '#7C2D12', // Orange
-      weight: 15.5
+      weight: 14.6 // Official framework weight
     },
     {
       id: 'S',
       name: 'Semantic Content Quality',
-      description: 'Content depth and relevance',
+      description: 'Content depth and semantic relevance',
       color: '#6366F1', // Indigo
-      weight: 14.0
-    },
-    {
-      id: 'T',
-      name: 'Topical Relevance',
-      description: 'Subject matter alignment and coverage',
-      color: '#DC2626', // Red
-      weight: 12.5
+      weight: 13.9 // Official framework weight
     },
     {
       id: 'E',
-      name: 'Engagement Optimization',
+      name: 'Engagement & User Experience',
       description: 'User interaction and experience quality',
       color: '#7C3AED', // Purple
-      weight: 11.5
+      weight: 10.9 // Official framework weight
+    },
+    {
+      id: 'T',
+      name: 'Topical Expertise & Experience',
+      description: 'Subject matter expertise and experience demonstration',
+      color: '#DC2626', // Red
+      weight: 8.9 // Official framework weight
     },
     {
       id: 'R',
-      name: 'Reference Networks & Citation Optimization',
+      name: 'Reference Networks & Citations',
       description: 'Citation authority and reference network strength',
       color: '#0891B2', // Cyan
-      weight: 6.0
+      weight: 5.9 // Official framework weight
     },
     {
       id: 'Y',
-      name: 'Yield Optimization',
-      description: 'Performance and conversion efficiency',
+      name: 'Yield Optimization & Freshness',
+      description: 'Performance optimization and content freshness',
       color: '#EA580C', // Orange
-      weight: 5.5
+      weight: 4.1 // Official framework weight
     }
   ];
 

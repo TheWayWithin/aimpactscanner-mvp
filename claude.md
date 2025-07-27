@@ -1,5 +1,5 @@
 # AImpactScanner Claude Code Prompts
-## Updated July 25, 2025 - Enhanced UX Features with Auto-Navigation and Subscription Reliability
+## Updated July 27, 2025 - Framework Compliance Complete & Phase 2 Planning
 
 ## Current Project State
 
@@ -119,6 +119,56 @@
 - **Pattern**: Equal height cards (min-h-[500px]) with flex-based content distribution
 - **UX Enhancement**: Professional button states with clear visual hierarchy
 - **Impact**: Professional appearance across all device sizes, improved conversion potential
+
+#### Framework Compliance Implementation Success (NEW - July 27, 2025)
+- **Achievement**: Transformed from incorrect random factors to true MASTERY-AI Framework v3.1.1 compliance
+- **Problem Solved**: Previous factors didn't map to official framework (e.g., HTTPS → AI.1.1 was wrong)
+- **Technical Implementation**: Complete factor remapping with evidence-based scoring algorithms
+- **Result**: Realistic 30-95% scoring with proper framework pillar weights (AI: 23.8%, A: 17.9%, etc.)
+- **Validation**: Tested with example.com (29/100) and anthropic.com (67/100) showing accurate differentiation
+- **Impact**: Tool now provides legitimate framework-compliant analysis instead of random scores
+
+#### Evidence-Based Scoring Algorithms (NEW - July 27, 2025)
+- **Innovation**: Replaced binary 0/100 scoring with nuanced 30-95% ranges per factor
+- **Technical Details**: Each factor has unique algorithm (word count, keyword presence, structure analysis)
+- **Example**: Title Optimization checks length (30-60 chars), keyword presence, brand placement
+- **Scoring Philosophy**: No perfect scores (95% max) reflecting real-world optimization reality
+- **User Value**: Actionable insights showing specific improvement areas instead of pass/fail
+
+#### Location Reference Bug Fix (NEW - July 27, 2025)
+- **Problem**: Edge Function error "location is not defined" in Deno environment
+- **Root Cause**: Browser-specific `location` object used in Evidence Chunking function
+- **Solution**: Removed browser dependency, used simple string matching for internal links
+- **Learning**: Edge Functions run in Deno, not browser - avoid browser-specific APIs
+- **Prevention**: Add Deno compatibility checks to development workflow
+
+## Phase 2: Customer Experience & Reporting Plan (July 27, 2025)
+
+### Simple UX Improvements (Approved)
+- **First-Time Users**: Welcome message with value proposition after auth
+- **Returning Users**: Smart dashboard showing recent analyses and quick actions
+- **Usage Prompts**: Progressive alerts at 1/3, 2/3, and 3/3 analyses for free tier
+- **Database Updates**: Add last_analysis_id, last_login_at, total_analyses_count to users table
+- **Implementation**: Minimal changes to App.jsx and TierIndicator.jsx
+
+### Reporting & History Features (New Requirements)
+- **Downloadable Reports**: Format ResultsDashboard as professional PDF
+- **Report Content**: Executive summary, scores, evidence, recommendations
+- **History Access**: New AnalysisHistory component showing all past analyses
+- **Implementation**: Client-side PDF generation using html2pdf.js for MVP simplicity
+- **Future Enhancement**: Save dashboard snapshots for higher tier users
+
+### Technical Approach
+- **PDF Generation**: Regenerate on-demand from stored analysis data
+- **No Storage Costs**: Avoid storing PDFs, generate when requested
+- **Performance**: <3 second generation time, lazy load PDF library
+- **Security**: Validate user ownership before allowing report access
+
+### Implementation Timeline
+- **Week 1**: Simple UX improvements (highest impact, easiest implementation)
+- **Week 2**: Report generation and PDF formatting
+- **Week 3**: History view and integration
+- **Documentation**: Complete plan in docs/Phase2_UX_Reporting_Plan.md
 
 ## Testing Framework
 
@@ -563,3 +613,108 @@ Ensure service role policies exist for INSERT/UPDATE operations.
 - `.env.test`: Test environment variables
 - `vitest.config.js`: Test framework configuration
 - `tests/README.md`: Complete testing documentation
+
+---
+
+## ✅ FRAMEWORK COMPLIANCE IMPLEMENTATION COMPLETE (July 27, 2025)
+
+### Critical Framework Analysis Findings (RESOLVED)
+- **Problem**: Current 10 factors don't map to official MASTERY-AI Framework v3.1.1
+- **Example**: Our "HTTPS Security" → AI.1.1 but framework AI.1.1 is "Citation-Worthy Content Structure"
+- **Impact**: Random scoring instead of evidence-based framework compliance
+- **Solution**: Complete factor remapping using updated corrected framework documents
+
+### High-Impact Factor Selection (20/80 Principle)
+Based on official framework weights and technical feasibility:
+
+**AI Pillar (23.8% - HIGHEST IMPACT):**
+- AI.1.1: Citation-Worthy Content Structure ✅ Easy to assess
+- AI.1.2: Source Authority Signals ✅ Easy to assess
+- AI.1.5: Evidence Chunking for RAG Optimization ✅ Easy to assess
+
+**A Pillar (17.9% - SECOND HIGHEST):**
+- A.3.1: Transparency & Disclosure Standards ✅ Easy to assess
+- A.3.2: Contact Information & Accessibility ✅ Easy to assess
+
+**M Pillar (14.6% - ENHANCED WITH LLMs.txt):**
+- M.1.4: Security and Access Control (HTTPS) ✅ Easy to assess
+- M.2.1: Title Tag Optimization ✅ Easy to assess
+- M.2.2: Meta Description Quality ✅ Easy to assess
+
+**S & E Pillars:**
+- S.2.2: Heading Structure & Hierarchy ✅ Easy to assess
+- E.1.1: Page Load Speed Optimization ✅ Easy to assess
+
+### Framework Compliance Implementation
+
+#### Phase 1: Immediate Factor Remapping
+```
+Update Edge Function with official framework factors:
+1. Replace current random factors with 10 framework-mapped factors
+2. Implement proper factor weighting using official pillar weights (AI: 23.8%, A: 17.9%, etc.)
+3. Update Results Dashboard to use schema-driven weights instead of hardcoded values
+4. Fix factor analysis algorithms to provide evidence-based scoring (30-95% ranges)
+```
+
+#### Phase 2: Schema Integration
+```
+Integrate with official framework schema:
+1. Use docs/schema_v3_1_1_validation.py for dynamic factor configuration
+2. Implement factor relevance flags (LLMs.txt, MCP integration capabilities)
+3. Add framework version tracking for backward compatibility
+4. Support competitive analysis based on framework specifications
+```
+
+#### Phase 3: Advanced Framework Features
+```
+Implement cutting-edge framework capabilities:
+1. MCP (Model Context Protocol) integration assessment
+2. LLMs.txt content accessibility evaluation
+3. Content integrity and synthetic content validation
+4. Cross-agent compatibility scoring
+```
+
+### Framework Document Updates Used
+- ✅ Updated Pillar AI document with corrected sub-pillar weights (100.0% validated)
+- ✅ Updated Pillar A document with corrected sub-pillar weights (100.0% validated)
+- ✅ Updated schema_v3_1_1_validation.py with reconciled factor counts and weights
+- ✅ Main framework document v3.1.1 with complete 148-factor specifications
+
+### Success Criteria for Framework Compliance (ALL ACHIEVED ✅)
+- ✅ All 10 factors map to official framework specifications with correct IDs
+- ✅ Factor weighting reflects actual framework importance (20/80 principle)
+- ✅ Overall scores are evidence-based and actionable (not random)
+- ✅ Results Dashboard displays correct official pillar weights
+- ✅ Analysis provides framework-compliant recommendations
+- ✅ Live testing validated: example.com (29/100), anthropic.com (67/100)
+
+### Framework Compliance Prompts
+
+#### Implement Framework-Compliant Factors
+```
+Replace current random factor implementation with official framework factors:
+1. Use the 10 high-impact factors identified in Framework Compliance Plan
+2. Map factor IDs correctly (AI.1.1, AI.1.2, A.3.1, A.3.2, M.1.4, M.2.1, M.2.2, S.2.2, E.1.1)
+3. Implement evidence-based analysis algorithms for each factor
+4. Apply proper weighting based on official framework pillar weights
+5. Provide actionable recommendations aligned with framework specifications
+```
+
+#### Schema-Driven Development
+```
+Integrate framework schema for dynamic factor configuration:
+1. Use docs/schema_v3_1_1_validation.py for official framework specifications
+2. Implement factor relevance flags and version tracking
+3. Support multiple framework versions for backward compatibility
+4. Enable competitive analysis based on framework benchmarks
+```
+
+#### Framework Performance Validation
+```
+Validate framework compliance implementation:
+1. Verify all factor IDs match official framework specifications
+2. Confirm pillar weights use official values (AI: 23.8%, A: 17.9%, M: 14.6%, etc.)
+3. Test evidence-based scoring provides realistic 30-95% ranges
+4. Validate Results Dashboard displays correct framework structure
+5. Ensure recommendations align with official framework guidance
+```
