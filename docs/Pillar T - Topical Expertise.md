@@ -1,25 +1,25 @@
 ---
-title: "MASTERY-AI Framework v3.1 - Pillar T: Topical Expertise"
+title: "MASTERY-AI Framework v3.1.1 - Pillar T: Topical Expertise & Experience"
 author: "Jamie Watters"
-version: "3.1.0"
-date: "2025-06-25"
+version: "3.1.1"
+date: "2025-07-03"
 document_type: "framework"
 original_created_date: "2025-06-25"
 status: "draft"
 project: "mastery_framework"
 priority: "high"
 folder_path: "framework_development/"
-related_documents: ["mastery_ai_framework_v3_1_main.md"]
-tags: ["framework", "pillar", "topical_expertise", "subject_matter", "knowledge_depth"]
-description: "Comprehensive specification for Topical Expertise pillar focusing on subject matter authority and knowledge depth"
+related_documents: ["mastery_ai_framework_v3_1_1_main.md"]
+tags: ["framework", "pillar", "expertise", "topical", "experience", "3.1.1"]
+description: "Comprehensive specification for Topical Expertise & Experience pillar focusing on subject matter authority and practical experience"
 ---
 
 # Pillar T: Topical Expertise
 ## Subject Matter Authority and Knowledge Depth
 
-**Framework Weight**: 9% (Decreased from 10% in v2.1)  
-**Total Atomic Factors**: 14 factors across 3 sub-pillars  
-**Strategic Priority**: Medium - Subject matter authority and expertise demonstration
+**Framework Weight**: 8.9% (Decreased from 10% in v2.1)  
+**Total Atomic Factors**: 15 factors across 3 sub-pillars  
+**Strategic Priority**: Medium - Subject matter expertise validation
 
 ---
 
@@ -39,16 +39,16 @@ The pillar's philosophy operates on the principle that comprehensive topical exp
 
 The Topical Expertise pillar incorporates three comprehensive sub-pillars that address the complete spectrum of topical authority and expertise optimization:
 
-### Sub-Pillar Weight Distribution (9% total pillar weight)
+### Sub-Pillar Weight Distribution (8.9% total pillar weight)
 
 | Sub-Pillar | Name | Weight | Factors | Focus Area |
 |------------|------|--------|---------|------------|
 | **T.1** | Subject Matter Depth & Coverage | 50% (4.5% framework) | 6 | Comprehensive topic coverage and knowledge depth |
-| **T.2** | Expertise Demonstration & Validation | 35% (3.15% framework) | 5 | Authority validation and expertise evidence |
-| **T.3** | Topical Authority Building | 15% (1.35% framework) | 3 | Authority development and recognition cultivation |
+| **T.2** | Expertise Demonstration & Validation | 35% (3.1% framework) | 5 | Authority validation and expertise evidence |
+| **T.3** | Topical Authority Building | 15% (1.3% framework) | 3 | Authority development and recognition cultivation |
 
-**Total Sub-Pillar Weights**: 100%  
-**Total Framework Contribution**: 9%
+**Total Sub-Pillar Weights**: 100.0% (Mathematically Validated)  
+**Framework Weight Allocation**: 8.9% total framework weight
 
 ---
 
