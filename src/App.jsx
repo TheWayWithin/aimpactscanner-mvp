@@ -11,6 +11,7 @@ import TierIndicator from './components/TierIndicator';
 import TierSelection from './components/TierSelection';
 import AccountDashboard from './components/AccountDashboard';
 import DiagnosticTest from './components/DiagnosticTest';
+import EnvCheck from './components/EnvCheck';
 import { useUpgrade } from './components/UpgradeHandler';
 
 function App() {
@@ -440,6 +441,7 @@ function App() {
         {/* Content */}
         {currentView === 'input' && (
           <div>
+            <EnvCheck />
             <URLInput onAnalyze={startAnalysis} isAnalyzing={isAnalyzing} />
             <div className="mt-6">
               <DiagnosticTest session={session} />
