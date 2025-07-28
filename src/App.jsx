@@ -191,12 +191,30 @@ function App() {
         } else {
           console.log("✅ Analysis marked as completed for usage tracking");
           
+          // Update user's monthly usage count
+          try {
+            const { error: userError } = await supabase
+              .from('users')
+              .update({
+                monthly_analyses_used: supabase.raw('monthly_analyses_used + 1')
+              })
+              .eq('id', session.user.id);
+
+            if (userError) {
+              console.log("⚠️ Could not update user usage count:", userError.message);
+            } else {
+              console.log("✅ User usage count incremented");
+            }
+          } catch (userUpdateError) {
+            console.log("⚠️ User usage update failed:", userUpdateError.message);
+          }
+          
           // Refresh tier data to show updated usage
           setTimeout(() => {
             if (session?.user?.id) {
               fetchUserDashboardData(session.user.id);
             }
-          }, 1000);
+          }, 1500); // Increased timeout to allow database update
         }
       } catch (error) {
         console.log("⚠️ Analysis completion update failed:", error.message);
@@ -219,9 +237,20 @@ function App() {
       return;
     }
 
-    console.log("🚀 Starting analysis for URL:", url);
+    // Clean up URL formatting
+    let cleanUrl = url.trim();
+    if (cleanUrl.startsWith('https://https//')) {
+      cleanUrl = cleanUrl.replace('https://https//', 'https://');
+    }
+    if (cleanUrl.startsWith('https//')) {
+      cleanUrl = cleanUrl.replace('https//', 'https://');
+    }
+    // Remove any www. prefix duplication
+    cleanUrl = cleanUrl.replace(/\/\/www\.www\./, '//www.');
+
+    console.log("🚀 Starting analysis for URL:", cleanUrl);
     setIsAnalyzing(true);
-    setCurrentUrl(url);
+    setCurrentUrl(cleanUrl);
 
     try {
         const userId = session.user.id;
@@ -244,7 +273,7 @@ function App() {
             .insert({
               id: analysisId,
               user_id: userId,
-              url: url,
+              url: cleanUrl,
               status: 'pending',
               scores: {},
               factor_results: []
