@@ -26,7 +26,7 @@ const TierIndicator = ({ user, onUpgrade, className = '' }) => {
 
       if (error) {
         console.error('Error fetching tier data:', error);
-        // Set default for free users if no data found
+        // Set default for free users if no data found or database issues (406, 409, etc.)
         setTierData({ tier: 'free', monthly_analyses_used: 0 });
       } else {
         setTierData(data);
