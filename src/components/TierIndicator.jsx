@@ -92,7 +92,7 @@ const TierIndicator = ({ user, onUpgrade, className = '' }) => {
       </div>
 
       {/* Remaining Analyses */}
-      <div className="text-sm text-gray-600 hidden sm:block">
+      <div className="text-sm text-white hidden sm:block">
         <span className="font-medium">{getRemainingAnalyses()}</span> 
         {tierData.tier === 'free' ? ' left' : ''}
       </div>
