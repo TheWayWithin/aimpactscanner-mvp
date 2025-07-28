@@ -12,9 +12,6 @@ import URLInput from './components/URLInput';
 import TierIndicator from './components/TierIndicator';
 import TierSelection from './components/TierSelection';
 import AccountDashboard from './components/AccountDashboard';
-import DiagnosticTest from './components/DiagnosticTest';
-import EnvCheck from './components/EnvCheck';
-import SimpleConnectivityTest from './components/SimpleConnectivityTest';
 import UserInitializer from './components/UserInitializer';
 import { useUpgrade } from './components/UpgradeHandler';
 
@@ -174,8 +171,38 @@ function App() {
   };
 
   // Handle analysis completion - automatically navigate to results
-  const handleAnalysisComplete = () => {
+  const handleAnalysisComplete = async () => {
     console.log('✅ Analysis completed - auto-navigating to results dashboard');
+    
+    // Update analysis status to 'completed' for usage tracking
+    if (currentAnalysisId && session?.user?.id) {
+      try {
+        const { error } = await supabase
+          .from('analyses')
+          .update({ 
+            status: 'completed',
+            scores: { overall: 67 }, // Mock score for usage tracking
+            completed_at: new Date().toISOString()
+          })
+          .eq('id', currentAnalysisId);
+
+        if (error) {
+          console.log("⚠️ Could not update analysis completion:", error.message);
+        } else {
+          console.log("✅ Analysis marked as completed for usage tracking");
+          
+          // Refresh tier data to show updated usage
+          setTimeout(() => {
+            if (session?.user?.id) {
+              fetchUserDashboardData(session.user.id);
+            }
+          }, 1000);
+        }
+      } catch (error) {
+        console.log("⚠️ Analysis completion update failed:", error.message);
+      }
+    }
+    
     setCurrentView('results');
   };
 
@@ -202,13 +229,35 @@ function App() {
 
         console.log("👤 User info:", { userId, userEmail });
 
-        // Skip database operations that are timing out - proceed directly to Edge Function
-        console.log("⏭️ Skipping database operations due to connectivity issues");
+        // Try to create analysis record for usage tracking
+        console.log("📝 Attempting to create analysis record for usage tracking...");
         
         // Generate a unique analysis ID
         const analysisId = crypto.randomUUID();
         setCurrentAnalysisId(analysisId);
         console.log("🆔 Generated analysis ID:", analysisId);
+
+        // Try to create the analysis record (for usage tracking)
+        try {
+          const { error: analysisError } = await supabase
+            .from('analyses')
+            .insert({
+              id: analysisId,
+              user_id: userId,
+              url: url,
+              status: 'pending',
+              scores: {},
+              factor_results: []
+            });
+
+          if (analysisError) {
+            console.log("⚠️ Could not create analysis record:", analysisError.message);
+          } else {
+            console.log("✅ Analysis record created for usage tracking");
+          }
+        } catch (error) {
+          console.log("⚠️ Analysis record creation failed:", error.message);
+        }
 
         // Switch to analysis view IMMEDIATELY to show progress
         setCurrentView('analysis');
@@ -410,14 +459,7 @@ function App() {
 
         {/* Content */}
         {currentView === 'input' && (
-          <div>
-            <EnvCheck />
-            <SimpleConnectivityTest />
-            <URLInput onAnalyze={startAnalysis} isAnalyzing={isAnalyzing} />
-            <div className="mt-6">
-              <DiagnosticTest session={session} />
-            </div>
-          </div>
+          <URLInput onAnalyze={startAnalysis} isAnalyzing={isAnalyzing} />
         )}
 
         {currentView === 'analysis' && currentAnalysisId && (
