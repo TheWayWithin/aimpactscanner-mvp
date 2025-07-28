@@ -40,6 +40,13 @@ function UserInitializer({ session, onUserReady }) {
       if (checkError && checkError.code !== 'PGRST116') {
         // PGRST116 = no rows returned, which is expected for new users
         console.log('Database check error:', checkError);
+        // If we can't check user existence due to 406 errors, just proceed with defaults
+        if (checkError.message && checkError.message.includes('406')) {
+          console.log('Database access issues (406), proceeding with default user data');
+          setStatus('ready');
+          onUserReady?.({ tier: 'free', monthly_analyses_used: 0 });
+          return;
+        }
         throw checkError;
       }
 
@@ -54,12 +61,15 @@ function UserInitializer({ session, onUserReady }) {
         // Create user in database with timeout
         const createPromise = supabase
           .from('users')
-          .insert({
+          .upsert({
             id: userId,
             email: userEmail,
             tier: 'free',
             monthly_analyses_used: 0,
             subscription_status: 'active'
+          }, { 
+            onConflict: 'id',
+            ignoreDuplicates: false 
           })
           .select()
           .single();
@@ -68,6 +78,13 @@ function UserInitializer({ session, onUserReady }) {
 
         if (createError) {
           console.log('User creation error:', createError);
+          // If user already exists (409 conflict), that's actually fine
+          if (createError.message && (createError.message.includes('409') || createError.message.includes('duplicate'))) {
+            console.log('User already exists, proceeding with default data');
+            setStatus('ready');
+            onUserReady?.({ tier: 'free', monthly_analyses_used: 0 });
+            return;
+          }
           throw createError;
         }
 
