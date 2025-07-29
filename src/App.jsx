@@ -181,69 +181,70 @@ function App() {
           .from('analyses')
           .update({ 
             status: 'completed',
-            scores: { overall: 67 }, // Mock score for usage tracking
-            completed_at: new Date().toISOString()
+            scores: { overall: 67 } // Mock score for usage tracking
+            // Note: completed_at column doesn't exist in current schema
           })
           .eq('id', currentAnalysisId);
 
         if (error) {
           console.log("⚠️ Could not update analysis completion:", error.message);
+          console.log("📊 Proceeding with usage tracking anyway...");
         } else {
           console.log("✅ Analysis marked as completed for usage tracking");
-          
-          // Update user's monthly usage count
-          try {
-            // First check if user exists and get current count
-            const { data: currentUser, error: fetchError } = await supabase
-              .from('users')
-              .select('monthly_analyses_used, tier')
-              .eq('id', session.user.id)
-              .single();
-
-            if (fetchError && fetchError.code === 'PGRST116') {
-              // User doesn't exist, create with count = 1
-              const { error: createError } = await supabase
-                .from('users')
-                .insert({
-                  id: session.user.id,
-                  email: session.user.email,
-                  tier: 'free',
-                  monthly_analyses_used: 1,
-                  subscription_status: 'active'
-                });
-              
-              if (createError) {
-                console.log("⚠️ Could not create user with usage count:", createError.message);
-              } else {
-                console.log("✅ New user created with usage count 1");
-              }
-            } else if (fetchError) {
-              console.log("⚠️ Could not fetch current usage:", fetchError.message);
-            } else {
-              // User exists, increment the count
-              const newCount = (currentUser.monthly_analyses_used || 0) + 1;
-              const { error: updateError } = await supabase
-                .from('users')
-                .update({ monthly_analyses_used: newCount })
-                .eq('id', session.user.id);
-
-              if (updateError) {
-                console.log("⚠️ Could not update user usage count:", updateError.message);
-              } else {
-                console.log(`✅ User usage count incremented to ${newCount}`);
-              }
-            }
-          } catch (userUpdateError) {
-            console.log("⚠️ User usage update failed:", userUpdateError.message);
-          }
-          
-          // Refresh tier data to show updated usage
-          setTimeout(() => {
-            if (session?.user?.id) {
-              fetchUserDashboardData(session.user.id);
-            }
-          }, 1500); // Increased timeout to allow database update
         }
+        
+        // Update user's monthly usage count (regardless of analysis update success)
+        try {
+          // First check if user exists and get current count
+          const { data: currentUser, error: fetchError } = await supabase
+            .from('users')
+            .select('monthly_analyses_used, tier')
+            .eq('id', session.user.id)
+            .single();
+
+          if (fetchError && fetchError.code === 'PGRST116') {
+            // User doesn't exist, create with count = 1
+            const { error: createError } = await supabase
+              .from('users')
+              .insert({
+                id: session.user.id,
+                email: session.user.email,
+                tier: 'free',
+                monthly_analyses_used: 1,
+                subscription_status: 'active'
+              });
+            
+            if (createError) {
+              console.log("⚠️ Could not create user with usage count:", createError.message);
+            } else {
+              console.log("✅ New user created with usage count 1");
+            }
+          } else if (fetchError) {
+            console.log("⚠️ Could not fetch current usage:", fetchError.message);
+          } else {
+            // User exists, increment the count
+            const newCount = (currentUser.monthly_analyses_used || 0) + 1;
+            const { error: updateError } = await supabase
+              .from('users')
+              .update({ monthly_analyses_used: newCount })
+              .eq('id', session.user.id);
+
+            if (updateError) {
+              console.log("⚠️ Could not update user usage count:", updateError.message);
+            } else {
+              console.log(`✅ User usage count incremented to ${newCount}`);
+            }
+          }
+        } catch (userUpdateError) {
+          console.log("⚠️ User usage update failed:", userUpdateError.message);
+        }
+        
+        // Refresh tier data to show updated usage
+        setTimeout(() => {
+          if (session?.user?.id) {
+            fetchUserDashboardData(session.user.id);
+          }
+        }, 1500); // Increased timeout to allow database update
       } catch (error) {
         console.log("⚠️ Analysis completion update failed:", error.message);
       }
