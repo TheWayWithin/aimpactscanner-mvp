@@ -266,6 +266,16 @@ function App() {
       return;
     }
 
+    // Check free tier limits
+    if (dashboardData?.user_tier === 'free' || userTier === 'free') {
+      const used = dashboardData?.monthly_used || dashboardData?.user?.monthly_analyses_used || 0;
+      if (used >= 3) {
+        alert("You've reached your free tier limit of 3 analyses per month. Please upgrade to Coffee Tier for unlimited analyses.");
+        setCurrentView('pricing');
+        return;
+      }
+    }
+
     // Clean up URL formatting
     let cleanUrl = url.trim();
     if (cleanUrl.startsWith('https://https//')) {
@@ -379,7 +389,16 @@ function App() {
           <p className="brand-subtitle">by AI Search Mastery</p>
         </div>
         <div className="flex items-center space-x-4">
-          <TierIndicator user={session?.user} onUpgrade={handleUpgrade} />
+          <TierIndicator 
+            user={session?.user} 
+            onUpgrade={handleUpgrade} 
+            tierData={dashboardData ? {
+              tier: dashboardData.user_tier || userTier,
+              monthly_analyses_used: dashboardData.monthly_used || dashboardData.user?.monthly_analyses_used || 0,
+              tier_expires_at: dashboardData.user?.tier_expires_at,
+              subscription_status: dashboardData.user?.subscription_status
+            } : null}
+          />
           <button
             onClick={async () => {
               await supabase.auth.signOut();
