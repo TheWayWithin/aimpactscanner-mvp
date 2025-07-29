@@ -4,15 +4,20 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
-const TierIndicator = ({ user, onUpgrade, className = '' }) => {
-  const [tierData, setTierData] = useState(null);
+const TierIndicator = ({ user, onUpgrade, className = '', tierData = null, refreshTrigger = 0 }) => {
+  const [localTierData, setLocalTierData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user?.id) {
+    if (tierData) {
+      // Use provided tier data if available
+      setLocalTierData(tierData);
+      setLoading(false);
+    } else if (user?.id) {
+      // Fallback to fetching data if not provided
       fetchTierData();
     }
-  }, [user]);
+  }, [user, tierData, refreshTrigger]);
 
   const fetchTierData = async () => {
     try {
@@ -27,13 +32,13 @@ const TierIndicator = ({ user, onUpgrade, className = '' }) => {
       if (error) {
         console.error('Error fetching tier data:', error);
         // Set default for free users if no data found or database issues (406, 409, etc.)
-        setTierData({ tier: 'free', monthly_analyses_used: 0 });
+        setLocalTierData({ tier: 'free', monthly_analyses_used: 0 });
       } else {
-        setTierData(data);
+        setLocalTierData(data);
       }
     } catch (error) {
       console.error('Error fetching tier data:', error);
-      setTierData({ tier: 'free', monthly_analyses_used: 0 });
+      setLocalTierData({ tier: 'free', monthly_analyses_used: 0 });
     } finally {
       setLoading(false);
     }
@@ -50,16 +55,16 @@ const TierIndicator = ({ user, onUpgrade, className = '' }) => {
   };
 
   const getRemainingAnalyses = () => {
-    if (!tierData) return 0;
+    if (!localTierData) return 0;
     
-    if (tierData.tier === 'free') {
-      return Math.max(0, 3 - (tierData.monthly_analyses_used || 0));
+    if (localTierData.tier === 'free') {
+      return Math.max(0, 3 - (localTierData.monthly_analyses_used || 0));
     }
     return '∞';
   };
 
   const getIndicatorColor = () => {
-    if (!tierData || tierData.tier !== 'free') return 'bg-green-100 text-green-800';
+    if (!localTierData || localTierData.tier !== 'free') return 'bg-green-100 text-green-800';
     
     const remaining = getRemainingAnalyses();
     if (remaining === 0) return 'bg-red-100 text-red-800';
@@ -68,7 +73,7 @@ const TierIndicator = ({ user, onUpgrade, className = '' }) => {
   };
 
   const shouldShowUpgradePrompt = () => {
-    return tierData?.tier === 'free' && getRemainingAnalyses() <= 1;
+    return localTierData?.tier === 'free' && getRemainingAnalyses() <= 1;
   };
 
   if (loading) {
@@ -82,19 +87,19 @@ const TierIndicator = ({ user, onUpgrade, className = '' }) => {
     );
   }
 
-  if (!tierData) return null;
+  if (!localTierData) return null;
 
   return (
     <div className={`flex items-center space-x-3 ${className}`}>
       {/* Tier Badge */}
       <div className={`px-3 py-1 rounded-full text-xs font-medium ${getIndicatorColor()}`}>
-        {getTierDisplayName(tierData.tier)}
+        {getTierDisplayName(localTierData.tier)}
       </div>
 
       {/* Remaining Analyses */}
       <div className="text-sm text-white hidden sm:block">
         <span className="font-medium">{getRemainingAnalyses()}</span> 
-        {tierData.tier === 'free' ? ' left' : ''}
+        {localTierData.tier === 'free' ? ' left' : ''}
       </div>
 
       {/* Upgrade Button (only for free users with low remaining) */}
@@ -108,7 +113,7 @@ const TierIndicator = ({ user, onUpgrade, className = '' }) => {
       )}
 
       {/* Expiration Warning */}
-      {tierData.tier_expires_at && new Date(tierData.tier_expires_at) < new Date() && (
+      {localTierData.tier_expires_at && new Date(localTierData.tier_expires_at) < new Date() && (
         <div className="text-xs text-red-600 font-medium">
           Expired
         </div>
