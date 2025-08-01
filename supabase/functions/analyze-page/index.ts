@@ -32,18 +32,31 @@ function analyzeCitationWorthyContent(pageContent: string, title: string): Facto
   evidence.push(`Factual claims identified: ${factualClaims}`);
   evidence.push(`Fact density: ${factDensity.toFixed(2)} claims per 100 words`);
   
-  // Score based on fact density (target: 1+ per 100 words)
-  if (factDensity >= 1.0) {
+  // Score based on fact density with more varied ranges
+  if (factDensity >= 1.5) {
+    score += 45;
+    evidence.push('Exceptional fact density for AI citation');
+  } else if (factDensity >= 1.0) {
     score += 40;
     evidence.push('Excellent fact density for AI citation');
-  } else if (factDensity >= 0.5) {
-    score += 25;
+  } else if (factDensity >= 0.7) {
+    score += 30;
     evidence.push('Good fact density');
     recommendations.push('Add more verifiable claims and supporting evidence');
-  } else {
-    score += 10;
+  } else if (factDensity >= 0.5) {
+    score += 25;
+    evidence.push('Adequate fact density');
+    recommendations.push('Increase factual content with verifiable claims');
+  } else if (factDensity >= 0.2) {
+    score += 15;
+    evidence.push('Limited factual content');
     recommendations.push('Increase factual content with verifiable claims');
     recommendations.push('Add supporting evidence and data points');
+  } else {
+    score += 5;
+    evidence.push('Very low fact density');
+    recommendations.push('Add substantial factual content with verifiable claims');
+    recommendations.push('Include supporting evidence and data points');
   }
   
   // Hierarchical structure assessment
@@ -133,11 +146,14 @@ function analyzeSourceAuthoritySignals(pageContent: string, url: string): Factor
     recommendations.push('Add references section to support claims');
   }
   
-  // Base score if minimal indicators
-  if (score < 30) {
-    score = Math.max(score, 30);
+  // Base score varies based on actual content quality
+  if (score < 15) {
+    score = Math.max(score, 15); // Lower floor for truly poor sites
     recommendations.push('Establish clear expertise and authority indicators');
     recommendations.push('Include professional background and credentials');
+  } else if (score < 25) {
+    // Slight boost for sites with minimal authority
+    recommendations.push('Strengthen authority signals with more credentials');
   }
   
   return {
@@ -200,10 +216,12 @@ function analyzeTransparencyDisclosure(pageContent: string): FactorResult {
     recommendations.push('Include publication and update dates');
   }
   
-  // Base transparency score
+  // Base transparency score varies by content quality
   if (score === 0) {
-    score = 25;
+    score = 15; // Lower base for sites with no transparency
     recommendations.push('Implement basic transparency standards');
+  } else if (score < 30) {
+    score += 10; // Boost for sites with some transparency
   }
   
   return {
@@ -265,11 +283,17 @@ function analyzeContactAccessibility(pageContent: string): FactorResult {
     recommendations.push('Add accessibility attributes (alt text, aria labels)');
   }
   
-  // Provide recommendations based on missing elements
+  // Provide recommendations and varied base scores
   if (!hasEmail && !hasPhone && !hasContactSection) {
     recommendations.push('Add clear contact information (email, phone)');
     recommendations.push('Include dedicated contact section');
-    score = Math.max(score, 20); // Minimum score
+    score = Math.max(score, 10); // Lower minimum for no contact info
+  } else if (score < 30) {
+    // Boost sites with some contact information
+    score += 15;
+    if (!hasEmail) recommendations.push('Add email contact method');
+    if (!hasPhone) recommendations.push('Consider adding phone number');
+    if (!hasContactSection) recommendations.push('Create dedicated contact section');
   } else {
     if (!hasEmail) recommendations.push('Add email contact method');
     if (!hasPhone) recommendations.push('Consider adding phone number');
@@ -389,7 +413,7 @@ function analyzeTitleTagOptimization(title: string, url: string): FactorResult {
       recommendations.push('Reduce keyword repetition for better readability');
     }
     
-    if (score === 0) score = 25; // Base score for having a title
+    if (score === 0) score = 10; // Minimal score for having a title
   }
   
   return {
@@ -453,7 +477,7 @@ function analyzeMetaDescriptionQuality(metaDescription: string): FactorResult {
       recommendations.push('Use natural language and avoid keyword stuffing');
     }
     
-    if (score === 0) score = 20; // Base score for having a description
+    if (score === 0) score = 5; // Minimal score for having a description
   }
   
   return {
@@ -551,8 +575,11 @@ function analyzeContentDepth(pageContent: string, title: string): FactorResult {
   evidence.push(`Word count: ${wordCount}`);
   evidence.push(`Sentences: ${sentences.length}`);
   
-  // Score based on content depth
-  if (wordCount >= 1000) {
+  // Score based on content depth - more varied ranges
+  if (wordCount >= 1500) {
+    score += 45;
+    evidence.push('Exceptionally comprehensive content (1500+ words)');
+  } else if (wordCount >= 1000) {
     score += 40;
     evidence.push('Comprehensive content length (1000+ words)');
   } else if (wordCount >= 500) {
@@ -562,9 +589,14 @@ function analyzeContentDepth(pageContent: string, title: string): FactorResult {
     score += 20;
     evidence.push('Adequate content length (300+ words)');
     recommendations.push('Consider expanding content for better depth');
-  } else {
+  } else if (wordCount >= 100) {
     score += 10;
+    evidence.push('Minimal content length');
     recommendations.push('Increase content length to 500+ words for better comprehensiveness');
+  } else {
+    score += 5;
+    evidence.push('Very limited content');
+    recommendations.push('Add substantial content (500+ words) for meaningful analysis');
   }
   
   // Check for content structure indicators
@@ -701,16 +733,28 @@ function analyzePageLoadSpeed(pageContent: string): FactorResult {
   evidence.push(`Scripts: ${scriptTags}`);
   evidence.push(`CSS files: ${cssLinks + styleTags}`);
   
-  // Score based on page size (smaller is generally better for speed)
-  if (pageSize < 100000) { // < 100KB
+  // Score based on page size with more granular ranges
+  if (pageSize < 50000) { // < 50KB - very lightweight
+    score += 45;
+    evidence.push('Exceptionally lightweight page for optimal loading');
+  } else if (pageSize < 100000) { // < 100KB
     score += 40;
     evidence.push('Lightweight page size for fast loading');
+  } else if (pageSize < 250000) { // < 250KB
+    score += 30;
+    evidence.push('Reasonable page size');
   } else if (pageSize < 500000) { // < 500KB
-    score += 25;
+    score += 20;
     evidence.push('Moderate page size');
-  } else {
+    recommendations.push('Consider optimizing images and content for faster loading');
+  } else if (pageSize < 1000000) { // < 1MB
     score += 10;
+    evidence.push('Large page size may impact loading speed');
     recommendations.push('Optimize page size - consider compressing content');
+  } else {
+    score += 5;
+    evidence.push('Very large page size');
+    recommendations.push('Significantly reduce page size for better performance');
   }
   
   // Check for optimization indicators
@@ -743,10 +787,12 @@ function analyzePageLoadSpeed(pageContent: string): FactorResult {
     recommendations.push('Consider preloading critical resources');
   }
   
-  // Base score for basic optimization
+  // Base score varies by optimization level
   if (score === 0) {
-    score = 30;
+    score = 15; // Lower base for unoptimized sites
     recommendations.push('Implement basic page speed optimizations');
+  } else if (score < 25) {
+    score += 5; // Small boost for minimal optimization
   }
   
   return {
