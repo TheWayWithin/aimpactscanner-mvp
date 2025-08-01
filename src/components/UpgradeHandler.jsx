@@ -62,46 +62,11 @@ const UpgradeHandler = ({ user, onSuccess, onError }) => {
     }
   };
 
-  // Mock function for development - replace with real Stripe integration
-  const handleMockUpgrade = async (targetTier) => {
-    if (loading) return;
-
-    setLoading(true);
-    try {
-      console.log(`Mock upgrade to ${targetTier} tier for user:`, user.id);
-
-      // Simulate upgrade delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // For demo purposes, directly update the user's tier
-      // In production, this would be done via Stripe webhook
-      const expiresAt = new Date();
-      expiresAt.setMonth(expiresAt.getMonth() + 1);
-
-      const { error } = await supabase
-        .from('users')
-        .update({
-          tier: targetTier,
-          tier_expires_at: expiresAt.toISOString(),
-          subscription_status: 'active'
-        })
-        .eq('id', user.id);
-
-      if (error) throw error;
-
-      onSuccess?.(`Successfully upgraded to ${targetTier} tier!`);
-
-    } catch (error) {
-      console.error('Mock upgrade error:', error);
-      onError?.(error.message || 'Upgrade failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Note: Mock upgrade function removed - now using real Stripe payment flow only
 
   // Return the upgrade function that components can use
   return {
-    handleUpgrade: process.env.NODE_ENV === 'development' ? handleMockUpgrade : handleUpgrade,
+    handleUpgrade: handleUpgrade, // Always use real Stripe payment flow
     loading
   };
 };
@@ -116,28 +81,6 @@ export const useUpgrade = (user, onSuccess, onError) => {
     setLoading(true);
     try {
       console.log(`Initiating upgrade to ${targetTier} tier for user:`, user.id);
-
-      // For development - mock upgrade
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Using mock upgrade for development');
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        const expiresAt = new Date();
-        expiresAt.setMonth(expiresAt.getMonth() + 1);
-
-        const { error } = await supabase
-          .from('users')
-          .update({
-            tier: targetTier,
-            tier_expires_at: expiresAt.toISOString(),
-            subscription_status: 'active'
-          })
-          .eq('id', user.id);
-
-        if (error) throw error;
-        onSuccess?.(`Successfully upgraded to ${targetTier} tier! (Mock)`);
-        return;
-      }
 
       // Production upgrade logic
       const priceIds = {
