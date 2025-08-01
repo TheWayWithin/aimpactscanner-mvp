@@ -20,9 +20,9 @@ function UserInitializer({ session, onUserReady }) {
 
       console.log('Initializing user:', userId, userEmail);
 
-      // Add timeout promise
+      // Add timeout promise with automatic fallback
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('User initialization timeout after 10 seconds')), 10000)
+        setTimeout(() => reject(new Error('User initialization timeout - proceeding with defaults')), 5000)
       );
 
       // First check if user exists with timeout
@@ -95,8 +95,15 @@ function UserInitializer({ session, onUserReady }) {
 
     } catch (err) {
       console.error('User initialization error:', err);
-      setError(err.message);
-      setStatus('error');
+      // Auto-fallback on timeout or database issues
+      if (err.message.includes('timeout') || err.message.includes('406') || err.message.includes('PGRST')) {
+        console.log('Auto-fallback: Proceeding with default user data due to database issues');
+        setStatus('ready');
+        onUserReady?.({ tier: 'free', monthly_analyses_used: 0 });
+      } else {
+        setError(err.message);
+        setStatus('error');
+      }
     }
   };
 
