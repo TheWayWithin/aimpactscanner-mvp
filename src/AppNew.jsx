@@ -1,0 +1,352 @@
+// New App with conversion-optimized flow
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import { supabase } from './lib/supabaseClient';
+
+// New components for conversion flow
+import Landing from './components/Landing';
+import TeaserResults from './components/TeaserResults';
+
+// Existing components
+import Auth from './components/Auth';
+import SimpleAnalysisProgress from './components/SimpleAnalysisProgress';
+import SimpleResultsDashboard from './components/SimpleResultsDashboard';
+import URLInput from './components/URLInput';
+import TierIndicator from './components/TierIndicator';
+import TierSelection from './components/TierSelection';
+import AccountDashboard from './components/AccountDashboard';
+import UserInitializer from './components/UserInitializer';
+import { useUpgrade } from './components/UpgradeHandler';
+
+function AppNew() {
+  const [session, setSession] = useState(null);
+  const [currentView, setCurrentView] = useState('landing'); // Start with landing page
+  const [currentAnalysisId, setCurrentAnalysisId] = useState(null);
+  const [currentUrl, setCurrentUrl] = useState('');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [userTier, setUserTier] = useState('free');
+  const [dashboardData, setDashboardData] = useState(null);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [userReady, setUserReady] = useState(false);
+  const [pendingAnalysis, setPendingAnalysis] = useState(null);
+
+  // Upgrade handler hooks
+  const handleUpgradeSuccess = (message) => {
+    // Refresh user tier after successful upgrade
+    if (session?.user?.id) {
+      fetchUserTier(session.user.id);
+    }
+    // Continue with pending analysis if exists
+    if (pendingAnalysis) {
+      setCurrentView('results');
+    }
+  };
+
+  const handleUpgradeError = (error) => {
+    alert(`Upgrade failed: ${error}`);
+  };
+
+  const { handleUpgrade, loading: upgradeLoading } = useUpgrade(
+    session?.user, 
+    handleUpgradeSuccess, 
+    handleUpgradeError
+  );
+
+  useEffect(() => {
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session && session.user) {
+        setSession(session);
+        fetchUserTier(session.user.id);
+        // If user is already logged in, skip landing
+        setCurrentView('dashboard');
+      }
+    });
+
+    // Listen for auth state changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setSession(session);
+      if (session?.user?.id) {
+        fetchUserTier(session.user.id);
+        // After login, check if there's a pending analysis
+        const pendingUrl = sessionStorage.getItem('pendingAnalysisUrl');
+        if (pendingUrl) {
+          setCurrentView('results');
+        } else {
+          setCurrentView('dashboard');
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchUserTier = async (userId) => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('tier, stripe_customer_id, analyses_used, analyses_limit')
+        .eq('id', userId)
+        .single();
+
+      if (data) {
+        setUserTier(data.tier || 'free');
+        setDashboardData(data);
+      }
+    } catch (error) {
+      console.log('Could not fetch user tier:', error);
+      setUserTier('free');
+    }
+  };
+
+  // Handle analysis from landing page (no auth)
+  const handleLandingAnalysis = (url, analysisId) => {
+    setCurrentUrl(url);
+    setCurrentAnalysisId(analysisId);
+    setPendingAnalysis({ url, analysisId });
+    setCurrentView('teaser-results');
+  };
+
+  // Handle upgrade click from teaser results
+  const handleUpgradeFromTeaser = async (tier) => {
+    if (!session) {
+      // Need to register first
+      sessionStorage.setItem('selectedTier', tier);
+      setCurrentView('register');
+    } else {
+      // Already logged in, go straight to payment
+      if (tier === 'professional') {
+        await handleUpgrade('professional');
+      } else if (tier === 'starter') {
+        await handleUpgrade('coffee'); // Map starter to coffee tier
+      }
+    }
+  };
+
+  // Handle free trial click from teaser
+  const handleFreeTrialFromTeaser = () => {
+    if (!session) {
+      sessionStorage.setItem('selectedTier', 'free');
+      setCurrentView('register');
+    } else {
+      // Already logged in, show full results
+      setCurrentView('results');
+    }
+  };
+
+  // Handle analysis complete
+  const handleAnalysisComplete = () => {
+    setCurrentView('results');
+  };
+
+  // Start analysis (authenticated version)
+  const startAnalysis = async (url) => {
+    if (!session?.user) {
+      // Redirect to landing for unauthenticated users
+      setCurrentView('landing');
+      return;
+    }
+
+    try {
+      setIsAnalyzing(true);
+      const userId = session.user.id;
+      const userEmail = session.user.email;
+      const analysisId = crypto.randomUUID();
+
+      console.log('🚀 Starting analysis for URL:', url);
+      setCurrentUrl(url);
+      setCurrentAnalysisId(analysisId);
+
+      // Try to create analysis record
+      try {
+        const { error: analysisError } = await supabase
+          .from('analyses')
+          .insert({
+            id: analysisId,
+            user_id: userId,
+            url: url,
+            status: 'in_progress',
+            created_at: new Date().toISOString()
+          });
+
+        if (analysisError) {
+          console.log("⚠️ Could not create analysis record:", analysisError.message);
+        }
+      } catch (error) {
+        console.log("⚠️ Analysis record creation failed:", error.message);
+      }
+
+      // Switch to analysis view
+      setCurrentView('analysis');
+
+      // Call Edge Function
+      supabase.functions.invoke('analyze-page', {
+        body: {
+          url: url,
+          analysisId: analysisId,
+          userId: userId
+        }
+      }).then(({ data, error: invokeError }) => {
+        if (invokeError) {
+          console.error('❌ Edge Function error:', invokeError);
+          alert(`Analysis error: ${invokeError.message}`);
+        } else {
+          console.log('✅ Analysis completed:', data);
+        }
+      });
+
+    } catch (error) {
+      console.error('❌ Error starting analysis:', error);
+      alert(`Error starting analysis: ${error.message}`);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  // Render based on current view
+  if (currentView === 'landing' && !session) {
+    return <Landing onAnalysisComplete={handleLandingAnalysis} />;
+  }
+
+  if (currentView === 'teaser-results') {
+    return (
+      <TeaserResults
+        url={currentUrl}
+        analysisId={currentAnalysisId}
+        onUpgradeClick={handleUpgradeFromTeaser}
+        onFreeTrialClick={handleFreeTrialFromTeaser}
+      />
+    );
+  }
+
+  if (currentView === 'register') {
+    return <Auth />;
+  }
+
+  if (!session) {
+    return <Auth />;
+  }
+
+  // Authenticated views
+  return (
+    <div className="app-container">
+      {/* Header with user info */}
+      <header className="brand-header">
+        <div className="flex justify-between items-center max-w-7xl mx-auto px-4">
+          <h1 className="text-2xl font-bold">AImpactScanner</h1>
+          <div className="flex items-center gap-4">
+            <TierIndicator tier={userTier} />
+            <button
+              onClick={() => supabase.auth.signOut()}
+              className="text-sm text-gray-600 hover:text-gray-900"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <UserInitializer user={session?.user} onReady={() => setUserReady(true)} />
+
+      <main className="main-content">
+        {/* Navigation tabs */}
+        <div className="flex justify-center mb-8 space-x-4">
+          <button
+            onClick={() => setCurrentView('dashboard')}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+              currentView === 'dashboard' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            🏠 Dashboard
+          </button>
+          <button
+            onClick={() => setCurrentView('input')}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+              currentView === 'input' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            🔍 New Analysis
+          </button>
+          <button
+            onClick={() => setCurrentView('pricing')}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+              currentView === 'pricing' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            💎 Upgrade
+          </button>
+          <button
+            onClick={() => setCurrentView('account')}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+              currentView === 'account' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            👤 Account
+          </button>
+        </div>
+
+        {/* Content based on view */}
+        {currentView === 'dashboard' && (
+          <div className="text-center">
+            <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
+            <p className="text-gray-600 mb-8">
+              You have {dashboardData?.analyses_limit - dashboardData?.analyses_used || 3} analyses remaining this month.
+            </p>
+            <button
+              onClick={() => setCurrentView('input')}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
+            >
+              Start New Analysis →
+            </button>
+          </div>
+        )}
+
+        {currentView === 'input' && (
+          <URLInput onAnalyze={startAnalysis} isAnalyzing={isAnalyzing} />
+        )}
+
+        {currentView === 'analysis' && currentAnalysisId && (
+          <SimpleAnalysisProgress 
+            analysisId={currentAnalysisId}
+            url={currentUrl}
+            onAnalysisComplete={handleAnalysisComplete}
+          />
+        )}
+
+        {currentView === 'results' && currentAnalysisId && (
+          <SimpleResultsDashboard 
+            analysisId={currentAnalysisId} 
+            url={currentUrl}
+          />
+        )}
+
+        {currentView === 'pricing' && (
+          <TierSelection 
+            currentTier={userTier} 
+            onUpgrade={handleUpgrade} 
+          />
+        )}
+
+        {currentView === 'account' && (
+          <AccountDashboard user={session?.user} />
+        )}
+      </main>
+
+      <footer className="brand-footer">
+        <p>&copy; 2025 AI Search Mastery. All rights reserved.</p>
+      </footer>
+    </div>
+  );
+}
+
+export default AppNew;

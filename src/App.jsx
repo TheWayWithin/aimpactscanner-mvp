@@ -3,7 +3,10 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import { supabase } from './lib/supabaseClient';
 
-import Auth from './components/Auth';
+import AuthWithPassword from './components/AuthWithPassword';
+import PasswordResetPage from './components/PasswordResetPage';
+import TermsOfService from './components/TermsOfService';
+import PrivacyPolicy from './components/PrivacyPolicy';
 import AnalysisProgress from './components/AnalysisProgress';
 import SimpleAnalysisProgress from './components/SimpleAnalysisProgress';
 import ResultsDashboard from './components/ResultsDashboard';
@@ -26,6 +29,7 @@ function App() {
   const [dashboardData, setDashboardData] = useState(null);
   const [showWelcome, setShowWelcome] = useState(false);
   const [userReady, setUserReady] = useState(false);
+  const [currentRoute, setCurrentRoute] = useState('app'); // 'app', 'reset-password', 'terms', 'privacy'
 
   // Upgrade handler hooks
   const handleUpgradeSuccess = (message) => {
@@ -48,6 +52,29 @@ function App() {
   );
 
   useEffect(() => {
+    // Check current route based on URL
+    const checkRoute = () => {
+      const path = window.location.pathname;
+      if (path === '/reset-password' || window.location.hash.includes('type=recovery')) {
+        setCurrentRoute('reset-password');
+        return;
+      }
+      if (path === '/terms') {
+        setCurrentRoute('terms');
+        return;
+      }
+      if (path === '/privacy') {
+        setCurrentRoute('privacy');
+        return;
+      }
+      setCurrentRoute('app');
+    };
+    
+    checkRoute();
+    
+    // Listen for URL changes
+    window.addEventListener('popstate', checkRoute);
+    
     // Fetch the current session
     supabase.auth.getSession().then(({ data: { session } }) => {
       // Validate session has required data
@@ -89,8 +116,11 @@ function App() {
       }
     });
 
-    // Clean up subscription on component unmount
-    return () => subscription.unsubscribe();
+    // Clean up subscription and event listener on component unmount
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener('popstate', checkRoute);
+    };
   }, []);
 
   // Fetch user dashboard data including tier and welcome status
@@ -371,6 +401,19 @@ function App() {
   };
 
 
+  // Handle special pages
+  if (currentRoute === 'reset-password') {
+    return <PasswordResetPage />;
+  }
+  
+  if (currentRoute === 'terms') {
+    return <TermsOfService />;
+  }
+  
+  if (currentRoute === 'privacy') {
+    return <PrivacyPolicy />;
+  }
+  
   // Debug: Always show session status
   console.log('App render - Session:', session);
   console.log('App render - User:', session?.user);
@@ -378,7 +421,7 @@ function App() {
   // If no session or session without user, show auth
   if (!session || !session.user || !session.user.id) {
     console.log('No valid session, showing Auth component');
-    return <Auth />;
+    return <AuthWithPassword />;
   }
 
   console.log('Valid session found, showing main app');
