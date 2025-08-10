@@ -54,11 +54,13 @@ function App() {
       if (session && session.user && session.user.id && session.user.email) {
         setSession(session);
         fetchUserTier(session.user.id);
-      } else if (session) {
-        // Invalid/corrupted session - clear it
-        console.log('Invalid session detected, clearing...');
-        supabase.auth.signOut();
-        setSession(null);
+      } else if (session && session.user) {
+        // Partial session - still valid, just use what we have
+        console.log('Partial session detected, using available data...');
+        setSession(session);
+        if (session.user.id) {
+          fetchUserTier(session.user.id);
+        }
       } else {
         setSession(null);
       }
