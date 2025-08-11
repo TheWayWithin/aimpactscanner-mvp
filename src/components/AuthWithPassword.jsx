@@ -16,7 +16,8 @@ function AuthWithPassword({
   showTierInfo = false, 
   selectedTier = null, 
   skipEmailVerification = false,
-  defaultMode = 'login'
+  defaultMode = 'login',
+  onSuccess = null
 }) {
   const [mode, setMode] = useState(defaultMode); // 'login', 'register', 'reset'
   const [loading, setLoading] = useState(false);
@@ -251,7 +252,12 @@ function AuthWithPassword({
         throw error;
       }
 
-      if (skipEmailVerification && selectedTier !== 'free') {
+      // With autoconfirm enabled, user is automatically signed in
+      if (data?.user && data?.session) {
+        showMessage('Registration successful! Logging you in...', 'success');
+        // The auth state change listener in App will handle the redirect
+        onSuccess?.(data.user);
+      } else if (skipEmailVerification && selectedTier !== 'free') {
         // Paid user - email verification already done via payment
         showMessage(
           `${selectedTier} account created successfully! You can now access all features.`,
@@ -259,7 +265,7 @@ function AuthWithPassword({
         );
         // Don't switch to login mode - let the parent component handle the flow
       } else {
-        // Free user or email verification required
+        // Email verification required (shouldn't happen with autoconfirm)
         showMessage(
           'Registration successful! Please check your email for a confirmation link before signing in.',
           'success'

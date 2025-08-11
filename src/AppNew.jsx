@@ -266,7 +266,9 @@ function AppNew() {
         </div>
       </header>
 
+      {/* Temporarily disabled due to 406 RLS issues
       <UserInitializer user={session?.user} onReady={() => setUserReady(true)} />
+      */}
 
       <main className="main-content">
         {/* Navigation tabs */}
