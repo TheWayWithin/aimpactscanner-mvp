@@ -1,10 +1,11 @@
 [build]
   # Build configuration for React + Vite
+  command = "npm run build"
   publish = "dist"
 
 [build.environment]
   # Node.js version for build
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
 
 # SPA redirect rule - catch all routes and serve index.html
 [[redirects]]
