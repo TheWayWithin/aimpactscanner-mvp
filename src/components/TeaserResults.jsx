@@ -13,8 +13,10 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
   const [factorInteractions, setFactorInteractions] = useState(0);
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(null);
 
-  // Simulate analysis progress
+  // Simulate analysis progress with robust state management
   useEffect(() => {
+    console.log('TeaserResults: Starting analysis simulation');
+    
     const messages = [
       { progress: 10, text: 'Fetching your website content...' },
       { progress: 25, text: 'Analyzing against ChatGPT ranking factors...' },
@@ -26,18 +28,55 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
     ];
 
     let currentIndex = 0;
-    const interval = setInterval(() => {
+    let intervalId = null;
+    let timeoutId = null;
+    let isCompleted = false;
+
+    const showFinalResults = () => {
+      if (!isCompleted) {
+        isCompleted = true;
+        console.log('TeaserResults: Showing final results');
+        setShowResults(true);
+      }
+    };
+
+    intervalId = setInterval(() => {
       if (currentIndex < messages.length) {
-        setProgress(messages[currentIndex].progress);
-        setCurrentMessage(messages[currentIndex].text);
+        const message = messages[currentIndex];
+        console.log(`TeaserResults: Progress ${message.progress}% - ${message.text}`);
+        setProgress(message.progress);
+        setCurrentMessage(message.text);
+        
+        // Check if we've reached 100%
+        if (message.progress === 100) {
+          console.log('TeaserResults: Reached 100% progress, preparing to show results');
+          clearInterval(intervalId);
+          timeoutId = setTimeout(showFinalResults, 500);
+        }
+        
         currentIndex++;
       } else {
-        clearInterval(interval);
-        setTimeout(() => setShowResults(true), 500);
+        // Fallback in case we somehow go past the array
+        console.log('TeaserResults: Reached end of messages array');
+        clearInterval(intervalId);
+        showFinalResults();
       }
     }, 2000);
 
-    return () => clearInterval(interval);
+    // Maximum timeout fallback - ensure results show after 15 seconds
+    const maxTimeout = setTimeout(() => {
+      console.log('TeaserResults: Max timeout reached (15s), forcing results display');
+      if (intervalId) clearInterval(intervalId);
+      if (timeoutId) clearTimeout(timeoutId);
+      showFinalResults();
+    }, 15000);
+
+    return () => {
+      console.log('TeaserResults: Cleanup - clearing timers');
+      if (intervalId) clearInterval(intervalId);
+      if (timeoutId) clearTimeout(timeoutId);
+      clearTimeout(maxTimeout);
+    };
   }, []);
 
 
