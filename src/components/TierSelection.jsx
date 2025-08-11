@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 
-const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
+const TierSelection = ({ currentTier = 'free', onUpgrade, className = '', showRegistrationFlow = false }) => {
   const [loading, setLoading] = useState(false);
 
   const tiers = [
@@ -18,7 +18,7 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
         'Watermarked results',
         'Community support'
       ],
-      cta: 'Current Plan',
+      cta: showRegistrationFlow ? 'Start Free Trial' : 'Current Plan',
       highlight: false,
       popular: false
     },
@@ -34,7 +34,7 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
         'Educational content',
         'Email support'
       ],
-      cta: 'Buy Me a Coffee',
+      cta: showRegistrationFlow ? 'Choose Coffee Plan' : 'Buy Me a Coffee',
       highlight: true,
       popular: true,
       description: 'Perfect for individuals and small businesses'
@@ -51,7 +51,7 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
         'Priority support',
         'API access'
       ],
-      cta: 'Go Professional',
+      cta: showRegistrationFlow ? 'Choose Professional' : 'Go Professional',
       highlight: false,
       comingSoon: true,
       description: 'Complete analysis for growing businesses'
@@ -89,11 +89,11 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
   };
 
   const getButtonClass = (tier) => {
-    if (tier.comingSoon) {
+    if (tier.comingSoon && !showRegistrationFlow) {
       return 'w-full py-3 px-4 border border-gray-300 rounded-md text-gray-500 bg-gray-100 cursor-not-allowed text-sm font-medium';
     }
     
-    if (currentTier === tier.id) {
+    if (!showRegistrationFlow && currentTier === tier.id) {
       return 'w-full py-3 px-4 border-2 border-green-500 rounded-md text-green-700 bg-green-50 cursor-default text-sm font-medium flex items-center justify-center';
     }
     
@@ -105,8 +105,9 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
   };
 
   const getButtonText = (tier) => {
-    if (tier.comingSoon) return 'Coming Soon';
-    if (currentTier === tier.id) return (
+    if (tier.comingSoon && !showRegistrationFlow) return 'Coming Soon';
+    if (tier.comingSoon && showRegistrationFlow) return `Choose ${tier.name.replace(/[^A-Za-z\s]/g, '').trim()}`;
+    if (!showRegistrationFlow && currentTier === tier.id) return (
       <>
         <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -196,7 +197,7 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '' }) => {
             <div className="mt-auto">
               <button
                 onClick={() => handleUpgrade(tier.id)}
-                disabled={tier.comingSoon || currentTier === tier.id || loading}
+                disabled={(tier.comingSoon && !showRegistrationFlow) || (!showRegistrationFlow && currentTier === tier.id) || loading}
                 className={getButtonClass(tier)}
               >
                 {getButtonText(tier)}

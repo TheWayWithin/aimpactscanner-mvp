@@ -11,15 +11,21 @@ const PASSWORD_REQUIREMENTS = {
   hasUpper: /[A-Z]/
 };
 
-function AuthWithPassword() {
-  const [mode, setMode] = useState('login'); // 'login', 'register', 'reset'
+function AuthWithPassword({ 
+  initialEmail = '', 
+  showTierInfo = false, 
+  selectedTier = null, 
+  skipEmailVerification = false,
+  defaultMode = 'login'
+}) {
+  const [mode, setMode] = useState(defaultMode); // 'login', 'register', 'reset'
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState(''); // 'success', 'error', 'info'
   
   // Form data
   const [formData, setFormData] = useState({
-    email: '',
+    email: initialEmail,
     password: '',
     confirmPassword: '',
     rememberMe: false,
@@ -78,6 +84,20 @@ function AuthWithPassword() {
       });
     }
   }, [formData.password]);
+
+  // Update email when initialEmail changes (for registration flow)
+  useEffect(() => {
+    if (initialEmail && !formData.email) {
+      setFormData(prev => ({ ...prev, email: initialEmail }));
+    }
+  }, [initialEmail]);
+
+  // Auto-switch to registration mode if we're in registration flow
+  useEffect(() => {
+    if (showTierInfo && selectedTier && mode === 'login') {
+      setMode('register');
+    }
+  }, [showTierInfo, selectedTier, mode]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -231,16 +251,26 @@ function AuthWithPassword() {
         throw error;
       }
 
-      showMessage(
-        'Registration successful! Please check your email for a confirmation link before signing in.',
-        'success'
-      );
-      
-      // Switch to login mode after successful registration
-      setTimeout(() => {
-        setMode('login');
-        setFormData(prev => ({ ...prev, password: '', confirmPassword: '', agreeToTerms: false }));
-      }, 3000);
+      if (skipEmailVerification && selectedTier !== 'free') {
+        // Paid user - email verification already done via payment
+        showMessage(
+          `${selectedTier} account created successfully! You can now access all features.`,
+          'success'
+        );
+        // Don't switch to login mode - let the parent component handle the flow
+      } else {
+        // Free user or email verification required
+        showMessage(
+          'Registration successful! Please check your email for a confirmation link before signing in.',
+          'success'
+        );
+        
+        // Switch to login mode after successful registration
+        setTimeout(() => {
+          setMode('login');
+          setFormData(prev => ({ ...prev, password: '', confirmPassword: '', agreeToTerms: false }));
+        }, 3000);
+      }
       
     } catch (error) {
       console.error("AI Search Mastery Registration Error:", error.message);
@@ -327,10 +357,37 @@ function AuthWithPassword() {
           {mode === 'login' 
             ? 'Access comprehensive AI optimization insights powered by the MASTERY-AI Framework v3.1.1.'
             : mode === 'register'
-            ? 'Join thousands of professionals optimizing their content for AI search engines.'
+            ? (showTierInfo && selectedTier 
+                ? `Complete your ${selectedTier} subscription setup. Join thousands of professionals optimizing their content.`
+                : 'Join thousands of professionals optimizing their content for AI search engines.')
             : 'Enter your email to receive password reset instructions.'
           }
         </p>
+
+        {/* Tier information display for registration flow */}
+        {showTierInfo && selectedTier && mode === 'register' && (
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="text-center">
+              <div className="text-2xl mb-1">
+                {selectedTier === 'coffee' ? '☕' : selectedTier === 'professional' ? '💼' : selectedTier === 'free' ? '🆓' : '🏢'}
+              </div>
+              <h3 className="font-semibold text-blue-900 capitalize">
+                {selectedTier} {selectedTier !== 'free' ? 'Subscription' : 'Trial'}
+              </h3>
+              <p className="text-sm text-blue-700 mt-1">
+                {selectedTier === 'free' && '3 analyses per month • Basic features'}
+                {selectedTier === 'coffee' && 'Unlimited analyses • Professional features'}
+                {selectedTier === 'professional' && 'Everything in Coffee + Advanced analysis'}
+                {selectedTier === 'enterprise' && 'Everything + Team collaboration'}
+              </p>
+              {selectedTier !== 'free' && skipEmailVerification && (
+                <p className="text-xs text-green-700 mt-1">
+                  ✓ Payment confirmed • Email verification not required
+                </p>
+              )}
+            </div>
+          </div>
+        )}
 
         {message && (
           <div className={`p-3 mb-4 rounded-md font-secondary text-sm text-white`} 

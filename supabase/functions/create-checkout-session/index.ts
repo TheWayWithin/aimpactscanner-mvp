@@ -19,81 +19,119 @@ serve(async (req) => {
     console.log('=== CREATE CHECKOUT SESSION START ===');
     
     const requestBody = await req.json();
-    const { priceId, userId, tier, successUrl, cancelUrl } = requestBody;
+    const { priceId, userId, tier, successUrl, cancelUrl, mode, customerCreation, allowPromotionCodes } = requestBody;
     
-    console.log('Parameters:', { priceId, userId, tier, successUrl, cancelUrl });
+    console.log('Parameters:', { priceId, userId, tier, successUrl, cancelUrl, mode, customerCreation });
     
-    // Validate inputs
-    if (!priceId || !userId || !tier) {
-      throw new Error('Missing required parameters: priceId, userId, or tier');
+    // Validate inputs - userId is optional for registration flow
+    if (!priceId || !tier) {
+      throw new Error('Missing required parameters: priceId or tier');
     }
+    
+    // Check if this is registration flow (no userId provided)
+    const isRegistrationFlow = mode === 'registration' || !userId;
 
     if (!STRIPE_SECRET_KEY) {
       throw new Error('Stripe secret key not configured');
     }
     
-    // Create Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL');
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    let customerId = null;
+    let userEmail = null;
     
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Missing Supabase environment variables');
-    }
-    
-    const supabase = createClient(supabaseUrl, supabaseKey);
-    
-    // Get user information
-    const { data: user, error: userError } = await supabase
-      .from('users')
-      .select('email, stripe_customer_id')
-      .eq('id', userId)
-      .single();
-
-    if (userError || !user) {
-      throw new Error('User not found');
-    }
-
-    console.log('User found:', { email: user.email, hasStripeId: !!user.stripe_customer_id });
-
-    // Prepare Stripe customer
-    let customerId = user.stripe_customer_id;
-    
-    if (!customerId) {
-      console.log('Creating new Stripe customer...');
+    if (!isRegistrationFlow) {
+      // Existing user flow - get user information
+      const supabaseUrl = Deno.env.get('SUPABASE_URL');
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
       
-      // Create new Stripe customer
-      const customerResponse = await fetch(`${STRIPE_API_URL}/customers`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${STRIPE_SECRET_KEY}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          email: user.email,
-          'metadata[user_id]': userId,
-          'metadata[tier]': tier
-        })
-      });
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error('Missing Supabase environment variables');
+      }
+      
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      
+      // Get user information
+      const { data: user, error: userError } = await supabase
+        .from('users')
+        .select('email, stripe_customer_id')
+        .eq('id', userId)
+        .single();
 
-      if (!customerResponse.ok) {
-        const error = await customerResponse.text();
-        throw new Error(`Failed to create Stripe customer: ${error}`);
+      if (userError || !user) {
+        throw new Error('User not found');
       }
 
-      const customer = await customerResponse.json();
-      customerId = customer.id;
+      console.log('User found:', { email: user.email, hasStripeId: !!user.stripe_customer_id });
+      userEmail = user.email;
+      customerId = user.stripe_customer_id;
+      
+      if (!customerId) {
+        console.log('Creating new Stripe customer for existing user...');
+        
+        // Create new Stripe customer
+        const customerResponse = await fetch(`${STRIPE_API_URL}/customers`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${STRIPE_SECRET_KEY}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            email: user.email,
+            'metadata[user_id]': userId,
+            'metadata[tier]': tier
+          })
+        });
 
-      // Update user with Stripe customer ID
-      await supabase
-        .from('users')
-        .update({ stripe_customer_id: customerId })
-        .eq('id', userId);
+        if (!customerResponse.ok) {
+          const error = await customerResponse.text();
+          throw new Error(`Failed to create Stripe customer: ${error}`);
+        }
 
-      console.log('Stripe customer created:', customerId);
+        const customer = await customerResponse.json();
+        customerId = customer.id;
+
+        // Update user with Stripe customer ID
+        await supabase
+          .from('users')
+          .update({ stripe_customer_id: customerId })
+          .eq('id', userId);
+
+        console.log('Stripe customer created:', customerId);
+      }
+    } else {
+      console.log('Registration flow - customer will be created by Stripe Checkout');
     }
 
     // Create checkout session
     console.log('Creating Stripe checkout session...');
+    
+    // Build checkout session parameters
+    const sessionParams = new URLSearchParams({
+      'line_items[0][price]': priceId,
+      'line_items[0][quantity]': '1',
+      mode: 'subscription',
+      success_url: successUrl || `${req.headers.get('origin')}/upgrade-success`,
+      cancel_url: cancelUrl || `${req.headers.get('origin')}/pricing`,
+      'metadata[tier]': tier,
+      'subscription_data[metadata][tier]': tier,
+      allow_promotion_codes: allowPromotionCodes?.toString() || 'true',
+      billing_address_collection: 'auto',
+      'payment_method_types[0]': 'card'
+    });
+    
+    // Add customer information based on flow type
+    if (isRegistrationFlow) {
+      // Registration flow - let Stripe create customer
+      sessionParams.append('customer_creation', customerCreation || 'always');
+    } else {
+      // Existing user flow
+      if (customerId) {
+        sessionParams.append('customer', customerId);
+      }
+      if (userId) {
+        sessionParams.append('metadata[user_id]', userId);
+        sessionParams.append('subscription_data[metadata][user_id]', userId);
+      }
+    }
     
     const checkoutResponse = await fetch(`${STRIPE_API_URL}/checkout/sessions`, {
       method: 'POST',
@@ -101,21 +139,7 @@ serve(async (req) => {
         'Authorization': `Bearer ${STRIPE_SECRET_KEY}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: new URLSearchParams({
-        customer: customerId,
-        'line_items[0][price]': priceId,
-        'line_items[0][quantity]': '1',
-        mode: 'subscription',
-        success_url: successUrl || `${req.headers.get('origin')}/upgrade-success`,
-        cancel_url: cancelUrl || `${req.headers.get('origin')}/pricing`,
-        'metadata[user_id]': userId,
-        'metadata[tier]': tier,
-        'subscription_data[metadata][user_id]': userId,
-        'subscription_data[metadata][tier]': tier,
-        allow_promotion_codes: 'true',
-        billing_address_collection: 'auto',
-        'payment_method_types[0]': 'card'
-      })
+      body: sessionParams
     });
 
     if (!checkoutResponse.ok) {

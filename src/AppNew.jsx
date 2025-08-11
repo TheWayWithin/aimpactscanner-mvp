@@ -9,6 +9,7 @@ import TeaserResults from './components/TeaserResults';
 
 // Existing components
 import Auth from './components/Auth';
+import RegistrationFlow from './components/RegistrationFlow';
 import SimpleAnalysisProgress from './components/SimpleAnalysisProgress';
 import SimpleResultsDashboard from './components/SimpleResultsDashboard';
 import URLInput from './components/URLInput';
@@ -112,9 +113,9 @@ function AppNew() {
   // Handle upgrade click from teaser results
   const handleUpgradeFromTeaser = async (tier) => {
     if (!session) {
-      // Need to register first
+      // Need to register first - use new registration flow
       sessionStorage.setItem('selectedTier', tier);
-      setCurrentView('register');
+      setCurrentView('registration-flow');
     } else {
       // Already logged in, go straight to payment
       if (tier === 'professional') {
@@ -129,10 +130,23 @@ function AppNew() {
   const handleFreeTrialFromTeaser = () => {
     if (!session) {
       sessionStorage.setItem('selectedTier', 'free');
-      setCurrentView('register');
+      setCurrentView('registration-flow');
     } else {
       // Already logged in, show full results
       setCurrentView('results');
+    }
+  };
+
+  // Handle registration completion from registration flow
+  const handleRegistrationComplete = (user, tier) => {
+    console.log('Registration completed:', { user: user?.id, tier });
+    // The auth state change will handle the redirect to dashboard
+    // Just clear any pending analysis URL if needed
+    const pendingUrl = sessionStorage.getItem('pendingAnalysisUrl');
+    if (pendingUrl) {
+      setCurrentView('results');
+    } else {
+      setCurrentView('dashboard');
     }
   };
 
@@ -223,6 +237,10 @@ function AppNew() {
 
   if (currentView === 'register') {
     return <Auth />;
+  }
+
+  if (currentView === 'registration-flow') {
+    return <RegistrationFlow onRegistrationComplete={handleRegistrationComplete} />;
   }
 
   if (!session) {

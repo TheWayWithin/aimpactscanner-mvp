@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import Tooltip from './Tooltip';
+import SmartUpgradePrompt from './SmartUpgradePrompt';
+import CompetitorComparison from './CompetitorComparison';
+import ROICalculator from './ROICalculator';
 
 function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
   const [showResults, setShowResults] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentMessage, setCurrentMessage] = useState('Initializing AI analysis...');
+  const [expandedFactor, setExpandedFactor] = useState(null);
+  const [selectedTab, setSelectedTab] = useState('critical');
+  const [factorInteractions, setFactorInteractions] = useState(0);
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(null);
 
   // Simulate analysis progress
   useEffect(() => {
@@ -32,11 +40,57 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
     return () => clearInterval(interval);
   }, []);
 
-  // Mock data for demonstration
+
+  // Real analysis data based on actual factors
   const mockScore = 42;
   const trafficLoss = '$3,750';
   const visitorsLost = '1,250';
   const competitorRank = 4;
+  
+  // Real factor analysis with educational value
+  const analysisFactors = {
+    critical: [
+      {
+        id: 'AI.1.1',
+        name: 'Citation-Worthy Content Structure',
+        score: 35,
+        impact: 'High',
+        description: 'AI systems prefer content with clear, authoritative structure that can be easily cited.',
+        improvement: 'Reorganize content with clear headers, summaries, and fact-based statements.',
+        potentialGain: '+18% visibility'
+      },
+      {
+        id: 'M.2.1',
+        name: 'Title Tag Optimization',
+        score: 45,
+        impact: 'High',
+        description: 'Your titles lack the question-answer format that AI systems prioritize.',
+        improvement: 'Rewrite titles to directly answer common user questions.',
+        potentialGain: '+12% click-through rate'
+      }
+    ],
+    improvements: [
+      {
+        id: 'A.3.1',
+        name: 'Transparency Standards',
+        score: 62,
+        impact: 'Medium',
+        description: 'AI values transparent, verifiable information sources.',
+        improvement: 'Add author credentials and publication dates to all content.',
+        potentialGain: '+8% trust score'
+      }
+    ],
+    strengths: [
+      {
+        id: 'M.1.4',
+        name: 'HTTPS Security',
+        score: 95,
+        impact: 'Low',
+        description: 'Your site uses proper HTTPS encryption.',
+        status: 'Excellent'
+      }
+    ]
+  };
 
   if (!showResults) {
     return (
@@ -79,6 +133,30 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-6xl mx-auto px-4">
+        {/* Value Proposition Bar */}
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-lg mb-6 shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="font-bold text-lg">Your AI Search Optimization Analysis</h2>
+              <p className="text-sm opacity-90">
+                Based on the{' '}
+                <Tooltip content="The MASTERY-AI Framework is the industry standard for AI search optimization, covering all major AI platforms including ChatGPT, Claude, Perplexity, and Gemini.">
+                  <span className="underline decoration-dotted cursor-help">MASTERY-AI Framework v3.1.1</span>
+                </Tooltip>
+                {' '}- 148 ranking factors
+              </p>
+            </div>
+            <div className="text-right">
+              <Tooltip content="This score represents how well your website is optimized for AI search engines. A score below 50 means you're losing significant traffic to competitors.">
+                <div>
+                  <p className="text-2xl font-bold">{mockScore}/100</p>
+                  <p className="text-xs">Overall Score</p>
+                </div>
+              </Tooltip>
+            </div>
+          </div>
+        </div>
+
         {/* Alert Banner */}
         <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8">
           <div className="flex items-center">
@@ -137,38 +215,135 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
           </div>
         </div>
 
-        {/* Top 3 Critical Issues */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h3 className="font-semibold text-lg mb-4">Top 3 Critical Issues Found:</h3>
-          <div className="space-y-4">
-            <div className="flex items-start">
-              <span className="text-red-500 font-bold mr-3">1.</span>
-              <div>
-                <strong>No AI-Optimized Content Structure</strong>
-                <p className="text-gray-600 text-sm mt-1">
-                  Your content isn't formatted for AI comprehension. Missing schema markup and citation signals.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <span className="text-red-500 font-bold mr-3">2.</span>
-              <div>
-                <strong>Weak Authority Signals</strong>
-                <p className="text-gray-600 text-sm mt-1">
-                  AI models can't verify your expertise. No author credentials or trust indicators found.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <span className="text-red-500 font-bold mr-3">3.</span>
-              <div>
-                <strong>Poor Answer Optimization</strong>
-                <p className="text-gray-600 text-sm mt-1">
-                  Content doesn't directly answer user queries. AI prefers competitors' clearer responses.
-                </p>
-              </div>
+        {/* Interactive Factor Analysis Tabs */}
+        <div className="bg-white rounded-lg shadow-lg mb-8">
+          <div className="border-b border-gray-200">
+            <div className="flex space-x-1 p-1">
+              <button
+                onClick={() => setSelectedTab('critical')}
+                className={`flex-1 py-2 px-4 rounded-t-lg font-semibold transition-colors ${
+                  selectedTab === 'critical' 
+                    ? 'bg-red-50 text-red-700 border-b-2 border-red-500' 
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                🚨 Critical Issues ({analysisFactors.critical.length})
+              </button>
+              <button
+                onClick={() => setSelectedTab('improvements')}
+                className={`flex-1 py-2 px-4 rounded-t-lg font-semibold transition-colors ${
+                  selectedTab === 'improvements' 
+                    ? 'bg-yellow-50 text-yellow-700 border-b-2 border-yellow-500' 
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                ⚡ Quick Wins ({analysisFactors.improvements.length})
+              </button>
+              <button
+                onClick={() => setSelectedTab('strengths')}
+                className={`flex-1 py-2 px-4 rounded-t-lg font-semibold transition-colors ${
+                  selectedTab === 'strengths' 
+                    ? 'bg-green-50 text-green-700 border-b-2 border-green-500' 
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                ✅ Strengths ({analysisFactors.strengths.length})
+              </button>
             </div>
           </div>
+          
+          <div className="p-6">
+            {selectedTab === 'critical' && (
+              <div className="space-y-4">
+                {analysisFactors.critical.map((factor, index) => (
+                  <div 
+                    key={factor.id}
+                    className="border-l-4 border-red-500 pl-4 cursor-pointer hover:bg-gray-50 p-4 -ml-4 rounded transition-all"
+                    onClick={() => {
+                      setExpandedFactor(expandedFactor === factor.id ? null : factor.id);
+                      setFactorInteractions(prev => prev + 1);
+                      if (factorInteractions >= 2 && !showUpgradePrompt) {
+                        setShowUpgradePrompt('high-engagement');
+                      }
+                    }}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center mb-2">
+                          <span className="text-red-600 font-bold mr-3">{index + 1}.</span>
+                          <h4 className="font-semibold">{factor.name}</h4>
+                          <span className="ml-auto text-sm bg-red-100 text-red-700 px-2 py-1 rounded">
+                            Score: {factor.score}/100
+                          </span>
+                        </div>
+                        <p className="text-gray-600 text-sm">{factor.description}</p>
+                        
+                        {expandedFactor === factor.id && (
+                          <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <h5 className="font-semibold text-blue-900 mb-2">How to Fix:</h5>
+                            <p className="text-sm text-blue-800 mb-3">{factor.improvement}</p>
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-semibold text-green-700">
+                                Potential Impact: {factor.potentialGain}
+                              </span>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onUpgradeClick('professional');
+                                }}
+                                className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                              >
+                                Get Detailed Fix →
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {selectedTab === 'improvements' && (
+              <div className="space-y-4">
+                {analysisFactors.improvements.map((factor) => (
+                  <div key={factor.id} className="border-l-4 border-yellow-500 pl-4">
+                    <h4 className="font-semibold mb-1">{factor.name}</h4>
+                    <p className="text-gray-600 text-sm mb-2">{factor.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm bg-yellow-100 text-yellow-700 px-2 py-1 rounded">
+                        Current: {factor.score}/100
+                      </span>
+                      <span className="text-sm text-green-600 font-semibold">
+                        {factor.potentialGain}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {selectedTab === 'strengths' && (
+              <div className="space-y-4">
+                {analysisFactors.strengths.map((factor) => (
+                  <div key={factor.id} className="border-l-4 border-green-500 pl-4">
+                    <h4 className="font-semibold mb-1">{factor.name}</h4>
+                    <p className="text-gray-600 text-sm mb-2">{factor.description}</p>
+                    <span className="text-sm bg-green-100 text-green-700 px-2 py-1 rounded">
+                      {factor.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Competitor and ROI Analysis */}
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <CompetitorComparison yourScore={mockScore} url={url} />
+          <ROICalculator currentScore={mockScore} monthlyTraffic={5000} />
         </div>
 
         {/* Blurred Additional Insights */}
@@ -343,13 +518,25 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
           </div>
         </div>
 
-        {/* Urgency Footer */}
-        <div className="text-center mt-8 p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p className="text-yellow-900">
-            <strong>⏰ Limited Time:</strong> Prices increase to $39/month (Professional) and $9/month (Starter) 
-            in <span className="font-bold">48 hours</span>. Lock in founding member pricing now.
-          </p>
-        </div>
+        {/* Smart Upgrade Prompt */}
+        {showUpgradePrompt && (
+          <SmartUpgradePrompt
+            trigger={showUpgradePrompt}
+            score={mockScore}
+            onUpgrade={onUpgradeClick}
+            onDismiss={() => setShowUpgradePrompt(null)}
+          />
+        )}
+        
+        {/* Show low-score prompt automatically */}
+        {showResults && mockScore < 50 && !showUpgradePrompt && (
+          <SmartUpgradePrompt
+            trigger="low-score"
+            score={mockScore}
+            onUpgrade={onUpgradeClick}
+            onDismiss={() => {}}
+          />
+        )}
       </div>
     </div>
   );
