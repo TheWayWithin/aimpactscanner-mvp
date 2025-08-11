@@ -88,4 +88,4 @@
 
 # Production build optimization
 [context.production]
-  command = "npm run build"
+  command = "npm install && npm run build"
