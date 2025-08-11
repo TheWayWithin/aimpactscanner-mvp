@@ -88,7 +88,7 @@ function AppNew() {
     try {
       const { data, error } = await supabase
         .from('users')
-        .select('tier, stripe_customer_id, analyses_used, analyses_limit')
+        .select('tier, stripe_customer_id, monthly_analyses_used')
         .eq('id', userId)
         .single();
 
@@ -318,7 +318,7 @@ function AppNew() {
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
             <p className="text-gray-600 mb-8">
-              You have {dashboardData?.analyses_limit - dashboardData?.analyses_used || 3} analyses remaining this month.
+              You have {userTier === 'free' ? (3 - (dashboardData?.monthly_analyses_used || 0)) : 'unlimited'} analyses remaining this month.
             </p>
             <button
               onClick={() => setCurrentView('input')}

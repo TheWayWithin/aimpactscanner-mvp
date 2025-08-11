@@ -20,9 +20,9 @@ function UserInitializer({ session, onUserReady }) {
 
       console.log('Initializing user:', userId, userEmail);
 
-      // Add timeout promise with automatic fallback
+      // Add timeout promise with automatic fallback - reduced to 1 second for production
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('User initialization timeout - proceeding with defaults')), 5000)
+        setTimeout(() => reject(new Error('User initialization timeout - proceeding with defaults')), 1000)
       );
 
       // First check if user exists with timeout
