@@ -88,6 +88,12 @@ function Auth() {
           </button>
         </form>
 
+        <div className="text-center mt-4">
+          <a href="/reset-password" className="text-sm text-blue-600 hover:text-blue-700 underline">
+            Forgot your password?
+          </a>
+        </div>
+        
         <p className="text-center font-secondary text-xs mt-6" style={{ color: 'var(--ai-silver)' }}>
           By signing in, you agree to the AI Search Mastery Terms of Service.
         </p>
