@@ -17,7 +17,8 @@ import TierIndicator from './components/TierIndicator';
 import TierSelection from './components/TierSelection';
 import AccountDashboard from './components/AccountDashboard';
 import UserInitializer from './components/UserInitializer';
-import { useUpgrade } from './components/UpgradeHandler';
+// import { useUpgrade } from './components/UpgradeHandler';
+import { useUpgradeDebug as useUpgrade } from './components/UpgradeHandlerDebug'; // Temporary debug
 
 function AppNew() {
   const [session, setSession] = useState(null);
