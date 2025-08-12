@@ -16,10 +16,26 @@ function ResetPassword() {
     const type = hashParams.get('type');
     
     if (accessToken && type === 'recovery') {
-      setIsValidToken(true);
-      setMessage('Please enter your new password');
+      // We have a token - let's verify it by setting the session
+      supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: hashParams.get('refresh_token') || ''
+      }).then(({ error }) => {
+        if (error) {
+          console.error('Token validation error:', error);
+          setError('Your reset link has expired or been used. Please request a new one.');
+          setIsValidToken(false);
+        } else {
+          setIsValidToken(true);
+          setMessage('Please enter your new password');
+        }
+      });
+    } else if (window.location.hash.includes('access_token')) {
+      // We have a token but it might not be a recovery type
+      setError('This link may have already been used. Please request a new password reset link.');
     } else {
-      setError('Invalid or expired reset link. Please request a new password reset.');
+      // No token at all - show the request form
+      setError('Enter your email to receive a password reset link.');
     }
   }, []);
 
@@ -77,14 +93,27 @@ function ResetPassword() {
       });
       
       if (error) {
-        throw error;
+        // Handle rate limiting specifically
+        if (error.message.includes('security purposes') || error.message.includes('429') || error.message.includes('rate')) {
+          setError('Too many reset attempts. Please wait a minute before trying again.');
+          // Set a timer to show when they can try again
+          setTimeout(() => {
+            setError('You can now request a new reset link.');
+          }, 60000); // 1 minute
+        } else {
+          throw error;
+        }
+      } else {
+        setRequestSent(true);
+        setMessage('New password reset link sent! Check your email.');
       }
       
-      setRequestSent(true);
-      setMessage('New password reset link sent! Check your email.');
-      
     } catch (error) {
-      setError(error.message);
+      if (error.message.includes('security purposes')) {
+        setError('Too many reset attempts. Please wait a minute before trying again.');
+      } else {
+        setError(error.message);
+      }
     } finally {
       setRequestLoading(false);
     }
