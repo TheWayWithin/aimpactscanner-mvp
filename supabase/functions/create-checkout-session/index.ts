@@ -19,7 +19,27 @@ serve(async (req) => {
     console.log('=== CREATE CHECKOUT SESSION START ===');
     
     const requestBody = await req.json();
-    const { priceId, userId, tier, successUrl, cancelUrl, mode, customerCreation, allowPromotionCodes } = requestBody;
+    let { priceId, userId, tier, successUrl, cancelUrl, mode, customerCreation, allowPromotionCodes } = requestBody;
+    
+    // Map 'starter' to 'coffee' for backward compatibility
+    if (tier === 'starter') {
+      tier = 'coffee';
+      console.log('Mapped starter tier to coffee');
+    }
+    
+    // If priceId is not provided or is a placeholder, use the actual price ID
+    if (!priceId || priceId === 'price_coffee_tier_monthly') {
+      // Use the actual Coffee tier price ID from environment
+      const coffeePriceId = Deno.env.get('STRIPE_COFFEE_PRICE_ID');
+      if (coffeePriceId) {
+        priceId = coffeePriceId;
+        console.log('Using Coffee price ID from environment:', priceId);
+      } else {
+        // Fallback to the known working price ID
+        priceId = 'price_1RnSa4IiC84gpR8HXmbDgaNy';
+        console.log('Using fallback Coffee price ID:', priceId);
+      }
+    }
     
     console.log('Parameters:', { priceId, userId, tier, successUrl, cancelUrl, mode, customerCreation });
     
@@ -120,8 +140,9 @@ serve(async (req) => {
     
     // Add customer information based on flow type
     if (isRegistrationFlow) {
-      // Registration flow - let Stripe create customer
-      sessionParams.append('customer_creation', customerCreation || 'always');
+      // Registration flow - for subscription mode, Stripe creates customer automatically
+      // Don't use customer_creation parameter as it's only for payment mode
+      // Stripe will create a customer automatically for subscriptions
     } else {
       // Existing user flow
       if (customerId) {

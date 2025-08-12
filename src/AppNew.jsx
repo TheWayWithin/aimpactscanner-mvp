@@ -55,6 +55,31 @@ function AppNew() {
   );
 
   useEffect(() => {
+    // Check URL parameters first (for Stripe returns)
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment');
+    const sessionId = urlParams.get('session_id');
+    
+    if (paymentStatus === 'success' && sessionId) {
+      // Payment successful - show success message
+      console.log('Payment successful! Session ID:', sessionId);
+      setCurrentView('payment-success');
+      // Clean URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      // After showing success, redirect to dashboard
+      setTimeout(() => {
+        setCurrentView('dashboard');
+      }, 3000);
+      return;
+    } else if (paymentStatus === 'cancelled') {
+      // Payment cancelled
+      console.log('Payment cancelled');
+      setCurrentView('landing');
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+    }
+    
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session && session.user) {
@@ -241,6 +266,26 @@ function AppNew() {
 
   if (currentView === 'registration-flow') {
     return <RegistrationFlow onRegistrationComplete={handleRegistrationComplete} />;
+  }
+  
+  if (currentView === 'payment-success') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
+        <div className="text-center p-8 bg-white rounded-lg shadow-xl max-w-md">
+          <div className="text-6xl mb-4">🎉</div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Successful!</h1>
+          <p className="text-gray-600 mb-6">
+            Welcome to the Coffee Tier! Your subscription is now active.
+          </p>
+          <p className="text-sm text-gray-500">
+            Redirecting to your dashboard...
+          </p>
+          <div className="mt-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!session) {
