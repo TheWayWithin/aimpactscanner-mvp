@@ -113,17 +113,16 @@ function AppNew() {
 
   // Handle upgrade click from teaser results
   const handleUpgradeFromTeaser = async (tier) => {
+    // Map starter to coffee since that's our actual tier name
+    const actualTier = tier === 'starter' ? 'coffee' : tier;
+    
     if (!session) {
       // Need to register first - use new registration flow
-      sessionStorage.setItem('selectedTier', tier);
+      sessionStorage.setItem('selectedTier', actualTier);
       setCurrentView('registration-flow');
     } else {
       // Already logged in, go straight to payment
-      if (tier === 'professional') {
-        await handleUpgrade('professional');
-      } else if (tier === 'starter') {
-        await handleUpgrade('coffee'); // Map starter to coffee tier
-      }
+      await handleUpgrade(actualTier);
     }
   };
 
