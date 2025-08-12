@@ -6,6 +6,7 @@ import { supabase } from './lib/supabaseClient';
 // New components for conversion flow
 import Landing from './components/Landing';
 import TeaserResults from './components/TeaserResults';
+import ResetPassword from './components/ResetPassword';
 
 // Existing components
 import Auth from './components/Auth';
@@ -55,6 +56,12 @@ function AppNew() {
   );
 
   useEffect(() => {
+    // Check if this is the reset-password page
+    if (window.location.pathname === '/reset-password') {
+      setCurrentView('reset-password');
+      return;
+    }
+    
     // Check URL parameters first (for Stripe returns)
     const urlParams = new URLSearchParams(window.location.search);
     const paymentStatus = urlParams.get('payment');
@@ -245,6 +252,10 @@ function AppNew() {
   };
 
   // Render based on current view
+  if (currentView === 'reset-password') {
+    return <ResetPassword />;
+  }
+  
   if (currentView === 'landing' && !session) {
     return <Landing onAnalysisComplete={handleLandingAnalysis} />;
   }
