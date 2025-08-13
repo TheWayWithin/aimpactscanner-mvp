@@ -121,23 +121,41 @@ function SimpleResultsDashboard({ analysisId, url }) {
 
   return (
     <div className="results-dashboard max-w-6xl mx-auto p-6">
+      {/* Demo Mode Notice */}
+      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <svg className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <p className="text-sm text-yellow-800">
+              <strong>Demo Mode:</strong> Due to temporary database connectivity issues, this is sample data demonstrating 
+              our analysis format. Real analysis uses our Edge Function to check 148 factors specific to YOUR site. 
+              The patterns shown are based on typical issues we find across our 7 client sites.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">AI Search Analysis Results</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Sample Analysis Results</h1>
             <p className="text-gray-600 break-all">{mockResults.url}</p>
           </div>
           <div className="text-right">
             <div className="text-3xl font-bold text-blue-600">{mockResults.overall_score}</div>
-            <div className="text-sm text-gray-600">Overall Score</div>
+            <div className="text-sm text-gray-600">Sample Score</div>
           </div>
         </div>
         
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-blue-800 text-sm">
-            <strong>Note:</strong> This is a demonstration using the MASTERY-AI Framework v3.1.1. 
-            Analysis shows Phase A results (11 core factors) with evidence-based scoring.
+            <strong>Framework:</strong> MASTERY-AI v3.1.1 with 148 factors. 
+            Sample shows common patterns from analyzing FreeCalcHub, Evolve-7, Agent-11, and 4 other client sites.
           </p>
         </div>
       </div>

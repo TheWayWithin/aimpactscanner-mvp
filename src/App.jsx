@@ -5,7 +5,7 @@ import { supabase } from './lib/supabaseClient';
 
 // New components for conversion flow
 import Landing from './components/Landing';
-import TeaserResults from './components/TeaserResults';
+import AnalysisPreview from './components/AnalysisPreview';
 
 // Existing components
 import AuthWithPassword from './components/AuthWithPassword';
@@ -252,7 +252,7 @@ function App() {
 
   if (currentView === 'teaser-results') {
     return (
-      <TeaserResults
+      <AnalysisPreview
         url={currentUrl}
         analysisId={currentAnalysisId}
         onUpgradeClick={handleUpgradeFromTeaser}

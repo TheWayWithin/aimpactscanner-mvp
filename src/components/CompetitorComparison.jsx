@@ -2,25 +2,29 @@ import React from 'react';
 import Tooltip from './Tooltip';
 
 function CompetitorComparison({ yourScore, url }) {
-  // Realistic competitor scores based on framework analysis
-  const competitors = [
+  // Industry averages based on our 7 client analyses
+  // These are typical scores we see across different optimization levels
+  const industryBenchmarks = [
     { 
-      name: 'Industry Leader',
-      score: 78,
-      improvements: ['Structured data', 'Author credentials', 'FAQ sections'],
+      name: 'Well-Optimized Sites',
+      score: 70,
+      description: 'Sites with deliberate AI optimization',
+      examples: 'Usually have structured data, clear authorship, FAQ sections',
       status: 'Strong AI visibility'
     },
     {
-      name: 'Top Competitor',
-      score: 65,
-      improvements: ['Content depth', 'Regular updates', 'Clear answers'],
+      name: 'Partially Optimized',
+      score: 55,
+      description: 'Sites with some SEO but no AI focus',
+      examples: 'Basic meta tags, some content structure',
       status: 'Moderate AI presence'
     },
     {
-      name: 'Average Competitor', 
-      score: 51,
-      improvements: ['Basic optimization', 'Some structure'],
-      status: 'Basic optimization'
+      name: 'Typical Website', 
+      score: 42,
+      description: 'Most sites without optimization',
+      examples: 'Limited structure, no schema markup',
+      status: 'Minimal AI visibility'
     }
   ];
 
