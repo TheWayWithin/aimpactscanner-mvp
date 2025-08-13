@@ -78,17 +78,16 @@ function Landing({ onAnalysisComplete }) {
             {/* Client Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 max-w-5xl mx-auto">
               {[
-                { name: 'FreeCalcHub', url: 'freecalchub.com' },
-                { name: 'Evolve-7', url: 'evolve-7.com' },
-                { name: 'Agent-11', url: 'agent-11.com' },
-                { name: 'Agents-11', url: 'agents-11.com' },
-                { name: 'LLMtxt Mastery', url: 'llmtxtmastery.com' },
-                { name: 'AI Search Mastery', url: 'aisearchmastery.com' },
-                { name: 'MCP-11', url: 'mcp-11.com' }
+                'FreeCalcHub',
+                'Evolve-7',
+                'Agent-11', 
+                'Agents-11',
+                'LLMtxt Mastery',
+                'AI Search Mastery',
+                'MCP-11'
               ].map((client, index) => (
-                <div key={index} className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-md border border-gray-100 text-center hover:shadow-lg transition-shadow">
-                  <div className="text-xs font-medium text-gray-900 mb-1">{client.name}</div>
-                  <div className="text-xs text-gray-600">{client.url}</div>
+                <div key={index} className="bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-md border border-gray-100 text-center hover:shadow-lg transition-shadow">
+                  <div className="text-sm font-medium text-gray-900">{client}</div>
                 </div>
               ))}
             </div>
@@ -189,7 +188,7 @@ function Landing({ onAnalysisComplete }) {
           </p>
           <div className="flex justify-center items-center gap-8">
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">47,000+</div>
+              <div className="text-4xl font-bold text-blue-600 mb-2">10+</div>
               <div className="text-sm text-gray-600">Businesses Analyzed</div>
             </div>
             <div className="text-center">

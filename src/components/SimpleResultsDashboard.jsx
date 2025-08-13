@@ -3,18 +3,57 @@ import React, { useEffect } from 'react';
 import { addToHistory } from './AnalysisHistory';
 
 function SimpleResultsDashboard({ analysisId, url }) {
+  // Generate dynamic score based on URL for more realistic demo
+  const generateScore = (url) => {
+    if (!url) return 67;
+    
+    // Use URL characteristics to generate consistent but varied scores
+    const urlLower = url.toLowerCase();
+    
+    // Known sites get specific scores
+    if (urlLower.includes('freecalchub')) return 72;
+    if (urlLower.includes('evolve-7')) return 68;
+    if (urlLower.includes('agent-11')) return 61;
+    if (urlLower.includes('agents-11')) return 63;
+    if (urlLower.includes('llmtxt')) return 74;
+    if (urlLower.includes('aisearchmastery')) return 79;
+    if (urlLower.includes('mcp-11')) return 65;
+    if (urlLower.includes('example.com')) return 42;
+    
+    // Generate pseudo-random score based on URL length and characters
+    const charSum = urlLower.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    return 35 + (charSum % 45); // Range: 35-80
+  };
+  
+  const overallScore = generateScore(url);
+  
+  // Generate pillar scores based on overall score with some variation
+  const generatePillarScores = (baseScore) => {
+    const variation = 8; // +/- 8 points variation
+    return {
+      ai: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 4)),
+      authority: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 3)),
+      machine_readability: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 5)),
+      user_experience: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 6)),
+      content_quality: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 2)),
+      technical: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 1))
+    };
+  };
+  
+  const pillarScores = generatePillarScores(overallScore);
+  
   // Mock results data for demonstration
   const mockResults = {
-    overall_score: 67,
+    overall_score: overallScore,
     url: url || 'aisearchmastery.com',
     created_at: new Date().toISOString(),
     pillars: {
-      ai: { score: 71, weight: 23.8, factors: 3 },
-      authority: { score: 64, weight: 17.9, factors: 2 },
-      machine_readability: { score: 72, weight: 14.6, factors: 2 },
-      user_experience: { score: 58, weight: 13.7, factors: 2 },
-      content_quality: { score: 69, weight: 12.2, factors: 1 },
-      technical: { score: 63, weight: 17.8, factors: 1 }
+      ai: { score: pillarScores.ai, weight: 23.8, factors: 3 },
+      authority: { score: pillarScores.authority, weight: 17.9, factors: 2 },
+      machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 2 },
+      user_experience: { score: pillarScores.user_experience, weight: 13.7, factors: 2 },
+      content_quality: { score: pillarScores.content_quality, weight: 12.2, factors: 1 },
+      technical: { score: pillarScores.technical, weight: 17.8, factors: 1 }
     },
     factors: [
       {
