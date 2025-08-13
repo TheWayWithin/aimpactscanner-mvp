@@ -17,7 +17,9 @@ import TierIndicator from './components/TierIndicator';
 import TierSelection from './components/TierSelection';
 import AccountDashboard from './components/AccountDashboard';
 import UserInitializer from './components/UserInitializer';
+import AnalysisHistory from './components/AnalysisHistory';
 import { useUpgrade } from './components/UpgradeHandler';
+import { useUsageTracking } from './hooks/useUsageTracking';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -30,6 +32,14 @@ function App() {
   const [showWelcome, setShowWelcome] = useState(false);
   const [userReady, setUserReady] = useState(false);
   const [pendingAnalysis, setPendingAnalysis] = useState(null);
+
+  // Usage tracking hook
+  const { 
+    usageData, 
+    incrementUsage, 
+    canAnalyze, 
+    setUnlimitedAccess 
+  } = useUsageTracking(session?.user?.email);
 
   // Upgrade handler hooks
   const handleUpgradeSuccess = (message) => {
@@ -95,6 +105,10 @@ function App() {
       if (data) {
         setUserTier(data.tier || 'free');
         setDashboardData(data);
+        // Update unlimited access for Coffee tier
+        if (data.tier === 'coffee') {
+          setUnlimitedAccess(true);
+        }
       }
     } catch (error) {
       console.log('Could not fetch user tier:', error);
@@ -163,6 +177,13 @@ function App() {
       return;
     }
 
+    // Check usage limits for free tier
+    if (userTier === 'free' && !canAnalyze()) {
+      alert(`You've reached your monthly limit of 3 analyses. Upgrade to Coffee tier for unlimited analyses!`);
+      setCurrentView('pricing');
+      return;
+    }
+
     try {
       setIsAnalyzing(true);
       const userId = session.user.id;
@@ -190,6 +211,11 @@ function App() {
         }
       } catch (error) {
         console.log("⚠️ Analysis record creation failed:", error.message);
+      }
+
+      // Increment usage for free tier
+      if (userTier === 'free') {
+        incrementUsage();
       }
 
       // Switch to analysis view
@@ -315,18 +341,20 @@ function App() {
 
         {/* Content based on view */}
         {currentView === 'dashboard' && (
-          <div className="text-center">
-            <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
-            <p className="text-gray-600 mb-8">
-              You have {userTier === 'free' ? (3 - (dashboardData?.monthly_analyses_used || 0)) : 'unlimited'} analyses remaining this month.
-            </p>
-            <button
-              onClick={() => setCurrentView('input')}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
-            >
-              Start New Analysis →
+          <div>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
+              <p className="text-gray-600 mb-8">
+                You have {userTier === 'free' ? usageData.remaining : 'unlimited'} analyses remaining this month.
+              </p>
+              <button
+                onClick={() => setCurrentView('input')}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
+              >
+                Start New Analysis →
             </button>
           </div>
+          <AnalysisHistory />
         )}
 
         {currentView === 'input' && (

@@ -1,5 +1,6 @@
 // Simplified Results Dashboard - works without database
-import React from 'react';
+import React, { useEffect } from 'react';
+import { addToHistory } from './AnalysisHistory';
 
 function SimpleResultsDashboard({ analysisId, url }) {
   // Mock results data for demonstration
@@ -53,6 +54,19 @@ function SimpleResultsDashboard({ analysisId, url }) {
       }
     ]
   };
+
+  // Add analysis to history when component mounts
+  useEffect(() => {
+    if (url || analysisId) {
+      addToHistory({
+        id: analysisId || Date.now().toString(),
+        url: url || mockResults.url,
+        score: mockResults.overall_score,
+        date: new Date().toISOString(),
+        factors: mockResults.factors.length
+      });
+    }
+  }, [analysisId, url]);
 
   const getScoreColor = (score) => {
     if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
