@@ -246,10 +246,6 @@ function App() {
   };
 
   // Render based on current view
-  if (currentView === 'landing' && !session) {
-    return <Landing onAnalysisComplete={handleLandingAnalysis} />;
-  }
-
   if (currentView === 'teaser-results') {
     return (
       <AnalysisPreview
@@ -269,7 +265,12 @@ function App() {
     return <RegistrationFlow onRegistrationComplete={handleRegistrationComplete} />;
   }
 
+  // Show landing page for non-authenticated users by default
   if (!session) {
+    if (currentView === 'landing' || currentView === 'dashboard' || currentView === 'input') {
+      return <Landing onAnalysisComplete={handleLandingAnalysis} />;
+    }
+    // For any other view without session, show auth
     return <AuthWithPassword />;
   }
 
@@ -355,6 +356,7 @@ function App() {
             </button>
           </div>
           <AnalysisHistory />
+          </div>
         )}
 
         {currentView === 'input' && (
