@@ -20,17 +20,17 @@ test.describe('Complete E2E User Journey', () => {
       await expect(page.locator('text=AI is reshaping search')).toBeVisible();
       
       // Check social proof
-      await expect(page.locator('text=5,247 businesses')).toBeVisible();
+      await expect(page.locator('text=Trusted by 7 pioneering sites')).toBeVisible();
       
       // Check trust indicators
       await expect(page.locator('text=148')).toBeVisible();
       await expect(page.locator('text=AI Ranking Factors')).toBeVisible();
     });
 
-    test('should display testimonials', async ({ page }) => {
-      await expect(page.locator('text=Sarah Chen')).toBeVisible();
-      await expect(page.locator('text=Michael Torres')).toBeVisible();
-      await expect(page.locator('text=Emma Williams')).toBeVisible();
+    test('should display client showcase', async ({ page }) => {
+      await expect(page.locator('text=FreeCalcHub')).toBeVisible();
+      await expect(page.locator('text=Agent-11')).toBeVisible();
+      await expect(page.locator('text=AI Search Mastery')).toBeVisible();
     });
 
     test('should have working URL input', async ({ page }) => {

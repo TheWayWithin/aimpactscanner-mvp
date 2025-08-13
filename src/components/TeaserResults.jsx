@@ -82,8 +82,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
 
   // Real analysis data based on actual factors
   const mockScore = 42;
-  const trafficLoss = '$3,750';
-  const visitorsLost = '1,250';
+  const optimizationPotential = 100 - mockScore;
   const competitorRank = 4;
   
   // Real factor analysis with educational value
@@ -196,15 +195,15 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
           </div>
         </div>
 
-        {/* Alert Banner */}
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8">
+        {/* Opportunity Banner */}
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
           <div className="flex items-center">
-            <span className="text-2xl mr-3">⚠️</span>
+            <span className="text-2xl mr-3">🎯</span>
             <div>
-              <h3 className="font-semibold text-red-900">Critical: You're Losing Traffic to AI</h3>
-              <p className="text-red-700">
-                Your website is losing an estimated <strong>{visitorsLost} visitors/month</strong> worth 
-                <strong> {trafficLoss}</strong> to AI-powered search engines.
+              <h3 className="font-semibold text-blue-900">AI Discovery Opportunity</h3>
+              <p className="text-blue-700">
+                Your site is only <strong>{mockScore}% optimized</strong> for AI discovery. 
+                AI searchers have specific intent - they're your best prospects.
               </p>
             </div>
           </div>
@@ -232,12 +231,12 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
             </div>
           </div>
 
-          {/* Traffic Loss */}
+          {/* Optimization Potential */}
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <h3 className="text-sm font-semibold text-gray-600 mb-2">MONTHLY TRAFFIC LOSS</h3>
-            <div className="text-4xl font-bold text-red-600">{trafficLoss}</div>
+            <h3 className="text-sm font-semibold text-gray-600 mb-2">OPTIMIZATION POTENTIAL</h3>
+            <div className="text-4xl font-bold text-blue-600">{optimizationPotential}%</div>
             <p className="text-sm text-gray-600 mt-2">
-              {visitorsLost} potential customers going to competitors
+              Untapped AI discovery opportunities
             </p>
           </div>
 
@@ -416,7 +415,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
             Get Your Complete AI Optimization Roadmap
           </h2>
           <p className="text-center text-gray-600 mb-8">
-            Join 5,247 businesses already protecting their traffic from AI
+            Start optimizing for AI-driven traffic today
           </p>
 
           <div className="grid md:grid-cols-3 gap-6">

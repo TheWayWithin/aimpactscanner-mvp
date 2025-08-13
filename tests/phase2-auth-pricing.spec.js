@@ -381,10 +381,10 @@ test.describe('Phase 2 Pricing Display Components', () => {
       await expect(page.locator('text=99.9% Uptime')).toBeVisible();
     });
 
-    test('should display customer testimonials', async ({ page }) => {
-      await expect(page.locator('text=Increased our conversion rate by 340%')).toBeVisible();
-      await expect(page.locator('text=Sarah Chen')).toBeVisible();
-      await expect(page.locator('text=TechStart')).toBeVisible();
+    test('should display customer success metrics', async ({ page }) => {
+      await expect(page.locator('text=+340%')).toBeVisible();
+      await expect(page.locator('text=Average Conversion Improvement')).toBeVisible();
+      await expect(page.locator('text=47,000+')).toBeVisible();
     });
 
     test('should show money-back guarantee', async ({ page }) => {

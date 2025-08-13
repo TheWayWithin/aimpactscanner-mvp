@@ -24,7 +24,7 @@ test.describe('Phase 2 Actual Implementation Tests', () => {
 
     test('should show urgency banner', async ({ page }) => {
       await expect(page.locator('text=AI is reshaping search')).toBeVisible();
-      await expect(page.locator('text=65% of businesses losing traffic')).toBeVisible();
+      await expect(page.locator('text=protect your traffic now')).toBeVisible();
     });
 
     test('should display trust indicators', async ({ page }) => {
@@ -35,14 +35,14 @@ test.describe('Phase 2 Actual Implementation Tests', () => {
     });
 
     test('should show social proof', async ({ page }) => {
-      await expect(page.locator('text=5,247 businesses')).toBeVisible();
-      await expect(page.locator('text=protecting their traffic')).toBeVisible();
+      await expect(page.locator('text=Trusted by 7 pioneering sites')).toBeVisible();
+      await expect(page.locator('text=Real clients using our AI optimization')).toBeVisible();
     });
 
-    test('should display testimonials', async ({ page }) => {
-      await expect(page.locator('text=Sarah Chen')).toBeVisible();
-      await expect(page.locator('text=Michael Torres')).toBeVisible();
-      await expect(page.locator('text=Emma Williams')).toBeVisible();
+    test('should display client showcase', async ({ page }) => {
+      await expect(page.locator('text=FreeCalcHub')).toBeVisible();
+      await expect(page.locator('text=Agent-11')).toBeVisible();
+      await expect(page.locator('text=AI Search Mastery')).toBeVisible();
     });
 
     test('should validate URL input', async ({ page }) => {

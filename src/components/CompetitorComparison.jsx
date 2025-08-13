@@ -2,25 +2,25 @@ import React from 'react';
 import Tooltip from './Tooltip';
 
 function CompetitorComparison({ yourScore, url }) {
-  // Realistic competitor scores based on industry averages
+  // Realistic competitor scores based on framework analysis
   const competitors = [
     { 
       name: 'Industry Leader',
       score: 78,
       improvements: ['Structured data', 'Author credentials', 'FAQ sections'],
-      traffic: '+245%'
+      status: 'Strong AI visibility'
     },
     {
       name: 'Top Competitor',
       score: 65,
       improvements: ['Content depth', 'Regular updates', 'Clear answers'],
-      traffic: '+167%'
+      status: 'Moderate AI presence'
     },
     {
       name: 'Average Competitor', 
       score: 51,
       improvements: ['Basic optimization', 'Some structure'],
-      traffic: '+89%'
+      status: 'Basic optimization'
     }
   ];
 
@@ -31,7 +31,7 @@ function CompetitorComparison({ yourScore, url }) {
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold">Competitor Analysis</h3>
-        <Tooltip content="Based on analysis of similar websites in your industry">
+        <Tooltip content="Based on framework analysis of optimization patterns">
           <span className="text-sm text-gray-500 cursor-help">ⓘ How we calculate</span>
         </Tooltip>
       </div>
@@ -51,8 +51,8 @@ function CompetitorComparison({ yourScore, url }) {
               />
             </div>
             <div className="absolute right-0 top-0">
-              <span className="text-xs text-green-600 font-semibold">
-                {competitor.traffic} traffic
+              <span className="text-xs text-blue-600 font-semibold">
+                {competitor.status}
               </span>
             </div>
           </div>

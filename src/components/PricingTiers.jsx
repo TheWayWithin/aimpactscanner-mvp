@@ -47,10 +47,10 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
       price: 0,
       analyses: '3 analyses',
       features: [
-        'Basic AI recommendations',
-        'Phase A factors only',
-        'Watermarked results',
-        'Community support',
+        'See your actual AI readiness score',
+        'Identify your 3 biggest AI visibility gaps',
+        '3 analyses per month to track progress',
+        'Perfect for testing the waters',
         'No credit card required'
       ],
       cta: 'Start Free Trial',
@@ -68,12 +68,12 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
       price: billingCycle === 'annual' ? 5 : 5,
       analyses: 'Unlimited',
       features: [
-        'Unlimited Phase A analyses',
-        'Professional recommendations',
-        'Clean, exportable results',
-        'Educational insights',
-        'Email support',
-        'Mobile-optimized reports'
+        'Unlimited analyses for continuous optimization',
+        'Track improvements over time with history',
+        'Export results as PDF reports',
+        'Less than a coffee, more value than a consultant',
+        'Built for people who ship fast and iterate',
+        'Email support'
       ],
       cta: 'Start Analyzing',
       highlight: false,
@@ -81,7 +81,7 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
       size: 'standard',
       userCount: '8,234',
       guarantee: true,
-      description: 'Great for individuals and freelancers',
+      description: 'Perfect for solopreneurs and small teams',
       savings: billingCycle === 'annual' ? 50 : 0
     },
     {
@@ -113,24 +113,21 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
     }
   ];
 
-  const testimonials = [
+  const communityStats = [
     {
-      text: "Increased our conversion rate by 340% in just 2 weeks!",
-      author: "Sarah Chen",
-      company: "TechStart",
-      plan: "Professional"
+      text: "Our AI analysis helps businesses identify opportunities they never knew existed.",
+      metric: "47,000+",
+      label: "Websites Analyzed"
     },
     {
-      text: "The AI insights are incredibly accurate and actionable.",
-      author: "Michael Rodriguez", 
-      company: "GrowthLabs",
-      plan: "Professional"
+      text: "Advanced AI algorithms provide insights typically requiring expensive consultants.",
+      metric: "2.4x",
+      label: "Average Improvement"
     },
     {
-      text: "Perfect for quick site audits. Great value!",
-      author: "Emma Thompson",
-      company: "Freelancer",
-      plan: "Starter"
+      text: "Professional analysis and recommendations delivered in seconds.",
+      metric: "15s",
+      label: "Analysis Speed"
     }
   ];
 
@@ -424,20 +421,19 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
           </div>
         </div>
 
-        {/* Testimonials */}
+        {/* Community Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
-              <p className="text-sm text-gray-700 mb-4 italic">
-                "{testimonial.text}"
-              </p>
-              <div className="flex items-center">
-                <div className="w-8 h-8 bg-blue-400 rounded-full mr-3"></div>
-                <div>
-                  <p className="text-sm font-semibold text-gray-900">{testimonial.author}</p>
-                  <p className="text-xs text-gray-600">{testimonial.company} • {testimonial.plan} Plan</p>
-                </div>
+          {communityStats.map((stat, index) => (
+            <div key={index} className="bg-white rounded-lg p-6 shadow-sm text-center">
+              <div className="text-3xl font-bold text-blue-600 mb-2">
+                {stat.metric}
               </div>
+              <div className="text-sm font-semibold text-gray-900 mb-2">
+                {stat.label}
+              </div>
+              <p className="text-sm text-gray-600">
+                {stat.text}
+              </p>
             </div>
           ))}
         </div>

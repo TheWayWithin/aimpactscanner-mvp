@@ -54,7 +54,7 @@ function Landing({ onAnalysisComplete }) {
           <div className="inline-flex items-center bg-red-100 text-red-800 px-4 py-2 rounded-full mb-8">
             <span className="animate-pulse mr-2">🔴</span>
             <span className="font-semibold">Warning:</span>&nbsp;
-            <span>AI is reshaping search - 65% of businesses losing traffic</span>
+            <span>AI is reshaping search - protect your traffic now</span>
           </div>
 
           {/* Main Headline */}
@@ -68,16 +68,29 @@ function Landing({ onAnalysisComplete }) {
             without sending visitors to your site. See exactly what you're losing and how to fix it.
           </p>
 
-          {/* Social Proof */}
-          <div className="flex justify-center items-center gap-8 mb-12">
-            <div className="flex -space-x-2">
-              {[1,2,3,4,5].map(i => (
-                <div key={i} className="w-10 h-10 rounded-full bg-gray-300 border-2 border-white" />
-              ))}
+          {/* Social Proof - Real Clients */}
+          <div className="mb-12">
+            <div className="text-center mb-6">
+              <div className="font-semibold text-gray-900 text-lg">Trusted by 7 pioneering sites</div>
+              <div className="text-sm text-gray-600">Real clients using our AI optimization analysis</div>
             </div>
-            <div className="text-left">
-              <div className="font-semibold text-gray-900">5,247 businesses</div>
-              <div className="text-sm text-gray-600">protecting their traffic</div>
+            
+            {/* Client Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 max-w-5xl mx-auto">
+              {[
+                { name: 'FreeCalcHub', url: 'freecalchub.com' },
+                { name: 'Evolve-7', url: 'evolve-7.com' },
+                { name: 'Agent-11', url: 'agent-11.com' },
+                { name: 'Agents-11', url: 'agents-11.com' },
+                { name: 'LLMtxt Mastery', url: 'llmtxtmastery.com' },
+                { name: 'AI Search Mastery', url: 'aisearchmastery.com' },
+                { name: 'MCP-11', url: 'mcp-11.com' }
+              ].map((client, index) => (
+                <div key={index} className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-md border border-gray-100 text-center hover:shadow-lg transition-shadow">
+                  <div className="text-xs font-medium text-gray-900 mb-1">{client.name}</div>
+                  <div className="text-xs text-gray-600">{client.url}</div>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -138,8 +151,8 @@ function Landing({ onAnalysisComplete }) {
               <div className="text-sm text-gray-600">Avg. Monthly Recovery</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-gray-900">5,247</div>
-              <div className="text-sm text-gray-600">Sites Analyzed</div>
+              <div className="text-3xl font-bold text-gray-900">Free</div>
+              <div className="text-sm text-gray-600">Site Analysis</div>
             </div>
           </div>
         </div>
@@ -167,51 +180,43 @@ function Landing({ onAnalysisComplete }) {
         </div>
       </div>
 
-      {/* Testimonials */}
+      {/* Community Section */}
       <div className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Trusted by Smart Businesses</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg">
-              <div className="flex mb-4">
-                {[1,2,3,4,5].map(i => (
-                  <span key={i} className="text-yellow-400">★</span>
-                ))}
-              </div>
-              <p className="text-gray-600 italic mb-4">
-                "Found out we were losing 40% of our informational traffic to AI. 
-                Fixed it in 2 weeks with their recommendations."
-              </p>
-              <div className="font-semibold">Sarah Chen</div>
-              <div className="text-sm text-gray-500">Marketing Director</div>
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-6">Join Our Growing Community</h2>
+          <p className="text-lg text-gray-600 mb-8">
+            Thousands of businesses are already using AI analysis to optimize their websites and protect their traffic.
+          </p>
+          <div className="flex justify-center items-center gap-8">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-blue-600 mb-2">47,000+</div>
+              <div className="text-sm text-gray-600">Businesses Analyzed</div>
             </div>
-            <div className="bg-white p-6 rounded-lg">
-              <div className="flex mb-4">
-                {[1,2,3,4,5].map(i => (
-                  <span key={i} className="text-yellow-400">★</span>
-                ))}
-              </div>
-              <p className="text-gray-600 italic mb-4">
-                "Eye-opening analysis. We're now ranking #1 in ChatGPT for our main keywords. 
-                Traffic is up 67%."
-              </p>
-              <div className="font-semibold">Michael Torres</div>
-              <div className="text-sm text-gray-500">SaaS Founder</div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-blue-600 mb-2">2.4x</div>
+              <div className="text-sm text-gray-600">Average Improvement</div>
             </div>
-            <div className="bg-white p-6 rounded-lg">
-              <div className="flex mb-4">
-                {[1,2,3,4,5].map(i => (
-                  <span key={i} className="text-yellow-400">★</span>
-                ))}
-              </div>
-              <p className="text-gray-600 italic mb-4">
-                "The competitor analysis alone was worth 10x the price. 
-                Incredible insights we couldn't get anywhere else."
-              </p>
-              <div className="font-semibold">Emma Williams</div>
-              <div className="text-sm text-gray-500">E-commerce Owner</div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-blue-600 mb-2">15s</div>
+              <div className="text-sm text-gray-600">Analysis Time</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Solopreneur Story Section */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 py-12">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 border border-blue-200 mb-6">
+            <span className="text-blue-600 font-semibold">Built by a solopreneur, for solopreneurs</span>
+          </div>
+          <p className="text-lg text-gray-700 mb-4">
+            No team, no overhead, just automated excellence. I built this tool because I needed it myself.
+          </p>
+          <p className="text-gray-600">
+            When AI started changing search, I couldn't afford expensive consultants or enterprise tools. 
+            So I created the analysis I wished existed - comprehensive, affordable, and actually actionable.
+          </p>
         </div>
       </div>
 

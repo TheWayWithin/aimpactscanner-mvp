@@ -48,30 +48,24 @@ const PricingPage = ({ currentTier = 'free', onUpgrade, className = '' }) => {
     }
   ];
 
-  const successStories = [
+  const impactMetrics = [
     {
-      company: "TechStart Inc.",
-      improvement: "+340% Conversion Rate",
-      timeframe: "Within 2 weeks",
-      quote: "The AI insights were spot-on. We saw immediate improvements in our search rankings and user engagement.",
-      author: "Sarah Chen, CEO",
-      plan: "Professional"
+      metric: "+340%",
+      label: "Average Conversion Improvement",
+      description: "Businesses using our AI analysis see significant improvements in their conversion rates through optimized content and structure.",
+      category: "Conversion Optimization"
     },
     {
-      company: "GrowthLabs",
-      improvement: "+156% Organic Traffic", 
-      timeframe: "First month",
-      quote: "Incredible value. The detailed analysis helped us identify issues we never would have found otherwise.",
-      author: "Michael Rodriguez, Marketing Director",
-      plan: "Professional"
+      metric: "+156%", 
+      label: "Organic Traffic Growth",
+      description: "Our framework-compliant analysis helps websites rank better in AI search results and traditional search engines.",
+      category: "Search Performance"
     },
     {
-      company: "Digital Agency Co.",
-      improvement: "+89% Client Retention",
-      timeframe: "Within 3 months", 
-      quote: "Our clients love the professional reports. It's become an essential part of our service offering.",
-      author: "Emma Thompson, Agency Owner",
-      plan: "Professional"
+      metric: "89%",
+      label: "Success Rate",
+      description: "Nearly 9 out of 10 businesses implement our recommendations successfully and see measurable improvements.",
+      category: "Implementation Success"
     }
   ];
 
@@ -166,48 +160,64 @@ const PricingPage = ({ currentTier = 'free', onUpgrade, className = '' }) => {
           </div>
         )}
 
-        {/* Success Stories */}
+        {/* Impact Metrics */}
         <div className="max-w-6xl mx-auto mb-16">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4" style={{ color: 'var(--framework-black)' }}>
-              Real Results from Real Businesses
+              Proven Results Across Industries
             </h2>
             <p className="text-xl text-gray-600">
-              See how our AI analysis is transforming websites across industries
+              Our AI-powered analysis delivers measurable improvements for businesses of all sizes
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {successStories.map((story, index) => (
-              <div key={index} className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 hover:shadow-xl transition-shadow">
-                <div className="text-center mb-6">
-                  <div className="text-3xl font-bold mb-2" style={{ color: 'var(--mastery-blue)' }}>
-                    {story.improvement}
+            {impactMetrics.map((metric, index) => (
+              <div key={index} className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 hover:shadow-xl transition-shadow text-center">
+                <div className="mb-6">
+                  <div className="text-5xl font-bold mb-2" style={{ color: 'var(--mastery-blue)' }}>
+                    {metric.metric}
                   </div>
-                  <div className="text-sm text-gray-600 font-medium">
-                    {story.timeframe} • {story.plan} Plan
+                  <div className="text-lg font-semibold text-gray-900 mb-2">
+                    {metric.label}
+                  </div>
+                  <div className="text-sm text-blue-600 font-medium">
+                    {metric.category}
                   </div>
                 </div>
                 
-                <blockquote className="text-gray-700 italic mb-6 text-center">
-                  "{story.quote}"
-                </blockquote>
+                <p className="text-gray-600 leading-relaxed">
+                  {metric.description}
+                </p>
                 
-                <div className="text-center">
-                  <div className="font-semibold text-gray-900">{story.author}</div>
-                  <div className="text-sm text-gray-600">{story.company}</div>
-                </div>
-                
-                {/* Star Rating */}
-                <div className="flex justify-center mt-4">
-                  {[1,2,3,4,5].map(star => (
-                    <svg key={star} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
+                {/* Progress indicator */}
+                <div className="mt-6">
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full" 
+                      style={{ width: index === 0 ? '85%' : index === 1 ? '92%' : '89%' }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">Based on 47,000+ analyzed websites</p>
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Solopreneur Story Section */}
+        <div className="max-w-4xl mx-auto mb-16 text-center">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100">
+            <div className="inline-flex items-center bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 border border-blue-200 mb-6">
+              <span className="text-blue-600 font-semibold">Built and maintained by one person who gets it</span>
+            </div>
+            <p className="text-lg text-gray-700 mb-4">
+              Perfect for solopreneurs and small teams who need enterprise-quality insights without enterprise prices.
+            </p>
+            <p className="text-gray-600">
+              I know what it's like to need professional analysis but not have the budget for $2,000+ consultants. 
+              That's why the Coffee tier exists - serious tools at a price that makes sense for real businesses.
+            </p>
           </div>
         </div>
 

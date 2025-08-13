@@ -15,7 +15,7 @@ test.describe('Phase 1: Landing Page and Value-First Flow', () => {
     
     // Check key elements are present
     await expect(page.locator('text=ChatGPT, Claude, and Perplexity')).toBeVisible();
-    await expect(page.locator('text=5,247 businesses')).toBeVisible();
+    await expect(page.locator('text=7 pioneering sites')).toBeVisible();
     
     // Check URL input is present
     const urlInput = page.locator('input[placeholder="Enter your website URL..."]');
@@ -37,10 +37,10 @@ test.describe('Phase 1: Landing Page and Value-First Flow', () => {
     await expect(page.locator('text=15s')).toBeVisible();
     await expect(page.locator('text=Analysis Time')).toBeVisible();
     
-    // Check testimonials section
-    await expect(page.locator('text=Trusted by Smart Businesses')).toBeVisible();
-    await expect(page.locator('text=Sarah Chen')).toBeVisible();
-    await expect(page.locator('text=Michael Torres')).toBeVisible();
+    // Check client showcase section
+    await expect(page.locator('text=Trusted by 7 pioneering sites')).toBeVisible();
+    await expect(page.locator('text=FreeCalcHub')).toBeVisible();
+    await expect(page.locator('text=Agent-11')).toBeVisible();
   });
 
   test('should analyze URL without requiring email', async ({ page }) => {
@@ -113,7 +113,7 @@ test.describe('Phase 1: Landing Page and Value-First Flow', () => {
   test('should show urgency and FOMO elements', async ({ page }) => {
     // Check urgency banner
     await expect(page.locator('text=Warning:')).toBeVisible();
-    await expect(page.locator('text=65% of businesses losing traffic')).toBeVisible();
+    await expect(page.locator('text=AI is reshaping search')).toBeVisible();
     
     // Scroll to pricing after analysis
     const urlInput = page.locator('input[placeholder="Enter your website URL..."]');
