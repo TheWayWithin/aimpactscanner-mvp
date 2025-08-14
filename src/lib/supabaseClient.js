@@ -9,7 +9,14 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Supabase environment variables are not set correctly.");
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  global: {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  }
+})
 
 // Brand-aligned log for confirmation (optional, but good for debugging)
 console.log("AI Search Mastery: Supabase client initialized. Connecting to the powerful MASTERY-AI Framework backend.");

@@ -58,6 +58,10 @@ const TierIndicator = ({ user, onUpgrade, className = '', tierData = null, refre
     if (!localTierData) return 0;
     
     if (localTierData.tier === 'free') {
+      // Use remaining count if provided, otherwise calculate from monthly_analyses_used
+      if (localTierData.remaining !== undefined) {
+        return localTierData.remaining;
+      }
       return Math.max(0, 3 - (localTierData.monthly_analyses_used || 0));
     }
     return '∞';

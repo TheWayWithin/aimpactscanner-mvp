@@ -157,8 +157,8 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
             </div>
             <div className="ml-3">
               <p className="text-sm text-yellow-800">
-                <strong>Demo Mode:</strong> This is sample data demonstrating our analysis format. 
-                To see real analysis of YOUR site, please enter your URL in the analysis form.
+                <strong>Sample Report:</strong> This shows you exactly what our analysis looks like. 
+                Ready to analyze your own site? Click "New Analysis" in the navigation above to get started!
               </p>
             </div>
           </div>

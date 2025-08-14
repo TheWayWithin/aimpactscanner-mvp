@@ -204,7 +204,19 @@ function App() {
             user_id: userId,
             url: url,
             status: 'in_progress',
-            created_at: new Date().toISOString()
+            overall_score: null,
+            ai_score: null,
+            authority_score: null,
+            machine_readability_score: null,
+            semantic_quality_score: null,
+            engagement_score: null,
+            topical_expertise_score: null,
+            reference_networks_score: null,
+            yield_optimization_score: null,
+            framework_version: '3.1.1',
+            analysis_duration: null,
+            created_at: new Date().toISOString(),
+            completed_at: null
           });
 
         if (analysisError) {
@@ -295,7 +307,7 @@ function App() {
         <div className="flex justify-between items-center max-w-7xl mx-auto px-4">
           <h1 className="text-2xl font-bold">AImpactScanner</h1>
           <div className="flex items-center gap-4">
-            <TierIndicator user={session?.user} tierData={{ tier: userTier, monthly_analyses_used: dashboardData?.analyses_used || 0 }} />
+            <TierIndicator user={session?.user} tierData={{ tier: userTier, remaining: userTier === 'free' ? usageData.remaining : Infinity }} />
             <button
               onClick={() => supabase.auth.signOut()}
               className="text-sm text-gray-600 hover:text-gray-900"
@@ -361,24 +373,29 @@ function App() {
               <p className="text-gray-600 mb-8">
                 You have {userTier === 'free' ? usageData.remaining : 'unlimited'} analyses remaining this month.
               </p>
-              <div className="flex gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <button
                   onClick={() => setCurrentView('input')}
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
                 >
                   Start New Analysis →
                 </button>
-                <button
-                  onClick={() => {
-                    setCurrentAnalysisId('demo-' + Date.now());
-                    setCurrentUrl('example.com');
-                    setAnalysisResults(null); // Ensure demo mode
-                    setCurrentView('results');
-                  }}
-                  className="px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600"
-                >
-                  View Demo Analysis
-                </button>
+                <div className="flex flex-col items-center">
+                  <button
+                    onClick={() => {
+                      setCurrentAnalysisId('demo-' + Date.now());
+                      setCurrentUrl('example.com');
+                      setAnalysisResults(null); // Ensure demo mode
+                      setCurrentView('results');
+                    }}
+                    className="px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600"
+                  >
+                    📋 See Sample Report
+                  </button>
+                  <p className="text-xs text-gray-500 mt-1 max-w-48 text-center">
+                    View a sample analysis to understand our framework and report format
+                  </p>
+                </div>
               </div>
           </div>
           <AnalysisHistory />
