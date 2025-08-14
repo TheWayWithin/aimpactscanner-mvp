@@ -47,8 +47,24 @@ function Landing({ onAnalysisComplete }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      {/* Header with Logo */}
+      <header className="bg-white shadow-sm border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center">
+            <img 
+              src="/images/logos/logo-primary-240x60-transparent.png" 
+              alt="AImpactScanner" 
+              className="h-12"
+            />
+            <div className="text-sm text-gray-600">
+              AI Search Optimization Platform
+            </div>
+          </div>
+        </div>
+      </header>
+      
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-16">
         <div className="text-center">
           {/* Urgency Banner */}
           <div className="inline-flex items-center bg-red-100 text-red-800 px-4 py-2 rounded-full mb-8">
@@ -130,6 +146,14 @@ function Landing({ onAnalysisComplete }) {
           <p className="mt-4 text-sm text-gray-500">
             No email required • See results in 15 seconds • 100% free analysis
           </p>
+          
+          {/* Trust Badges */}
+          <div className="flex justify-center gap-4 mt-6">
+            <img src="/images/badges/badge-148-factors-150x50.png" alt="148 AI Factors" className="h-10" />
+            <img src="/images/badges/badge-15-second-analysis-150x50.png" alt="15 Second Analysis" className="h-10" />
+            <img src="/images/badges/badge-privacy-safe-150x50.png" alt="100% Privacy Safe" className="h-10" />
+            <img src="/images/badges/badge-no-credit-card-150x50.png" alt="No Credit Card Required" className="h-10" />
+          </div>
         </div>
       </div>
 
@@ -162,17 +186,17 @@ function Landing({ onAnalysisComplete }) {
         <h2 className="text-3xl font-bold text-center mb-12">What You'll Discover</h2>
         <div className="grid md:grid-cols-3 gap-8">
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="text-2xl mb-4">📉</div>
+            <img src="/images/features/feature-ai-analysis-600x400.png" alt="AI Analysis" className="w-full h-32 object-contain mb-4" />
             <h3 className="font-semibold text-lg mb-2">Traffic Loss Analysis</h3>
             <p className="text-gray-600">See exactly how much traffic AI is stealing and which queries you're losing</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="text-2xl mb-4">🎯</div>
+            <img src="/images/features/feature-competitor-comparison-600x400.png" alt="Competitor Comparison" className="w-full h-32 object-contain mb-4" />
             <h3 className="font-semibold text-lg mb-2">Competitor Comparison</h3>
             <p className="text-gray-600">Know where you rank vs competitors in AI search results</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="text-2xl mb-4">🚀</div>
+            <img src="/images/features/feature-recovery-roadmap-600x400.png" alt="Recovery Roadmap" className="w-full h-32 object-contain mb-4" />
             <h3 className="font-semibold text-lg mb-2">Recovery Roadmap</h3>
             <p className="text-gray-600">Get specific actions to reclaim your traffic and protect your business</p>
           </div>

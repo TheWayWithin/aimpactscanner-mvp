@@ -1,70 +1,31 @@
 import React from 'react';
 
-const Logo = ({ className = "h-8", showText = true }) => {
+const Logo = ({ className = "h-8", showText = true, variant = 'primary' }) => {
+  // Determine which logo to use based on variant
+  const logoSrc = variant === 'white' 
+    ? '/images/logos/logo-white-240x60-transparent.png'
+    : '/images/logos/logo-primary-240x60-transparent.png';
+  
+  const squareLogoSrc = '/images/logos/logo-square-60x60-transparent.png';
+  
   return (
     <div className="flex items-center gap-2">
-      {/* Logo Icon */}
-      <svg 
-        className={className}
-        viewBox="0 0 48 48" 
-        fill="none" 
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Background Circle */}
-        <circle 
-          cx="24" 
-          cy="24" 
-          r="20" 
-          className="fill-blue-600"
+      {showText ? (
+        // Use the full horizontal logo when text is shown
+        <img 
+          src={logoSrc}
+          alt="AImpactScanner Logo"
+          className={className}
+          style={{ height: 'auto', maxHeight: '60px' }}
         />
-        
-        {/* AI Scanner Icon */}
-        <g className="text-white">
-          {/* Scanner Frame */}
-          <rect 
-            x="12" 
-            y="12" 
-            width="24" 
-            height="24" 
-            rx="2" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            fill="none"
-          />
-          
-          {/* Scan Lines */}
-          <path 
-            d="M12 20h24M12 28h24" 
-            stroke="currentColor" 
-            strokeWidth="1.5" 
-            opacity="0.6"
-          />
-          
-          {/* AI Dot Pattern */}
-          <circle cx="18" cy="24" r="2" fill="currentColor" />
-          <circle cx="24" cy="24" r="2" fill="currentColor" />
-          <circle cx="30" cy="24" r="2" fill="currentColor" />
-          
-          {/* Corner Brackets */}
-          <path 
-            d="M12 16v-4h4M36 12h-4v4M36 32v4h-4M12 36h4v-4" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round"
-          />
-        </g>
-      </svg>
-      
-      {/* Logo Text */}
-      {showText && (
-        <div className="flex flex-col">
-          <span className="text-xl font-bold text-gray-900 leading-tight">
-            AImpact<span className="text-blue-600">Scanner</span>
-          </span>
-          <span className="text-xs text-gray-500 uppercase tracking-wide">
-            AI Search Mastery
-          </span>
-        </div>
+      ) : (
+        // Use the square logo icon when text is hidden
+        <img 
+          src={squareLogoSrc}
+          alt="AImpactScanner"
+          className={className}
+          style={{ height: 'auto', maxHeight: '60px' }}
+        />
       )}
     </div>
   );
