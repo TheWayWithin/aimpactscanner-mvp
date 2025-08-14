@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { addToHistory } from './AnalysisHistory';
 
-function SimpleResultsDashboard({ analysisId, url }) {
+function SimpleResultsDashboard({ analysisId, url, analysisData }) {
   // Generate dynamic score based on URL for more realistic demo
   const generateScore = (url) => {
     if (!url) return 67;
@@ -25,7 +25,11 @@ function SimpleResultsDashboard({ analysisId, url }) {
     return 35 + (charSum % 45); // Range: 35-80
   };
   
-  const overallScore = generateScore(url);
+  // Check if we have real analysis data from Edge Function
+  const isRealAnalysis = analysisData && analysisData.overall_score !== undefined;
+  
+  // Use real data if available, otherwise generate demo data
+  const overallScore = isRealAnalysis ? analysisData.overall_score : generateScore(url);
   
   // Generate pillar scores based on overall score with some variation
   const generatePillarScores = (baseScore) => {
@@ -40,10 +44,31 @@ function SimpleResultsDashboard({ analysisId, url }) {
     };
   };
   
-  const pillarScores = generatePillarScores(overallScore);
+  const pillarScores = isRealAnalysis && analysisData.pillars ? 
+    {
+      ai: analysisData.pillars.ai?.score || analysisData.pillars.A?.score || 0,
+      authority: analysisData.pillars.authority?.score || analysisData.pillars.A?.score || 0,
+      machine_readability: analysisData.pillars.machine_readability?.score || analysisData.pillars.M?.score || 0,
+      user_experience: analysisData.pillars.user_experience?.score || analysisData.pillars.E?.score || 0,
+      content_quality: analysisData.pillars.content_quality?.score || analysisData.pillars.S?.score || 0,
+      technical: analysisData.pillars.technical?.score || analysisData.pillars.T?.score || 0
+    } : generatePillarScores(overallScore);
   
-  // Mock results data for demonstration
-  const mockResults = {
+  // Use real results if available, otherwise use mock data
+  const results = isRealAnalysis ? {
+    overall_score: analysisData.overall_score,
+    url: analysisData.url || url,
+    created_at: analysisData.created_at || new Date().toISOString(),
+    pillars: analysisData.pillars || {
+      ai: { score: pillarScores.ai, weight: 23.8, factors: 3 },
+      authority: { score: pillarScores.authority, weight: 17.9, factors: 2 },
+      machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 2 },
+      user_experience: { score: pillarScores.user_experience, weight: 13.7, factors: 2 },
+      content_quality: { score: pillarScores.content_quality, weight: 12.2, factors: 1 },
+      technical: { score: pillarScores.technical, weight: 17.8, factors: 1 }
+    },
+    factors: analysisData.factors || []
+  } : {
     overall_score: overallScore,
     url: url || 'aisearchmastery.com',
     created_at: new Date().toISOString(),
@@ -99,10 +124,10 @@ function SimpleResultsDashboard({ analysisId, url }) {
     if (url || analysisId) {
       addToHistory({
         id: analysisId || Date.now().toString(),
-        url: url || mockResults.url,
-        score: mockResults.overall_score,
+        url: url || results.url,
+        score: results.overall_score,
         date: new Date().toISOString(),
-        factors: mockResults.factors.length
+        factors: results.factors.length
       });
     }
   }, [analysisId, url]);
@@ -121,34 +146,35 @@ function SimpleResultsDashboard({ analysisId, url }) {
 
   return (
     <div className="results-dashboard max-w-6xl mx-auto p-6">
-      {/* Demo Mode Notice */}
-      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-        <div className="flex">
-          <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <div className="ml-3">
-            <p className="text-sm text-yellow-800">
-              <strong>Demo Mode:</strong> Due to temporary database connectivity issues, this is sample data demonstrating 
-              our analysis format. Real analysis uses our Edge Function to check 148 factors specific to YOUR site. 
-              The patterns shown are based on typical issues we find across our 7 client sites.
-            </p>
+      {/* Demo Mode Notice - Only show when using demo data */}
+      {!isRealAnalysis && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-yellow-800">
+                <strong>Demo Mode:</strong> This is sample data demonstrating our analysis format. 
+                To see real analysis of YOUR site, please enter your URL in the analysis form.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Header */}
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Sample Analysis Results</h1>
-            <p className="text-gray-600 break-all">{mockResults.url}</p>
+            <h1 className="text-2xl font-bold text-gray-900">{isRealAnalysis ? 'AI Impact Analysis Results' : 'Sample Analysis Results'}</h1>
+            <p className="text-gray-600 break-all">{results.url}</p>
           </div>
           <div className="text-right">
-            <div className="text-3xl font-bold text-blue-600">{mockResults.overall_score}</div>
-            <div className="text-sm text-gray-600">Sample Score</div>
+            <div className="text-3xl font-bold text-blue-600">{results.overall_score}</div>
+            <div className="text-sm text-gray-600">{isRealAnalysis ? 'Overall Score' : 'Sample Score'}</div>
           </div>
         </div>
         
@@ -162,7 +188,7 @@ function SimpleResultsDashboard({ analysisId, url }) {
 
       {/* Pillar Scores */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {Object.entries(mockResults.pillars).map(([key, pillar]) => (
+        {Object.entries(results.pillars).map(([key, pillar]) => (
           <div key={key} className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-semibold text-gray-900 capitalize">
@@ -189,7 +215,7 @@ function SimpleResultsDashboard({ analysisId, url }) {
       <div className="space-y-6">
         <h2 className="text-xl font-bold text-gray-900">Factor Analysis Details</h2>
         
-        {mockResults.factors.map((factor, index) => (
+        {results.factors.map((factor, index) => (
           <div key={index} className="bg-white rounded-lg shadow p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">

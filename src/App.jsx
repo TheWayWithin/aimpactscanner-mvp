@@ -32,6 +32,7 @@ function App() {
   const [showWelcome, setShowWelcome] = useState(false);
   const [userReady, setUserReady] = useState(false);
   const [pendingAnalysis, setPendingAnalysis] = useState(null);
+  const [analysisResults, setAnalysisResults] = useState(null);
 
   // Usage tracking hook
   const { 
@@ -215,7 +216,9 @@ function App() {
 
       // Increment usage for free tier
       if (userTier === 'free') {
+        console.log('Incrementing usage. Current:', usageData.remaining);
         incrementUsage();
+        console.log('After increment:', usageData.remaining - 1);
       }
 
       // Switch to analysis view
@@ -234,6 +237,16 @@ function App() {
           alert(`Analysis error: ${invokeError.message}`);
         } else {
           console.log('✅ Analysis completed:', data);
+          // Store the real analysis results
+          // Edge Function returns { success, overall_score, factors, etc }
+          if (data && data.success) {
+            setAnalysisResults({
+              overall_score: data.overall_score,
+              factors: data.factors || [],
+              url: url,
+              created_at: new Date().toISOString()
+            });
+          }
         }
       });
 
@@ -348,12 +361,25 @@ function App() {
               <p className="text-gray-600 mb-8">
                 You have {userTier === 'free' ? usageData.remaining : 'unlimited'} analyses remaining this month.
               </p>
-              <button
-                onClick={() => setCurrentView('input')}
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
-              >
-                Start New Analysis →
-            </button>
+              <div className="flex gap-4 justify-center">
+                <button
+                  onClick={() => setCurrentView('input')}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
+                >
+                  Start New Analysis →
+                </button>
+                <button
+                  onClick={() => {
+                    setCurrentAnalysisId('demo-' + Date.now());
+                    setCurrentUrl('example.com');
+                    setAnalysisResults(null); // Ensure demo mode
+                    setCurrentView('results');
+                  }}
+                  className="px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600"
+                >
+                  View Demo Analysis
+                </button>
+              </div>
           </div>
           <AnalysisHistory />
           </div>
@@ -375,6 +401,7 @@ function App() {
           <SimpleResultsDashboard 
             analysisId={currentAnalysisId} 
             url={currentUrl}
+            analysisData={analysisResults}
           />
         )}
 
