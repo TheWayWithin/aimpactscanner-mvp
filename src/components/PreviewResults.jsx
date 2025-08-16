@@ -302,23 +302,23 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
         {/* Locked Content Preview */}
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8 relative">
           {/* Lock Overlay */}
-          <div className="absolute inset-0 bg-gray-900 bg-opacity-10 backdrop-blur-sm rounded-lg flex items-center justify-center z-10">
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center max-w-md">
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-100/95 to-gray-200/95 backdrop-blur-sm rounded-lg flex items-center justify-center z-10">
+            <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg shadow-2xl p-6 text-center max-w-md">
               <div className="text-4xl mb-4">🔒</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-xl font-bold text-white mb-2">
                 {lockedFactorsCount} More Factors Available
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-blue-100 mb-4">
                 See your complete analysis with detailed recommendations for every optimization opportunity.
               </p>
               <div className="flex flex-col gap-2">
                 <button
                   onClick={onFreeTrialClick}
-                  className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all"
+                  className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-all shadow-lg"
                 >
                   Get Free Account & See All Results
                 </button>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-blue-100">
                   No credit card required • 3 free analyses per month
                 </p>
               </div>
@@ -370,16 +370,16 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
           </p>
           <div className="grid md:grid-cols-3 gap-4 my-6 text-left">
             <div className="bg-white bg-opacity-20 rounded-lg p-4">
-              <div className="font-semibold mb-2">✅ All {factors.length || 11} Factor Results</div>
-              <div className="text-sm opacity-90">Complete detailed analysis with evidence and recommendations</div>
+              <div className="font-semibold mb-2 text-white">✅ All {factors.length || 11} Factor Results</div>
+              <div className="text-sm text-white">Complete detailed analysis with evidence and recommendations</div>
             </div>
             <div className="bg-white bg-opacity-20 rounded-lg p-4">
-              <div className="font-semibold mb-2">📊 Detailed Scoring</div>
-              <div className="text-sm opacity-90">See exactly how each factor impacts your AI visibility</div>
+              <div className="font-semibold mb-2 text-white">📊 Detailed Scoring</div>
+              <div className="text-sm text-white">See exactly how each factor impacts your AI visibility</div>
             </div>
             <div className="bg-white bg-opacity-20 rounded-lg p-4">
-              <div className="font-semibold mb-2">🎯 Action Plan</div>
-              <div className="text-sm opacity-90">Step-by-step recommendations prioritized by impact</div>
+              <div className="font-semibold mb-2 text-white">🎯 Action Plan</div>
+              <div className="text-sm text-white">Step-by-step recommendations prioritized by impact</div>
             </div>
           </div>
           
