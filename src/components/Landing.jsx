@@ -54,7 +54,7 @@ function Landing({ onAnalysisComplete }) {
             <img 
               src="/images/logos/logo-primary-240x60-transparent.png" 
               alt="AImpactScanner" 
-              className="h-12"
+              className="h-16 md:h-24"
             />
             <div className="text-sm text-gray-600">
               AI Search Optimization Platform
@@ -146,37 +146,33 @@ function Landing({ onAnalysisComplete }) {
           <p className="mt-4 text-sm text-gray-500">
             No email required • See results in 15 seconds • 100% free analysis
           </p>
-          
-          {/* Trust Badges */}
-          <div className="flex justify-center gap-4 mt-6">
-            <img src="/images/badges/badge-148-factors-150x50.png" alt="148 AI Factors" className="h-10" />
-            <img src="/images/badges/badge-15-second-analysis-150x50.png" alt="15 Second Analysis" className="h-10" />
-            <img src="/images/badges/badge-privacy-safe-150x50.png" alt="100% Privacy Safe" className="h-10" />
-            <img src="/images/badges/badge-no-credit-card-150x50.png" alt="No Credit Card Required" className="h-10" />
-          </div>
         </div>
       </div>
 
       {/* Trust Indicators */}
       <div className="border-t border-gray-200 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-3xl font-bold text-gray-900">148</div>
-              <div className="text-sm text-gray-600">AI Ranking Factors</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-gray-900">15s</div>
-              <div className="text-sm text-gray-600">Analysis Time</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-gray-900">$2.5K</div>
-              <div className="text-sm text-gray-600">Avg. Monthly Recovery</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-gray-900">Free</div>
-              <div className="text-sm text-gray-600">Site Analysis</div>
-            </div>
+          <div className="flex justify-center items-center gap-6 md:gap-8">
+            <img 
+              src="/images/badges/badge-148-factors-150x50.png" 
+              alt="148 AI Factors" 
+              className="h-12 md:h-16 object-contain" 
+            />
+            <img 
+              src="/images/badges/badge-15-second-analysis-150x50.png" 
+              alt="15 Second Analysis" 
+              className="h-12 md:h-16 object-contain" 
+            />
+            <img 
+              src="/images/badges/badge-privacy-safe-150x50.png" 
+              alt="100% Privacy Safe" 
+              className="h-12 md:h-16 object-contain" 
+            />
+            <img 
+              src="/images/badges/badge-no-credit-card-150x50.png" 
+              alt="No Credit Card Required" 
+              className="h-12 md:h-16 object-contain" 
+            />
           </div>
         </div>
       </div>
