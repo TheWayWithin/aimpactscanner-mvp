@@ -42,6 +42,13 @@
     "test:phase2:registration": "npx playwright test tests/phase2-auth-pricing.spec.js --grep \"Registration Flow\"",
     "test:phase2:mobile": "npx playwright test tests/phase2-auth-pricing.spec.js --project=\"Mobile Chrome\"",
     "test:phase2:performance": "npx playwright test tests/phase2-auth-pricing.spec.js --grep \"Performance Tests\"",
+    "test:temp-email": "npx playwright test tests/e2e/user-journey-with-temp-email.spec.js",
+    "test:temp-email:ui": "npx playwright test tests/e2e/user-journey-with-temp-email.spec.js --ui",
+    "test:temp-email:debug": "npx playwright test tests/e2e/user-journey-with-temp-email.spec.js --debug",
+    "test:usage-tracking": "npx playwright test tests/e2e/usage-tracking-flow.spec.js",
+    "test:error-handling": "npx playwright test tests/e2e/error-handling-edge-cases.spec.js",
+    "test:e2e:all": "npx playwright test tests/e2e/",
+    "test:e2e:ci": "npx playwright test tests/e2e/ --reporter=json --output-dir=test-results/e2e"
     "test:validate-phase2": "node tests/validate-phase2-setup.js",
     "verify:migration": "node scripts/verify-coffee-tier-migration.js",
     "verify:steps": "node scripts/verify-step-by-step.js",

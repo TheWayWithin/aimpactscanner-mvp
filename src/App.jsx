@@ -195,8 +195,9 @@ function App() {
   // Handle free trial click from teaser
   const handleFreeTrialFromTeaser = () => {
     if (!session) {
-      sessionStorage.setItem('selectedTier', 'free');
-      setCurrentView('registration-flow');
+      // For free tier, just show auth - no need for full registration flow
+      // The auth state change handler will preserve the pending analysis
+      setCurrentView('register');
     } else {
       // Already logged in, show full results
       setCurrentView('results');
