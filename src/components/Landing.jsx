@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import TrustBadges from './TrustBadges';
+import AILogo from './AILogo';
 
 function Landing({ onAnalysisComplete }) {
   const [url, setUrl] = useState('');
@@ -52,13 +53,16 @@ function Landing({ onAnalysisComplete }) {
       <header className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
-            <img 
-              src="/images/logos/logo-primary-240x60-transparent.png" 
-              alt="AImpactScanner" 
-              className="h-16 md:h-24"
-            />
-            <div className="text-sm text-gray-600">
-              AI Search Optimization Platform
+            <div className="flex items-center gap-3">
+              <AILogo className="h-12 md:h-16" />
+              <div>
+                <div className="text-xl md:text-2xl font-bold text-gray-900">
+                  AImpactScanner
+                </div>
+                <div className="text-xs md:text-sm text-gray-600">
+                  AI Search Optimization Platform
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -161,18 +165,30 @@ function Landing({ onAnalysisComplete }) {
       <div className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-center mb-12">What You'll Discover</h2>
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <img src="/images/features/feature-ai-analysis-600x400.png" alt="AI Analysis" className="w-full h-32 object-contain mb-4" />
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <div className="h-32 flex items-center justify-center mb-4">
+              <svg className="w-24 h-24 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
             <h3 className="font-semibold text-lg mb-2">Traffic Loss Analysis</h3>
             <p className="text-gray-600">See exactly how much traffic AI is stealing and which queries you're losing</p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <img src="/images/features/feature-competitor-comparison-600x400.png" alt="Competitor Comparison" className="w-full h-32 object-contain mb-4" />
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <div className="h-32 flex items-center justify-center mb-4">
+              <svg className="w-24 h-24 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
             <h3 className="font-semibold text-lg mb-2">Competitor Comparison</h3>
             <p className="text-gray-600">Know where you rank vs competitors in AI search results</p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <img src="/images/features/feature-recovery-roadmap-600x400.png" alt="Recovery Roadmap" className="w-full h-32 object-contain mb-4" />
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <div className="h-32 flex items-center justify-center mb-4">
+              <svg className="w-24 h-24 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+            </div>
             <h3 className="font-semibold text-lg mb-2">Recovery Roadmap</h3>
             <p className="text-gray-600">Get specific actions to reclaim your traffic and protect your business</p>
           </div>
