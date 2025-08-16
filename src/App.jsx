@@ -6,6 +6,8 @@ import { supabase } from './lib/supabaseClient';
 // New components for conversion flow
 import Landing from './components/Landing';
 import AnalysisPreview from './components/AnalysisPreview';
+import PreviewAnalysis from './components/PreviewAnalysis';
+import PreviewResults from './components/PreviewResults';
 
 // Existing components
 import AuthWithPassword from './components/AuthWithPassword';
@@ -72,8 +74,31 @@ function App() {
       if (session && session.user) {
         setSession(session);
         fetchUserTier(session.user.id);
-        // If user is already logged in, skip landing
-        setCurrentView('dashboard');
+        
+        // Check if there's a pending analysis from landing page
+        const pendingUrl = sessionStorage.getItem('pendingAnalysisUrl');
+        const pendingId = sessionStorage.getItem('pendingAnalysisId');
+        const landingData = sessionStorage.getItem('landingAnalysisData');
+        
+        if (pendingUrl && pendingId && landingData) {
+          console.log('Found pending analysis, redirecting to results');
+          try {
+            const data = JSON.parse(landingData);
+            setAnalysisResults(data.results);
+            setCurrentUrl(pendingUrl);
+            setCurrentAnalysisId(pendingId);
+            setCurrentView('results');
+            // Clear the pending data
+            sessionStorage.removeItem('pendingAnalysisUrl');
+            sessionStorage.removeItem('pendingAnalysisId');
+            sessionStorage.removeItem('landingAnalysisData');
+          } catch (error) {
+            console.error('Error parsing pending analysis data:', error);
+            setCurrentView('dashboard');
+          }
+        } else {
+          setCurrentView('dashboard');
+        }
       }
     });
 
@@ -84,10 +109,28 @@ function App() {
       setSession(session);
       if (session?.user?.id) {
         fetchUserTier(session.user.id);
+        
         // After login, check if there's a pending analysis
         const pendingUrl = sessionStorage.getItem('pendingAnalysisUrl');
-        if (pendingUrl) {
-          setCurrentView('results');
+        const pendingId = sessionStorage.getItem('pendingAnalysisId');
+        const landingData = sessionStorage.getItem('landingAnalysisData');
+        
+        if (pendingUrl && pendingId && landingData) {
+          console.log('Auth state changed, found pending analysis');
+          try {
+            const data = JSON.parse(landingData);
+            setAnalysisResults(data.results);
+            setCurrentUrl(pendingUrl);
+            setCurrentAnalysisId(pendingId);
+            setCurrentView('results');
+            // Clear the pending data
+            sessionStorage.removeItem('pendingAnalysisUrl');
+            sessionStorage.removeItem('pendingAnalysisId');
+            sessionStorage.removeItem('landingAnalysisData');
+          } catch (error) {
+            console.error('Error parsing pending analysis data:', error);
+            setCurrentView('dashboard');
+          }
         } else {
           setCurrentView('dashboard');
         }
@@ -124,7 +167,13 @@ function App() {
     setCurrentUrl(url);
     setCurrentAnalysisId(analysisId);
     setPendingAnalysis({ url, analysisId });
-    setCurrentView('teaser-results');
+    // Show real-time progress during analysis
+    setCurrentView('preview-analysis');
+  };
+
+  // Handle analysis completion from preview
+  const handlePreviewAnalysisComplete = () => {
+    setCurrentView('preview-results');
   };
 
   // Handle upgrade click from teaser results
@@ -157,11 +206,28 @@ function App() {
   // Handle registration completion from registration flow
   const handleRegistrationComplete = (user, tier) => {
     console.log('Registration completed:', { user: user?.id, tier });
-    // The auth state change will handle the redirect to dashboard
-    // Just clear any pending analysis URL if needed
+    // Check if there's a pending analysis from landing page
     const pendingUrl = sessionStorage.getItem('pendingAnalysisUrl');
-    if (pendingUrl) {
-      setCurrentView('results');
+    const pendingId = sessionStorage.getItem('pendingAnalysisId');
+    const landingData = sessionStorage.getItem('landingAnalysisData');
+    
+    if (pendingUrl && pendingId && landingData) {
+      console.log('Redirecting to results for completed landing analysis');
+      // Parse the analysis data to pass to results
+      try {
+        const data = JSON.parse(landingData);
+        setAnalysisResults(data.results);
+        setCurrentUrl(pendingUrl);
+        setCurrentAnalysisId(pendingId);
+        setCurrentView('results');
+        // Clear the pending data after successful processing
+        sessionStorage.removeItem('pendingAnalysisUrl');
+        sessionStorage.removeItem('pendingAnalysisId');
+        sessionStorage.removeItem('landingAnalysisData');
+      } catch (error) {
+        console.error('Error parsing landing analysis data:', error);
+        setCurrentView('dashboard');
+      }
     } else {
       setCurrentView('dashboard');
     }
@@ -273,6 +339,27 @@ function App() {
   };
 
   // Render based on current view
+  if (currentView === 'preview-analysis') {
+    return (
+      <PreviewAnalysis
+        url={currentUrl}
+        analysisId={currentAnalysisId}
+        onAnalysisComplete={handlePreviewAnalysisComplete}
+      />
+    );
+  }
+
+  if (currentView === 'preview-results') {
+    return (
+      <PreviewResults
+        url={currentUrl}
+        analysisId={currentAnalysisId}
+        onUpgradeClick={handleUpgradeFromTeaser}
+        onFreeTrialClick={handleFreeTrialFromTeaser}
+      />
+    );
+  }
+
   if (currentView === 'teaser-results') {
     return (
       <AnalysisPreview

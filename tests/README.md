@@ -1,25 +1,30 @@
-# AImpactScanner MVP Testing Guide
+# AImpactScanner Test Suite
+**Comprehensive Testing Framework for Priority 1 User Journey**
 
-This directory contains the comprehensive testing suite for the AImpactScanner MVP. The testing environment is designed to support your transition from mock analysis to real factor implementation.
+This directory contains the complete testing suite for AImpactScanner MVP, with specialized focus on validating the Priority 1 conversion-optimized user journey implementation.
 
 ## 🏗️ Test Architecture
 
 ```
 tests/
-├── setup/
-│   ├── test-config.js      # Test configuration and utilities
-│   └── database-setup.js   # Database setup script
+├── e2e/                           # Priority 1 End-to-end tests
+│   └── priority1-user-journey.test.js
+├── integration/                   # Component integration tests
+│   ├── component-integration.test.js
+│   └── conversion-flow.test.js
+├── unit/                         # Unit tests (existing)
+│   └── factors.test.js
+├── manual/                       # Manual validation tests
+│   └── edge-function-validation.test.js
+├── setup/                        # Test configuration
+│   ├── test-config.js
+│   └── database-setup.js
 ├── test-data/
-│   └── urls.json          # Test URLs for different scenarios
-├── unit/
-│   └── factors.test.js    # Individual factor testing
-├── integration/
-│   └── analysis-flow.test.js  # Full analysis workflow tests
-├── e2e/
-│   └── user-flow.test.js  # End-to-end user experience tests
+│   └── urls.json
 ├── performance/
-│   └── load-tests.js      # Performance and load testing
-└── README.md              # This file
+│   └── load-tests.js
+├── priority1-test-suite.js      # Main test runner
+└── README.md                     # This file
 ```
 
 ## 🚀 Quick Start

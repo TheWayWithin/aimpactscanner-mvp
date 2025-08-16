@@ -169,19 +169,24 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{isRealAnalysis ? 'AI Impact Analysis Results' : 'Sample Analysis Results'}</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {isRealAnalysis ? 'AI Impact Analysis Results' : 'Sample Analysis Report'}
+            </h1>
             <p className="text-gray-600 break-all">{results.url}</p>
           </div>
           <div className="text-right">
             <div className="text-3xl font-bold text-blue-600">{results.overall_score}</div>
-            <div className="text-sm text-gray-600">{isRealAnalysis ? 'Overall Score' : 'Sample Score'}</div>
+            <div className="text-sm text-gray-600">Overall Score</div>
           </div>
         </div>
         
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-blue-800 text-sm">
             <strong>Framework:</strong> MASTERY-AI v3.1.1 with 148 factors. 
-            Sample shows common patterns from analyzing FreeCalcHub, Evolve-7, Agent-11, and 4 other client sites.
+            {isRealAnalysis 
+              ? 'This analysis uses real data from your website for accurate optimization recommendations.'
+              : 'Sample shows common patterns from analyzing FreeCalcHub, Evolve-7, Agent-11, and 4 other client sites.'
+            }
           </p>
         </div>
       </div>

@@ -38,7 +38,7 @@ function AnalysisPreview({ url, analysisId, onUpgradeClick, onFreeTrialClick }) 
         <div className="max-w-2xl w-full p-8">
           <div className="bg-white rounded-lg shadow-lg p-8">
             <h2 className="text-2xl font-bold mb-6 text-center">
-              Preparing Your AI Search Analysis
+              Running Your AI Search Analysis
             </h2>
             
             <div className="mb-6">
@@ -56,10 +56,10 @@ function AnalysisPreview({ url, analysisId, onUpgradeClick, onFreeTrialClick }) 
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <p className="text-sm text-blue-800 mb-2">
-                <strong>Analyzing:</strong> {url}
+                <strong>Analyzing Your Site:</strong> {url}
               </p>
               <p className="text-xs text-blue-700">
-                Preparing to check how ChatGPT, Claude, Perplexity, and Gemini see your site
+                Running real-time analysis to see how ChatGPT, Claude, Perplexity, and Gemini see your site
               </p>
             </div>
           </div>
@@ -168,13 +168,13 @@ function AnalysisPreview({ url, analysisId, onUpgradeClick, onFreeTrialClick }) 
           <h1 className="text-3xl font-bold mb-4">
             Your Site: <span className="text-blue-600">{url}</span>
           </h1>
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-            <p className="text-lg font-semibold text-yellow-900 mb-2">
-              To See Your Complete Analysis Results:
+          <div className="bg-green-50 border-l-4 border-green-400 p-4">
+            <p className="text-lg font-semibold text-green-900 mb-2">
+              Your Real Analysis Results Available:
             </p>
-            <p className="text-yellow-800">
-              Create a free account to get your full 148-factor analysis with specific recommendations for YOUR site.
-              No fake scores or generic advice - real analysis based on how AI systems actually evaluate content.
+            <p className="text-green-800">
+              We've completed analyzing YOUR website using the MASTERY-AI Framework. 
+              Create a free account to access your personalized results and recommendations.
             </p>
           </div>
         </div>

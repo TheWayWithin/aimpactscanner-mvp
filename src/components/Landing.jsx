@@ -36,15 +36,64 @@ function Landing({ onAnalysisComplete }) {
 
     setIsAnalyzing(true);
     
-    // Generate a temporary analysis ID
-    const tempAnalysisId = crypto.randomUUID();
-    
-    // Store URL and ID for later use
-    sessionStorage.setItem('pendingAnalysisUrl', validatedUrl);
-    sessionStorage.setItem('pendingAnalysisId', tempAnalysisId);
-    
-    // Trigger analysis complete callback with URL
-    onAnalysisComplete(validatedUrl, tempAnalysisId);
+    try {
+      // Generate analysis ID and temporary user ID for anonymous analysis
+      const analysisId = crypto.randomUUID();
+      const tempUserId = 'temp_' + crypto.randomUUID();
+      
+      // Store analysis data in sessionStorage for later access
+      const analysisData = {
+        analysisId,
+        url: validatedUrl,
+        tempUserId,
+        timestamp: new Date().toISOString(),
+        status: 'in_progress'
+      };
+      
+      sessionStorage.setItem('landingAnalysisData', JSON.stringify(analysisData));
+      sessionStorage.setItem('pendingAnalysisUrl', validatedUrl);
+      sessionStorage.setItem('pendingAnalysisId', analysisId);
+      
+      // Start real Edge Function analysis
+      console.log('🚀 Starting real analysis from landing page:', { analysisId, url: validatedUrl, tempUserId });
+      
+      // Call Edge Function for real analysis
+      const { data, error: invokeError } = await supabase.functions.invoke('analyze-page', {
+        body: {
+          url: validatedUrl,
+          analysisId: analysisId,
+          userId: tempUserId
+        }
+      });
+      
+      if (invokeError) {
+        console.error('❌ Edge Function error:', invokeError);
+        setError(`Analysis error: ${invokeError.message}`);
+        setIsAnalyzing(false);
+        return;
+      }
+      
+      console.log('✅ Analysis initiated successfully:', data);
+      
+      // Update stored analysis data with results
+      if (data && data.success) {
+        analysisData.status = 'completed';
+        analysisData.results = {
+          overall_score: data.overall_score,
+          factors: data.factors || [],
+          factors_count: data.factors_count || 0
+        };
+        sessionStorage.setItem('landingAnalysisData', JSON.stringify(analysisData));
+      }
+      
+      // Trigger analysis complete callback to show results
+      onAnalysisComplete(validatedUrl, analysisId);
+      
+    } catch (error) {
+      console.error('❌ Error starting analysis:', error);
+      setError(`Error starting analysis: ${error.message}`);
+      setIsAnalyzing(false);
+    }
   };
 
   return (
