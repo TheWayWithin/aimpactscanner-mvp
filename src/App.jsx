@@ -399,7 +399,10 @@ function App() {
         onSignOut={() => supabase.auth.signOut()}
       />
 
-      <UserInitializer session={session} onUserReady={() => setUserReady(true)} />
+      {/* Only show UserInitializer if we're not viewing results from a pending analysis */}
+      {currentView !== 'results' && (
+        <UserInitializer session={session} onUserReady={() => setUserReady(true)} />
+      )}
 
       <main className="main-content">
         {/* Navigation tabs */}

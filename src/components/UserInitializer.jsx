@@ -124,7 +124,7 @@ function UserInitializer({ session, onUserReady }) {
       <div className="p-4 bg-green-50 border border-green-200 rounded-lg mb-4">
         <div className="flex items-center">
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600 mr-3"></div>
-          <span className="text-green-800">Setting up your free account...</span>
+          <span className="text-green-800">Welcome! You have 3 free analyses per month</span>
         </div>
       </div>
     );
