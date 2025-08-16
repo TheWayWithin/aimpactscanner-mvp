@@ -20,6 +20,8 @@ import UserInitializer from './components/UserInitializer';
 import AnalysisHistory from './components/AnalysisHistory';
 import { useUpgrade } from './components/UpgradeHandler';
 import { useUsageTracking } from './hooks/useUsageTracking';
+import AuthenticatedHeader from './components/AuthenticatedHeader';
+import AILogo from './components/AILogo';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -301,22 +303,14 @@ function App() {
 
   // Authenticated views
   return (
-    <div className="app-container">
-      {/* Header with user info */}
-      <header className="brand-header">
-        <div className="flex justify-between items-center max-w-7xl mx-auto px-4">
-          <h1 className="text-2xl font-bold">AImpactScanner</h1>
-          <div className="flex items-center gap-4">
-            <TierIndicator user={session?.user} tierData={{ tier: userTier, remaining: userTier === 'free' ? usageData.remaining : Infinity }} />
-            <button
-              onClick={() => supabase.auth.signOut()}
-              className="text-sm text-gray-600 hover:text-gray-900"
-            >
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      {/* Consistent header across all authenticated pages */}
+      <AuthenticatedHeader 
+        session={session}
+        userTier={userTier}
+        usageData={usageData}
+        onSignOut={() => supabase.auth.signOut()}
+      />
 
       <UserInitializer session={session} onUserReady={() => setUserReady(true)} />
 
@@ -373,10 +367,10 @@ function App() {
               <p className="text-gray-600 mb-8">
                 You have {userTier === 'free' ? usageData.remaining : 'unlimited'} analyses remaining this month.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-start">
                 <button
                   onClick={() => setCurrentView('input')}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 min-w-[200px]"
                 >
                   Start New Analysis →
                 </button>
@@ -388,7 +382,7 @@ function App() {
                       setAnalysisResults(null); // Ensure demo mode
                       setCurrentView('results');
                     }}
-                    className="px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600"
+                    className="px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 min-w-[200px]"
                   >
                     📋 See Sample Report
                   </button>

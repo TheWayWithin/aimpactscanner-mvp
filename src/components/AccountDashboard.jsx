@@ -181,7 +181,7 @@ const AccountDashboard = ({ user, className = '' }) => {
                   <span className="text-sm font-mono text-gray-500">
                     {accountData.user.stripe_customer_id 
                       ? `${accountData.user.stripe_customer_id.slice(0, 8)}...`
-                      : 'Not set'}
+                      : accountData.user.id?.slice(0, 8) || 'Not set'}
                   </span>
                 </div>
               </div>
