@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import TrustBadges from './TrustBadges';
 
 function Landing({ onAnalysisComplete }) {
   const [url, setUrl] = useState('');
@@ -152,28 +153,7 @@ function Landing({ onAnalysisComplete }) {
       {/* Trust Indicators */}
       <div className="border-t border-gray-200 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="flex justify-center items-center gap-6 md:gap-8">
-            <img 
-              src="/images/badges/badge-148-factors-150x50.png" 
-              alt="148 AI Factors" 
-              className="h-12 md:h-16 object-contain" 
-            />
-            <img 
-              src="/images/badges/badge-15-second-analysis-150x50.png" 
-              alt="15 Second Analysis" 
-              className="h-12 md:h-16 object-contain" 
-            />
-            <img 
-              src="/images/badges/badge-privacy-safe-150x50.png" 
-              alt="100% Privacy Safe" 
-              className="h-12 md:h-16 object-contain" 
-            />
-            <img 
-              src="/images/badges/badge-no-credit-card-150x50.png" 
-              alt="No Credit Card Required" 
-              className="h-12 md:h-16 object-contain" 
-            />
-          </div>
+          <TrustBadges />
         </div>
       </div>
 
