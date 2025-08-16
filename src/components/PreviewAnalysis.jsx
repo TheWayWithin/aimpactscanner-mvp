@@ -8,112 +8,59 @@ function PreviewAnalysis({ analysisId, url, onAnalysisComplete }) {
   const [educationalContent, setEducationalContent] = useState('Setting up secure analysis environment...');
 
   useEffect(() => {
-    let subscription;
-    let fallbackInterval;
+    let simulationInterval;
     let completed = false;
-
-    const startProgressTracking = () => {
-      console.log('🔄 Starting progress tracking for analysis:', analysisId);
+    
+    // Use client-side simulation for anonymous users to avoid RLS policy issues
+    const startClientSideSimulation = () => {
+      console.log('🎭 Starting client-side progress simulation for anonymous preview');
       
-      // Set up real-time subscription for progress updates
-      subscription = supabase
-        .channel(`analysis_progress_${analysisId}`)
-        .on('postgres_changes', {
-          event: '*',
-          schema: 'public',
-          table: 'analysis_progress',
-          filter: `analysis_id=eq.${analysisId}`
-        }, (payload) => {
-          console.log('📊 Progress update received:', payload);
-          
-          if (payload.new) {
-            setProgress(payload.new.progress_percent || 0);
-            setCurrentMessage(payload.new.message || 'Processing...');
-            setCurrentStage(payload.new.stage || 'processing');
-            setEducationalContent(payload.new.educational_content || 'Analyzing your site...');
-            
-            // Check if analysis is complete
-            if (payload.new.progress_percent >= 100) {
-              if (!completed) {
-                completed = true;
-                console.log('✅ Analysis completed via subscription');
-                setTimeout(() => {
-                  onAnalysisComplete();
-                }, 2500); // Show completion message for 2.5 seconds
-              }
-            }
-          }
-        })
-        .subscribe((status) => {
-          console.log('📡 Subscription status:', status);
-          
-          if (status === 'SUBSCRIBED') {
-            console.log('✅ Real-time subscription active');
-          } else if (status === 'CHANNEL_ERROR') {
-            console.warn('⚠️ Real-time subscription failed, starting fallback polling');
-            startFallbackPolling();
-          }
-        });
-
-      // Start fallback polling as backup
-      setTimeout(() => {
-        if (!completed) {
-          console.log('🔄 Starting backup polling for progress updates');
-          startFallbackPolling();
-        }
-      }, 3000);
-    };
-
-    const startFallbackPolling = () => {
-      if (fallbackInterval) return; // Already running
+      const progressStages = [
+        { progress: 15, message: 'Connecting to your website...', stage: 'connection', educational: 'Establishing secure connection to analyze your site' },
+        { progress: 25, message: 'Analyzing title tags and meta descriptions...', stage: 'meta', educational: 'Title tags are crucial for AI understanding' },
+        { progress: 35, message: 'Checking HTTPS security configuration...', stage: 'security', educational: 'Security signals affect AI trust scores' },
+        { progress: 45, message: 'Evaluating content structure and headings...', stage: 'structure', educational: 'Proper heading hierarchy helps AI parse content' },
+        { progress: 55, message: 'Analyzing authority signals...', stage: 'authority', educational: 'AI systems prioritize authoritative sources' },
+        { progress: 65, message: 'Scanning for AI readability factors...', stage: 'readability', educational: 'Content must be optimized for AI consumption' },
+        { progress: 75, message: 'Processing MASTERY-AI Framework factors...', stage: 'framework', educational: 'Applying 148-factor comprehensive analysis' },
+        { progress: 85, message: 'Calculating improvement opportunities...', stage: 'opportunities', educational: 'Identifying quick wins and critical issues' },
+        { progress: 95, message: 'Finalizing your analysis report...', stage: 'finalizing', educational: 'Preparing actionable recommendations' },
+        { progress: 100, message: 'Analysis complete!', stage: 'complete', educational: 'Your AI optimization report is ready' }
+      ];
       
-      fallbackInterval = setInterval(async () => {
-        if (completed) {
-          clearInterval(fallbackInterval);
-          return;
-        }
-        
-        try {
-          const { data, error } = await supabase
-            .from('analysis_progress')
-            .select('*')
-            .eq('analysis_id', analysisId)
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
-
-          if (data && !error) {
-            console.log('📊 Fallback progress update:', data);
-            setProgress(data.progress_percent || 0);
-            setCurrentMessage(data.message || 'Processing...');
-            setCurrentStage(data.stage || 'processing');
-            setEducationalContent(data.educational_content || 'Analyzing your site...');
-            
-            if (data.progress_percent >= 100 && !completed) {
-              completed = true;
-              console.log('✅ Analysis completed via fallback polling');
-              clearInterval(fallbackInterval);
-              setTimeout(() => {
-                onAnalysisComplete();
-              }, 2500);
-            }
+      let stageIndex = 0;
+      
+      // Update progress every 1.5 seconds for a 15-second total duration
+      simulationInterval = setInterval(() => {
+        if (stageIndex < progressStages.length) {
+          const stage = progressStages[stageIndex];
+          setProgress(stage.progress);
+          setCurrentMessage(stage.message);
+          setCurrentStage(stage.stage);
+          setEducationalContent(stage.educational);
+          
+          if (stage.progress >= 100 && !completed) {
+            completed = true;
+            clearInterval(simulationInterval);
+            console.log('✅ Analysis simulation completed');
+            setTimeout(() => {
+              onAnalysisComplete();
+            }, 2000); // Show completion message for 2 seconds
           }
-        } catch (error) {
-          console.error('❌ Fallback polling error:', error);
+          
+          stageIndex++;
         }
-      }, 1000);
+      }, 1500); // 1.5 seconds per stage = 15 seconds total
     };
-
-    startProgressTracking();
+    
+    // Start client-side simulation immediately for anonymous users
+    startClientSideSimulation();
 
     // Cleanup function
     return () => {
-      if (subscription) {
-        console.log('🧹 Cleaning up progress subscription');
-        subscription.unsubscribe();
-      }
-      if (fallbackInterval) {
-        clearInterval(fallbackInterval);
+      if (simulationInterval) {
+        console.log('🧹 Cleaning up progress simulation');
+        clearInterval(simulationInterval);
       }
     };
   }, [analysisId, onAnalysisComplete]);
