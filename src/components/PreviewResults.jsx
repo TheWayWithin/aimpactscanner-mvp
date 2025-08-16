@@ -369,17 +369,17 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
             This is just a preview of your real analysis. Create a free account to see:
           </p>
           <div className="grid md:grid-cols-3 gap-4 my-6 text-left">
-            <div className="bg-white bg-opacity-20 rounded-lg p-4">
+            <div className="bg-blue-800 bg-opacity-40 border border-white border-opacity-30 rounded-lg p-4">
               <div className="font-semibold mb-2 text-white">✅ All {factors.length || 11} Factor Results</div>
-              <div className="text-sm text-white">Complete detailed analysis with evidence and recommendations</div>
+              <div className="text-sm text-blue-100">Complete detailed analysis with evidence and recommendations</div>
             </div>
-            <div className="bg-white bg-opacity-20 rounded-lg p-4">
+            <div className="bg-blue-800 bg-opacity-40 border border-white border-opacity-30 rounded-lg p-4">
               <div className="font-semibold mb-2 text-white">📊 Detailed Scoring</div>
-              <div className="text-sm text-white">See exactly how each factor impacts your AI visibility</div>
+              <div className="text-sm text-blue-100">See exactly how each factor impacts your AI visibility</div>
             </div>
-            <div className="bg-white bg-opacity-20 rounded-lg p-4">
+            <div className="bg-blue-800 bg-opacity-40 border border-white border-opacity-30 rounded-lg p-4">
               <div className="font-semibold mb-2 text-white">🎯 Action Plan</div>
-              <div className="text-sm text-white">Step-by-step recommendations prioritized by impact</div>
+              <div className="text-sm text-blue-100">Step-by-step recommendations prioritized by impact</div>
             </div>
           </div>
           
