@@ -9,9 +9,9 @@
     "globalTimeout": 3600000,
     "grep": {},
     "grepInvert": null,
-    "maxFailures": 0,
+    "maxFailures": 1,
     "metadata": {
-      "actualWorkers": 1
+      "actualWorkers": 4
     },
     "preserveOutput": "always",
     "reporter": [
@@ -43,7 +43,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 4
         },
         "id": "chromium",
         "name": "chromium",
@@ -52,14 +52,14 @@
         "testMatch": [
           "**/*.spec.js"
         ],
-        "timeout": 60000
+        "timeout": 30000
       },
       {
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 4
         },
         "id": "firefox",
         "name": "firefox",
@@ -68,14 +68,14 @@
         "testMatch": [
           "**/*.spec.js"
         ],
-        "timeout": 60000
+        "timeout": 30000
       },
       {
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 4
         },
         "id": "webkit",
         "name": "webkit",
@@ -84,14 +84,14 @@
         "testMatch": [
           "**/*.spec.js"
         ],
-        "timeout": 60000
+        "timeout": 30000
       },
       {
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 4
         },
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
@@ -100,14 +100,14 @@
         "testMatch": [
           "**/phase2-auth-pricing.spec.js"
         ],
-        "timeout": 60000
+        "timeout": 30000
       },
       {
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 4
         },
         "id": "Mobile Safari",
         "name": "Mobile Safari",
@@ -116,14 +116,14 @@
         "testMatch": [
           "**/phase2-auth-pricing.spec.js"
         ],
-        "timeout": 60000
+        "timeout": 30000
       },
       {
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 4
         },
         "id": "Microsoft Edge",
         "name": "Microsoft Edge",
@@ -132,14 +132,14 @@
         "testMatch": [
           "**/*.spec.js"
         ],
-        "timeout": 60000
+        "timeout": 30000
       },
       {
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 4
         },
         "id": "Google Chrome",
         "name": "Google Chrome",
@@ -148,7 +148,7 @@
         "testMatch": [
           "**/*.spec.js"
         ],
-        "timeout": 60000
+        "timeout": 30000
       }
     ],
     "shard": null,
@@ -168,25 +168,25 @@
   },
   "suites": [
     {
-      "title": "e2e/user-journey-with-temp-email.spec.js",
-      "file": "e2e/user-journey-with-temp-email.spec.js",
+      "title": "e2e/unified-registration-flow.spec.js",
+      "file": "e2e/unified-registration-flow.spec.js",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "AImpactScanner Complete User Journey with Temp Email",
-          "file": "e2e/user-journey-with-temp-email.spec.js",
-          "line": 19,
+          "title": "Unified Registration Flow - Conversion Optimization Tests",
+          "file": "e2e/unified-registration-flow.spec.js",
+          "line": 11,
           "column": 6,
           "specs": [
             {
-              "title": "should complete full anonymous → authenticated flow with preview results persistence",
-              "ok": false,
+              "title": "1. Complete Anonymous Analysis → Preview Results → Registration Flow",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 120000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -195,52 +195,15 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 15476,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 15000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"progress\"], .progress, [role=\"progressbar\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"progress\"], .progress, [role=\"progressbar\"]')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 15000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"progress\"], .progress, [role=\"progressbar\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"progress\"], .progress, [role=\"progressbar\"]')\u001b[22m\n\n    at /Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/e2e/user-journey-with-temp-email.spec.js:76:37",
-                        "location": {
-                          "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/e2e/user-journey-with-temp-email.spec.js",
-                          "column": 37,
-                          "line": 76
-                        },
-                        "snippet": "  74 |     // Wait for progress to start\n  75 |     const progressIndicator = page.locator('[data-testid=\"progress\"], .progress, [role=\"progressbar\"]');\n> 76 |     await expect(progressIndicator).toBeVisible({ timeout: 15000 });\n     |                                     ^\n  77 |     console.log('✅ Progress indicator visible');\n  78 |     \n  79 |     // Monitor progress for 15 seconds (matches SimpleAnalysisProgress duration)"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/e2e/user-journey-with-temp-email.spec.js",
-                            "column": 37,
-                            "line": 76
-                          },
-                          "message": "Error: \u001b[31mTimed out 15000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"progress\"], .progress, [role=\"progressbar\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"progress\"], .progress, [role=\"progressbar\"]')\u001b[22m\n\n\n  74 |     // Wait for progress to start\n  75 |     const progressIndicator = page.locator('[data-testid=\"progress\"], .progress, [role=\"progressbar\"]');\n> 76 |     await expect(progressIndicator).toBeVisible({ timeout: 15000 });\n     |                                     ^\n  77 |     console.log('✅ Progress indicator visible');\n  78 |     \n  79 |     // Monitor progress for 15 seconds (matches SimpleAnalysisProgress duration)\n    at /Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/e2e/user-journey-with-temp-email.spec.js:76:37"
-                        }
-                      ],
+                      "status": "interrupted",
+                      "duration": 13245,
+                      "errors": [],
                       "stdout": [
                         {
-                          "text": "🚀 Starting fresh user journey test...\n"
+                          "text": "🧪 TEST 1: Complete anonymous analysis flow\n"
                         },
                         {
-                          "text": "🎯 Testing complete user journey with temp email authentication\n"
-                        },
-                        {
-                          "text": "📍 Phase 1: Starting as anonymous user\n"
-                        },
-                        {
-                          "text": "✅ Landing page loaded successfully\n"
-                        },
-                        {
-                          "text": "✅ Entered test URL: https://example.com\n"
-                        },
-                        {
-                          "text": "✅ Analysis started\n"
-                        },
-                        {
-                          "text": "📍 Phase 2: Monitoring analysis progress\n"
-                        },
-                        {
-                          "text": "🧹 Cleaning up temp email resources...\n"
+                          "text": "📊 Waiting for analysis to complete...\n"
                         }
                       ],
                       "stderr": [
@@ -248,67 +211,88 @@
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+79ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+609ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+2ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+9ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+3ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+42ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+2ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+28ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+397ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+2ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5174/\", waiting until \"load\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5174/\", waiting until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+5ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+54ms\u001b[0m\n"
                         },
                         {
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+254ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+337ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+4ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+502ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toContainText started \u001b[38;5;45m+4ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.evaluate started \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toContainText\" with timeout 10000ms \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.evaluate succeeded \u001b[38;5;45m+3ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('h1') \u001b[38;5;45m+2ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <h1 class=\"text-5xl md:text-6xl font-bold text-gray-900 mb-6\">…</h1> \u001b[38;5;45m+45ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5174/\", waiting until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toContainText succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+50ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 10000ms \u001b[38;5;45m+0ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+20ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('input[type=\"url\"], input[placeholder*=\"URL\"], #url-input') \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <input value=\"\" type=\"text\" placeholder=\"Enter your website URL...\" class=\"flex-1 px-6 py-4 text-lg border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none\"/> \u001b[38;5;45m+2ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+501ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toHaveTitle started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toHaveTitle\" with timeout 10000ms \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toHaveTitle succeeded \u001b[38;5;45m+13ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+4ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 10000ms \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('input[type=\"url\"], input[placeholder*=\"website\"]').first() \u001b[38;5;45m+4ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <input value=\"\" type=\"text\" placeholder=\"Enter your website URL...\" class=\"flex-1 px-6 py-4 text-lg border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none\"/> \u001b[38;5;45m+6ms\u001b[0m\n"
                         },
                         {
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toBeVisible succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
@@ -317,13 +301,13 @@
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.fill started \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('input[type=\"url\"], input[placeholder*=\"URL\"], #url-input') \u001b[38;5;45m+0ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('input[type=\"url\"], input[placeholder*=\"website\"]').first() \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <input value=\"\" type=\"text\" placeholder=\"Enter your website URL...\" class=\"flex-1 px-6 py-4 text-lg border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none\"/> \u001b[38;5;45m+2ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <input value=\"\" type=\"text\" placeholder=\"Enter your website URL...\" class=\"flex-1 px-6 py-4 text-lg border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none\"/> \u001b[38;5;45m+4ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  fill(\"https://example.com\") \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  fill(\"https://anthropic.com\") \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting fill action \u001b[38;5;45m+0ms\u001b[0m\n"
@@ -332,31 +316,34 @@
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and editable \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.fill succeeded \u001b[38;5;45m+16ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+19ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.fill succeeded \u001b[38;5;45m+491ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 5000ms \u001b[38;5;45m+0ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+2ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Analyze\"), button[type=\"submit\"]').first() \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 10000ms \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button type=\"submit\" class=\"px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all\">Analyze My Site Free</button> \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Analyze\"), button:has-text(\"Start Analysis\")').first() \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button type=\"submit\" class=\"px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all\">Analyze My Site Free</button> \u001b[38;5;45m+2ms\u001b[0m\n"
                         },
                         {
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toBeVisible succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+0ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+2ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Analyze\"), button[type=\"submit\"]').first() \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Analyze\"), button:has-text(\"Start Analysis\")').first() \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button type=\"submit\" class=\"px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all\">Analyze My Site Free</button> \u001b[38;5;45m+2ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button type=\"submit\" class=\"px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all\">Analyze My Site Free</button> \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting click action \u001b[38;5;45m+1ms\u001b[0m\n"
@@ -365,7 +352,7 @@
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and stable \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  element is visible, enabled and stable \u001b[38;5;45m+26ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  element is visible, enabled and stable \u001b[38;5;45m+30ms\u001b[0m\n"
                         },
                         {
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  scrolling into view if needed \u001b[38;5;45m+0ms\u001b[0m\n"
@@ -374,34 +361,667 @@
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  done scrolling \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  performing click action \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  performing click action \u001b[38;5;45m+2ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  click action done \u001b[38;5;45m+9ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  click action done \u001b[38;5;45m+11ms\u001b[0m\n"
                         },
                         {
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for scheduled navigations to finish \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigations have finished \u001b[38;5;45m+0ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigations have finished \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click succeeded \u001b[38;5;45m+501ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForSelector started \u001b[38;5;45m+2ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 15000ms \u001b[38;5;45m+0ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForSelector started \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('[data-testid=\"progress\"], .progress, [role=\"progressbar\"]') \u001b[38;5;45m+0ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForSelector started \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+12s\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('[data-testid=\"preview-results\"]') to be visible \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toBeVisible succeeded \u001b[38;5;45m+3s\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('text=\"Analysis Complete\"') to be visible \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Get Your Complete\")') to be visible \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.screenshot started \u001b[38;5;45m+10s\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+9ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.screenshot succeeded \u001b[38;5;45m+75ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.close started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.close succeeded \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.close started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForSelector failed \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForSelector failed \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForSelector failed \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.close succeeded \u001b[38;5;45m+78ms\u001b[0m\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-08-17T13:52:29.220Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/e2e-unified-registration-f-6ad7e-Results-→-Registration-Flow-chromium/test-failed-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6ca1a2dc5f31763eefc8-8da3b9f7c276456cf36e",
+              "file": "e2e/unified-registration-flow.spec.js",
+              "line": 41,
+              "column": 3
+            },
+            {
+              "title": "2. Coffee Tier Pre-selection and Visual Prominence",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6ca1a2dc5f31763eefc8-07b46d6864cdc093a636",
+              "file": "e2e/unified-registration-flow.spec.js",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "3. Dynamic Benefits Display - Tier Switching",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 13044,
+                      "error": {
+                        "message": "TimeoutError: locator.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Create\"), button:has-text(\"Register\")').first()\u001b[22m\n",
+                        "stack": "TimeoutError: locator.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Create\"), button:has-text(\"Register\")').first()\u001b[22m\n\n    at /Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/e2e/unified-registration-flow.spec.js:127:90",
+                        "location": {
+                          "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/e2e/unified-registration-flow.spec.js",
+                          "column": 90,
+                          "line": 127
+                        },
+                        "snippet": "  125 |     // Get to registration\n  126 |     await page.reload();\n> 127 |     await page.locator('button:has-text(\"Create\"), button:has-text(\"Register\")').first().click();\n      |                                                                                          ^\n  128 |     await expect(page.locator('h1:has-text(\"Create Your Account\")')).toBeVisible({ timeout: 10000 });\n  129 |     \n  130 |     // Initial state - Coffee tier selected"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/e2e/unified-registration-flow.spec.js",
+                            "column": 90,
+                            "line": 127
+                          },
+                          "message": "TimeoutError: locator.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Create\"), button:has-text(\"Register\")').first()\u001b[22m\n\n\n  125 |     // Get to registration\n  126 |     await page.reload();\n> 127 |     await page.locator('button:has-text(\"Create\"), button:has-text(\"Register\")').first().click();\n      |                                                                                          ^\n  128 |     await expect(page.locator('h1:has-text(\"Create Your Account\")')).toBeVisible({ timeout: 10000 });\n  129 |     \n  130 |     // Initial state - Coffee tier selected\n    at /Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/e2e/unified-registration-flow.spec.js:127:90"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "🧪 TEST 3: Dynamic benefits testing\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+596ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+18ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+26ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+442ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5174/\", waiting until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+103ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+227ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+4ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+501ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.evaluate started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.evaluate succeeded \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5174/\", waiting until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+50ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+17ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+500ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.evaluate started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.evaluate succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.reload started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for navigation until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+36ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+14ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.reload succeeded \u001b[38;5;45m+501ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Create\"), button:has-text(\"Register\")').first() \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+37ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click failed \u001b[38;5;45m+10s\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.screenshot started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.screenshot succeeded \u001b[38;5;45m+76ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.close started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.close succeeded \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.close started \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.close succeeded \u001b[38;5;45m+106ms\u001b[0m\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-08-17T13:52:29.231Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/e2e-unified-registration-f-157a1-ts-Display---Tier-Switching-chromium/test-failed-1.png"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/e2e/unified-registration-flow.spec.js",
+                        "column": 90,
+                        "line": 127
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6ca1a2dc5f31763eefc8-5ce373ac698c41e821c1",
+              "file": "e2e/unified-registration-flow.spec.js",
+              "line": 116,
+              "column": 3
+            },
+            {
+              "title": "4. Email Input and Magic Link Flow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6ca1a2dc5f31763eefc8-0012ed290649cd73c9cf",
+              "file": "e2e/unified-registration-flow.spec.js",
+              "line": 154,
+              "column": 3
+            },
+            {
+              "title": "5. Free Tier Selection Flow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "interrupted",
+                      "duration": 13135,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🧪 TEST 5: Free tier selection flow\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+589ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+18ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+32ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+433ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5174/\", waiting until \"load\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+145ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+257ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+503ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.evaluate started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.evaluate succeeded \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5174/\", waiting until \"load\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+68ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+25ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+501ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.evaluate started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.evaluate succeeded \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.reload started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for navigation until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+42ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+11ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.reload succeeded \u001b[38;5;45m+502ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Create\"), button:has-text(\"Register\")').first() \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+35ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click failed \u001b[38;5;45m+10s\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.screenshot started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.screenshot succeeded \u001b[38;5;45m+65ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.close started \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.close succeeded \u001b[38;5;45m+9ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.close started \u001b[38;5;45m+4ms\u001b[0m\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-08-17T13:52:29.225Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/e2e-unified-registration-f-de5f6--5-Free-Tier-Selection-Flow-chromium/test-failed-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6ca1a2dc5f31763eefc8-625f7811909fd35802e9",
+              "file": "e2e/unified-registration-flow.spec.js",
+              "line": 195,
+              "column": 3
+            },
+            {
+              "title": "6. Mobile Responsiveness Check",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6ca1a2dc5f31763eefc8-21ef51d731af02a9b028",
+              "file": "e2e/unified-registration-flow.spec.js",
+              "line": 229,
+              "column": 3
+            },
+            {
+              "title": "7. Error Handling - Invalid Email",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "interrupted",
+                      "duration": 13111,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🧪 TEST 7: Error handling for invalid emails\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+589ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+12ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+40ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+460ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5174/\", waiting until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+116ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+243ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+4ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+502ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.evaluate started \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.evaluate succeeded \u001b[38;5;45m+8ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5174/\", waiting until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+63ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+27ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+500ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.evaluate started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.evaluate succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.reload started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for navigation until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+40ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5174/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+11ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.reload succeeded \u001b[38;5;45m+500ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Create\"), button:has-text(\"Register\")').first() \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+38ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click failed \u001b[38;5;45m+10s\u001b[0m\n"
                         },
                         {
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.screenshot started \u001b[38;5;45m+2ms\u001b[0m\n"
@@ -410,54 +1030,62 @@
                           "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+0ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+1ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+1ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+0ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.screenshot succeeded \u001b[38;5;45m+34ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.screenshot succeeded \u001b[38;5;45m+67ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('body') \u001b[38;5;45m+4ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.close started \u001b[38;5;45m+2ms\u001b[0m\n"
                         },
                         {
-                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <body>…</body> \u001b[38;5;45m+3ms\u001b[0m\n"
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.close succeeded \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.close started \u001b[38;5;45m+5ms\u001b[0m\n"
                         }
                       ],
                       "retry": 0,
-                      "startTime": "2025-08-17T00:01:48.934Z",
+                      "startTime": "2025-08-17T13:52:29.225Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/e2e-user-journey-with-temp-dc71a-preview-results-persistence-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/e2e-user-journey-with-temp-dc71a-preview-results-persistence-chromium/video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/e2e-user-journey-with-temp-dc71a-preview-results-persistence-chromium/error-context.md"
+                          "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/e2e-unified-registration-f-eec33-or-Handling---Invalid-Email-chromium/test-failed-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/e2e/user-journey-with-temp-email.spec.js",
-                        "column": 37,
-                        "line": 76
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "skipped"
                 }
               ],
-              "id": "8dbb8edbc1f05f5dbf59-76205302ad67e40a9a8e",
-              "file": "e2e/user-journey-with-temp-email.spec.js",
-              "line": 40,
+              "id": "6ca1a2dc5f31763eefc8-3172866d6b3091c08181",
+              "file": "e2e/unified-registration-flow.spec.js",
+              "line": 260,
+              "column": 3
+            },
+            {
+              "title": "8. Performance - Page Load Times",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6ca1a2dc5f31763eefc8-d5c0d2fd7f3910b5bdfe",
+              "file": "e2e/unified-registration-flow.spec.js",
+              "line": 293,
               "column": 3
             }
           ]
@@ -465,12 +1093,16 @@
       ]
     }
   ],
-  "errors": [],
+  "errors": [
+    {
+      "message": "\u001b[31mTesting stopped early after 1 maximum allowed failures.\u001b[39m"
+    }
+  ],
   "stats": {
-    "startTime": "2025-08-17T00:01:47.774Z",
-    "duration": 16988.071,
+    "startTime": "2025-08-17T13:52:27.463Z",
+    "duration": 15890.747000000001,
     "expected": 0,
-    "skipped": 0,
+    "skipped": 7,
     "unexpected": 1,
     "flaky": 0
   }
