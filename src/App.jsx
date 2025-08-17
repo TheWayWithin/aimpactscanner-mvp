@@ -1,5 +1,5 @@
 // New App with conversion-optimized flow
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
 import { supabase } from './lib/supabaseClient';
 
@@ -13,6 +13,7 @@ import PreviewResults from './components/PreviewResults';
 import AuthWithPassword from './components/AuthWithPassword';
 import RegistrationFlow from './components/RegistrationFlow';
 import UnifiedRegistration from './components/UnifiedRegistration';
+import Login from './components/Login';
 import SimpleAnalysisProgress from './components/SimpleAnalysisProgress';
 import SimpleResultsDashboard from './components/SimpleResultsDashboard';
 import URLInput from './components/URLInput';
@@ -41,6 +42,17 @@ function App() {
   
   // Track if we've already processed the pending analysis to prevent duplicate processing
   const pendingAnalysisProcessed = useRef(false);
+  
+  // Performance optimization: User data caching and deduplication
+  const userDataCache = useRef(new Map());
+  const fetchingUsers = useRef(new Set());
+  const lastFetchTime = useRef(new Map());
+  const CACHE_DURATION = 30000; // 30 seconds cache
+  
+  // Authentication state change debouncing
+  const authStateChangeInProgress = useRef(false);
+  const lastAuthStateChange = useRef(0);
+  const AUTH_DEBOUNCE_DELAY = 500; // 500ms debounce
 
   // Usage tracking hook
   const { 
@@ -49,6 +61,20 @@ function App() {
     canAnalyze, 
     setUnlimitedAccess 
   } = useUsageTracking(session?.user?.email);
+
+  // Clear cache when user changes to prevent stale data
+  useEffect(() => {
+    if (session?.user?.id) {
+      // Clear any cached data for different users
+      const currentCachedUsers = Array.from(userDataCache.current.keys());
+      if (currentCachedUsers.length > 0 && !currentCachedUsers.includes(session.user.id)) {
+        console.log('🧹 Clearing user data cache for user change');
+        userDataCache.current.clear();
+        lastFetchTime.current.clear();
+        fetchingUsers.current.clear();
+      }
+    }
+  }, [session?.user?.id]);
 
   // Upgrade handler hooks
   const handleUpgradeSuccess = (message) => {
@@ -73,6 +99,13 @@ function App() {
   );
 
   useEffect(() => {
+    // Check URL path for login route
+    if (window.location.pathname === '/login') {
+      setCurrentView('login');
+      // Clear URL to prevent issues with navigation
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session && session.user) {
@@ -80,12 +113,21 @@ function App() {
         fetchUserTier(session.user.id);
         
         // Check if there's a pending analysis from landing page
-        const pendingUrl = sessionStorage.getItem('pendingAnalysisUrl');
-        const pendingId = sessionStorage.getItem('pendingAnalysisId');
-        const landingData = sessionStorage.getItem('landingAnalysisData');
+        const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
+        const pendingId = localStorage.getItem('pendingAnalysisId');
+        const landingData = localStorage.getItem('landingAnalysisData');
+        
+        console.log('🔍 INITIAL SESSION DEBUG:', {
+          hasPendingUrl: !!pendingUrl,
+          hasPendingId: !!pendingId,
+          hasLandingData: !!landingData,
+          alreadyProcessed: pendingAnalysisProcessed.current,
+          pendingUrl: pendingUrl,
+          pendingId: pendingId
+        });
         
         if (pendingUrl && pendingId && landingData && !pendingAnalysisProcessed.current) {
-          console.log('Found pending analysis, redirecting to results');
+          console.log('✅ Initial session: Found pending analysis, redirecting to results');
           pendingAnalysisProcessed.current = true; // Mark as processed
           
           try {
@@ -95,9 +137,9 @@ function App() {
             setCurrentAnalysisId(pendingId);
             setCurrentView('results');
             // Clear the pending data
-            sessionStorage.removeItem('pendingAnalysisUrl');
-            sessionStorage.removeItem('pendingAnalysisId');
-            sessionStorage.removeItem('landingAnalysisData');
+            localStorage.removeItem('pendingAnalysisUrl');
+            localStorage.removeItem('pendingAnalysisId');
+            localStorage.removeItem('landingAnalysisData');
           } catch (error) {
             console.error('Error parsing pending analysis data:', error);
             setCurrentView('dashboard');
@@ -108,16 +150,77 @@ function App() {
       }
     });
 
-    // Listen for auth state changes
+    // Listen for auth state changes with debouncing
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-      if (session?.user?.id) {
+      const currentTime = Date.now();
+      
+      // Debounce rapid auth state changes
+      if (authStateChangeInProgress.current || (currentTime - lastAuthStateChange.current) < AUTH_DEBOUNCE_DELAY) {
+        console.log('🔄 Debouncing auth state change - too soon after last change');
+        return;
+      }
+      
+      authStateChangeInProgress.current = true;
+      lastAuthStateChange.current = currentTime;
+      
+      try {
+        setSession(session);
+        if (session?.user?.id) {
         // PRIORITY 1: Check for pending analysis BEFORE database operations
-        const pendingUrl = sessionStorage.getItem('pendingAnalysisUrl');
-        const pendingId = sessionStorage.getItem('pendingAnalysisId');
-        const landingData = sessionStorage.getItem('landingAnalysisData');
+        let pendingUrl = localStorage.getItem('pendingAnalysisUrl');
+        let pendingId = localStorage.getItem('pendingAnalysisId');
+        let landingData = localStorage.getItem('landingAnalysisData');
+        
+        // Fallback: Check URL parameters if localStorage is empty (magic link flow)
+        if (!pendingUrl || !pendingId) {
+          const urlParams = new URLSearchParams(window.location.search);
+          const urlFromParams = urlParams.get('analysisUrl');
+          const idFromParams = urlParams.get('analysisId');
+          const tierFromParams = urlParams.get('tier');
+          
+          if (urlFromParams && idFromParams) {
+            console.log('🔧 Fallback: Found analysis data in URL parameters');
+            pendingUrl = urlFromParams;
+            pendingId = idFromParams;
+            
+            // Store back to localStorage for consistency
+            localStorage.setItem('pendingAnalysisUrl', pendingUrl);
+            localStorage.setItem('pendingAnalysisId', pendingId);
+            
+            if (tierFromParams) {
+              localStorage.setItem('selectedTier', tierFromParams);
+            }
+            
+            // Create minimal landing data for URL parameter flow
+            if (!landingData) {
+              const minimalData = {
+                analysisId: pendingId,
+                url: pendingUrl,
+                timestamp: new Date().toISOString(),
+                status: 'completed',
+                fromUrlParams: true
+              };
+              landingData = JSON.stringify(minimalData);
+              localStorage.setItem('landingAnalysisData', landingData);
+            }
+            
+            // Clean up URL parameters
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        }
+        
+        // Enhanced debugging for auth state change
+        console.log('🔍 AUTH STATE DEBUG:', {
+          hasPendingUrl: !!pendingUrl,
+          hasPendingId: !!pendingId,
+          hasLandingData: !!landingData,
+          alreadyProcessed: pendingAnalysisProcessed.current,
+          pendingUrl: pendingUrl,
+          pendingId: pendingId,
+          storageMethod: landingData?.includes('fromUrlParams') ? 'URL parameters' : 'localStorage'
+        });
         
         if (pendingUrl && pendingId && landingData && !pendingAnalysisProcessed.current) {
           console.log('🎯 Auth state changed, found pending analysis - redirecting to results');
@@ -130,7 +233,7 @@ function App() {
             setCurrentAnalysisId(pendingId);
             
             // Check if user selected Coffee tier
-            const selectedTier = sessionStorage.getItem('selectedTier');
+            const selectedTier = localStorage.getItem('selectedTier');
             if (selectedTier === 'coffee') {
               // Trigger Stripe checkout for Coffee tier
               console.log('User selected Coffee tier, triggering payment flow');
@@ -139,10 +242,10 @@ function App() {
             
             setCurrentView('results');
             // Clear the pending data
-            sessionStorage.removeItem('pendingAnalysisUrl');
-            sessionStorage.removeItem('pendingAnalysisId');
-            sessionStorage.removeItem('landingAnalysisData');
-            sessionStorage.removeItem('selectedTier');
+            localStorage.removeItem('pendingAnalysisUrl');
+            localStorage.removeItem('pendingAnalysisId');
+            localStorage.removeItem('landingAnalysisData');
+            localStorage.removeItem('selectedTier');
             
             // PRIORITY 2: Fetch user tier in background (non-blocking)
             fetchUserTier(session.user.id).catch(error => {
@@ -175,6 +278,9 @@ function App() {
             setCurrentView('dashboard');
           }
         }
+      } finally {
+        // Reset auth state change flag
+        authStateChangeInProgress.current = false;
       }
     });
 
@@ -182,8 +288,35 @@ function App() {
   }, []);
 
   const fetchUserTier = async (userId) => {
+    // Performance optimization: Prevent duplicate calls for same user
+    if (fetchingUsers.current.has(userId)) {
+      console.log('🔄 Already fetching user tier for:', userId, '- skipping duplicate call');
+      return;
+    }
+    
+    // Check cache first
+    const cacheKey = userId;
+    const cachedData = userDataCache.current.get(cacheKey);
+    const lastFetch = lastFetchTime.current.get(cacheKey);
+    const now = Date.now();
+    
+    if (cachedData && lastFetch && (now - lastFetch) < CACHE_DURATION) {
+      console.log('✅ Using cached user data for:', userId);
+      setUserTier(cachedData.tier || 'free');
+      setDashboardData(cachedData);
+      
+      // Update unlimited access for Coffee tier
+      if (cachedData.tier === 'coffee') {
+        setUnlimitedAccess(true);
+      }
+      return;
+    }
+    
     try {
       console.log('🔍 Fetching user tier for:', userId);
+      
+      // Mark as being fetched
+      fetchingUsers.current.add(userId);
       
       // Try the RPC function first (more reliable for missing users)
       let { data, error } = await supabase.rpc('get_user_data', { user_id: userId });
@@ -211,6 +344,10 @@ function App() {
         const userData = Array.isArray(data) ? data[0] : data;
         console.log('✅ User data fetched successfully:', userData);
         
+        // Cache the data
+        userDataCache.current.set(cacheKey, userData);
+        lastFetchTime.current.set(cacheKey, now);
+        
         setUserTier(userData.tier || 'free');
         setDashboardData(userData);
         
@@ -234,6 +371,9 @@ function App() {
       
       setUserTier('free');
       // Don't throw - handle gracefully with defaults
+    } finally {
+      // Always remove from fetching set when done
+      fetchingUsers.current.delete(userId);
     }
   };
 
@@ -292,7 +432,7 @@ function App() {
   const handleUpgradeFromTeaser = async (tier) => {
     if (!session) {
       // Need to register first - use new registration flow
-      sessionStorage.setItem('selectedTier', tier);
+      localStorage.setItem('selectedTier', tier);
       setCurrentView('registration-flow');
     } else {
       // Already logged in, go straight to payment
@@ -319,9 +459,9 @@ function App() {
   const handleRegistrationComplete = (user, tier) => {
     console.log('Registration completed:', { user: user?.id, tier });
     // Check if there's a pending analysis from landing page
-    const pendingUrl = sessionStorage.getItem('pendingAnalysisUrl');
-    const pendingId = sessionStorage.getItem('pendingAnalysisId');
-    const landingData = sessionStorage.getItem('landingAnalysisData');
+    const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
+    const pendingId = localStorage.getItem('pendingAnalysisId');
+    const landingData = localStorage.getItem('landingAnalysisData');
     
     if (pendingUrl && pendingId && landingData) {
       console.log('Redirecting to results for completed landing analysis');
@@ -333,9 +473,37 @@ function App() {
         setCurrentAnalysisId(pendingId);
         setCurrentView('results');
         // Clear the pending data after successful processing
-        sessionStorage.removeItem('pendingAnalysisUrl');
-        sessionStorage.removeItem('pendingAnalysisId');
-        sessionStorage.removeItem('landingAnalysisData');
+        localStorage.removeItem('pendingAnalysisUrl');
+        localStorage.removeItem('pendingAnalysisId');
+        localStorage.removeItem('landingAnalysisData');
+      } catch (error) {
+        console.error('Error parsing landing analysis data:', error);
+        setCurrentView('dashboard');
+      }
+    } else {
+      setCurrentView('dashboard');
+    }
+  };
+
+  // Handle login completion
+  const handleLoginComplete = (user) => {
+    console.log('Login completed:', user?.id);
+    // For login, we typically just redirect to dashboard unless there's pending analysis
+    const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
+    const pendingId = localStorage.getItem('pendingAnalysisId');
+    const landingData = localStorage.getItem('landingAnalysisData');
+    
+    if (pendingUrl && pendingId && landingData) {
+      console.log('Redirecting to results for completed landing analysis after login');
+      try {
+        const data = JSON.parse(landingData);
+        setAnalysisResults(data.results);
+        setCurrentUrl(pendingUrl);
+        setCurrentAnalysisId(pendingId);
+        setCurrentView('results');
+        localStorage.removeItem('pendingAnalysisUrl');
+        localStorage.removeItem('pendingAnalysisId');
+        localStorage.removeItem('landingAnalysisData');
       } catch (error) {
         console.error('Error parsing landing analysis data:', error);
         setCurrentView('dashboard');
@@ -495,6 +663,10 @@ function App() {
     return <UnifiedRegistration onRegistrationComplete={handleRegistrationComplete} />;
   }
 
+  if (currentView === 'login') {
+    return <Login onLoginSuccess={handleLoginComplete} />;
+  }
+
   // Show landing page for non-authenticated users by default
   if (!session) {
     if (currentView === 'landing' || currentView === 'dashboard' || currentView === 'input') {
@@ -512,7 +684,16 @@ function App() {
         session={session}
         userTier={userTier}
         usageData={usageData}
-        onSignOut={() => supabase.auth.signOut()}
+        onSignOut={() => {
+          // Clear all cached data on sign out
+          console.log('🧹 Clearing all user data cache on sign out');
+          userDataCache.current.clear();
+          lastFetchTime.current.clear();
+          fetchingUsers.current.clear();
+          pendingAnalysisProcessed.current = false;
+          authStateChangeInProgress.current = false;
+          supabase.auth.signOut();
+        }}
       />
 
       {/* Only show UserInitializer if we're not viewing results from a pending analysis */}

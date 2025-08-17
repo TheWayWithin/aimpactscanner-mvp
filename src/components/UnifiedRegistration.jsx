@@ -76,14 +76,24 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
 
     try {
       // Store selected tier for post-auth handling
-      sessionStorage.setItem('selectedTier', selectedTier);
-      sessionStorage.setItem('registrationEmail', email);
+      localStorage.setItem('selectedTier', selectedTier);
+      localStorage.setItem('registrationEmail', email);
 
-      // Sign up with magic link
+      // Sign up with magic link - add analysis data to redirect URL
+      const redirectUrl = new URL(window.location.origin);
+      const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
+      const pendingId = localStorage.getItem('pendingAnalysisId');
+      
+      if (pendingUrl && pendingId) {
+        redirectUrl.searchParams.set('analysisUrl', pendingUrl);
+        redirectUrl.searchParams.set('analysisId', pendingId);
+        redirectUrl.searchParams.set('tier', selectedTier);
+      }
+
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: redirectUrl.toString(),
           data: {
             tier: selectedTier
           }
@@ -275,9 +285,12 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Already have an account?{' '}
-                <a href="/login" className="text-blue-600 hover:underline">
-                  Sign in
-                </a>
+                <button 
+                  onClick={() => window.location.href = '/login'}
+                  className="text-blue-600 hover:underline font-semibold"
+                >
+                  Sign in here
+                </button>
               </p>
             </div>
           </div>

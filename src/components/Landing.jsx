@@ -41,7 +41,7 @@ function Landing({ onAnalysisComplete }) {
       const analysisId = crypto.randomUUID();
       const tempUserId = 'temp_' + crypto.randomUUID();
       
-      // Store analysis data in sessionStorage for later access
+      // Store analysis data in localStorage for later access
       const analysisData = {
         analysisId,
         url: validatedUrl,
@@ -50,9 +50,9 @@ function Landing({ onAnalysisComplete }) {
         status: 'in_progress'
       };
       
-      sessionStorage.setItem('landingAnalysisData', JSON.stringify(analysisData));
-      sessionStorage.setItem('pendingAnalysisUrl', validatedUrl);
-      sessionStorage.setItem('pendingAnalysisId', analysisId);
+      localStorage.setItem('landingAnalysisData', JSON.stringify(analysisData));
+      localStorage.setItem('pendingAnalysisUrl', validatedUrl);
+      localStorage.setItem('pendingAnalysisId', analysisId);
       
       // Start real Edge Function analysis
       console.log('🚀 Starting real analysis from landing page:', { analysisId, url: validatedUrl, tempUserId });
@@ -83,7 +83,7 @@ function Landing({ onAnalysisComplete }) {
           factors: data.factors || [],
           factors_count: data.factors_count || 0
         };
-        sessionStorage.setItem('landingAnalysisData', JSON.stringify(analysisData));
+        localStorage.setItem('landingAnalysisData', JSON.stringify(analysisData));
       }
       
       // Trigger analysis complete callback to show results

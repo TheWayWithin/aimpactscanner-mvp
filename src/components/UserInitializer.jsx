@@ -1,13 +1,25 @@
 // User Initializer Component - Ensures user exists in database
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
 function UserInitializer({ session, onUserReady }) {
   const [status, setStatus] = useState('checking');
   const [error, setError] = useState(null);
+  
+  // Performance optimization: Prevent duplicate initialization
+  const initializationAttempted = useRef(false);
+  const currentUserId = useRef(null);
 
   useEffect(() => {
     if (session?.user?.id) {
+      // Performance optimization: Prevent duplicate initialization for same user
+      if (currentUserId.current === session.user.id && initializationAttempted.current) {
+        console.log('🔄 UserInitializer: Skipping duplicate initialization for user:', session.user.id);
+        return;
+      }
+      
+      currentUserId.current = session.user.id;
+      initializationAttempted.current = true;
       initializeUser();
     }
   }, [session]);
@@ -18,7 +30,7 @@ function UserInitializer({ session, onUserReady }) {
       const userId = session.user.id;
       const userEmail = session.user.email;
 
-      console.log('Initializing user:', userId, userEmail);
+      console.log('🔧 UserInitializer: Starting initialization for user:', userId, userEmail);
 
       // Add timeout promise with automatic fallback - 3 seconds to handle 406 errors
       const timeoutPromise = new Promise((_, reject) => 
@@ -26,7 +38,7 @@ function UserInitializer({ session, onUserReady }) {
       );
 
       // First check if user exists with timeout
-      console.log('Checking if user exists in database...');
+      console.log('🔍 UserInitializer: Checking if user exists in database...');
       const checkPromise = supabase
         .from('users')
         .select('id, email, tier, monthly_analyses_used')
@@ -35,7 +47,7 @@ function UserInitializer({ session, onUserReady }) {
 
       const { data: existingUser, error: checkError } = await Promise.race([checkPromise, timeoutPromise]);
 
-      console.log('Database check result:', { existingUser, checkError });
+      console.log('📊 UserInitializer: Database check result:', { existingUser, checkError });
 
       if (checkError && checkError.code !== 'PGRST116') {
         // PGRST116 = no rows returned, which is expected for new users
@@ -52,11 +64,11 @@ function UserInitializer({ session, onUserReady }) {
       }
 
       if (existingUser) {
-        console.log('User exists:', existingUser);
+        console.log('✅ UserInitializer: User exists:', existingUser);
         setStatus('ready');
         onUserReady?.(existingUser);
       } else {
-        console.log('User does not exist, creating...');
+        console.log('🔧 UserInitializer: User does not exist, creating...');
         setStatus('creating');
 
         // Create user in database with timeout
@@ -89,16 +101,16 @@ function UserInitializer({ session, onUserReady }) {
           throw createError;
         }
 
-        console.log('User created:', newUser);
+        console.log('✅ UserInitializer: User created:', newUser);
         setStatus('ready');
         onUserReady?.(newUser);
       }
 
     } catch (err) {
-      console.error('User initialization error:', err);
+      console.error('❌ UserInitializer: User initialization error:', err);
       // Auto-fallback on timeout or database issues
       if (err.message.includes('timeout') || err.message.includes('406') || err.message.includes('PGRST')) {
-        console.log('Auto-fallback: Proceeding with default user data due to database issues');
+        console.log('⚠️ UserInitializer: Auto-fallback - proceeding with default user data due to database issues');
         setStatus('ready');
         onUserReady?.({ tier: 'free', monthly_analyses_used: 0 });
       } else {
@@ -145,7 +157,7 @@ function UserInitializer({ session, onUserReady }) {
             </button>
             <button 
               onClick={() => {
-                console.log('Bypassing user initialization - proceeding with default data');
+                console.log('⏭️ UserInitializer: Bypassing initialization - proceeding with default data');
                 setStatus('ready');
                 onUserReady?.({ tier: 'free', monthly_analyses_used: 0 });
               }}
