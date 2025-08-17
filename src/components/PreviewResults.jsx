@@ -316,10 +316,10 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                   onClick={onFreeTrialClick}
                   className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-all shadow-lg"
                 >
-                  Get Free Account & See All Results
+                  Unlock All Factors →
                 </button>
                 <p className="text-xs text-blue-100">
-                  No credit card required • 3 free analyses per month
+                  Get instant access to your complete analysis
                 </p>
               </div>
             </div>
@@ -383,20 +383,16 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col gap-4 justify-center items-center">
             <button
               onClick={onFreeTrialClick}
-              className="px-8 py-4 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition-all text-lg"
+              className="px-10 py-5 bg-yellow-400 text-gray-900 font-bold rounded-lg hover:bg-yellow-300 transition-all text-xl shadow-lg transform hover:scale-105"
             >
-              Create Free Account
+              Get Your Complete Analysis →
             </button>
-            <span className="text-white opacity-75">or</span>
-            <button
-              onClick={() => onUpgradeClick('coffee')}
-              className="px-8 py-4 bg-yellow-400 text-gray-900 font-bold rounded-lg hover:bg-yellow-300 transition-all text-lg"
-            >
-              ☕ Get Unlimited for $5/mo
-            </button>
+            <p className="text-sm text-white opacity-90">
+              Join 7+ businesses already optimizing with AImpactScanner
+            </p>
           </div>
           
           <p className="mt-6 text-sm opacity-75">

@@ -12,6 +12,7 @@ import PreviewResults from './components/PreviewResults';
 // Existing components
 import AuthWithPassword from './components/AuthWithPassword';
 import RegistrationFlow from './components/RegistrationFlow';
+import UnifiedRegistration from './components/UnifiedRegistration';
 import SimpleAnalysisProgress from './components/SimpleAnalysisProgress';
 import SimpleResultsDashboard from './components/SimpleResultsDashboard';
 import URLInput from './components/URLInput';
@@ -129,11 +130,21 @@ function App() {
             setAnalysisResults(data.results);
             setCurrentUrl(pendingUrl);
             setCurrentAnalysisId(pendingId);
+            
+            // Check if user selected Coffee tier
+            const selectedTier = sessionStorage.getItem('selectedTier');
+            if (selectedTier === 'coffee') {
+              // Trigger Stripe checkout for Coffee tier
+              console.log('User selected Coffee tier, triggering payment flow');
+              handleUpgrade('coffee');
+            }
+            
             setCurrentView('results');
             // Clear the pending data
             sessionStorage.removeItem('pendingAnalysisUrl');
             sessionStorage.removeItem('pendingAnalysisId');
             sessionStorage.removeItem('landingAnalysisData');
+            sessionStorage.removeItem('selectedTier');
           } catch (error) {
             console.error('Error parsing pending analysis data:', error);
             setCurrentView('dashboard');
@@ -201,12 +212,11 @@ function App() {
     }
   };
 
-  // Handle free trial click from teaser
+  // Handle free trial click from teaser - now goes to unified registration
   const handleFreeTrialFromTeaser = () => {
     if (!session) {
-      // For free tier, just show auth - no need for full registration flow
-      // The auth state change handler will preserve the pending analysis
-      setCurrentView('register');
+      // Show unified registration with Coffee tier pre-selected
+      setCurrentView('unified-registration');
     } else {
       // Already logged in, show full results
       setCurrentView('results');
@@ -387,6 +397,10 @@ function App() {
 
   if (currentView === 'registration-flow') {
     return <RegistrationFlow onRegistrationComplete={handleRegistrationComplete} />;
+  }
+
+  if (currentView === 'unified-registration') {
+    return <UnifiedRegistration onRegistrationComplete={handleRegistrationComplete} />;
   }
 
   // Show landing page for non-authenticated users by default
