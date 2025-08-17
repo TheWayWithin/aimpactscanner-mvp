@@ -114,15 +114,13 @@ function App() {
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       if (session?.user?.id) {
-        fetchUserTier(session.user.id);
-        
-        // After login, check if there's a pending analysis
+        // PRIORITY 1: Check for pending analysis BEFORE database operations
         const pendingUrl = sessionStorage.getItem('pendingAnalysisUrl');
         const pendingId = sessionStorage.getItem('pendingAnalysisId');
         const landingData = sessionStorage.getItem('landingAnalysisData');
         
         if (pendingUrl && pendingId && landingData && !pendingAnalysisProcessed.current) {
-          console.log('Auth state changed, found pending analysis');
+          console.log('🎯 Auth state changed, found pending analysis - redirecting to results');
           pendingAnalysisProcessed.current = true; // Mark as processed to prevent duplicate handling
           
           try {
@@ -145,15 +143,38 @@ function App() {
             sessionStorage.removeItem('pendingAnalysisId');
             sessionStorage.removeItem('landingAnalysisData');
             sessionStorage.removeItem('selectedTier');
+            
+            // PRIORITY 2: Fetch user tier in background (non-blocking)
+            fetchUserTier(session.user.id).catch(error => {
+              console.warn('⚠️ Database error during pending analysis flow (non-blocking):', error);
+              // Set default tier to prevent issues, but don't block the analysis flow
+              setUserTier('free');
+            });
+            
+            return; // Exit early - don't proceed to dashboard logic
           } catch (error) {
-            console.error('Error parsing pending analysis data:', error);
+            console.error('❌ Error parsing pending analysis data:', error);
+            // Even on error, try to fetch user data before falling back
+            await fetchUserTier(session.user.id).catch(() => setUserTier('free'));
+            setCurrentView('dashboard');
+            return;
+          }
+        }
+        
+        // PRIORITY 3: No pending analysis - proceed with normal dashboard flow
+        try {
+          await fetchUserTier(session.user.id);
+          if (!pendingAnalysisProcessed.current) {
             setCurrentView('dashboard');
           }
-        } else if (!pendingAnalysisProcessed.current) {
-          // Only set dashboard if we haven't processed a pending analysis
-          setCurrentView('dashboard');
+        } catch (error) {
+          console.warn('⚠️ Database error during normal auth flow:', error);
+          // Set default tier and proceed to dashboard
+          setUserTier('free');
+          if (!pendingAnalysisProcessed.current) {
+            setCurrentView('dashboard');
+          }
         }
-        // If we've already processed the pending analysis, don't change the view at all
       }
     });
 
@@ -162,22 +183,93 @@ function App() {
 
   const fetchUserTier = async (userId) => {
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('tier, stripe_customer_id, monthly_analyses_used')
-        .eq('id', userId)
-        .single();
+      console.log('🔍 Fetching user tier for:', userId);
+      
+      // Try the RPC function first (more reliable for missing users)
+      let { data, error } = await supabase.rpc('get_user_data', { user_id: userId });
+      
+      if (error) {
+        console.warn('⚠️ RPC function failed, trying direct query:', error);
+        
+        // Fallback to direct query with error handling
+        const result = await supabase
+          .from('users')
+          .select('id, email, tier, stripe_customer_id, monthly_analyses_used, subscription_status')
+          .eq('id', userId)
+          .maybeSingle(); // Use maybeSingle() instead of single() to avoid errors on missing rows
+        
+        data = result.data ? [result.data] : null;
+        error = result.error;
+      }
 
-      if (data) {
-        setUserTier(data.tier || 'free');
-        setDashboardData(data);
+      if (error) {
+        console.error('❌ Database query failed with error:', error);
+        throw error;
+      }
+
+      if (data && data.length > 0) {
+        const userData = Array.isArray(data) ? data[0] : data;
+        console.log('✅ User data fetched successfully:', userData);
+        
+        setUserTier(userData.tier || 'free');
+        setDashboardData(userData);
+        
         // Update unlimited access for Coffee tier
-        if (data.tier === 'coffee') {
+        if (userData.tier === 'coffee') {
           setUnlimitedAccess(true);
         }
+      } else {
+        console.warn('⚠️ No user data found, creating default user');
+        // Create user with defaults if they don't exist
+        await createDefaultUser(userId);
       }
     } catch (error) {
-      console.log('Could not fetch user tier:', error);
+      console.error('❌ Could not fetch user tier:', error);
+      // More detailed error logging for debugging 406 errors
+      if (error.code) {
+        console.error('Database error code:', error.code);
+        console.error('Database error message:', error.message);
+        console.error('Database error details:', error.details);
+      }
+      
+      setUserTier('free');
+      // Don't throw - handle gracefully with defaults
+    }
+  };
+
+  const createDefaultUser = async (userId) => {
+    try {
+      console.log('🔧 Creating default user for:', userId);
+      
+      // Get email from session
+      const userEmail = session?.user?.email;
+      if (!userEmail) {
+        throw new Error('No user email available');
+      }
+
+      const { data, error } = await supabase
+        .from('users')
+        .insert({
+          id: userId,
+          email: userEmail,
+          tier: 'free',
+          subscription_tier: 'free',
+          monthly_analyses_used: 0,
+          subscription_status: 'inactive'
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ Failed to create default user:', error);
+        return;
+      }
+
+      console.log('✅ Created default user:', data);
+      setUserTier('free');
+      setDashboardData(data);
+    } catch (error) {
+      console.error('❌ Error creating default user:', error);
       setUserTier('free');
     }
   };
