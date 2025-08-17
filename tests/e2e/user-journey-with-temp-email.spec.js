@@ -48,7 +48,7 @@ test.describe('AImpactScanner Complete User Journey with Temp Email', () => {
     await page.goto('/');
     
     // Verify landing page loads
-    await expect(page.locator('h1')).toContainText('AI Search Mastery', { timeout: 10000 });
+    await expect(page.locator('h1')).toContainText('Is AI Stealing Your', { timeout: 10000 });
     console.log('✅ Landing page loaded successfully');
     
     // Enter test URL for analysis

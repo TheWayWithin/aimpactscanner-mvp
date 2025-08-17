@@ -48,7 +48,7 @@
     "test:usage-tracking": "npx playwright test tests/e2e/usage-tracking-flow.spec.js",
     "test:error-handling": "npx playwright test tests/e2e/error-handling-edge-cases.spec.js",
     "test:e2e:all": "npx playwright test tests/e2e/",
-    "test:e2e:ci": "npx playwright test tests/e2e/ --reporter=json --output-dir=test-results/e2e"
+    "test:e2e:ci": "npx playwright test tests/e2e/ --reporter=json --output-dir=test-results/e2e",
     "test:validate-phase2": "node tests/validate-phase2-setup.js",
     "verify:migration": "node scripts/verify-coffee-tier-migration.js",
     "verify:steps": "node scripts/verify-step-by-step.js",

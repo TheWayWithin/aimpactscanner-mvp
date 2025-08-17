@@ -1,5 +1,5 @@
 // New App with conversion-optimized flow
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { supabase } from './lib/supabaseClient';
 
@@ -37,6 +37,9 @@ function App() {
   const [userReady, setUserReady] = useState(false);
   const [pendingAnalysis, setPendingAnalysis] = useState(null);
   const [analysisResults, setAnalysisResults] = useState(null);
+  
+  // Track if we've already processed the pending analysis to prevent duplicate processing
+  const pendingAnalysisProcessed = useRef(false);
 
   // Usage tracking hook
   const { 
@@ -80,8 +83,10 @@ function App() {
         const pendingId = sessionStorage.getItem('pendingAnalysisId');
         const landingData = sessionStorage.getItem('landingAnalysisData');
         
-        if (pendingUrl && pendingId && landingData) {
+        if (pendingUrl && pendingId && landingData && !pendingAnalysisProcessed.current) {
           console.log('Found pending analysis, redirecting to results');
+          pendingAnalysisProcessed.current = true; // Mark as processed
+          
           try {
             const data = JSON.parse(landingData);
             setAnalysisResults(data.results);
@@ -96,7 +101,7 @@ function App() {
             console.error('Error parsing pending analysis data:', error);
             setCurrentView('dashboard');
           }
-        } else {
+        } else if (!pendingAnalysisProcessed.current) {
           setCurrentView('dashboard');
         }
       }
@@ -115,8 +120,10 @@ function App() {
         const pendingId = sessionStorage.getItem('pendingAnalysisId');
         const landingData = sessionStorage.getItem('landingAnalysisData');
         
-        if (pendingUrl && pendingId && landingData) {
+        if (pendingUrl && pendingId && landingData && !pendingAnalysisProcessed.current) {
           console.log('Auth state changed, found pending analysis');
+          pendingAnalysisProcessed.current = true; // Mark as processed to prevent duplicate handling
+          
           try {
             const data = JSON.parse(landingData);
             setAnalysisResults(data.results);
@@ -131,9 +138,11 @@ function App() {
             console.error('Error parsing pending analysis data:', error);
             setCurrentView('dashboard');
           }
-        } else {
+        } else if (!pendingAnalysisProcessed.current) {
+          // Only set dashboard if we haven't processed a pending analysis
           setCurrentView('dashboard');
         }
+        // If we've already processed the pending analysis, don't change the view at all
       }
     });
 
