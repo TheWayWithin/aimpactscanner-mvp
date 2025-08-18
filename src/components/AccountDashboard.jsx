@@ -3,11 +3,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { useUsageTracking } from '../hooks/useUsageTracking';
 
 const AccountDashboard = ({ user, className = '' }) => {
   const [accountData, setAccountData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Use the same client-side usage tracking as the main app
+  const { usageData } = useUsageTracking(user?.email);
 
   useEffect(() => {
     if (user?.id) {
@@ -80,12 +84,16 @@ const AccountDashboard = ({ user, className = '' }) => {
   };
 
   const getRemainingAnalyses = () => {
-    if (!accountData?.user) return 0;
-    
-    if (accountData.user.tier === 'free') {
-      return Math.max(0, 3 - (accountData.user.monthly_analyses_used || 0));
+    // Use client-side usage data instead of database data
+    if (usageData.isUnlimited) {
+      return 'Unlimited';
     }
-    return 'Unlimited';
+    return usageData.remaining || 0;
+  };
+
+  const getUsedAnalyses = () => {
+    // Use client-side usage data instead of database data
+    return usageData.monthlyUsed || 0;
   };
 
   const isSubscriptionExpired = () => {
@@ -233,12 +241,12 @@ const AccountDashboard = ({ user, className = '' }) => {
                 {getRemainingAnalyses()}
               </div>
               <div className="text-sm text-gray-600">
-                {accountData.user.tier === 'free' ? 'Remaining This Month' : 'Analyses Available'}
+                {usageData.isUnlimited ? 'Analyses Available' : 'Remaining This Month'}
               </div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-gray-900 mb-2">
-                {accountData.user.monthly_analyses_used || 0}
+                {getUsedAnalyses()}
               </div>
               <div className="text-sm text-gray-600">Used This Month</div>
             </div>
