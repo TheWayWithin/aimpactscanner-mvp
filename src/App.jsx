@@ -439,9 +439,9 @@ function App() {
   // Handle upgrade click from teaser results
   const handleUpgradeFromTeaser = async (tier) => {
     if (!session) {
-      // Need to register first - use new registration flow
+      // Need to register first - use unified registration with password
       localStorage.setItem('selectedTier', tier);
-      setCurrentView('registration-flow');
+      setCurrentView('unified-registration');
     } else {
       // Already logged in, go straight to payment
       if (tier === 'professional') {
