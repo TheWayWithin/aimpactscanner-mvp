@@ -6,10 +6,14 @@ import { useUpgrade } from './UpgradeHandler';
 const UnifiedRegistration = ({ onRegistrationComplete }) => {
   const [selectedTier, setSelectedTier] = useState('coffee'); // Default to paid tier
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [showEmailSent, setShowEmailSent] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Tier configurations
   const tiers = {
@@ -62,12 +66,80 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
     }
   };
 
-  const handleSignUp = async (e) => {
-    e.preventDefault();
+  // Password validation function
+  const validatePassword = (pass) => {
+    let strength = 0;
+    const checks = [
+      pass.length >= 8,                    // Length check
+      /[a-z]/.test(pass),                  // Lowercase check  
+      /[A-Z]/.test(pass),                  // Uppercase check
+      /\d/.test(pass),                     // Number check
+      /[!@#$%^&*(),.?":{}|<>]/.test(pass) // Special character check
+    ];
     
+    strength = checks.filter(Boolean).length;
+    setPasswordStrength(strength);
+    return strength;
+  };
+
+  // Password strength indicator
+  const getPasswordStrengthText = () => {
+    switch(passwordStrength) {
+      case 0:
+      case 1: return { text: 'Very Weak', color: 'text-red-600' };
+      case 2: return { text: 'Weak', color: 'text-orange-600' };
+      case 3: return { text: 'Fair', color: 'text-yellow-600' };
+      case 4: return { text: 'Good', color: 'text-blue-600' };
+      case 5: return { text: 'Strong', color: 'text-green-600' };
+      default: return { text: '', color: '' };
+    }
+  };
+
+  // Handle password change with validation
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    if (newPassword) {
+      validatePassword(newPassword);
+    } else {
+      setPasswordStrength(0);
+    }
+  };
+
+  // Form validation
+  const validateForm = () => {
     if (!email) {
       setMessage('Please enter your email address');
       setMessageType('error');
+      return false;
+    }
+
+    if (!password) {
+      setMessage('Please enter a password');
+      setMessageType('error');
+      return false;
+    }
+
+    if (passwordStrength < 3) {
+      setMessage('Password must be stronger. Include uppercase, lowercase, numbers, and special characters.');
+      setMessageType('error');
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      setMessage('Passwords do not match');
+      setMessageType('error');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    
+    // Validate form inputs
+    if (!validateForm()) {
       return;
     }
 
@@ -75,40 +147,58 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
     setMessage('');
 
     try {
-      // Store selected tier for post-auth handling
+      console.log('🔐 Starting password-based registration for:', email);
+      
+      // Store analysis data and tier for post-verification handling
       localStorage.setItem('selectedTier', selectedTier);
       localStorage.setItem('registrationEmail', email);
-
-      // Sign up with magic link - add analysis data to redirect URL
-      const redirectUrl = new URL(window.location.origin);
+      
+      // Create redirect URL to login page with verification flag
+      const loginUrl = new URL('/login', window.location.origin);
+      loginUrl.searchParams.set('verified', 'true');
+      loginUrl.searchParams.set('tier', selectedTier);
+      
+      // Add analysis data if exists
       const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
       const pendingId = localStorage.getItem('pendingAnalysisId');
       
       if (pendingUrl && pendingId) {
-        redirectUrl.searchParams.set('analysisUrl', pendingUrl);
-        redirectUrl.searchParams.set('analysisId', pendingId);
-        redirectUrl.searchParams.set('tier', selectedTier);
+        loginUrl.searchParams.set('analysisUrl', pendingUrl);
+        loginUrl.searchParams.set('analysisId', pendingId);
       }
 
-      const { error } = await supabase.auth.signInWithOtp({
+      // Sign up with email and password (creates unconfirmed user)
+      const { data, error } = await supabase.auth.signUp({
         email: email,
+        password: password,
         options: {
-          emailRedirectTo: redirectUrl.toString(),
+          emailRedirectTo: loginUrl.toString(),
           data: {
-            tier: selectedTier
+            tier: selectedTier,
+            full_name: email.split('@')[0] // Use email prefix as default name
           }
         }
       });
 
       if (error) throw error;
 
+      console.log('✅ Registration successful, user created:', data.user?.id);
+      
       setShowEmailSent(true);
-      setMessage(`Check ${email} for your magic link to complete registration`);
+      setMessage(`Account created! Check ${email} for verification link.`);
       setMessageType('success');
 
     } catch (error) {
-      console.error('Registration error:', error);
-      setMessage(error.message || 'Registration failed. Please try again.');
+      console.error('❌ Registration error:', error);
+      
+      // Handle specific Supabase errors
+      if (error.message.includes('already registered')) {
+        setMessage('Email already registered. Try signing in instead.');
+      } else if (error.message.includes('Password')) {
+        setMessage('Password requirements not met. Please try a stronger password.');
+      } else {
+        setMessage(error.message || 'Registration failed. Please try again.');
+      }
       setMessageType('error');
     } finally {
       setLoading(false);
@@ -120,22 +210,49 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
   if (showEmailSent) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
-        <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-lg text-center">
-          <div className="text-6xl mb-4">📧</div>
-          <h2 className="text-2xl font-bold mb-4">Check Your Email!</h2>
+        <div className="max-w-lg w-full p-8 bg-white rounded-lg shadow-lg text-center">
+          <div className="text-6xl mb-4">✅</div>
+          <h2 className="text-2xl font-bold mb-4">Account Created Successfully!</h2>
           <p className="text-gray-600 mb-6">
-            We've sent a magic link to <strong>{email}</strong>
+            We've sent a verification link to <strong>{email}</strong>
           </p>
-          <p className="text-sm text-gray-500">
-            Click the link in your email to complete registration and see your full analysis results.
-          </p>
+          
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <h3 className="font-semibold text-blue-800 mb-2">📋 Next Steps:</h3>
+            <ol className="text-sm text-blue-700 text-left space-y-2">
+              <li>1. 📧 Check your email for the verification link</li>
+              <li>2. 🔗 Click the link to verify your email address</li>
+              <li>3. 🔐 Sign in with your email and password</li>
+              <li>4. 🎯 View your complete analysis results</li>
+            </ol>
+          </div>
+
           {selectedTier === 'coffee' && (
-            <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-sm text-yellow-800">
-                ☕ After confirming your email, you'll be redirected to secure Stripe checkout
+                ☕ <strong>Coffee Plan Selected</strong><br />
+                After signing in, you'll be redirected to secure Stripe checkout ($5/month)
               </p>
             </div>
           )}
+
+          <div className="text-sm text-gray-500 mb-4">
+            <p><strong>Your Account Details:</strong></p>
+            <p>Email: {email}</p>
+            <p>Plan: {selectedTier === 'coffee' ? 'Coffee Plan ($5/month)' : 'Free Plan'}</p>
+          </div>
+
+          <div className="border-t pt-4">
+            <p className="text-xs text-gray-500 mb-3">
+              Didn't receive the email? Check your spam folder or
+            </p>
+            <button 
+              onClick={() => setShowEmailSent(false)}
+              className="text-blue-600 hover:underline text-sm font-semibold"
+            >
+              ← Try again with different email
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -234,8 +351,9 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
               </div>
             </div>
 
-            {/* Email Input */}
+            {/* Registration Form */}
             <form onSubmit={handleSignUp}>
+              {/* Email Input */}
               <div className="mb-6">
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                   Email Address
@@ -249,6 +367,84 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
+              </div>
+
+              {/* Password Input */}
+              <div className="mb-4">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    placeholder="Create a strong password"
+                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? '🙈' : '👁️'}
+                  </button>
+                </div>
+                
+                {/* Password Strength Indicator */}
+                {password && (
+                  <div className="mt-2">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs text-gray-600">Password Strength:</span>
+                      <span className={`text-xs font-semibold ${getPasswordStrengthText().color}`}>
+                        {getPasswordStrengthText().text}
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full transition-all duration-300 ${
+                          passwordStrength <= 1 ? 'bg-red-500' :
+                          passwordStrength === 2 ? 'bg-orange-500' :
+                          passwordStrength === 3 ? 'bg-yellow-500' :
+                          passwordStrength === 4 ? 'bg-blue-500' :
+                          'bg-green-500'
+                        }`}
+                        style={{ width: `${(passwordStrength / 5) * 100}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Include uppercase, lowercase, numbers, and special characters
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Confirm Password Input */}
+              <div className="mb-6">
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm your password"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    confirmPassword && password !== confirmPassword 
+                      ? 'border-red-300 bg-red-50' 
+                      : 'border-gray-300'
+                  }`}
+                  required
+                />
+                {confirmPassword && password !== confirmPassword && (
+                  <p className="text-xs text-red-600 mt-1">Passwords do not match</p>
+                )}
+                {confirmPassword && password === confirmPassword && confirmPassword.length > 0 && (
+                  <p className="text-xs text-green-600 mt-1">✓ Passwords match</p>
+                )}
               </div>
 
               {/* Message Display */}

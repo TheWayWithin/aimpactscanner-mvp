@@ -278,6 +278,14 @@ function App() {
             setCurrentView('dashboard');
           }
         }
+        } // Close if (session?.user?.id) block
+      } catch (error) {
+        console.error('❌ Error in auth state change handler:', error);
+        // Set default tier and proceed to dashboard on any auth error
+        setUserTier('free');
+        if (!pendingAnalysisProcessed.current) {
+          setCurrentView('dashboard');
+        }
       } finally {
         // Reset auth state change flag
         authStateChangeInProgress.current = false;
@@ -485,30 +493,53 @@ function App() {
     }
   };
 
-  // Handle login completion
-  const handleLoginComplete = (user) => {
-    console.log('Login completed:', user?.id);
-    // For login, we typically just redirect to dashboard unless there's pending analysis
-    const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
-    const pendingId = localStorage.getItem('pendingAnalysisId');
-    const landingData = localStorage.getItem('landingAnalysisData');
+  // Handle login completion with smart routing
+  const handleLoginComplete = (routingData) => {
+    console.log('Login completed with routing data:', routingData);
     
-    if (pendingUrl && pendingId && landingData) {
-      console.log('Redirecting to results for completed landing analysis after login');
-      try {
-        const data = JSON.parse(landingData);
-        setAnalysisResults(data.results);
-        setCurrentUrl(pendingUrl);
-        setCurrentAnalysisId(pendingId);
-        setCurrentView('results');
-        localStorage.removeItem('pendingAnalysisUrl');
-        localStorage.removeItem('pendingAnalysisId');
-        localStorage.removeItem('landingAnalysisData');
-      } catch (error) {
-        console.error('Error parsing landing analysis data:', error);
+    const { user, isNewUser, hasAnalysisData, tier } = routingData;
+    
+    // Smart routing based on user type and context
+    if (isNewUser && hasAnalysisData) {
+      // New verified users with analysis data → go to results
+      console.log('🎯 New verified user with analysis data → redirecting to results');
+      const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
+      const pendingId = localStorage.getItem('pendingAnalysisId');
+      const landingData = localStorage.getItem('landingAnalysisData');
+      
+      if (pendingUrl && pendingId && landingData) {
+        try {
+          const data = JSON.parse(landingData);
+          setAnalysisResults(data.results);
+          setCurrentUrl(pendingUrl);
+          setCurrentAnalysisId(pendingId);
+          setCurrentView('results');
+          
+          // Increment usage for first analysis completion
+          if (tier === 'free') {
+            console.log('🔢 Incrementing usage for new user first analysis');
+            incrementUsage();
+          }
+          
+          // Clear pending data
+          localStorage.removeItem('pendingAnalysisUrl');
+          localStorage.removeItem('pendingAnalysisId');
+          localStorage.removeItem('landingAnalysisData');
+        } catch (error) {
+          console.error('Error parsing landing analysis data:', error);
+          setCurrentView('dashboard');
+        }
+      } else {
         setCurrentView('dashboard');
       }
+    } else if (isNewUser && !hasAnalysisData) {
+      // New verified users without analysis data → go to dashboard with welcome
+      console.log('🎯 New verified user without analysis data → redirecting to dashboard');
+      setShowWelcome(true);
+      setCurrentView('dashboard');
     } else {
+      // Returning users → always go to dashboard
+      console.log('🎯 Returning user → redirecting to dashboard');
       setCurrentView('dashboard');
     }
   };

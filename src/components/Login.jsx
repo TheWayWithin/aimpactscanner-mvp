@@ -1,19 +1,61 @@
-// Login.jsx - Dedicated login component for returning users
-import React, { useState } from 'react';
+// Login.jsx - Password-based login component for returning and verified users
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
 const Login = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [showEmailSent, setShowEmailSent] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isVerifiedUser, setIsVerifiedUser] = useState(false);
+  const [analysisData, setAnalysisData] = useState(null);
+
+  useEffect(() => {
+    // Check URL parameters for email verification and analysis data
+    const urlParams = new URLSearchParams(window.location.search);
+    const verified = urlParams.get('verified');
+    const tier = urlParams.get('tier');
+    const analysisUrl = urlParams.get('analysisUrl');
+    const analysisId = urlParams.get('analysisId');
+
+    if (verified === 'true') {
+      setIsVerifiedUser(true);
+      setMessage('✅ Email verified successfully! Please sign in with your password to continue.');
+      setMessageType('success');
+      
+      // Pre-fill email from localStorage if available
+      const registrationEmail = localStorage.getItem('registrationEmail');
+      if (registrationEmail) {
+        setEmail(registrationEmail);
+      }
+
+      // Store analysis data if present
+      if (analysisUrl && analysisId) {
+        const data = { analysisUrl, analysisId, tier };
+        setAnalysisData(data);
+        console.log('📊 Analysis data found in URL parameters:', data);
+      }
+
+      // Clean up URL without refreshing page
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     
+    // Form validation
     if (!email) {
       setMessage('Please enter your email address');
+      setMessageType('error');
+      return;
+    }
+
+    if (!password) {
+      setMessage('Please enter your password');
       setMessageType('error');
       return;
     }
@@ -30,74 +72,73 @@ const Login = ({ onLoginSuccess }) => {
     setMessage('');
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
+      console.log('🔐 Starting password authentication for:', email);
+
+      // Sign in with email and password
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim().toLowerCase(),
-        options: {
-          emailRedirectTo: window.location.origin,
-        }
+        password: password
       });
 
       if (error) throw error;
 
-      setShowEmailSent(true);
-      setMessage(`Check ${email} for your magic link to sign in`);
-      setMessageType('success');
-      
-      // Call success handler if provided
-      if (onLoginSuccess) {
-        onLoginSuccess({ email });
+      console.log('✅ Authentication successful for user:', data.user?.id);
+
+      // Handle analysis data restoration for new verified users
+      if (analysisData) {
+        console.log('📊 Restoring analysis data for new user:', analysisData);
+        localStorage.setItem('pendingAnalysisUrl', analysisData.analysisUrl);
+        localStorage.setItem('pendingAnalysisId', analysisData.analysisId);
+        localStorage.setItem('selectedTier', analysisData.tier);
+        
+        // Add analysis results data from localStorage if it exists
+        const existingData = localStorage.getItem('landingAnalysisData');
+        if (existingData) {
+          console.log('📈 Found existing analysis data, user will see results');
+        }
       }
 
+      // Clean up registration data
+      localStorage.removeItem('registrationEmail');
+
+      // Call success handler with user data and routing info
+      if (onLoginSuccess) {
+        const routingData = {
+          user: data.user,
+          isNewUser: isVerifiedUser,
+          hasAnalysisData: !!analysisData,
+          tier: analysisData?.tier || 'free'
+        };
+        onLoginSuccess(routingData);
+      }
+
+      // Success message
+      if (isVerifiedUser) {
+        setMessage('Welcome! Redirecting to your analysis results...');
+      } else {
+        setMessage('Welcome back! Redirecting to your dashboard...');
+      }
+      setMessageType('success');
+
     } catch (error) {
-      console.error('Login error:', error);
-      setMessage(error.message || 'Login failed. Please try again.');
+      console.error('❌ Login error:', error);
+      
+      // Handle specific authentication errors
+      if (error.message.includes('Invalid login credentials')) {
+        setMessage('Invalid email or password. Please check your credentials and try again.');
+      } else if (error.message.includes('Email not confirmed')) {
+        setMessage('Please check your email and click the verification link before signing in.');
+      } else if (error.message.includes('Too many requests')) {
+        setMessage('Too many login attempts. Please wait a moment and try again.');
+      } else {
+        setMessage(error.message || 'Login failed. Please try again.');
+      }
       setMessageType('error');
     } finally {
       setLoading(false);
     }
   };
 
-  if (showEmailSent) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
-        <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-lg text-center">
-          <div className="text-6xl mb-4">📧</div>
-          <h2 className="text-2xl font-bold mb-4">Check Your Email!</h2>
-          <p className="text-gray-600 mb-6">
-            We've sent a magic link to <strong>{email}</strong>
-          </p>
-          <p className="text-sm text-gray-500 mb-6">
-            Click the link in your email to sign in to your account.
-          </p>
-          
-          <div className="space-y-4">
-            <button
-              onClick={() => {
-                setShowEmailSent(false);
-                setEmail('');
-                setMessage('');
-              }}
-              className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600"
-            >
-              Try Different Email
-            </button>
-            
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
-                <button 
-                  onClick={() => window.location.href = '/'}
-                  className="text-blue-600 hover:underline font-semibold"
-                >
-                  Sign up here
-                </button>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
@@ -111,7 +152,7 @@ const Login = ({ onLoginSuccess }) => {
           </div>
 
           <form onSubmit={handleLogin}>
-            <div className="mb-6">
+            <div className="mb-4">
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
               </label>
@@ -124,6 +165,30 @@ const Login = ({ onLoginSuccess }) => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
               />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? '🙈' : '👁️'}
+                </button>
+              </div>
             </div>
 
             {/* Message Display */}
@@ -145,7 +210,7 @@ const Login = ({ onLoginSuccess }) => {
                 loading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              {loading ? 'Sending Magic Link...' : 'Send Magic Link to Sign In'}
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
 
             <p className="mt-4 text-xs text-center text-gray-500">
@@ -182,8 +247,8 @@ const Login = ({ onLoginSuccess }) => {
             <div className="flex items-start">
               <span className="text-blue-600 mr-2">🔒</span>
               <div className="text-sm text-blue-800">
-                <div className="font-semibold">Secure Magic Link Authentication</div>
-                <div>No passwords to remember. Click the link in your email to sign in securely.</div>
+                <div className="font-semibold">Secure Authentication</div>
+                <div>Your credentials are encrypted and protected. Sign in securely with your email and password.</div>
               </div>
             </div>
           </div>
