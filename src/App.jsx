@@ -32,6 +32,10 @@ import AuthenticatedHeader from './components/AuthenticatedHeader';
 import AILogo from './components/AILogo';
 import AnalyticsTestComponent from './components/AnalyticsTestComponent.jsx';
 import EnzuzoTestComponent from './components/EnzuzoTestComponent.jsx';
+import PrivacyPolicyPage from './components/PrivacyPolicyPage.jsx';
+import TermsOfServicePage from './components/TermsOfServicePage.jsx';
+import ContactPage from './components/ContactPage.jsx';
+import SimpleConsentBanner from './components/SimpleConsentBanner.jsx';
 
 function AppContent() {
   const [session, setSession] = useState(null);
@@ -755,8 +759,8 @@ function AppContent() {
       {/* GTM Analytics Integration */}
       <GTMIntegration />
       
-      {/* Enzuzo GDPR Integration */}
-      <EnzuzoIntegration />
+      {/* Simple GDPR Consent Banner */}
+      <SimpleConsentBanner />
       
       {/* Consistent header across all authenticated pages */}
       <AuthenticatedHeader 
@@ -923,10 +927,119 @@ function AppContent() {
         {currentView === 'enzuzo-test' && (
           <EnzuzoTestComponent />
         )}
+
+        {currentView === 'privacy' && (
+          <PrivacyPolicyPage />
+        )}
+
+        {currentView === 'terms' && (
+          <TermsOfServicePage />
+        )}
+
+        {currentView === 'contact' && (
+          <ContactPage />
+        )}
       </main>
 
-      <footer className="brand-footer">
-        <p>&copy; 2025 AI Search Mastery. All rights reserved.</p>
+      <footer className="bg-gray-900 text-white">
+        <div className="max-w-6xl mx-auto px-6 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            
+            {/* Company Info */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">AImpactScanner</h3>
+              <p className="text-gray-400 text-sm">
+                AI Search Optimization Analysis Platform. Discover how AI search engines see your website.
+              </p>
+              <div className="text-sm text-gray-400">
+                <p>&copy; 2025 AI Search Mastery</p>
+                <p>All rights reserved.</p>
+              </div>
+            </div>
+
+            {/* Product */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Product</h3>
+              <div className="space-y-2 text-sm">
+                <button 
+                  onClick={() => setCurrentView('input')}
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Start Analysis
+                </button>
+                <button 
+                  onClick={() => setCurrentView('pricing')}
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Pricing Plans
+                </button>
+                <button 
+                  onClick={() => setCurrentView('dashboard')}
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Dashboard
+                </button>
+              </div>
+            </div>
+
+            {/* Support */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Support</h3>
+              <div className="space-y-2 text-sm">
+                <button 
+                  onClick={() => setCurrentView('contact')}
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Contact Us
+                </button>
+                <a 
+                  href="mailto:support@aisearchmastery.com"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Email Support
+                </a>
+                <a 
+                  href="mailto:info@aisearchmastery.com"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  General Info
+                </a>
+                <button 
+                  onClick={() => setCurrentView('account')}
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Account Settings
+                </button>
+              </div>
+            </div>
+
+            {/* Legal */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Legal</h3>
+              <div className="space-y-2 text-sm">
+                <button 
+                  onClick={() => setCurrentView('privacy')}
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Privacy Policy
+                </button>
+                <button 
+                  onClick={() => setCurrentView('terms')}
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Terms of Service
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <div className="border-t border-gray-800 mt-12 pt-8 text-center">
+            <p className="text-sm text-gray-400">
+              Built with AI optimization insights • Powered by the MASTERY-AI Framework v3.1.1
+            </p>
+          </div>
+        </div>
       </footer>
     </div>
   );
