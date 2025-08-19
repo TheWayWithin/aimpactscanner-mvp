@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Testing - AImpactScanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        #events { 
+            max-height: 300px; 
+            overflow-y: auto; 
+            background: #f8f9fa; 
+            padding: 10px; 
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔬 Analytics Testing Dashboard</h1>
+    <p>Testing GTM integration for AImpactScanner with Container ID: <strong>GTM-WCQGG5N6</strong></p>
+
+    <div class="test-section">
+        <h2>📊 GTM Integration Status</h2>
+        <div id="gtm-status" class="status info">Checking GTM integration...</div>
+        <div id="ga4-status" class="status info">Checking GA4 configuration...</div>
+        <div id="datalayer-status" class="status info">Checking Data Layer...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 Event Testing</h2>
+        <p>Test each business event manually:</p>
+        
+        <button onclick="testAnalysisStart()">🔍 Test Analysis Start</button>
+        <button onclick="testAnalysisComplete()">✅ Test Analysis Complete</button>
+        <button onclick="testSignup()">👤 Test User Signup</button>
+        <button onclick="testPurchase()">💰 Test Coffee Purchase</button>
+        <button onclick="testFeatureUsage()">⚡ Test Feature Usage</button>
+        
+        <h3>📝 Event Log</h3>
+        <div id="events"></div>
+        <button onclick="clearEvents()">🗑️ Clear Log</button>
+    </div>
+
+    <div class="test-section">
+        <h2>📈 GA4 Real-time Verification</h2>
+        <div class="info">
+            <strong>Manual Verification Steps:</strong><br>
+            1. Open <a href="https://analytics.google.com/analytics/web/#/p467346442/realtime/overview" target="_blank">GA4 Real-time Reports</a><br>
+            2. Property: aimpactscanner.com (G-EJ5M874QBZ)<br>
+            3. Click test buttons above<br>
+            4. Check "Events in the last 30 minutes" section<br>
+            5. Look for: analysis_start, analysis_complete, sign_up, purchase, feature_usage
+        </div>
+    </div>
+
+    <!-- GTM Container -->
+    <script>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-WCQGG5N6');
+    </script>
+
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WCQGG5N6"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+
+    <script>
+        // Initialize Data Layer monitoring
+        window.dataLayer = window.dataLayer || [];
+        
+        // Log all data layer events
+        const originalPush = window.dataLayer.push;
+        window.dataLayer.push = function() {
+            const event = arguments[0];
+            logEvent('📤 Data Layer Push', event);
+            return originalPush.apply(window.dataLayer, arguments);
+        };
+
+        function logEvent(type, data) {
+            const timestamp = new Date().toLocaleTimeString();
+            const eventLog = document.getElementById('events');
+            const eventDiv = document.createElement('div');
+            eventDiv.innerHTML = `<strong>${timestamp}</strong> - ${type}: <pre>${JSON.stringify(data, null, 2)}</pre>`;
+            eventLog.appendChild(eventDiv);
+            eventLog.scrollTop = eventLog.scrollHeight;
+        }
+
+        function clearEvents() {
+            document.getElementById('events').innerHTML = '';
+        }
+
+        // Check GTM Integration
+        function checkGTMIntegration() {
+            const gtmStatus = document.getElementById('gtm-status');
+            const ga4Status = document.getElementById('ga4-status');
+            const dlStatus = document.getElementById('datalayer-status');
+
+            // Check if GTM loaded
+            if (typeof google_tag_manager !== 'undefined' || window.dataLayer) {
+                gtmStatus.className = 'status success';
+                gtmStatus.textContent = '✅ GTM Container GTM-WCQGG5N6 loaded successfully';
+            } else {
+                gtmStatus.className = 'status error';
+                gtmStatus.textContent = '❌ GTM Container not detected';
+            }
+
+            // Check if GA4 is configured
+            setTimeout(() => {
+                if (typeof gtag !== 'undefined' || window.dataLayer.some(item => item.event === 'gtm.js')) {
+                    ga4Status.className = 'status success';
+                    ga4Status.textContent = '✅ GA4 configuration detected (G-EJ5M874QBZ)';
+                } else {
+                    ga4Status.className = 'status error';
+                    ga4Status.textContent = '❌ GA4 configuration not detected';
+                }
+            }, 2000);
+
+            // Check Data Layer
+            if (window.dataLayer && Array.isArray(window.dataLayer)) {
+                dlStatus.className = 'status success';
+                dlStatus.textContent = `✅ Data Layer active (${window.dataLayer.length} items)`;
+            } else {
+                dlStatus.className = 'status error';
+                dlStatus.textContent = '❌ Data Layer not initialized';
+            }
+        }
+
+        // Test Event Functions
+        function testAnalysisStart() {
+            window.dataLayer.push({
+                event: 'analysis_start',
+                event_category: 'engagement',
+                analyzed_url: 'example.com',
+                user_tier: 'free'
+            });
+        }
+
+        function testAnalysisComplete() {
+            window.dataLayer.push({
+                event: 'analysis_complete',
+                event_category: 'engagement',
+                analyzed_url: 'example.com',
+                analysis_score: 67,
+                analysis_duration: 12,
+                user_tier: 'free'
+            });
+        }
+
+        function testSignup() {
+            window.dataLayer.push({
+                event: 'sign_up',
+                event_category: 'conversion',
+                method: 'email',
+                tier: 'free'
+            });
+        }
+
+        function testPurchase() {
+            window.dataLayer.push({
+                event: 'purchase',
+                event_category: 'conversion',
+                transaction_id: 'test_upgrade_' + Date.now(),
+                value: 5,
+                currency: 'USD',
+                items: [{
+                    item_id: 'tier_coffee',
+                    item_name: 'Coffee Tier',
+                    category: 'subscription',
+                    quantity: 1,
+                    price: 5
+                }]
+            });
+        }
+
+        function testFeatureUsage() {
+            window.dataLayer.push({
+                event: 'feature_usage',
+                event_category: 'engagement',
+                feature_name: 'dashboard',
+                action: 'view',
+                user_tier: 'free'
+            });
+        }
+
+        // Initialize checks when page loads
+        window.addEventListener('load', () => {
+            setTimeout(checkGTMIntegration, 1000);
+            logEvent('🚀 Test Page Loaded', { 
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent.substring(0, 50) + '...'
+            });
+        });
+    </script>
+</body>
+</html>

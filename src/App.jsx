@@ -3,6 +3,10 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
 import { supabase } from './lib/supabaseClient';
 
+// Analytics and Privacy  
+import { GTMIntegration, useGTMTracking } from './analytics/gtm-integration.jsx';
+import { EnzuzoIntegration } from './privacy/enzuzo-integration.jsx';
+
 // New components for conversion flow
 import Landing from './components/Landing';
 import AnalysisPreview from './components/AnalysisPreview';
@@ -26,8 +30,10 @@ import { useUpgrade } from './components/UpgradeHandler';
 import { useUsageTracking } from './hooks/useUsageTracking';
 import AuthenticatedHeader from './components/AuthenticatedHeader';
 import AILogo from './components/AILogo';
+import AnalyticsTestComponent from './components/AnalyticsTestComponent.jsx';
+import EnzuzoTestComponent from './components/EnzuzoTestComponent.jsx';
 
-function App() {
+function AppContent() {
   const [session, setSession] = useState(null);
   const [currentView, setCurrentView] = useState('landing'); // Start with landing page
   const [currentAnalysisId, setCurrentAnalysisId] = useState(null);
@@ -39,6 +45,17 @@ function App() {
   const [userReady, setUserReady] = useState(false);
   const [pendingAnalysis, setPendingAnalysis] = useState(null);
   const [analysisResults, setAnalysisResults] = useState(null);
+
+  // GTM tracking hooks
+  const {
+    trackPageView,
+    trackAnalysisStart,
+    trackAnalysisComplete,
+    trackSignup,
+    trackUpgrade,
+    trackFeatureUsage,
+    trackError
+  } = useGTMTracking();
   
   // Track if we've already processed the pending analysis to prevent duplicate processing
   const pendingAnalysisProcessed = useRef(false);
@@ -62,6 +79,11 @@ function App() {
     setUnlimitedAccess 
   } = useUsageTracking(session?.user?.email);
 
+  // Track page views when current view changes
+  useEffect(() => {
+    trackPageView(`/${currentView}`);
+  }, [currentView]);
+
   // Clear cache when user changes to prevent stale data
   useEffect(() => {
     if (session?.user?.id) {
@@ -78,6 +100,11 @@ function App() {
 
   // Upgrade handler hooks
   const handleUpgradeSuccess = (message) => {
+    // Track successful upgrade
+    const newTier = message.includes('Coffee') ? 'coffee' : 'professional';
+    const tierValue = newTier === 'coffee' ? 5 : 25; // Coffee: $5, Professional: $25
+    trackUpgrade(userTier, newTier, tierValue);
+    
     // Refresh user tier after successful upgrade
     if (session?.user?.id) {
       fetchUserTier(session.user.id);
@@ -466,6 +493,10 @@ function App() {
   // Handle registration completion from registration flow
   const handleRegistrationComplete = (user, tier) => {
     console.log('Registration completed:', { user: user?.id, tier });
+    
+    // Track signup event
+    trackSignup(tier);
+    
     // Check if there's a pending analysis from landing page
     const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
     const pendingId = localStorage.getItem('pendingAnalysisId');
@@ -486,6 +517,7 @@ function App() {
         localStorage.removeItem('landingAnalysisData');
       } catch (error) {
         console.error('Error parsing landing analysis data:', error);
+        trackError('registration_redirect', error.message, 'registration-complete');
         setCurrentView('dashboard');
       }
     } else {
@@ -560,6 +592,7 @@ function App() {
     // Check usage limits for free tier
     if (userTier === 'free' && !canAnalyze()) {
       alert(`You've reached your monthly limit of 3 analyses. Upgrade to Coffee tier for unlimited analyses!`);
+      trackFeatureUsage('usage_limit_reached', 'analysis_blocked');
       setCurrentView('pricing');
       return;
     }
@@ -569,8 +602,11 @@ function App() {
       const userId = session.user.id;
       const userEmail = session.user.email;
       const analysisId = crypto.randomUUID();
+      const startTime = Date.now();
 
       console.log('🚀 Starting analysis for URL:', url);
+      trackAnalysisStart(url);
+      
       setCurrentUrl(url);
       setCurrentAnalysisId(analysisId);
 
@@ -623,26 +659,32 @@ function App() {
           userId: userId
         }
       }).then(({ data, error: invokeError }) => {
+        const duration = Math.round((Date.now() - startTime) / 1000);
+        
         if (invokeError) {
           console.error('❌ Edge Function error:', invokeError);
+          trackError('edge_function', invokeError.message, 'analysis');
           alert(`Analysis error: ${invokeError.message}`);
         } else {
           console.log('✅ Analysis completed:', data);
           // Store the real analysis results
           // Edge Function returns { success, overall_score, factors, etc }
           if (data && data.success) {
-            setAnalysisResults({
+            const results = {
               overall_score: data.overall_score,
               factors: data.factors || [],
               url: url,
               created_at: new Date().toISOString()
-            });
+            };
+            setAnalysisResults(results);
+            trackAnalysisComplete(url, data.overall_score, duration);
           }
         }
       });
 
     } catch (error) {
       console.error('❌ Error starting analysis:', error);
+      trackError('analysis_start', error.message, 'analysis');
       alert(`Error starting analysis: ${error.message}`);
     } finally {
       setIsAnalyzing(false);
@@ -710,12 +752,21 @@ function App() {
   // Authenticated views
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      {/* GTM Analytics Integration */}
+      <GTMIntegration />
+      
+      {/* Enzuzo GDPR Integration */}
+      <EnzuzoIntegration />
+      
       {/* Consistent header across all authenticated pages */}
       <AuthenticatedHeader 
         session={session}
         userTier={userTier}
         usageData={usageData}
         onSignOut={() => {
+          // Track sign out
+          trackFeatureUsage('authentication', 'sign_out');
+          
           // Clear all cached data on sign out
           console.log('🧹 Clearing all user data cache on sign out');
           userDataCache.current.clear();
@@ -774,6 +825,26 @@ function App() {
             }`}
           >
             👤 Account
+          </button>
+          <button
+            onClick={() => setCurrentView('analytics-test')}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+              currentView === 'analytics-test' 
+                ? 'bg-red-600 text-white' 
+                : 'bg-red-200 text-red-700 hover:bg-red-300'
+            }`}
+          >
+            🔬 Analytics Test
+          </button>
+          <button
+            onClick={() => setCurrentView('enzuzo-test')}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+              currentView === 'enzuzo-test' 
+                ? 'bg-purple-600 text-white' 
+                : 'bg-purple-200 text-purple-700 hover:bg-purple-300'
+            }`}
+          >
+            🍪 Enzuzo Test
           </button>
         </div>
 
@@ -844,6 +915,14 @@ function App() {
         {currentView === 'account' && (
           <AccountDashboard user={session?.user} />
         )}
+
+        {currentView === 'analytics-test' && (
+          <AnalyticsTestComponent />
+        )}
+
+        {currentView === 'enzuzo-test' && (
+          <EnzuzoTestComponent />
+        )}
       </main>
 
       <footer className="brand-footer">
@@ -851,6 +930,11 @@ function App() {
       </footer>
     </div>
   );
+}
+
+// Main App component with GTM and Enzuzo integration
+function App() {
+  return <AppContent />;
 }
 
 export default App;
