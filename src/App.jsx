@@ -759,8 +759,8 @@ function AppContent() {
       {/* GTM Analytics Integration */}
       <GTMIntegration />
       
-      {/* Simple GDPR Consent Banner */}
-      <SimpleConsentBanner />
+      {/* Simple GDPR Consent Banner - Temporarily disabled to fix interface blocking */}
+      {/* <SimpleConsentBanner /> */}
       
       {/* Consistent header across all authenticated pages */}
       <AuthenticatedHeader 
