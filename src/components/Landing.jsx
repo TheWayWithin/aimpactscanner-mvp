@@ -74,14 +74,14 @@ function Landing({ onAnalysisComplete }) {
       }
       
       console.log('✅ Analysis initiated successfully:', data);
-      console.log('📊 Edge Function response details:', {
+      console.log('📊 Edge Function response details:', JSON.stringify({
         success: data?.success,
         overall_score: data?.overall_score,
         factors_count: data?.factors_count,
         has_factors: !!data?.factors,
         factors_length: data?.factors?.length || 0,
         first_factor: data?.factors?.[0]
-      });
+      }, null, 2));
       
       // Update stored analysis data with results
       if (data && data.success) {
@@ -92,10 +92,11 @@ function Landing({ onAnalysisComplete }) {
           factors_count: data.factors_count || 0,
           pillars: data.pillars || null
         };
-        console.log('💾 Storing analysis data with factors:', {
+        console.log('💾 Storing analysis data with factors:', JSON.stringify({
           factors_stored: analysisData.results.factors.length,
-          overall_score: analysisData.results.overall_score
-        });
+          overall_score: analysisData.results.overall_score,
+          first_factor_name: analysisData.results.factors[0]?.name
+        }, null, 2));
         localStorage.setItem('landingAnalysisData', JSON.stringify(analysisData));
       } else {
         console.warn('⚠️ Edge Function did not return success or data:', data);

@@ -915,7 +915,7 @@ serve(async (req) => {
     }
 
     // Framework-compliant factor analysis with official mappings
-    const factors = [
+    const rawFactors = [
       analyzeCitationWorthyContent(pageContent, documentTitle),         // AI.1.1
       analyzeSourceAuthoritySignals(pageContent, url),                  // AI.1.2  
       analyzeEvidenceChunking(pageContent),                             // AI.1.5
@@ -929,9 +929,29 @@ serve(async (req) => {
       analyzePageLoadSpeed(pageContent)                                 // E.1.1
     ];
     
+    // Map factors to include pillar information for frontend display
+    const factorPillarMap = {
+      'Citation-Worthy Content Structure': 'AI Response Optimization',
+      'Source Authority Signals': 'Authority & Trust',
+      'Evidence Chunking for RAG Optimization': 'AI Response Optimization',
+      'Transparency & Disclosure Standards': 'Authority & Trust',
+      'Contact Information & Accessibility': 'Authority & Trust',
+      'Security and Access Control': 'Machine Readability',
+      'Title Tag Optimization': 'Machine Readability',
+      'Meta Description Quality': 'Machine Readability',
+      'Heading Structure & Hierarchy': 'Semantic Content',
+      'Content Depth and Comprehensiveness': 'Semantic Content',
+      'Page Load Speed Optimization': 'Engagement'
+    };
+    
+    const factors = rawFactors.map(factor => ({
+      ...factor,
+      pillar: factorPillarMap[factor.name] || 'Machine Readability'
+    }));
+    
     console.log('📊 Factors analyzed:', {
       count: factors.length,
-      factors: factors.map(f => ({ name: f.name, score: f.score }))
+      factors: factors.map(f => ({ name: f.name, score: f.score, pillar: f.pillar }))
     });
     
     let progress = 20;
@@ -1089,6 +1109,13 @@ serve(async (req) => {
     console.log('=== ANALYSIS COMPLETE ===');
     console.log(`Overall score: ${overallScore}`);
     console.log(`Factors analyzed: ${factors.length}`);
+    console.log('📋 Factor details:', JSON.stringify(factors.map(f => ({
+      name: f.name,
+      score: f.score,
+      pillar: f.pillar,
+      evidenceCount: f.evidence?.length || 0,
+      recommendationsCount: f.recommendations?.length || 0
+    })), null, 2));
     console.log('✅ Factors successfully inserted, analysis functional');
     
     return new Response(JSON.stringify({
