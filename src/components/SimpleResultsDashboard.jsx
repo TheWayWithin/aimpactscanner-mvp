@@ -38,20 +38,24 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
       ai: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 4)),
       authority: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 3)),
       machine_readability: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 5)),
-      user_experience: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 6)),
-      content_quality: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 2)),
-      technical: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 1))
+      semantic: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 2)),
+      engagement: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 6)),
+      topical: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 1)),
+      reference: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 2)),
+      yield: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 4))
     };
   };
   
   const pillarScores = isRealAnalysis && analysisData.pillars ? 
     {
-      ai: analysisData.pillars.ai?.score || analysisData.pillars.A?.score || 0,
+      ai: analysisData.pillars.ai?.score || analysisData.pillars.AI?.score || 0,
       authority: analysisData.pillars.authority?.score || analysisData.pillars.A?.score || 0,
       machine_readability: analysisData.pillars.machine_readability?.score || analysisData.pillars.M?.score || 0,
-      user_experience: analysisData.pillars.user_experience?.score || analysisData.pillars.E?.score || 0,
-      content_quality: analysisData.pillars.content_quality?.score || analysisData.pillars.S?.score || 0,
-      technical: analysisData.pillars.technical?.score || analysisData.pillars.T?.score || 0
+      semantic: analysisData.pillars.semantic?.score || analysisData.pillars.S?.score || 0,
+      engagement: analysisData.pillars.engagement?.score || analysisData.pillars.E?.score || 0,
+      topical: analysisData.pillars.topical?.score || analysisData.pillars.T?.score || 0,
+      reference: analysisData.pillars.reference?.score || analysisData.pillars.R?.score || 0,
+      yield: analysisData.pillars.yield?.score || analysisData.pillars.Y?.score || 0
     } : generatePillarScores(overallScore);
   
   // Use real results if available, otherwise use mock data
@@ -60,12 +64,14 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
     url: analysisData.url || url,
     created_at: analysisData.created_at || new Date().toISOString(),
     pillars: analysisData.pillars || {
-      ai: { score: pillarScores.ai, weight: 23.8, factors: 3 },
-      authority: { score: pillarScores.authority, weight: 17.9, factors: 2 },
-      machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 2 },
-      user_experience: { score: pillarScores.user_experience, weight: 13.7, factors: 2 },
-      content_quality: { score: pillarScores.content_quality, weight: 12.2, factors: 1 },
-      technical: { score: pillarScores.technical, weight: 17.8, factors: 1 }
+      ai: { score: pillarScores.ai, weight: 23.8, factors: 3, name: "AI Response Optimization & Citation" },
+      authority: { score: pillarScores.authority, weight: 17.9, factors: 2, name: "Authority & Trust Signals" },
+      machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 3, name: "Machine Readability & Technical Infrastructure" },
+      semantic: { score: pillarScores.semantic, weight: 13.9, factors: 2, name: "Semantic Content Quality" },
+      engagement: { score: pillarScores.engagement, weight: 10.9, factors: 1, name: "Engagement & User Experience" },
+      topical: { score: pillarScores.topical, weight: 8.9, factors: 1, name: "Topical Expertise & Experience" },
+      reference: { score: pillarScores.reference, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
+      yield: { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" }
     },
     factors: analysisData.factors || []
   } : {
@@ -73,18 +79,34 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
     url: url || 'aisearchmastery.com',
     created_at: new Date().toISOString(),
     pillars: {
-      ai: { score: pillarScores.ai, weight: 23.8, factors: 3 },
-      authority: { score: pillarScores.authority, weight: 17.9, factors: 2 },
-      machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 2 },
-      user_experience: { score: pillarScores.user_experience, weight: 13.7, factors: 2 },
-      content_quality: { score: pillarScores.content_quality, weight: 12.2, factors: 1 },
-      technical: { score: pillarScores.technical, weight: 17.8, factors: 1 }
+      ai: { score: pillarScores.ai, weight: 23.8, factors: 3, name: "AI Response Optimization & Citation" },
+      authority: { score: pillarScores.authority, weight: 17.9, factors: 2, name: "Authority & Trust Signals" },
+      machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 3, name: "Machine Readability & Technical Infrastructure" },
+      semantic: { score: pillarScores.semantic, weight: 13.9, factors: 2, name: "Semantic Content Quality" },
+      engagement: { score: pillarScores.engagement, weight: 10.9, factors: 1, name: "Engagement & User Experience" },
+      topical: { score: pillarScores.topical, weight: 8.9, factors: 1, name: "Topical Expertise & Experience" },
+      reference: { score: pillarScores.reference, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
+      yield: { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" }
     },
     factors: [
       {
-        name: "HTTPS Implementation",
+        name: "Citation-Worthy Content Structure",
+        score: 69,
+        pillar: "AI Response Optimization",
+        evidence: ["Factual claims identified: 15", "Supporting evidence provided", "Structured data markup present"],
+        recommendations: ["Increase fact density to 1+ per 100 words", "Add more statistical data", "Include research citations"]
+      },
+      {
+        name: "Source Authority Signals",
+        score: 64,
+        pillar: "Authority & Trust",
+        evidence: ["Author bylines present", "Publication dates visible", "Some expert credentials mentioned"],
+        recommendations: ["Add more detailed author bios", "Include professional certifications", "Link to author social profiles"]
+      },
+      {
+        name: "Security and Access Control",
         score: 95,
-        pillar: "Technical",
+        pillar: "Machine Readability",
         evidence: ["Site uses HTTPS protocol", "SSL certificate is valid", "All resources loaded securely"],
         recommendations: ["Maintain SSL certificate renewal schedule"]
       },
@@ -101,20 +123,6 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
         pillar: "Machine Readability",
         evidence: ["Meta description present", "Length appropriate (145 characters)", "Contains call-to-action"],
         recommendations: ["Include more specific value propositions", "Test emotional triggers"]
-      },
-      {
-        name: "Content Authority Signals",
-        score: 64,
-        pillar: "Authority",
-        evidence: ["Author bylines present", "Publication dates visible", "Some expert credentials mentioned"],
-        recommendations: ["Add more detailed author bios", "Include professional certifications", "Link to author social profiles"]
-      },
-      {
-        name: "Citation-Worthy Content Structure",
-        score: 69,
-        pillar: "AI",
-        evidence: ["Factual claims identified: 15", "Supporting evidence provided", "Structured data markup present"],
-        recommendations: ["Increase fact density to 1+ per 100 words", "Add more statistical data", "Include research citations"]
       }
     ]
   };
@@ -196,8 +204,8 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
         {Object.entries(results.pillars).map(([key, pillar]) => (
           <div key={key} className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-gray-900 capitalize">
-                {key.replace('_', ' ')}
+              <h3 className="font-semibold text-gray-900 text-sm">
+                {pillar.name || key.replace('_', ' ')}
               </h3>
               <span className={`px-2 py-1 rounded text-sm font-medium ${getScoreColor(pillar.score)}`}>
                 {pillar.score}

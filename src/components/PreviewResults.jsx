@@ -64,12 +64,12 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
       const baseScore = overallScore;
       const variation = 12;
       return {
-        'AI Readiness': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 4)),
-        'Authority': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 3)),
+        'AI Response Optimization': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 4)),
+        'Authority & Trust': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 3)),
         'Machine Readability': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 5)),
-        'User Experience': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 6)),
-        'Content Quality': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 2)),
-        'Technical': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 1))
+        'Semantic Content': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 2)),
+        'Engagement': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 6)),
+        'Topical Expertise': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 1))
       };
     }
 
@@ -94,14 +94,16 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
 
   const getPillarDisplayName = (pillar) => {
     const mapping = {
-      'AI': 'AI Readiness',
-      'A': 'Authority', 
+      'AI': 'AI Response Optimization',
+      'A': 'Authority & Trust', 
       'M': 'Machine Readability',
-      'S': 'Content Quality',
-      'E': 'User Experience',
-      'T': 'Technical'
+      'S': 'Semantic Content',
+      'E': 'Engagement',
+      'T': 'Topical Expertise',
+      'R': 'Reference Networks',
+      'Y': 'Yield Optimization'
     };
-    return mapping[pillar] || 'Technical';
+    return mapping[pillar] || pillar;
   };
 
   const pillarScores = calculatePillarScores(factors);
@@ -229,25 +231,25 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
               {/* Fallback preview factors when no real data available */}
               {[
                 {
-                  name: "HTTPS Security Implementation",
+                  name: "Citation-Worthy Content Structure",
+                  score: Math.min(85, Math.max(40, overallScore - 10)),
+                  pillar: "AI Response Optimization",
+                  evidence: ["Factual claims analyzed", "Content structure reviewed"],
+                  recommendations: ["Increase fact density", "Add supporting evidence"]
+                },
+                {
+                  name: "Source Authority Signals",
+                  score: Math.min(85, Math.max(40, overallScore - 10)),
+                  pillar: "Authority & Trust", 
+                  evidence: ["Author credentials reviewed", "Authority indicators assessed"],
+                  recommendations: ["Add author credentials", "Include expertise signals"]
+                },
+                {
+                  name: "Security and Access Control",
                   score: Math.min(95, Math.max(60, overallScore + 15)),
-                  pillar: "Technical",
+                  pillar: "Machine Readability",
                   evidence: ["Site uses HTTPS protocol", "SSL certificate detected"],
                   recommendations: ["Maintain SSL certificate renewal"]
-                },
-                {
-                  name: "Title Tag Optimization", 
-                  score: Math.min(90, Math.max(45, overallScore - 5)),
-                  pillar: "Machine Readability",
-                  evidence: ["Title tag present", "Appropriate length detected"],
-                  recommendations: ["Consider keyword optimization", "Test click-through variations"]
-                },
-                {
-                  name: "Content Authority Signals",
-                  score: Math.min(85, Math.max(40, overallScore - 10)),
-                  pillar: "Authority", 
-                  evidence: ["Content structure analyzed", "Authority indicators reviewed"],
-                  recommendations: ["Add author credentials", "Include expertise signals"]
                 }
               ].map((factor, index) => (
                 <div key={index} className="border border-gray-200 rounded-lg p-6">

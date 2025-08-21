@@ -767,7 +767,7 @@ function AppContent() {
         session={session}
         userTier={userTier}
         usageData={usageData}
-        onSignOut={() => {
+        onSignOut={async () => {
           // Track sign out
           trackFeatureUsage('authentication', 'sign_out');
           
@@ -778,7 +778,39 @@ function AppContent() {
           fetchingUsers.current.clear();
           pendingAnalysisProcessed.current = false;
           authStateChangeInProgress.current = false;
-          supabase.auth.signOut();
+          
+          // Clear all localStorage items related to the session
+          const keysToRemove = [
+            'pendingAnalysisUrl',
+            'pendingAnalysisId',
+            'landingAnalysisData',
+            'selectedTier',
+            'registrationEmail',
+            'analysisHistory',
+            'user-tier',
+            'cookie-consent',
+            'usageTracking',
+            // Clear any welcome dismissed flags for any user
+            ...Object.keys(localStorage).filter(key => key.startsWith('welcome_dismissed_'))
+          ];
+          
+          keysToRemove.forEach(key => {
+            localStorage.removeItem(key);
+          });
+          
+          // Clear Supabase auth session from localStorage
+          const supabaseKeys = Object.keys(localStorage).filter(key => 
+            key.startsWith('sb-') || key.includes('supabase')
+          );
+          supabaseKeys.forEach(key => {
+            localStorage.removeItem(key);
+          });
+          
+          // Sign out from Supabase
+          await supabase.auth.signOut();
+          
+          // Force reload to ensure clean state
+          window.location.href = '/';
         }}
       />
 
