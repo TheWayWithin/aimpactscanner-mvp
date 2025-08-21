@@ -3,6 +3,9 @@ import React, { useEffect } from 'react';
 import { addToHistory } from './AnalysisHistory';
 
 function SimpleResultsDashboard({ analysisId, url, analysisData }) {
+  // Debug logging
+  console.log('📊 SimpleResultsDashboard props:', { analysisId, url, analysisData });
+  
   // Generate dynamic score based on URL for more realistic demo
   const generateScore = (url) => {
     if (!url) return 67;
@@ -59,6 +62,13 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
     } : generatePillarScores(overallScore);
   
   // Use real results if available, otherwise use mock data
+  console.log('🔍 Real analysis check:', { 
+    isRealAnalysis, 
+    hasFactors: analysisData?.factors?.length > 0,
+    factorsCount: analysisData?.factors?.length || 0,
+    factors: analysisData?.factors 
+  });
+  
   const results = isRealAnalysis ? {
     overall_score: analysisData.overall_score,
     url: analysisData.url || url,
@@ -73,7 +83,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
       reference: { score: pillarScores.reference, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
       yield: { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" }
     },
-    factors: analysisData.factors || []
+    factors: analysisData?.factors || []
   } : {
     overall_score: overallScore,
     url: url || 'aisearchmastery.com',
@@ -225,6 +235,12 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
   };
 
   const groupedFactors = groupFactorsByPillar(results.factors);
+  
+  console.log('📦 Grouped factors result:', {
+    totalFactors: results.factors.length,
+    groupedCount: groupedFactors.length,
+    groups: groupedFactors.map(g => ({ pillar: g.name, factorCount: g.factors.length }))
+  });
 
   return (
     <div className="results-dashboard max-w-6xl mx-auto p-6" data-testid="results-dashboard">
@@ -302,7 +318,17 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
       <div className="space-y-8">
         <h2 className="text-xl font-bold text-gray-900">Factor Analysis Details by Pillar</h2>
         
-        {groupedFactors.map((pillarGroup, groupIndex) => {
+        {groupedFactors.length === 0 ? (
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
+            <p className="text-gray-600 mb-2">
+              No detailed factor analysis available for this scan.
+            </p>
+            <p className="text-sm text-gray-500">
+              The analysis may still be processing or factors data was not returned.
+            </p>
+          </div>
+        ) : (
+          groupedFactors.map((pillarGroup, groupIndex) => {
           const pillarStyle = getPillarStyle(pillarGroup.key);
           return (
             <div key={groupIndex} className="space-y-4">
@@ -372,7 +398,8 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
               </div>
             </div>
           );
-        })}
+        }))
+        }
       </div>
 
       {/* Framework Info */}
