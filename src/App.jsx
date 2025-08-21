@@ -749,8 +749,13 @@ function AppContent() {
     if (currentView === 'landing' || currentView === 'dashboard' || currentView === 'input') {
       return <Landing onAnalysisComplete={handleLandingAnalysis} />;
     }
-    // For any other view without session, show auth
-    return <AuthWithPassword />;
+    // Allow preview views without authentication
+    if (currentView === 'preview-analysis' || currentView === 'preview-results') {
+      // These views are handled below, continue to the view rendering logic
+    } else {
+      // For any other view without session, show auth
+      return <AuthWithPassword />;
+    }
   }
 
   // Authenticated views

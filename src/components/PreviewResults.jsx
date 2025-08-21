@@ -6,16 +6,16 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load analysis data from sessionStorage
+    // Load analysis data from localStorage (where Landing.jsx stores it)
     const loadAnalysisData = () => {
       try {
-        const storedData = sessionStorage.getItem('landingAnalysisData');
+        const storedData = localStorage.getItem('landingAnalysisData');
         if (storedData) {
           const data = JSON.parse(storedData);
           console.log('📊 Loaded analysis data for preview:', data);
           setAnalysisData(data);
         } else {
-          console.warn('⚠️ No analysis data found in sessionStorage');
+          console.warn('⚠️ No analysis data found in localStorage');
         }
       } catch (error) {
         console.error('❌ Error loading analysis data:', error);
