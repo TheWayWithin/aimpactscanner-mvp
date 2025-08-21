@@ -929,6 +929,11 @@ serve(async (req) => {
       analyzePageLoadSpeed(pageContent)                                 // E.1.1
     ];
     
+    console.log('📊 Factors analyzed:', {
+      count: factors.length,
+      factors: factors.map(f => ({ name: f.name, score: f.score }))
+    });
+    
     let progress = 20;
     // Official MASTERY-AI Framework v3.1.1 factor mappings with weights
     const factorMappings = {

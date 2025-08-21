@@ -4,7 +4,15 @@ import { addToHistory } from './AnalysisHistory';
 
 function SimpleResultsDashboard({ analysisId, url, analysisData }) {
   // Debug logging
-  console.log('📊 SimpleResultsDashboard props:', { analysisId, url, analysisData });
+  console.log('📊 SimpleResultsDashboard props:', { 
+    analysisId, 
+    url, 
+    analysisData,
+    has_analysisData: !!analysisData,
+    has_factors: !!analysisData?.factors,
+    factors_count: analysisData?.factors?.length || 0,
+    overall_score: analysisData?.overall_score
+  });
   
   // Generate dynamic score based on URL for more realistic demo
   const generateScore = (url) => {
