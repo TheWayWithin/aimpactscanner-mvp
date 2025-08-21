@@ -10,7 +10,9 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 1
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -40,7 +42,9 @@
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "chromium",
         "name": "chromium",
         "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
@@ -54,7 +58,9 @@
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "firefox",
         "name": "firefox",
         "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
@@ -68,7 +74,9 @@
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "webkit",
         "name": "webkit",
         "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
@@ -82,7 +90,9 @@
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
         "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
@@ -96,7 +106,9 @@
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "Mobile Safari",
         "name": "Mobile Safari",
         "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
@@ -110,7 +122,9 @@
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "Microsoft Edge",
         "name": "Microsoft Edge",
         "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
@@ -124,7 +138,9 @@
         "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "Google Chrome",
         "name": "Google Chrome",
         "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
@@ -142,7 +158,7 @@
     "workers": 5,
     "webServer": {
       "command": "npm run dev",
-      "url": "http://localhost:5174",
+      "url": "http://localhost:5173",
       "reuseExistingServer": true,
       "timeout": 120000,
       "env": {
@@ -150,17 +166,138 @@
       }
     }
   },
-  "suites": [],
-  "errors": [
+  "suites": [
     {
-      "message": "Error: Timed out waiting 120000ms from config.webServer.",
-      "stack": "Error: Timed out waiting 120000ms from config.webServer."
+      "title": "playwright/simple-framework-validation.spec.js",
+      "file": "playwright/simple-framework-validation.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Simple Framework Validation",
+          "file": "playwright/simple-framework-validation.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Framework version consistency",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 570,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Found 11 version references on page\n"
+                        },
+                        {
+                          "text": "✅ Total factor count (148) referenced 1 times\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+83ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+27ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5173/\", waiting until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+6ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+228ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.count started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.count succeeded \u001b[38;5;45m+40ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.count started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.count succeeded \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.count started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.count succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+182ms\u001b[0m\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-08-21T03:01:43.008Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7e1e3776c89bfa86384d-27322f640cae32c1bcdb",
+              "file": "playwright/simple-framework-validation.spec.js",
+              "line": 147,
+              "column": 3
+            }
+          ]
+        }
+      ]
     }
   ],
+  "errors": [],
   "stats": {
-    "startTime": "2025-08-19T01:09:01.132Z",
-    "duration": 120328.962,
-    "expected": 0,
+    "startTime": "2025-08-21T03:01:40.851Z",
+    "duration": 3238.513,
+    "expected": 1,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

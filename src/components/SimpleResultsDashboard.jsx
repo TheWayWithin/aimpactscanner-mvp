@@ -152,8 +152,82 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
     return 'Needs Improvement';
   };
 
+  // Get pillar-specific styling
+  const getPillarStyle = (key) => {
+    const styles = {
+      'AI': { bg: 'bg-blue-50', border: 'border-blue-500', text: 'text-blue-700', badge: 'bg-blue-100' },
+      'A': { bg: 'bg-purple-50', border: 'border-purple-500', text: 'text-purple-700', badge: 'bg-purple-100' },
+      'M': { bg: 'bg-green-50', border: 'border-green-500', text: 'text-green-700', badge: 'bg-green-100' },
+      'S': { bg: 'bg-orange-50', border: 'border-orange-500', text: 'text-orange-700', badge: 'bg-orange-100' },
+      'E': { bg: 'bg-yellow-50', border: 'border-yellow-500', text: 'text-yellow-700', badge: 'bg-yellow-100' },
+      'T': { bg: 'bg-indigo-50', border: 'border-indigo-500', text: 'text-indigo-700', badge: 'bg-indigo-100' },
+      'R': { bg: 'bg-gray-50', border: 'border-gray-500', text: 'text-gray-700', badge: 'bg-gray-100' },
+      'Y': { bg: 'bg-teal-50', border: 'border-teal-500', text: 'text-teal-700', badge: 'bg-teal-100' }
+    };
+    return styles[key] || styles['M'];
+  };
+
+  // Group factors by pillar for organized display
+  const groupFactorsByPillar = (factors) => {
+    const grouped = {};
+    
+    // Define pillar order and full names
+    const pillarOrder = [
+      { key: 'AI', name: 'AI Response Optimization & Citation', icon: '🤖' },
+      { key: 'A', name: 'Authority & Trust Signals', icon: '🔐' },
+      { key: 'M', name: 'Machine Readability & Technical Infrastructure', icon: '⚙️' },
+      { key: 'S', name: 'Semantic Content Quality', icon: '📝' },
+      { key: 'E', name: 'Engagement & User Experience', icon: '👥' },
+      { key: 'T', name: 'Topical Expertise & Experience', icon: '🎯' },
+      { key: 'R', name: 'Reference Networks & Citations', icon: '🔗' },
+      { key: 'Y', name: 'Yield Optimization & Freshness', icon: '📈' }
+    ];
+    
+    // Initialize groups
+    pillarOrder.forEach(pillar => {
+      grouped[pillar.name] = {
+        factors: [],
+        icon: pillar.icon,
+        key: pillar.key
+      };
+    });
+    
+    // Group factors
+    factors.forEach(factor => {
+      // Map short pillar names to full names
+      const pillarMapping = {
+        'AI Response Optimization': 'AI Response Optimization & Citation',
+        'Authority & Trust': 'Authority & Trust Signals',
+        'Machine Readability': 'Machine Readability & Technical Infrastructure',
+        'Semantic Content': 'Semantic Content Quality',
+        'Engagement': 'Engagement & User Experience',
+        'Topical Expertise': 'Topical Expertise & Experience',
+        'Reference Networks': 'Reference Networks & Citations',
+        'Yield Optimization': 'Yield Optimization & Freshness'
+      };
+      
+      const fullPillarName = pillarMapping[factor.pillar] || factor.pillar;
+      
+      if (grouped[fullPillarName]) {
+        grouped[fullPillarName].factors.push(factor);
+      }
+    });
+    
+    // Filter out empty groups and return as array
+    return pillarOrder
+      .map(p => ({
+        name: p.name,
+        ...grouped[p.name],
+        weight: results.pillars[p.key.toLowerCase()]?.weight || 0,
+        score: results.pillars[p.key.toLowerCase()]?.score || 0
+      }))
+      .filter(group => group.factors.length > 0);
+  };
+
+  const groupedFactors = groupFactorsByPillar(results.factors);
+
   return (
-    <div className="results-dashboard max-w-6xl mx-auto p-6">
+    <div className="results-dashboard max-w-6xl mx-auto p-6" data-testid="results-dashboard">
       {/* Demo Mode Notice - Only show when using demo data */}
       {!isRealAnalysis && (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
@@ -183,7 +257,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
             <p className="text-gray-600 break-all">{results.url}</p>
           </div>
           <div className="text-right">
-            <div className="text-3xl font-bold text-blue-600">{results.overall_score}</div>
+            <div className="text-3xl font-bold text-blue-600" data-testid="overall-score">{results.overall_score}</div>
             <div className="text-sm text-gray-600">Overall Score</div>
           </div>
         </div>
@@ -200,9 +274,9 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
       </div>
 
       {/* Pillar Scores */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" data-testid="pillar-grid">
         {Object.entries(results.pillars).map(([key, pillar]) => (
-          <div key={key} className="bg-white rounded-lg shadow p-6">
+          <div key={key} className="bg-white rounded-lg shadow p-6" data-testid="pillar-card">
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-semibold text-gray-900 text-sm">
                 {pillar.name || key.replace('_', ' ')}
@@ -224,56 +298,81 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
         ))}
       </div>
 
-      {/* Factor Details */}
-      <div className="space-y-6">
-        <h2 className="text-xl font-bold text-gray-900">Factor Analysis Details</h2>
+      {/* Factor Details Grouped by Pillar */}
+      <div className="space-y-8">
+        <h2 className="text-xl font-bold text-gray-900">Factor Analysis Details by Pillar</h2>
         
-        {results.factors.map((factor, index) => (
-          <div key={index} className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 mb-1">{factor.name}</h3>
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                  {factor.pillar}
-                </span>
-              </div>
-              <div className="text-right">
-                <div className={`text-lg font-bold px-3 py-1 rounded border ${getScoreColor(factor.score)}`}>
-                  {factor.score}
+        {groupedFactors.map((pillarGroup, groupIndex) => {
+          const pillarStyle = getPillarStyle(pillarGroup.key);
+          return (
+            <div key={groupIndex} className="space-y-4">
+              {/* Pillar Header */}
+              <div className={`${pillarStyle.bg} border-l-4 ${pillarStyle.border} p-4 rounded-lg`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{pillarGroup.icon}</span>
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-900">{pillarGroup.name}</h3>
+                      <p className="text-sm text-gray-600">
+                        Weight: {pillarGroup.weight}% | Pillar Score: {pillarGroup.score} | {pillarGroup.factors.length} factor{pillarGroup.factors.length !== 1 ? 's' : ''} analyzed
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-xs text-gray-600 mt-1">
-                  {getScoreLabel(factor.score)}
-                </div>
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <h4 className="font-medium text-green-700 mb-2">✅ Evidence Found</h4>
-                <ul className="text-sm text-gray-700 space-y-1">
-                  {factor.evidence.map((item, i) => (
-                    <li key={i} className="flex items-start">
-                      <span className="text-green-600 mr-2">•</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
               </div>
               
-              <div>
-                <h4 className="font-medium text-blue-700 mb-2">💡 Recommendations</h4>
-                <ul className="text-sm text-gray-700 space-y-1">
-                  {factor.recommendations.map((item, i) => (
-                    <li key={i} className="flex items-start">
-                      <span className="text-blue-600 mr-2">•</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+              {/* Factors within this pillar */}
+              <div className="ml-8 space-y-4">
+                {pillarGroup.factors.map((factor, factorIndex) => (
+                  <div key={factorIndex} className="bg-white rounded-lg shadow p-6 border-l-2 border-gray-200" data-testid="factor-card">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-gray-900 mb-1">{factor.name}</h4>
+                        <span className={`text-xs ${pillarStyle.text} ${pillarStyle.badge} px-2 py-1 rounded font-medium`}>
+                          {pillarGroup.key} Pillar Factor
+                        </span>
+                      </div>
+                    <div className="text-right">
+                      <div className={`text-lg font-bold px-3 py-1 rounded border ${getScoreColor(factor.score)}`}>
+                        {factor.score}
+                      </div>
+                      <div className="text-xs text-gray-600 mt-1">
+                        {getScoreLabel(factor.score)}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <h5 className="font-medium text-green-700 mb-2">✅ Evidence Found</h5>
+                      <ul className="text-sm text-gray-700 space-y-1">
+                        {factor.evidence.map((item, i) => (
+                          <li key={i} className="flex items-start">
+                            <span className="text-green-600 mr-2">•</span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    <div>
+                      <h5 className="font-medium text-blue-700 mb-2">💡 Recommendations</h5>
+                      <ul className="text-sm text-gray-700 space-y-1">
+                        {factor.recommendations.map((item, i) => (
+                          <li key={i} className="flex items-start">
+                            <span className="text-blue-600 mr-2">•</span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                ))}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Framework Info */}

@@ -77,12 +77,14 @@ function Auth() {
             aria-label="Email address for sign in"
             disabled={loading}
             required
+            data-testid="email-input"
           />
           <button
             className="w-full font-primary font-semibold py-2 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ backgroundColor: 'var(--mastery-blue)', '--hover-bg-color': 'var(--innovation-teal)', color: 'var(--authority-white)' }} // <-- ADDED color: 'var(--authority-white)' HERE
             disabled={loading}
             aria-label="Send magic link"
+            data-testid="continue-button"
           >
             {loading ? 'Sending magic link...' : 'Send magic link'}
           </button>
