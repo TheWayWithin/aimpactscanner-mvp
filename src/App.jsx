@@ -551,11 +551,13 @@ function AppContent() {
           setCurrentAnalysisId(pendingId);
           setCurrentView('results');
           
-          // Increment usage for first analysis completion
-          if (tier === 'free') {
-            console.log('🔢 Incrementing usage for new user first analysis');
-            incrementUsage();
-          }
+          // Don't increment usage for the first analysis from landing page
+          // This analysis was done before authentication and should be "free"
+          // Usage counting starts from the second analysis (first authenticated one)
+          console.log('📊 First analysis from landing page - not counting against usage');
+          
+          // Note: If we wanted to count it, we would call incrementUsage() here
+          // But the current behavior is intentional - first analysis is free
           
           // Clear pending data
           localStorage.removeItem('pendingAnalysisUrl');
