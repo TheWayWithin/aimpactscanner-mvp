@@ -5,7 +5,7 @@ import { supabase } from './lib/supabaseClient';
 
 // Analytics and Privacy  
 import { GTMIntegration, useGTMTracking } from './analytics/gtm-integration.jsx';
-import { EnzuzoIntegration } from './privacy/enzuzo-integration.jsx';
+// import { EnzuzoIntegration } from './privacy/enzuzo-integration.jsx';
 
 // New components for conversion flow
 import Landing from './components/Landing';
@@ -31,7 +31,7 @@ import { useUsageTracking } from './hooks/useUsageTracking';
 import AuthenticatedHeader from './components/AuthenticatedHeader';
 import AILogo from './components/AILogo';
 import AnalyticsTestComponent from './components/AnalyticsTestComponent.jsx';
-import EnzuzoTestComponent from './components/EnzuzoTestComponent.jsx';
+// import EnzuzoTestComponent from './components/EnzuzoTestComponent.jsx';
 import PrivacyPolicyPage from './components/PrivacyPolicyPage.jsx';
 import TermsOfServicePage from './components/TermsOfServicePage.jsx';
 import ContactPage from './components/ContactPage.jsx';
@@ -87,6 +87,16 @@ function AppContent() {
   useEffect(() => {
     trackPageView(`/${currentView}`);
   }, [currentView]);
+
+  // Global navigation handler for privacy policy links
+  useEffect(() => {
+    const handlePrivacyNavigation = () => {
+      setCurrentView('privacy');
+    };
+    
+    window.addEventListener('navigate-to-privacy', handlePrivacyNavigation);
+    return () => window.removeEventListener('navigate-to-privacy', handlePrivacyNavigation);
+  }, []);
 
   // Clear cache when user changes to prevent stale data
   useEffect(() => {
@@ -700,74 +710,110 @@ function AppContent() {
   // Render based on current view
   if (currentView === 'preview-analysis') {
     return (
-      <PreviewAnalysis
-        url={currentUrl}
-        analysisId={currentAnalysisId}
-        onAnalysisComplete={handlePreviewAnalysisComplete}
-      />
+      <>
+        <SimpleConsentBanner />
+        <PreviewAnalysis
+          url={currentUrl}
+          analysisId={currentAnalysisId}
+          onAnalysisComplete={handlePreviewAnalysisComplete}
+        />
+      </>
     );
   }
 
   if (currentView === 'preview-results') {
     return (
-      <PreviewResults
-        url={currentUrl}
-        analysisId={currentAnalysisId}
-        onUpgradeClick={handleUpgradeFromTeaser}
-        onFreeTrialClick={handleFreeTrialFromTeaser}
-      />
+      <>
+        <SimpleConsentBanner />
+        <PreviewResults
+          url={currentUrl}
+          analysisId={currentAnalysisId}
+          onUpgradeClick={handleUpgradeFromTeaser}
+          onFreeTrialClick={handleFreeTrialFromTeaser}
+        />
+      </>
     );
   }
 
   if (currentView === 'teaser-results') {
     return (
-      <AnalysisPreview
-        url={currentUrl}
-        analysisId={currentAnalysisId}
-        onUpgradeClick={handleUpgradeFromTeaser}
-        onFreeTrialClick={handleFreeTrialFromTeaser}
-      />
+      <>
+        <SimpleConsentBanner />
+        <AnalysisPreview
+          url={currentUrl}
+          analysisId={currentAnalysisId}
+          onUpgradeClick={handleUpgradeFromTeaser}
+          onFreeTrialClick={handleFreeTrialFromTeaser}
+        />
+      </>
     );
   }
 
   if (currentView === 'register') {
-    return <AuthWithPassword />;
+    return (
+      <>
+        <SimpleConsentBanner />
+        <AuthWithPassword />
+      </>
+    );
   }
 
   if (currentView === 'registration-flow') {
-    return <RegistrationFlow onRegistrationComplete={handleRegistrationComplete} />;
+    return (
+      <>
+        <SimpleConsentBanner />
+        <RegistrationFlow onRegistrationComplete={handleRegistrationComplete} />
+      </>
+    );
   }
 
   if (currentView === 'unified-registration') {
-    return <UnifiedRegistration onRegistrationComplete={handleRegistrationComplete} />;
+    return (
+      <>
+        <SimpleConsentBanner />
+        <UnifiedRegistration onRegistrationComplete={handleRegistrationComplete} />
+      </>
+    );
   }
 
   if (currentView === 'login') {
-    return <Login onLoginSuccess={handleLoginComplete} />;
+    return (
+      <>
+        <SimpleConsentBanner />
+        <Login onLoginSuccess={handleLoginComplete} />
+      </>
+    );
   }
 
   // Show landing page for non-authenticated users by default
   if (!session) {
     if (currentView === 'landing' || currentView === 'dashboard' || currentView === 'input') {
-      return <Landing onAnalysisComplete={handleLandingAnalysis} />;
+      return (
+        <>
+          <SimpleConsentBanner />
+          <Landing onAnalysisComplete={handleLandingAnalysis} />
+        </>
+      );
     }
     // Allow preview views without authentication
     if (currentView === 'preview-analysis' || currentView === 'preview-results') {
       // These views are handled below, continue to the view rendering logic
     } else {
-      // For any other view without session, show auth
-      return <AuthWithPassword />;
+      // For any other view without session, show auth with consent banner
+      return (
+        <>
+          <SimpleConsentBanner />
+          <AuthWithPassword />
+        </>
+      );
     }
   }
 
   // Authenticated views
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* GTM Analytics Integration */}
-      <GTMIntegration />
-      
-      {/* Simple GDPR Consent Banner - Temporarily disabled to fix interface blocking */}
-      {/* <SimpleConsentBanner /> */}
+      {/* Simple GDPR Consent Banner */}
+      <SimpleConsentBanner />
       
       {/* Consistent header across all authenticated pages */}
       <AuthenticatedHeader 
@@ -879,16 +925,7 @@ function AppContent() {
           >
             🔬 Analytics Test
           </button>
-          <button
-            onClick={() => setCurrentView('enzuzo-test')}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-              currentView === 'enzuzo-test' 
-                ? 'bg-purple-600 text-white' 
-                : 'bg-purple-200 text-purple-700 hover:bg-purple-300'
-            }`}
-          >
-            🍪 Enzuzo Test
-          </button>
+          {/* ENZUZO TEST BUTTON REMOVED - GDPR testing complete */}
         </div>
 
         {/* Content based on view */}
@@ -963,9 +1000,7 @@ function AppContent() {
           <AnalyticsTestComponent />
         )}
 
-        {currentView === 'enzuzo-test' && (
-          <EnzuzoTestComponent />
-        )}
+        {/* ENZUZO TEST COMPONENT REMOVED - GDPR testing complete */}
 
         {currentView === 'privacy' && (
           <PrivacyPolicyPage />
@@ -1086,7 +1121,18 @@ function AppContent() {
 
 // Main App component with GTM and Enzuzo integration
 function App() {
-  return <AppContent />;
+  return (
+    <>
+      {/* GTM Analytics Integration - Load on all pages */}
+      <GTMIntegration />
+      
+      {/* Enzuzo GDPR Integration - Disabled during SimpleConsentBanner testing */}
+      {/* <EnzuzoIntegration /> */}
+      
+      {/* Main app content */}
+      <AppContent />
+    </>
+  );
 }
 
 export default App;

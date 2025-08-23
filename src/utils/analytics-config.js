@@ -8,8 +8,8 @@ export const ANALYTICS_CONFIG = {
   // GA4 Configuration (configured via GTM)
   GA4_MEASUREMENT_ID: import.meta.env.VITE_GA4_MEASUREMENT_ID || 'G-EJ5M874QBZ',
   
-  // Enzuzo GDPR Configuration
-  ENZUZO_DOMAIN_ID: import.meta.env.VITE_ENZUZO_DOMAIN_ID || 'd7ac73b6-7c38-11f0-9bf3-a7c11342cf5c',
+  // Enzuzo GDPR Configuration - REMOVED FOR TESTING
+  // ENZUZO_DOMAIN_ID: import.meta.env.VITE_ENZUZO_DOMAIN_ID || 'd7ac73b6-7c38-11f0-9bf3-a7c11342cf5c',
   
   // Event Tracking Configuration
   CUSTOM_EVENTS: {
