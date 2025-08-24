@@ -35,7 +35,7 @@ import AnalyticsTestComponent from './components/AnalyticsTestComponent.jsx';
 import PrivacyPolicyPage from './components/PrivacyPolicyPage.jsx';
 import TermsOfServicePage from './components/TermsOfServicePage.jsx';
 import ContactPage from './components/ContactPage.jsx';
-import SimpleConsentBanner from './components/SimpleConsentBanner.jsx';
+// import SimpleConsentBanner from './components/SimpleConsentBanner.jsx'; // Disabled - using Enzuzo via GTM
 
 function AppContent() {
   const [session, setSession] = useState(null);
@@ -711,7 +711,7 @@ function AppContent() {
   if (currentView === 'preview-analysis') {
     return (
       <>
-        <SimpleConsentBanner />
+        {/* <SimpleConsentBanner /> */}
         <PreviewAnalysis
           url={currentUrl}
           analysisId={currentAnalysisId}
@@ -724,7 +724,7 @@ function AppContent() {
   if (currentView === 'preview-results') {
     return (
       <>
-        <SimpleConsentBanner />
+        {/* <SimpleConsentBanner /> */}
         <PreviewResults
           url={currentUrl}
           analysisId={currentAnalysisId}
@@ -738,7 +738,7 @@ function AppContent() {
   if (currentView === 'teaser-results') {
     return (
       <>
-        <SimpleConsentBanner />
+        {/* <SimpleConsentBanner /> */}
         <AnalysisPreview
           url={currentUrl}
           analysisId={currentAnalysisId}
@@ -752,7 +752,7 @@ function AppContent() {
   if (currentView === 'register') {
     return (
       <>
-        <SimpleConsentBanner />
+        {/* <SimpleConsentBanner /> */}
         <AuthWithPassword />
       </>
     );
@@ -761,7 +761,7 @@ function AppContent() {
   if (currentView === 'registration-flow') {
     return (
       <>
-        <SimpleConsentBanner />
+        {/* <SimpleConsentBanner /> */}
         <RegistrationFlow onRegistrationComplete={handleRegistrationComplete} />
       </>
     );
@@ -770,7 +770,7 @@ function AppContent() {
   if (currentView === 'unified-registration') {
     return (
       <>
-        <SimpleConsentBanner />
+        {/* <SimpleConsentBanner /> */}
         <UnifiedRegistration onRegistrationComplete={handleRegistrationComplete} />
       </>
     );
@@ -779,7 +779,7 @@ function AppContent() {
   if (currentView === 'login') {
     return (
       <>
-        <SimpleConsentBanner />
+        {/* <SimpleConsentBanner /> */}
         <Login onLoginSuccess={handleLoginComplete} />
       </>
     );
@@ -790,7 +790,7 @@ function AppContent() {
     if (currentView === 'landing' || currentView === 'dashboard' || currentView === 'input') {
       return (
         <>
-          <SimpleConsentBanner />
+          {/* <SimpleConsentBanner /> */}
           <Landing onAnalysisComplete={handleLandingAnalysis} />
         </>
       );
@@ -799,10 +799,10 @@ function AppContent() {
     if (currentView === 'preview-analysis' || currentView === 'preview-results') {
       // These views are handled below, continue to the view rendering logic
     } else {
-      // For any other view without session, show auth with consent banner
+      // For any other view without session, show auth
       return (
         <>
-          <SimpleConsentBanner />
+          {/* <SimpleConsentBanner /> */}
           <AuthWithPassword />
         </>
       );
@@ -812,8 +812,8 @@ function AppContent() {
   // Authenticated views
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Simple GDPR Consent Banner */}
-      <SimpleConsentBanner />
+      {/* Simple GDPR Consent Banner - Removed duplicate from authenticated section */}
+      {/* <SimpleConsentBanner /> */}
       
       {/* Consistent header across all authenticated pages */}
       <AuthenticatedHeader 
