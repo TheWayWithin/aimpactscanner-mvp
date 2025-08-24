@@ -167,10 +167,10 @@ function Landing({ onAnalysisComplete }) {
                 'FreeCalcHub',
                 'Evolve-7',
                 'Agent-11', 
-                'Agents-11',
+                'AgentMarket',
                 'LLMtxt Mastery',
                 'AI Search Mastery',
-                'MCP-11'
+                'MCP-7'
               ].map((client, index) => (
                 <div key={index} className="bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-md border border-gray-100 text-center hover:shadow-lg transition-shadow">
                   <div className="text-sm font-medium text-gray-900">{client}</div>

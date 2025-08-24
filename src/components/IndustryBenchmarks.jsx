@@ -134,8 +134,8 @@ function IndustryBenchmarks({ yourScore, url }) {
 
       {/* Disclaimer */}
       <p className="text-xs text-gray-500 text-center mt-3">
-        Benchmarks based on analysis of FreeCalcHub, Evolve-7, Agent-11, Agents-11, 
-        LLMtxt Mastery, AI Search Mastery, and MCP-11
+        Benchmarks based on analysis of FreeCalcHub, Evolve-7, Agent-11, AgentMarket, 
+        LLMtxt Mastery, AI Search Mastery, and MCP-7
       </p>
     </div>
   );

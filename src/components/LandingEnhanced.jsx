@@ -156,10 +156,10 @@ function LandingEnhanced({ onAnalysisComplete }) {
                 { name: 'FreeCalcHub', url: 'freecalchub.com' },
                 { name: 'Evolve-7', url: 'evolve-7.com' },
                 { name: 'Agent-11', url: 'agent-11.com' },
-                { name: 'Agents-11', url: 'agents-11.com' },
+                { name: 'AgentMarket', url: 'agentmarket.com' },
                 { name: 'LLMtxt Mastery', url: 'llmtxtmastery.com' },
                 { name: 'AI Search Mastery', url: 'aisearchmastery.com' },
-                { name: 'MCP-11', url: 'mcp-11.com' }
+                { name: 'MCP-7', url: 'mcp-7.com' }
               ].map((client, index) => (
                 <div key={index} className="bg-white/70 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-white/60 text-center hover:bg-white/80 hover:shadow-xl transition-all duration-200">
                   <div className="text-xs font-semibold text-gray-900 mb-1">{client.name}</div>

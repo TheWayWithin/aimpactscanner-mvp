@@ -25,10 +25,10 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
     if (urlLower.includes('freecalchub')) return 72;
     if (urlLower.includes('evolve-7')) return 68;
     if (urlLower.includes('agent-11')) return 61;
-    if (urlLower.includes('agents-11')) return 63;
+    if (urlLower.includes('agentmarket')) return 63;
     if (urlLower.includes('llmtxt')) return 74;
     if (urlLower.includes('aisearchmastery')) return 79;
-    if (urlLower.includes('mcp-11')) return 65;
+    if (urlLower.includes('mcp-7')) return 65;
     if (urlLower.includes('example.com')) return 42;
     
     // Generate pseudo-random score based on URL length and characters
