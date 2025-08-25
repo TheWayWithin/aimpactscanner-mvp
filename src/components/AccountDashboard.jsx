@@ -95,8 +95,11 @@ const AccountDashboard = ({ user, className = '' }) => {
     const tierNames = {
       'free': '🆓 Free',
       'coffee': '☕ Coffee',
-      'professional': '💼 Professional',
-      'enterprise': '🏢 Enterprise'
+      'growth': '🚀 Growth',
+      'scale': '📈 Scale',
+      // Backward compatibility
+      'professional': '🚀 Growth',
+      'enterprise': '📈 Scale'
     };
     return tierNames[tier] || tier;
   };

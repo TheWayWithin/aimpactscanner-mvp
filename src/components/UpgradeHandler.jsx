@@ -10,8 +10,11 @@ const UpgradeHandler = ({ user, onSuccess, onError }) => {
   // Stripe Price IDs (these would be set in Stripe Dashboard)
   const PRICE_IDS = {
     coffee: import.meta.env.VITE_STRIPE_COFFEE_PRICE_ID || 'price_coffee_tier_monthly',
-    professional: import.meta.env.VITE_STRIPE_PROFESSIONAL_PRICE_ID || 'price_professional_monthly',
-    enterprise: import.meta.env.VITE_STRIPE_ENTERPRISE_PRICE_ID || 'price_enterprise_monthly'
+    growth: import.meta.env.VITE_STRIPE_GROWTH_PRICE_ID || import.meta.env.VITE_STRIPE_PROFESSIONAL_PRICE_ID || 'price_growth_monthly',
+    scale: import.meta.env.VITE_STRIPE_SCALE_PRICE_ID || import.meta.env.VITE_STRIPE_ENTERPRISE_PRICE_ID || 'price_scale_monthly',
+    // Backward compatibility
+    professional: import.meta.env.VITE_STRIPE_GROWTH_PRICE_ID || import.meta.env.VITE_STRIPE_PROFESSIONAL_PRICE_ID || 'price_growth_monthly',
+    enterprise: import.meta.env.VITE_STRIPE_SCALE_PRICE_ID || import.meta.env.VITE_STRIPE_ENTERPRISE_PRICE_ID || 'price_scale_monthly'
   };
 
   const handleUpgrade = async (targetTier) => {
@@ -85,8 +88,11 @@ export const useUpgrade = (user, onSuccess, onError) => {
       // Production upgrade logic
       const priceIds = {
         coffee: import.meta.env.VITE_STRIPE_COFFEE_PRICE_ID || 'price_coffee_tier_monthly',
-        professional: import.meta.env.VITE_STRIPE_PROFESSIONAL_PRICE_ID || 'price_professional_monthly',
-        enterprise: import.meta.env.VITE_STRIPE_ENTERPRISE_PRICE_ID || 'price_enterprise_monthly'
+        growth: import.meta.env.VITE_STRIPE_GROWTH_PRICE_ID || import.meta.env.VITE_STRIPE_PROFESSIONAL_PRICE_ID || 'price_growth_monthly',
+        scale: import.meta.env.VITE_STRIPE_SCALE_PRICE_ID || import.meta.env.VITE_STRIPE_ENTERPRISE_PRICE_ID || 'price_scale_monthly',
+        // Backward compatibility
+        professional: import.meta.env.VITE_STRIPE_GROWTH_PRICE_ID || import.meta.env.VITE_STRIPE_PROFESSIONAL_PRICE_ID || 'price_growth_monthly',
+        enterprise: import.meta.env.VITE_STRIPE_SCALE_PRICE_ID || import.meta.env.VITE_STRIPE_ENTERPRISE_PRICE_ID || 'price_scale_monthly'
       };
 
       const priceId = priceIds[targetTier];

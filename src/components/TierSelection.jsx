@@ -41,38 +41,41 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '', showRe
       description: 'Perfect for individuals and small businesses'
     },
     {
-      id: 'professional',
-      name: '💼 Professional',
+      id: 'growth',
+      name: '🚀 Growth',
       price: 29,
       analyses: 'Unlimited',
       features: [
         'Everything in Coffee',
         '📊 Advanced PDF reports',
+        '🗺️ AI Remediation Planner',
+        'Progress tracking dashboard',
         'Phase B factors (22 total)',
-        'Priority support',
-        'API access'
+        'Priority support'
       ],
-      cta: showRegistrationFlow ? 'Choose Professional' : 'Go Professional',
+      cta: showRegistrationFlow ? 'Choose Growth' : 'Go Growth',
       highlight: false,
       comingSoon: true,
-      description: 'Complete analysis for growing businesses'
+      description: 'Complete analysis & planning for growing businesses'
     },
     {
-      id: 'enterprise',
-      name: '🏢 Enterprise',
+      id: 'scale',
+      name: '📈 Scale',
       price: 99,
       analyses: 'Unlimited',
       features: [
-        'Everything in Professional',
+        'Everything in Growth',
+        '🔗 API access',
         '🏢 White-label PDF reports',
         'Team collaboration',
         'Custom reporting',
+        'Webhook integrations',
         'Dedicated support'
       ],
       cta: 'Contact Sales',
       highlight: false,
       comingSoon: true,
-      description: 'Full-featured solution for teams'
+      description: 'Enterprise-grade solution for scaling teams'
     }
   ];
 

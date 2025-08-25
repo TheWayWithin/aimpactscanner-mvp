@@ -122,7 +122,7 @@ const PricingPage = ({ currentTier = 'free', onUpgrade, className = '' }) => {
             {/* Urgency Element */}
             <div className="bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200 rounded-xl p-6 mb-8 max-w-md mx-auto">
               <div className="flex items-center justify-center mb-2">
-                <span className="text-orange-600 font-bold text-lg">⚡ Limited Time: 50% Off Professional Plan</span>
+                <span className="text-orange-600 font-bold text-lg">⚡ Limited Time: 50% Off Growth Plan</span>
               </div>
               <p className="text-sm text-orange-700">
                 Price increases to $58/month next week. Lock in your savings today.
@@ -265,14 +265,14 @@ const PricingPage = ({ currentTier = 'free', onUpgrade, className = '' }) => {
               Start Free Trial
             </button>
             <button 
-              onClick={() => onUpgrade('professional')}
+              onClick={() => onUpgrade('growth')}
               className="px-8 py-4 text-white rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg text-lg"
               style={{ 
                 background: 'linear-gradient(135deg, var(--mastery-blue) 0%, #3B82F6 100%)',
                 boxShadow: '0 10px 25px rgba(30, 58, 138, 0.3)'
               }}
             >
-              Get Professional Plan
+              Get Growth Plan
             </button>
           </div>
 

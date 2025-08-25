@@ -83,7 +83,7 @@ export async function syncUserTier(userId, userEmail) {
       
       if (stored) {
         const data = JSON.parse(stored);
-        const unlimited = ['coffee', 'professional', 'enterprise'].includes(actualTier.tier);
+        const unlimited = ['coffee', 'growth', 'scale', 'professional', 'enterprise'].includes(actualTier.tier);
         
         const updatedData = {
           ...data,
@@ -138,18 +138,35 @@ export function getTierDisplayInfo(tier) {
       isUnlimited: true,
       color: 'bg-yellow-100 text-yellow-800'
     },
+    'growth': {
+      name: 'Growth',
+      icon: '🚀',
+      displayName: '🚀 Growth',
+      limit: null,
+      isUnlimited: true,
+      color: 'bg-blue-100 text-blue-800'
+    },
+    'scale': {
+      name: 'Scale',
+      icon: '📈',
+      displayName: '📈 Scale',
+      limit: null,
+      isUnlimited: true,
+      color: 'bg-purple-100 text-purple-800'
+    },
+    // Backward compatibility mappings
     'professional': {
-      name: 'Professional',
-      icon: '💼',
-      displayName: '💼 Professional',
+      name: 'Growth',
+      icon: '🚀',
+      displayName: '🚀 Growth',
       limit: null,
       isUnlimited: true,
       color: 'bg-blue-100 text-blue-800'
     },
     'enterprise': {
-      name: 'Enterprise',
-      icon: '🏢',
-      displayName: '🏢 Enterprise',
+      name: 'Scale',
+      icon: '📈',
+      displayName: '📈 Scale',
       limit: null,
       isUnlimited: true,
       color: 'bg-purple-100 text-purple-800'
@@ -163,16 +180,20 @@ export function getTierDisplayInfo(tier) {
  * Check if user has access to a feature based on tier
  */
 export function hasFeatureAccess(tier, feature) {
+  // Map old tier names to new ones for backward compatibility
+  const mappedTier = tier === 'professional' ? 'growth' : tier === 'enterprise' ? 'scale' : tier;
+  
   const featureMatrix = {
-    'pdf_export': ['coffee', 'professional', 'enterprise'],
-    'unlimited_analyses': ['coffee', 'professional', 'enterprise'],
-    'priority_support': ['professional', 'enterprise'],
-    'api_access': ['enterprise'],
-    'team_management': ['enterprise']
+    'pdf_export': ['coffee', 'growth', 'scale', 'professional', 'enterprise'],
+    'unlimited_analyses': ['coffee', 'growth', 'scale', 'professional', 'enterprise'],
+    'planner': ['growth', 'scale', 'professional', 'enterprise'],
+    'priority_support': ['growth', 'scale', 'professional', 'enterprise'],
+    'api_access': ['scale', 'enterprise'], // Removed from growth tier
+    'team_management': ['scale', 'enterprise']
   };
 
   const allowedTiers = featureMatrix[feature] || [];
-  return allowedTiers.includes(tier);
+  return allowedTiers.includes(mappedTier) || allowedTiers.includes(tier);
 }
 
 /**

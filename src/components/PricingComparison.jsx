@@ -8,59 +8,63 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
     {
       category: 'Analysis Features',
       items: [
-        { name: 'Phase A Factors (Basic Analysis)', free: true, starter: true, professional: true },
-        { name: 'Complete 22-Factor Analysis', free: false, starter: false, professional: true },
-        { name: 'AI-Powered Recommendations', free: 'Basic', starter: 'Advanced', professional: 'Expert' },
-        { name: 'Educational Insights', free: false, starter: true, professional: true },
-        { name: 'Competitor Benchmarking', free: false, starter: false, professional: true },
-        { name: 'Historical Tracking', free: false, starter: 'Limited', professional: 'Unlimited' }
+        { name: 'Phase A Factors (Basic Analysis)', free: true, coffee: true, growth: true, scale: true },
+        { name: 'Complete 22-Factor Analysis', free: false, coffee: false, growth: true, scale: true },
+        { name: 'AI Remediation Planner', free: false, coffee: false, growth: true, scale: true },
+        { name: 'Progress Tracking Dashboard', free: false, coffee: false, growth: true, scale: true },
+        { name: 'AI-Powered Recommendations', free: 'Basic', coffee: 'Advanced', growth: 'Expert', scale: 'Enterprise' },
+        { name: 'Educational Insights', free: false, coffee: true, growth: true, scale: true },
+        { name: 'Competitor Benchmarking', free: false, coffee: false, growth: true, scale: true },
+        { name: 'Historical Tracking', free: false, coffee: 'Limited', growth: 'Unlimited', scale: 'Unlimited' }
       ]
     },
     {
       category: 'Usage & Limits',
       items: [
-        { name: 'Monthly Analysis Limit', free: '3', starter: 'Unlimited', professional: 'Unlimited' },
-        { name: 'Report Downloads', free: 'Watermarked', starter: 'Clean PDFs', professional: 'Custom Branded' },
-        { name: 'Data Export', free: false, starter: 'CSV', professional: 'CSV + API' },
-        { name: 'Analysis Speed', free: 'Standard', starter: 'Fast', professional: 'Priority Queue' }
+        { name: 'Monthly Analysis Limit', free: '3', coffee: 'Unlimited', growth: 'Unlimited', scale: 'Unlimited' },
+        { name: 'Report Downloads', free: 'Watermarked', coffee: 'Clean PDFs', growth: 'Advanced PDFs', scale: 'Custom Branded' },
+        { name: 'Data Export', free: false, coffee: 'CSV', growth: 'CSV + JSON', scale: 'CSV + JSON + API' },
+        { name: 'Analysis Speed', free: 'Standard', coffee: 'Fast', growth: 'Priority', scale: 'Dedicated Queue' }
       ]
     },
     {
       category: 'Reporting & Insights',
       items: [
-        { name: 'Basic Recommendations', free: true, starter: true, professional: true },
-        { name: 'Advanced SEO Insights', free: false, starter: true, professional: true },
-        { name: 'Performance Metrics', free: 'Basic', starter: 'Detailed', professional: 'Comprehensive' },
-        { name: 'Custom Branding', free: false, starter: false, professional: true },
-        { name: 'White-Label Reports', free: false, starter: false, professional: true }
+        { name: 'Basic Recommendations', free: true, coffee: true, growth: true, scale: true },
+        { name: 'Advanced SEO Insights', free: false, coffee: true, growth: true, scale: true },
+        { name: 'Performance Metrics', free: 'Basic', coffee: 'Detailed', growth: 'Comprehensive', scale: 'Enterprise' },
+        { name: 'Custom Branding', free: false, coffee: false, growth: true, scale: true },
+        { name: 'White-Label Reports', free: false, coffee: false, growth: false, scale: true }
       ]
     },
     {
       category: 'Integration & API',
       items: [
-        { name: 'Web Dashboard Access', free: true, starter: true, professional: true },
-        { name: 'API Access', free: false, starter: false, professional: true },
-        { name: 'Webhook Integration', free: false, starter: false, professional: true },
-        { name: 'Third-Party Integrations', free: false, starter: 'Basic', professional: 'Advanced' },
-        { name: 'Team Collaboration', free: false, starter: false, professional: true }
+        { name: 'Web Dashboard Access', free: true, coffee: true, growth: true, scale: true },
+        { name: 'API Access', free: false, coffee: false, growth: false, scale: true },
+        { name: 'Webhook Integration', free: false, coffee: false, growth: false, scale: true },
+        { name: 'Third-Party Integrations', free: false, coffee: 'Basic', growth: 'Standard', scale: 'Advanced' },
+        { name: 'Team Collaboration', free: false, coffee: false, growth: false, scale: true }
       ]
     },
     {
       category: 'Support & Training',
       items: [
-        { name: 'Community Support', free: true, starter: true, professional: true },
-        { name: 'Email Support', free: false, starter: true, professional: true },
-        { name: 'Priority Support', free: false, starter: false, professional: '24hr Response' },
-        { name: 'Training Materials', free: 'Basic', starter: 'Standard', professional: 'Premium' },
-        { name: 'Onboarding Call', free: false, starter: false, professional: true }
+        { name: 'Community Support', free: true, coffee: true, growth: true, scale: true },
+        { name: 'Email Support', free: false, coffee: true, growth: true, scale: true },
+        { name: 'Priority Support', free: false, coffee: false, growth: '24hr Response', scale: '1hr Response' },
+        { name: 'Training Materials', free: 'Basic', coffee: 'Standard', growth: 'Premium', scale: 'Enterprise' },
+        { name: 'Onboarding Call', free: false, coffee: false, growth: true, scale: true },
+        { name: 'Dedicated Account Manager', free: false, coffee: false, growth: false, scale: true }
       ]
     }
   ];
 
   const plans = [
     { id: 'free', name: 'Free Trial', price: '$0' },
-    { id: 'starter', name: 'Starter', price: '$5/mo' },
-    { id: 'professional', name: 'Professional', price: '$29/mo' }
+    { id: 'coffee', name: '☕ Coffee', price: '$5/mo' },
+    { id: 'growth', name: '🚀 Growth', price: '$29/mo' },
+    { id: 'scale', name: '📈 Scale', price: '$99/mo' }
   ];
 
   const renderFeatureValue = (value, planId) => {
@@ -77,13 +81,16 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
     }
 
     if (typeof value === 'string') {
-      const isHighlighted = planId === 'professional' && (
+      const isHighlighted = (planId === 'growth' || planId === 'scale') && (
         value.includes('Expert') || 
+        value.includes('Enterprise') ||
         value.includes('Premium') || 
         value.includes('24hr') || 
+        value.includes('1hr') ||
         value.includes('Priority') ||
         value.includes('Custom') ||
-        value.includes('Unlimited')
+        value.includes('Unlimited') ||
+        value.includes('Dedicated')
       );
 
       return (
@@ -103,10 +110,12 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
   const getPlanHeaderClass = (planId) => {
     const baseClass = "p-6 text-center";
     
-    if (planId === 'professional') {
+    if (planId === 'growth') {
       return `${baseClass} bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200`;
-    } else if (planId === 'starter') {
-      return `${baseClass} bg-gray-50 border border-gray-200`;
+    } else if (planId === 'scale') {
+      return `${baseClass} bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-200`;
+    } else if (planId === 'coffee') {
+      return `${baseClass} bg-gradient-to-br from-yellow-50 to-yellow-100 border border-yellow-200`;
     } else {
       return `${baseClass} bg-gray-25 border border-gray-100`;
     }
@@ -125,7 +134,7 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
 
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Plan Headers */}
-        <div className="grid grid-cols-4 border-b border-gray-200">
+        <div className="grid grid-cols-5 border-b border-gray-200">
           <div className="p-6 bg-gray-50 border-r border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900">Features</h3>
           </div>
@@ -137,7 +146,7 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
               <p className="text-2xl font-bold" style={{ color: 'var(--mastery-blue)' }}>
                 {plan.price}
               </p>
-              {plan.id === 'professional' && (
+              {plan.id === 'growth' && (
                 <div className="mt-2">
                   <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
                     MOST POPULAR
@@ -159,20 +168,20 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
         {features.map((category, categoryIndex) => (
           <div key={categoryIndex}>
             {/* Category Header */}
-            <div className="grid grid-cols-4 bg-gray-100 border-b border-gray-200">
+            <div className="grid grid-cols-5 bg-gray-100 border-b border-gray-200">
               <div className="p-4 border-r border-gray-200">
                 <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                   {category.category}
                 </h4>
               </div>
-              <div className="col-span-3"></div>
+              <div className="col-span-4"></div>
             </div>
 
             {/* Feature Items */}
             {category.items.map((feature, featureIndex) => (
               <div 
                 key={featureIndex} 
-                className={`grid grid-cols-4 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
+                className={`grid grid-cols-5 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
                   featureIndex % 2 === 0 ? 'bg-white' : 'bg-gray-25'
                 }`}
               >
@@ -185,10 +194,13 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
                   {renderFeatureValue(feature.free, 'free')}
                 </div>
                 <div className="p-4 border-r border-gray-200 text-center">
-                  {renderFeatureValue(feature.starter, 'starter')}
+                  {renderFeatureValue(feature.coffee, 'coffee')}
+                </div>
+                <div className="p-4 border-r border-gray-200 text-center">
+                  {renderFeatureValue(feature.growth, 'growth')}
                 </div>
                 <div className="p-4 text-center">
-                  {renderFeatureValue(feature.professional, 'professional')}
+                  {renderFeatureValue(feature.scale, 'scale')}
                 </div>
               </div>
             ))}
@@ -217,7 +229,7 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
                   boxShadow: '0 8px 20px rgba(30, 58, 138, 0.3)'
                 }}
               >
-                Go Professional
+                Get Growth Plan
               </button>
             </div>
           </div>
