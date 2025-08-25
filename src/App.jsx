@@ -35,6 +35,7 @@ import AnalyticsTestComponent from './components/AnalyticsTestComponent.jsx';
 import PrivacyPolicyPage from './components/PrivacyPolicyPage.jsx';
 import TermsOfServicePage from './components/TermsOfServicePage.jsx';
 import ContactPage from './components/ContactPage.jsx';
+import PDFTestComponent from './components/PDFTestComponent.jsx'; // Phase 1: PDF library testing
 // import SimpleConsentBanner from './components/SimpleConsentBanner.jsx'; // Disabled - using Enzuzo via GTM
 
 function AppContent() {
@@ -844,7 +845,9 @@ function AppContent() {
             'cookie-consent',
             'usageTracking',
             // Clear any welcome dismissed flags for any user
-            ...Object.keys(localStorage).filter(key => key.startsWith('welcome_dismissed_'))
+            ...Object.keys(localStorage).filter(key => key.startsWith('welcome_dismissed_')),
+            // Clear usage tracking for the user
+            ...Object.keys(localStorage).filter(key => key.startsWith('usage_'))
           ];
           
           keysToRemove.forEach(key => {
@@ -860,15 +863,23 @@ function AppContent() {
           });
           
           // Sign out from Supabase
-          await supabase.auth.signOut();
+          try {
+            await supabase.auth.signOut();
+          } catch (error) {
+            console.error('Sign out error:', error);
+          }
           
-          // Force reload to ensure clean state
-          window.location.href = '/';
+          // Clear ALL localStorage to ensure clean state
+          localStorage.clear();
+          sessionStorage.clear();
+          
+          // Force hard reload to ensure clean state
+          window.location.reload(true);
         }}
       />
 
-      {/* Only show UserInitializer if we're not viewing results from a pending analysis */}
-      {currentView !== 'results' && (
+      {/* Only show UserInitializer if we have a session and not viewing results from a pending analysis */}
+      {session && currentView !== 'results' && (
         <UserInitializer session={session} onUserReady={() => setUserReady(true)} />
       )}
 
@@ -924,6 +935,16 @@ function AppContent() {
             }`}
           >
             🔬 Analytics Test
+          </button>
+          <button
+            onClick={() => setCurrentView('pdf-test')}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+              currentView === 'pdf-test' 
+                ? 'bg-orange-600 text-white' 
+                : 'bg-orange-200 text-orange-700 hover:bg-orange-300'
+            }`}
+          >
+            📄 PDF Test
           </button>
           {/* ENZUZO TEST BUTTON REMOVED - GDPR testing complete */}
         </div>
@@ -982,6 +1003,7 @@ function AppContent() {
             analysisId={currentAnalysisId} 
             url={currentUrl}
             analysisData={analysisResults}
+            userEmail={session?.user?.email}
           />
         )}
 
@@ -998,6 +1020,10 @@ function AppContent() {
 
         {currentView === 'analytics-test' && (
           <AnalyticsTestComponent />
+        )}
+
+        {currentView === 'pdf-test' && (
+          <PDFTestComponent />
         )}
 
         {/* ENZUZO TEST COMPONENT REMOVED - GDPR testing complete */}

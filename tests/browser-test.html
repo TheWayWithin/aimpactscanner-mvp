@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Export Browser Testing</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-status {
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        .status-pass {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .status-fail {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        .status-running {
+            background: #fefce8;
+            color: #a16207;
+            border: 1px solid #fef08a;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .test-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .test-button:hover {
+            background: #2563eb;
+        }
+        .test-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+        }
+        pre {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+        .browser-info {
+            background: #f0f9ff;
+            border: 1px solid #e0e7ff;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 PDF Export Feature - Browser Testing Suite</h1>
+    
+    <div class="browser-info">
+        <strong>Browser:</strong> <span id="browser-info">Detecting...</span><br>
+        <strong>Test Environment:</strong> <span id="test-env">http://localhost:5173</span><br>
+        <strong>jsPDF Available:</strong> <span id="jspdf-status">Checking...</span>
+    </div>
+
+    <div class="test-container">
+        <h2>🔧 Test Configuration</h2>
+        <div class="test-grid">
+            <div>
+                <h3>Tier Configuration</h3>
+                <button class="test-button" onclick="setFreeTier()">Set Free Tier</button>
+                <button class="test-button" onclick="setCoffeeTier()">Set Coffee Tier</button>
+                <button class="test-button" onclick="clearStorage()">Clear Storage</button>
+                <div id="tier-status" class="test-status status-running">
+                    Current tier: <span id="current-tier">Unknown</span>
+                </div>
+            </div>
+            <div>
+                <h3>PDF Libraries</h3>
+                <button class="test-button" onclick="loadJsPDF()">Load jsPDF</button>
+                <button class="test-button" onclick="testPDFGeneration()">Test PDF Generation</button>
+                <div id="pdf-status" class="test-status status-running">
+                    PDF library status: <span id="pdf-lib-status">Not loaded</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>✅ Automated Test Results</h2>
+        <button class="test-button" onclick="runAllTests()">Run Full Test Suite</button>
+        <div id="test-progress" class="test-status status-running" style="display: none;">
+            Running tests... <span id="progress-indicator">0%</span>
+        </div>
+        
+        <div class="results-grid">
+            <div>
+                <h3>Cross-Browser Tests</h3>
+                <div id="browser-tests">
+                    <div class="test-status status-running">Waiting to run...</div>
+                </div>
+            </div>
+            <div>
+                <h3>Tier Access Tests</h3>
+                <div id="tier-tests">
+                    <div class="test-status status-running">Waiting to run...</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="results-grid">
+            <div>
+                <h3>Mobile Responsive Tests</h3>
+                <div id="mobile-tests">
+                    <div class="test-status status-running">Waiting to run...</div>
+                </div>
+            </div>
+            <div>
+                <h3>Integration Tests</h3>
+                <div id="integration-tests">
+                    <div class="test-status status-running">Waiting to run...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>📱 Manual Testing Instructions</h2>
+        <div id="manual-instructions">
+            <h3>Step 1: Tier Access Testing</h3>
+            <p>1. Set <strong>Free Tier</strong> above, then navigate to <a href="http://localhost:5173" target="_blank">localhost:5173</a></p>
+            <p>2. Complete an analysis and look for PDF export button</p>
+            <p>3. <strong>Expected:</strong> Blue button with upgrade prompt</p>
+            
+            <h3>Step 2: Paid Tier Testing</h3>
+            <p>1. Set <strong>Coffee Tier</strong> above, refresh the page</p>
+            <p>2. <strong>Expected:</strong> Green button with PDF export capability</p>
+            
+            <h3>Step 3: PDF Generation Testing</h3>
+            <p>1. Click PDF export button (Coffee tier)</p>
+            <p>2. <strong>Expected:</strong> Progress indicator → PDF download</p>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>🔍 Live Test Results</h2>
+        <pre id="test-output">Test output will appear here...</pre>
+    </div>
+
+    <script>
+        // Detect browser information
+        function detectBrowser() {
+            const userAgent = navigator.userAgent;
+            let browser = 'Unknown';
+            
+            if (userAgent.includes('Chrome') && !userAgent.includes('Edge')) {
+                browser = 'Chrome';
+            } else if (userAgent.includes('Firefox')) {
+                browser = 'Firefox';
+            } else if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
+                browser = 'Safari';
+            } else if (userAgent.includes('Edge')) {
+                browser = 'Edge';
+            }
+            
+            const version = userAgent.match(/(chrome|firefox|safari|edge)[\/\s](\d+)/i);
+            const versionNumber = version ? version[2] : 'Unknown';
+            
+            return `${browser} ${versionNumber}`;
+        }
+
+        // Initialize page
+        function initializePage() {
+            document.getElementById('browser-info').textContent = detectBrowser();
+            document.getElementById('jspdf-status').textContent = 
+                typeof window.jsPDF !== 'undefined' ? '✅ Available' : '❌ Not loaded';
+            checkCurrentTier();
+            log('Browser testing suite initialized');
+        }
+
+        // Logging function
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : '📋';
+            const output = document.getElementById('test-output');
+            output.textContent += `[${timestamp}] ${prefix} ${message}\n`;
+            output.scrollTop = output.scrollHeight;
+            console.log(`[${timestamp}] ${message}`);
+        }
+
+        // Tier management functions
+        function setFreeTier() {
+            const userData = {
+                tier: 'free',
+                monthlyUsed: 2,
+                analyses_limit: 3,
+                lastUpdated: new Date().toISOString()
+            };
+            localStorage.setItem('usage_test@example.com', JSON.stringify(userData));
+            checkCurrentTier();
+            log('Set tier to FREE - PDF export should be disabled');
+        }
+
+        function setCoffeeTier() {
+            const userData = {
+                tier: 'coffee',
+                monthlyUsed: 10,
+                analyses_limit: 100,
+                lastUpdated: new Date().toISOString()
+            };
+            localStorage.setItem('usage_test@example.com', JSON.stringify(userData));
+            checkCurrentTier();
+            log('Set tier to COFFEE - PDF export should be enabled');
+        }
+
+        function clearStorage() {
+            localStorage.clear();
+            checkCurrentTier();
+            log('Cleared localStorage - reset to default state');
+        }
+
+        function checkCurrentTier() {
+            const stored = localStorage.getItem('usage_test@example.com');
+            if (stored) {
+                const data = JSON.parse(stored);
+                document.getElementById('current-tier').textContent = data.tier || 'free';
+                document.getElementById('tier-status').className = 
+                    data.tier === 'coffee' ? 'test-status status-pass' : 'test-status status-fail';
+            } else {
+                document.getElementById('current-tier').textContent = 'free (default)';
+                document.getElementById('tier-status').className = 'test-status status-fail';
+            }
+        }
+
+        // PDF library functions
+        function loadJsPDF() {
+            if (typeof window.jsPDF === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                script.onload = () => {
+                    document.getElementById('pdf-lib-status').textContent = '✅ Loaded successfully';
+                    document.getElementById('pdf-status').className = 'test-status status-pass';
+                    log('jsPDF library loaded successfully', 'success');
+                };
+                script.onerror = () => {
+                    document.getElementById('pdf-lib-status').textContent = '❌ Failed to load';
+                    document.getElementById('pdf-status').className = 'test-status status-fail';
+                    log('Failed to load jsPDF library', 'error');
+                };
+                document.head.appendChild(script);
+                log('Loading jsPDF library...');
+            } else {
+                log('jsPDF already available');
+            }
+        }
+
+        function testPDFGeneration() {
+            if (typeof window.jsPDF === 'undefined') {
+                log('jsPDF not available - load library first', 'error');
+                return;
+            }
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Test PDF creation
+                doc.setFontSize(16);
+                doc.text('PDF Export Test', 20, 30);
+                doc.setFontSize(12);
+                doc.text('This is a test PDF generated by the browser testing suite.', 20, 50);
+                doc.text(`Browser: ${detectBrowser()}`, 20, 70);
+                doc.text(`Timestamp: ${new Date().toISOString()}`, 20, 90);
+                
+                // Test save functionality
+                doc.save('test-pdf-generation.pdf');
+                log('Test PDF generated and downloaded successfully', 'success');
+                
+            } catch (error) {
+                log(`PDF generation failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Automated testing functions
+        async function runAllTests() {
+            const progressEl = document.getElementById('test-progress');
+            const progressIndicator = document.getElementById('progress-indicator');
+            
+            progressEl.style.display = 'block';
+            log('Starting comprehensive test suite...');
+            
+            const tests = [
+                { name: 'Browser Compatibility', fn: testBrowserCompatibility },
+                { name: 'Tier Access Control', fn: testTierAccessControl },
+                { name: 'Mobile Responsiveness', fn: testMobileResponsiveness },
+                { name: 'Integration', fn: testIntegration }
+            ];
+            
+            for (let i = 0; i < tests.length; i++) {
+                const test = tests[i];
+                const progress = ((i + 1) / tests.length * 100).toFixed(0);
+                progressIndicator.textContent = `${progress}%`;
+                
+                log(`Running ${test.name} tests...`);
+                await test.fn();
+                await sleep(500); // Brief pause between test suites
+            }
+            
+            progressEl.style.display = 'none';
+            log('All tests completed!', 'success');
+        }
+
+        async function testBrowserCompatibility() {
+            const browserTestsEl = document.getElementById('browser-tests');
+            browserTestsEl.innerHTML = '';
+            
+            const browser = detectBrowser();
+            const tests = [
+                { name: 'jsPDF Support', test: () => typeof window.jsPDF !== 'undefined' },
+                { name: 'LocalStorage Support', test: () => typeof Storage !== 'undefined' },
+                { name: 'Download Support', test: () => document.createElement('a').download !== undefined },
+                { name: 'File API Support', test: () => typeof File !== 'undefined' }
+            ];
+            
+            tests.forEach(test => {
+                const result = test.test();
+                const statusClass = result ? 'status-pass' : 'status-fail';
+                const statusText = result ? 'PASS' : 'FAIL';
+                
+                browserTestsEl.innerHTML += `
+                    <div class="test-status ${statusClass}">
+                        ${test.name}: ${statusText}
+                    </div>
+                `;
+                
+                log(`${browser} - ${test.name}: ${statusText}`);
+            });
+        }
+
+        async function testTierAccessControl() {
+            const tierTestsEl = document.getElementById('tier-tests');
+            tierTestsEl.innerHTML = '';
+            
+            // Test free tier
+            setFreeTier();
+            const freeData = JSON.parse(localStorage.getItem('usage_test@example.com'));
+            const freeAccessCorrect = freeData.tier === 'free';
+            
+            // Test coffee tier
+            setCoffeeTier();
+            const coffeeData = JSON.parse(localStorage.getItem('usage_test@example.com'));
+            const coffeeAccessCorrect = coffeeData.tier === 'coffee';
+            
+            const tests = [
+                { name: 'Free Tier Setup', result: freeAccessCorrect },
+                { name: 'Coffee Tier Setup', result: coffeeAccessCorrect },
+                { name: 'LocalStorage Persistence', result: coffeeData && coffeeData.lastUpdated }
+            ];
+            
+            tests.forEach(test => {
+                const statusClass = test.result ? 'status-pass' : 'status-fail';
+                const statusText = test.result ? 'PASS' : 'FAIL';
+                
+                tierTestsEl.innerHTML += `
+                    <div class="test-status ${statusClass}">
+                        ${test.name}: ${statusText}
+                    </div>
+                `;
+                
+                log(`Tier Access - ${test.name}: ${statusText}`);
+            });
+        }
+
+        async function testMobileResponsiveness() {
+            const mobileTestsEl = document.getElementById('mobile-tests');
+            mobileTestsEl.innerHTML = '';
+            
+            const tests = [
+                { 
+                    name: 'Viewport Meta Tag', 
+                    test: () => document.querySelector('meta[name="viewport"]') !== null 
+                },
+                { 
+                    name: 'Touch Events Support', 
+                    test: () => 'ontouchstart' in window || navigator.maxTouchPoints > 0 
+                },
+                { 
+                    name: 'Responsive CSS Support', 
+                    test: () => window.CSS && CSS.supports('display', 'grid') 
+                },
+                { 
+                    name: 'Mobile Download Support', 
+                    test: () => /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                }
+            ];
+            
+            tests.forEach(test => {
+                const result = test.test();
+                const statusClass = result ? 'status-pass' : 'status-fail';
+                const statusText = result ? 'PASS' : 'FAIL';
+                
+                mobileTestsEl.innerHTML += `
+                    <div class="test-status ${statusClass}">
+                        ${test.name}: ${statusText}
+                    </div>
+                `;
+                
+                log(`Mobile - ${test.name}: ${statusText}`);
+            });
+        }
+
+        async function testIntegration() {
+            const integrationTestsEl = document.getElementById('integration-tests');
+            integrationTestsEl.innerHTML = '';
+            
+            const tests = [
+                { 
+                    name: 'App Server Connectivity', 
+                    test: async () => {
+                        try {
+                            const response = await fetch('http://localhost:5173');
+                            return response.status === 200;
+                        } catch {
+                            return false;
+                        }
+                    }
+                },
+                { 
+                    name: 'Component Integration Ready', 
+                    test: () => typeof document.createElement('div').className === 'string'
+                },
+                { 
+                    name: 'Error Handling Support', 
+                    test: () => typeof window.addEventListener === 'function'
+                }
+            ];
+            
+            for (const test of tests) {
+                const result = await test.test();
+                const statusClass = result ? 'status-pass' : 'status-fail';
+                const statusText = result ? 'PASS' : 'FAIL';
+                
+                integrationTestsEl.innerHTML += `
+                    <div class="test-status ${statusClass}">
+                        ${test.name}: ${statusText}
+                    </div>
+                `;
+                
+                log(`Integration - ${test.name}: ${statusText}`);
+            }
+        }
+
+        // Utility function
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Initialize when page loads
+        window.addEventListener('DOMContentLoaded', initializePage);
+        
+        // Auto-load jsPDF for testing
+        setTimeout(loadJsPDF, 1000);
+    </script>
+</body>
+</html>

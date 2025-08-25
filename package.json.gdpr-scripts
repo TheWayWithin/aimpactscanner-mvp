@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "gdpr:test": "playwright test tests/gdpr/ --reporter=html",
+    "gdpr:test:core": "playwright test tests/gdpr/gdpr-compliance.spec.js",
+    "gdpr:test:gtm": "playwright test tests/gdpr/gtm-consent-validation.spec.js",
+    "gdpr:test:enzuzo": "playwright test tests/gdpr/enzuzo-integration.spec.js",
+    "gdpr:test:browsers": "playwright test tests/gdpr/cross-browser-consent.spec.js",
+    "gdpr:test:email": "playwright test tests/gdpr/temp-email-integration.spec.js",
+    "gdpr:validate": "node tests/gdpr/gdpr-test-runner.js validate",
+    "gdpr:report": "node tests/gdpr/gdpr-test-runner.js report",
+    "gdpr:all": "node tests/gdpr/gdpr-test-runner.js all"
+  }
+}

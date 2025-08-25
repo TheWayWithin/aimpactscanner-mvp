@@ -15,8 +15,9 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '', showRe
       features: [
         'Basic recommendations',
         'Phase A factors',
-        'Watermarked results',
-        'Community support'
+        'Web-only results view',
+        'Community support',
+        '❌ No PDF export'
       ],
       cta: showRegistrationFlow ? 'Start Free Trial' : 'Current Plan',
       highlight: false,
@@ -29,7 +30,7 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '', showRe
       analyses: 'Unlimited',
       features: [
         'Unlimited Phase A analyses',
-        'Professional recommendations',
+        '✨ Professional PDF reports',
         'Clean, exportable results',
         'Educational content',
         'Email support'
@@ -46,8 +47,8 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '', showRe
       analyses: 'Unlimited',
       features: [
         'Everything in Coffee',
+        '📊 Advanced PDF reports',
         'Phase B factors (22 total)',
-        'Advanced analysis',
         'Priority support',
         'API access'
       ],
@@ -63,9 +64,9 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '', showRe
       analyses: 'Unlimited',
       features: [
         'Everything in Professional',
+        '🏢 White-label PDF reports',
         'Team collaboration',
         'Custom reporting',
-        'White-label options',
         'Dedicated support'
       ],
       cta: 'Contact Sales',

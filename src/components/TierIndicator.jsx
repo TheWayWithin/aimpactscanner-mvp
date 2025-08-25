@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { getActualUserTier, getTierDisplayInfo } from '../lib/tierUtils';
 
 const TierIndicator = ({ user, onUpgrade, className = '', tierData = null, refreshTrigger = 0 }) => {
   const [localTierData, setLocalTierData] = useState(null);
@@ -23,18 +24,33 @@ const TierIndicator = ({ user, onUpgrade, className = '', tierData = null, refre
     try {
       setLoading(true);
       
+      // Get the actual tier considering all sources
+      const actualTierInfo = await getActualUserTier(user.id);
+      
+      // Fetch user data for monthly usage
       const { data, error } = await supabase
         .from('users')
-        .select('tier, tier_expires_at, monthly_analyses_used, subscription_status')
+        .select('tier, subscription_tier, tier_expires_at, monthly_analyses_used, subscription_status')
         .eq('id', user.id)
         .single();
 
       if (error) {
         console.error('Error fetching tier data:', error);
-        // Set default for free users if no data found or database issues (406, 409, etc.)
-        setLocalTierData({ tier: 'free', monthly_analyses_used: 0 });
+        // Use actual tier info as fallback
+        setLocalTierData({ 
+          tier: actualTierInfo.tier, 
+          monthly_analyses_used: 0,
+          subscription_status: actualTierInfo.subscriptionStatus,
+          has_active_subscription: actualTierInfo.hasActiveSubscription
+        });
       } else {
-        setLocalTierData(data);
+        // Merge actual tier info with user data
+        setLocalTierData({
+          ...data,
+          tier: actualTierInfo.tier,
+          subscription_status: actualTierInfo.subscriptionStatus,
+          has_active_subscription: actualTierInfo.hasActiveSubscription
+        });
       }
     } catch (error) {
       console.error('Error fetching tier data:', error);
@@ -45,13 +61,8 @@ const TierIndicator = ({ user, onUpgrade, className = '', tierData = null, refre
   };
 
   const getTierDisplayName = (tier) => {
-    const tierNames = {
-      'free': '🆓 Free',
-      'coffee': '☕ Coffee',
-      'professional': '💼 Pro',
-      'enterprise': '🏢 Enterprise'
-    };
-    return tierNames[tier] || tier;
+    const tierInfo = getTierDisplayInfo(tier);
+    return tierInfo.displayName;
   };
 
   const getRemainingAnalyses = () => {
@@ -68,8 +79,16 @@ const TierIndicator = ({ user, onUpgrade, className = '', tierData = null, refre
   };
 
   const getIndicatorColor = () => {
-    if (!localTierData || localTierData.tier !== 'free') return 'bg-green-100 text-green-800';
+    if (!localTierData) return 'bg-gray-100 text-gray-800';
     
+    const tierInfo = getTierDisplayInfo(localTierData.tier);
+    
+    // Use tier-specific colors
+    if (localTierData.tier !== 'free') {
+      return tierInfo.color;
+    }
+    
+    // For free tier, color based on remaining analyses
     const remaining = getRemainingAnalyses();
     if (remaining === 0) return 'bg-red-100 text-red-800';
     if (remaining === 1) return 'bg-yellow-100 text-yellow-800';

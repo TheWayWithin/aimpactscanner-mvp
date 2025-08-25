@@ -325,3 +325,150 @@ body {
 .slide-in-left {
   animation: slide-in-left 0.5s ease-out;
 }
+
+/* --- Phase 4: PDF Export UX & Mobile Optimization --- */
+
+/* Enhanced mobile-responsive modal styling */
+@media (max-width: 640px) {
+  .fixed.inset-0 .bg-white {
+    margin: 10px;
+    max-height: calc(100vh - 20px);
+    border-radius: 12px;
+  }
+  
+  .pdf-upgrade-modal {
+    padding: 16px !important;
+  }
+  
+  .pdf-upgrade-modal h3 {
+    font-size: 1.25rem !important;
+  }
+  
+  .pdf-upgrade-modal .grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}
+
+/* PDF button responsive improvements */
+.pdf-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+@media (min-width: 640px) {
+  .pdf-button-container {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+/* Progress indicator mobile optimization */
+.pdf-progress {
+  width: 100%;
+  max-width: 400px;
+}
+
+@media (max-width: 640px) {
+  .pdf-progress {
+    font-size: 0.875rem;
+  }
+  
+  .pdf-progress .progress-text {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+/* Tooltip responsive behavior */
+@media (max-width: 768px) {
+  .group:hover .opacity-0 {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* Success notification mobile positioning */
+@media (max-width: 640px) {
+  .pdf-success-notification {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    margin: 0;
+    border-radius: 8px;
+  }
+}
+
+/* Enhanced focus states for mobile accessibility */
+.pdf-button:focus-visible {
+  outline: 2px solid var(--mastery-blue);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
+}
+
+/* Touch target improvements */
+@media (pointer: coarse) {
+  .pdf-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .modal-close-button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px;
+  }
+}
+
+/* Animation performance optimization */
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-pulse,
+  .hover-lift:hover,
+  .transition-all,
+  .transition-colors,
+  .transition-transform {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .pdf-button {
+    border: 2px solid;
+  }
+  
+  .bg-gradient-to-r {
+    background: var(--mastery-blue) !important;
+  }
+}
+
+/* Dark mode support for PDF components */
+@media (prefers-color-scheme: dark) {
+  .pdf-upgrade-modal {
+    background-color: #1f2937;
+    color: #f9fafb;
+  }
+  
+  .pdf-upgrade-modal .bg-white {
+    background-color: #374151 !important;
+  }
+  
+  .pdf-upgrade-modal .text-gray-900 {
+    color: #f9fafb !important;
+  }
+  
+  .pdf-upgrade-modal .border-gray-200 {
+    border-color: #4b5563 !important;
+  }
+}

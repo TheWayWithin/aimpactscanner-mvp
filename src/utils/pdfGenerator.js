@@ -78,13 +78,64 @@ export const downloadPDF = (pdfBlob, filename = 'aimpactscanner-test.pdf') => {
  */
 export const testHTMLToCanvas = async (element) => {
   try {
-    const canvas = await html2canvas(element, {
+    // Create a clone to avoid modifying the original
+    const clone = element.cloneNode(true);
+    
+    // Fix oklch and other unsupported color functions
+    const fixColors = (el) => {
+      if (el.style) {
+        const styles = el.style;
+        for (let i = 0; i < styles.length; i++) {
+          const prop = styles[i];
+          const value = styles.getPropertyValue(prop);
+          if (value && value.includes('oklch')) {
+            // Replace oklch with a fallback color
+            styles.setProperty(prop, '#3b82f6', 'important'); // Blue fallback
+          }
+        }
+      }
+      
+      // Recursively fix children
+      if (el.children) {
+        for (let child of el.children) {
+          fixColors(child);
+        }
+      }
+    };
+    
+    fixColors(clone);
+    
+    // Temporarily append clone to body for rendering
+    clone.style.position = 'absolute';
+    clone.style.left = '-9999px';
+    document.body.appendChild(clone);
+    
+    const canvas = await html2canvas(clone, {
       // Basic configuration for testing
       backgroundColor: '#ffffff',
       scale: 2, // Higher quality
       useCORS: true, // Handle external images
-      logging: false // Disable debug logging
+      logging: false, // Disable debug logging
+      onclone: (clonedDoc) => {
+        // Additional cleanup in the cloned document
+        const elements = clonedDoc.querySelectorAll('*');
+        elements.forEach(el => {
+          if (el.style) {
+            const computedStyle = window.getComputedStyle(el);
+            // Check for any oklch colors in computed styles
+            for (let prop of ['color', 'backgroundColor', 'borderColor']) {
+              const value = computedStyle[prop];
+              if (value && value.includes('oklch')) {
+                el.style[prop] = '#3b82f6';
+              }
+            }
+          }
+        });
+      }
     });
+    
+    // Clean up the clone
+    document.body.removeChild(clone);
     
     return canvas;
     

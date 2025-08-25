@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useUsageTracking } from '../hooks/useUsageTracking';
+import { getActualUserTier, getTierDisplayInfo, syncUserTier } from '../lib/tierUtils';
 
 const AccountDashboard = ({ user, className = '' }) => {
   const [accountData, setAccountData] = useState(null);
@@ -24,11 +25,18 @@ const AccountDashboard = ({ user, className = '' }) => {
       setLoading(true);
       setError(null);
 
+      // Get the actual tier considering all sources
+      const actualTierInfo = await getActualUserTier(user.id);
+      
+      // Skip sync due to subscription_tier constraint issues
+      // await syncUserTier(user.id, user.email);
+
       // Fetch user account information
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select(`
           tier,
+          subscription_tier,
           tier_expires_at,
           monthly_analyses_used,
           monthly_reset_date,
@@ -40,6 +48,15 @@ const AccountDashboard = ({ user, className = '' }) => {
         .single();
 
       if (userError) throw userError;
+
+      // Merge actual tier info with user data
+      const mergedUserData = {
+        ...userData,
+        tier: actualTierInfo.tier,
+        subscription_status: actualTierInfo.subscriptionStatus,
+        has_active_subscription: actualTierInfo.hasActiveSubscription,
+        stripe_subscription_id: actualTierInfo.stripeSubscriptionId
+      };
 
       // Fetch recent analyses for usage stats
       const { data: analysesData, error: analysesError } = await supabase
@@ -53,9 +70,18 @@ const AccountDashboard = ({ user, className = '' }) => {
         console.warn('Error fetching analyses:', analysesError);
       }
 
+      // Check for any subscription records
+      const { data: subscriptionData } = await supabase
+        .from('subscriptions')
+        .select('tier, status, stripe_subscription_id, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1);
+
       setAccountData({
-        user: userData,
-        analyses: analysesData || []
+        user: mergedUserData,
+        analyses: analysesData || [],
+        subscription: subscriptionData?.[0] || null
       });
     } catch (error) {
       console.error('Error fetching account data:', error);
@@ -97,8 +123,14 @@ const AccountDashboard = ({ user, className = '' }) => {
   };
 
   const isSubscriptionExpired = () => {
-    if (!accountData?.user?.tier_expires_at) return false;
-    return new Date(accountData.user.tier_expires_at) < new Date();
+    // Check subscription end date first, then tier expiry
+    if (accountData?.subscription?.current_period_end) {
+      return new Date(accountData.subscription.current_period_end) < new Date();
+    }
+    if (accountData?.user?.tier_expires_at) {
+      return new Date(accountData.user.tier_expires_at) < new Date();
+    }
+    return false;
   };
 
   const getSubscriptionStatus = () => {
@@ -186,10 +218,8 @@ const AccountDashboard = ({ user, className = '' }) => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Customer ID</span>
-                  <span className="text-sm font-mono text-gray-500">
-                    {accountData.user.stripe_customer_id 
-                      ? `${accountData.user.stripe_customer_id.slice(0, 8)}...`
-                      : accountData.user.id?.slice(0, 8) || 'Not set'}
+                  <span className="text-sm font-mono text-gray-500" style={{fontSize: '11px'}}>
+                    {accountData.user.stripe_customer_id || 'Not set'}
                   </span>
                 </div>
               </div>
@@ -213,14 +243,28 @@ const AccountDashboard = ({ user, className = '' }) => {
                     {getSubscriptionStatus()}
                   </span>
                 </div>
-                {accountData.user.tier_expires_at && (
+                {(accountData.subscription?.current_period_end || accountData.user.tier_expires_at) && (
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">
-                      {isSubscriptionExpired() ? 'Expired' : 'Expires'}
+                      {isSubscriptionExpired() ? 'Expired' : 'Renews'}
                     </span>
                     <span className="text-sm font-medium">
-                      {formatDate(accountData.user.tier_expires_at)}
+                      {formatDate(accountData.subscription?.current_period_end || accountData.user.tier_expires_at)}
                     </span>
+                  </div>
+                )}
+                {accountData.subscription && (
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600">Subscription ID</span>
+                    <span className="text-sm font-mono text-gray-500" style={{fontSize: '11px'}}>
+                      {accountData.subscription.stripe_subscription_id || 'Not set'}
+                    </span>
+                  </div>
+                )}
+                {accountData.user.has_active_subscription && (
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600">Active Subscription</span>
+                    <span className="text-sm font-medium text-green-600">✓ Yes</span>
                   </div>
                 )}
               </div>

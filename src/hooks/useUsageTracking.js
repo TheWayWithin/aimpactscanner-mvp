@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { getActualUserTier } from '../lib/tierUtils';
+import { supabase } from '../lib/supabaseClient';
 
 // Custom hook for client-side usage tracking
 export const useUsageTracking = (userEmail) => {
@@ -17,8 +19,40 @@ export const useUsageTracking = (userEmail) => {
     loadUsageData();
   }, [userEmail]);
 
-  const loadUsageData = () => {
+  const loadUsageData = async () => {
     try {
+      // Try database sync for authenticated users to get correct tier
+      if (userEmail && userEmail !== 'anonymous') {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            const tierInfo = await getActualUserTier(user.id);
+            
+            // Update localStorage with correct tier from database
+            if (tierInfo && tierInfo.tier) {
+              const unlimited = ['coffee', 'professional', 'enterprise'].includes(tierInfo.tier);
+              const stored = localStorage.getItem(STORAGE_KEY);
+              const existingData = stored ? JSON.parse(stored) : {};
+              
+              const syncedData = {
+                ...existingData,
+                tier: tierInfo.tier,
+                isUnlimited: unlimited,
+                lastSynced: new Date().toISOString(),
+                monthlyUsed: existingData.monthlyUsed || 0,
+                lastUpdated: existingData.lastUpdated || new Date().toISOString()
+              };
+              
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(syncedData));
+              console.log(`Synced tier from database: ${tierInfo.tier} for ${userEmail}`);
+            }
+          }
+        } catch (dbError) {
+          console.warn('Database tier sync failed, using localStorage fallback:', dbError);
+        }
+      }
+      
+      // Now load from localStorage
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const data = JSON.parse(stored);
@@ -34,7 +68,7 @@ export const useUsageTracking = (userEmail) => {
         } else {
           setUsageData({
             monthlyUsed: data.monthlyUsed || 0,
-            remaining: FREE_TIER_LIMIT - (data.monthlyUsed || 0),
+            remaining: data.isUnlimited ? Infinity : FREE_TIER_LIMIT - (data.monthlyUsed || 0),
             resetDate: getMonthResetDate(),
             isUnlimited: data.isUnlimited || false,
             tier: data.tier || 'free'

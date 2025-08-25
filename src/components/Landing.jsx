@@ -129,6 +129,21 @@ function Landing({ onAnalysisComplete }) {
                 </div>
               </div>
             </div>
+            {/* Sign In / Sign Up buttons */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => window.location.href = '/login'}
+                className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => window.location.href = '/register'}
+                className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Sign Up
+              </button>
+            </div>
           </div>
         </div>
       </header>
