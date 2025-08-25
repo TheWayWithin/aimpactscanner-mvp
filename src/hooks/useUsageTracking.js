@@ -6,7 +6,8 @@ export const useUsageTracking = (userEmail) => {
     monthlyUsed: 0,
     remaining: 3,
     resetDate: null,
-    isUnlimited: false
+    isUnlimited: false,
+    tier: 'free'
   });
 
   const STORAGE_KEY = userEmail ? `usage_${userEmail}` : 'usage_anonymous';
@@ -35,7 +36,8 @@ export const useUsageTracking = (userEmail) => {
             monthlyUsed: data.monthlyUsed || 0,
             remaining: FREE_TIER_LIMIT - (data.monthlyUsed || 0),
             resetDate: getMonthResetDate(),
-            isUnlimited: data.isUnlimited || false
+            isUnlimited: data.isUnlimited || false,
+            tier: data.tier || 'free'
           });
         }
       } else {
@@ -49,10 +51,14 @@ export const useUsageTracking = (userEmail) => {
   };
 
   const resetMonthlyUsage = () => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    const existingTier = stored ? JSON.parse(stored).tier : 'free';
+    
     const resetData = {
       monthlyUsed: 0,
       lastUpdated: new Date().toISOString(),
-      isUnlimited: false
+      isUnlimited: false,
+      tier: existingTier
     };
     
     localStorage.setItem(STORAGE_KEY, JSON.stringify(resetData));
@@ -61,7 +67,8 @@ export const useUsageTracking = (userEmail) => {
       monthlyUsed: 0,
       remaining: FREE_TIER_LIMIT,
       resetDate: getMonthResetDate(),
-      isUnlimited: false
+      isUnlimited: false,
+      tier: existingTier
     });
   };
 
@@ -78,7 +85,8 @@ export const useUsageTracking = (userEmail) => {
     const updatedData = {
       monthlyUsed: newUsed,
       lastUpdated: new Date().toISOString(),
-      isUnlimited: usageData.isUnlimited
+      isUnlimited: usageData.isUnlimited,
+      tier: usageData.tier
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
@@ -92,11 +100,12 @@ export const useUsageTracking = (userEmail) => {
     return true;
   };
 
-  const setUnlimitedAccess = (unlimited = true) => {
+  const setUnlimitedAccess = (unlimited = true, tier = null) => {
     const updatedData = {
       monthlyUsed: usageData.monthlyUsed,
       lastUpdated: new Date().toISOString(),
-      isUnlimited: unlimited
+      isUnlimited: unlimited,
+      tier: tier || usageData.tier
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
@@ -104,8 +113,35 @@ export const useUsageTracking = (userEmail) => {
     setUsageData(prev => ({
       ...prev,
       isUnlimited: unlimited,
+      tier: tier || prev.tier,
       remaining: unlimited ? Infinity : Math.max(0, FREE_TIER_LIMIT - prev.monthlyUsed)
     }));
+  };
+
+  // New function to update user tier
+  const setUserTier = (newTier) => {
+    const unlimited = ['coffee', 'professional', 'enterprise'].includes(newTier);
+    
+    const updatedData = {
+      monthlyUsed: usageData.monthlyUsed,
+      lastUpdated: new Date().toISOString(),
+      isUnlimited: unlimited,
+      tier: newTier
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
+    
+    setUsageData(prev => ({
+      ...prev,
+      tier: newTier,
+      isUnlimited: unlimited,
+      remaining: unlimited ? Infinity : Math.max(0, FREE_TIER_LIMIT - prev.monthlyUsed)
+    }));
+  };
+
+  // Check if user has access to PDF export (Coffee tier and above)
+  const hasPDFAccess = () => {
+    return ['coffee', 'professional', 'enterprise'].includes(usageData.tier);
   };
 
   const getMonthResetDate = () => {
@@ -132,6 +168,8 @@ export const useUsageTracking = (userEmail) => {
     usageData,
     incrementUsage,
     setUnlimitedAccess,
+    setUserTier,
+    hasPDFAccess,
     canAnalyze,
     getDaysUntilReset,
     resetMonthlyUsage
@@ -162,7 +200,9 @@ export const checkUsageLimit = (userEmail) => {
     return {
       canAnalyze: data.isUnlimited || remaining > 0,
       remaining: remaining,
-      isUnlimited: data.isUnlimited
+      isUnlimited: data.isUnlimited,
+      tier: data.tier || 'free',
+      hasPDFAccess: ['coffee', 'professional', 'enterprise'].includes(data.tier || 'free')
     };
   } catch (error) {
     console.error('Error checking usage limit:', error);

@@ -1,8 +1,11 @@
 // Simplified Results Dashboard - works without database
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { addToHistory } from './AnalysisHistory';
+import TierPDFButton from './TierPDFButton';
 
-function SimpleResultsDashboard({ analysisId, url, analysisData }) {
+function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user }) {
+  const [pdfStatus, setPdfStatus] = useState(null);
+
   // Debug logging
   console.log('📊 SimpleResultsDashboard props:', JSON.stringify({ 
     analysisId, 
@@ -13,6 +16,18 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
     overall_score: analysisData?.overall_score,
     first_factor_name: analysisData?.factors?.[0]?.name
   }, null, 2));
+
+  // Handle PDF generation callback
+  const handlePDFGenerated = (reportInfo) => {
+    setPdfStatus({
+      success: true,
+      message: `Report "${reportInfo.filename}" generated successfully!`,
+      details: `Analysis ID: ${reportInfo.analysisId} | Score: ${reportInfo.overallScore}/100 | Factors: ${reportInfo.factorsCount}`
+    });
+    
+    // Clear status after 5 seconds
+    setTimeout(() => setPdfStatus(null), 5000);
+  };
   
   // Generate dynamic score based on URL for more realistic demo
   const generateScore = (url) => {
@@ -271,18 +286,53 @@ function SimpleResultsDashboard({ analysisId, url, analysisData }) {
         </div>
       )}
 
+      {/* PDF Generation Status */}
+      {pdfStatus && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium text-green-800">{pdfStatus.message}</p>
+              <p className="text-sm text-green-700 mt-1">{pdfStatus.details}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
               {isRealAnalysis ? 'AI Impact Analysis Results' : 'Sample Analysis Report'}
             </h1>
-            <p className="text-gray-600 break-all">{results.url}</p>
+            <p className="text-gray-600 break-all mb-3">{results.url}</p>
+            
+            {/* Tier-Based PDF Export Button */}
+            <div className="flex items-center gap-3">
+              <TierPDFButton 
+                analysisId={analysisId}
+                url={results.url}
+                analysisData={results}
+                onReportGenerated={handlePDFGenerated}
+                userEmail={userEmail}
+                user={user}
+              />
+              <span className="text-sm text-gray-500">
+                Professional PDF report with detailed recommendations
+              </span>
+            </div>
           </div>
-          <div className="text-right">
+          <div className="text-right ml-6">
             <div className="text-3xl font-bold text-blue-600" data-testid="overall-score">{results.overall_score}</div>
             <div className="text-sm text-gray-600">Overall Score</div>
+            <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium mt-2 ${getScoreColor(results.overall_score)}`}>
+              {getScoreLabel(results.overall_score)}
+            </div>
           </div>
         </div>
         
