@@ -3,7 +3,9 @@
 
 export const ANALYTICS_CONFIG = {
   // Google Tag Manager Configuration
-  GTM_CONTAINER_ID: import.meta.env.VITE_GTM_CONTAINER_ID || 'GTM-WCQGG5N6',
+  // Temporarily disabled to remove Enzuzo privacy widget
+  GTM_CONTAINER_ID: import.meta.env.VITE_GTM_CONTAINER_ID || '',
+  // GTM_CONTAINER_ID: import.meta.env.VITE_GTM_CONTAINER_ID || 'GTM-WCQGG5N6',
   
   // GA4 Configuration (configured via GTM)
   GA4_MEASUREMENT_ID: import.meta.env.VITE_GA4_MEASUREMENT_ID || 'G-EJ5M874QBZ',

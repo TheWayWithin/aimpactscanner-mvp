@@ -50,9 +50,9 @@ Parse the arguments to determine:
 
 3. **Mission Execution - IMMEDIATE ACTION WITH MANDATORY UPDATES**:
    - **CREATE/UPDATE `project-plan.md`** with all planned mission tasks marked [ ]
-   - **IMMEDIATELY DELEGATE** to specialists using Task tool with subagent_type parameter
-   - **WAIT FOR EACH TASK TOOL RESPONSE** before proceeding to next
-   - **UPDATE `project-plan.md`** mark tasks [x] ONLY after Task tool confirms completion
+   - **IMMEDIATELY DELEGATE** to specialists using `@agent` syntax
+   - **WAIT FOR EACH AGENT RESPONSE** before proceeding to next
+   - **UPDATE `project-plan.md`** mark tasks [x] ONLY after agent confirms completion
    - **LOG TO `progress.md`** any issues, blockers, or unexpected problems
    - **UPDATE `progress.md`** with root causes and fixes when resolved
    - **PHASE END UPDATES** required before starting next phase
@@ -62,52 +62,49 @@ Parse the arguments to determine:
 
 - You orchestrate but do NOT implement
 - ALL technical work MUST be delegated to specialists
-- **DELEGATE IMMEDIATELY** - use Task tool with subagent_type='agent_name' parameter
-- **NO AWAITING CONFIRMATIONS** - call Task tool and wait for actual responses
+- **DELEGATE IMMEDIATELY** - use `@agent` syntax to call specialists now
+- **NO AWAITING CONFIRMATIONS** - call agents and wait for their responses
 - **MANDATORY project-plan.md UPDATES**: Update before each phase and after each completion
 - **MANDATORY progress.md LOGGING**: Log all issues and resolutions immediately
-- Track ACTUAL completion - only mark [x] when Task tool returns completion
-- If Task tool doesn't respond with work, immediately try different approach or agent
-- Report "Currently using Task tool with subagent_type='[agent]'" while waiting for response
+- Track ACTUAL completion - only mark [x] when specialist confirms
+- If agent doesn't respond, immediately try different approach or agent
+- Report "Currently delegating to @[agent]" while waiting for response
 - **PHASE END REQUIREMENT**: Must update both files before starting next phase
 
 ### IMMEDIATE DELEGATION EXAMPLES
 
-**RIGHT**: "Using Task tool with subagent_type='tester' to validate the coffee button fixes..."
-**WRONG**: "Will delegate to @tester when ready" or "@tester please validate..."
+**RIGHT**: "Delegating now to @tester: Please validate the coffee button fixes..."
+**WRONG**: "Will delegate to @tester when ready"
 
-**RIGHT**: "Calling Task tool with subagent_type='developer' for environment variable debugging..."
-**WRONG**: "Planning to have developer work on environment issues" or "@developer begin..."
+**RIGHT**: "@developer Begin environment variable debugging now..."
+**WRONG**: "Planning to have @developer work on environment issues"
 
 ### TROUBLESHOOTING NON-RESPONSIVE AGENTS
 
-If Task tool doesn't return actual work:
+If agents don't respond with actual work:
 
 1. **Immediate Escalation**:
-   ```
-   # Task tool didn't return work
-   Task(subagent_type='strategist', description='Alternative approach needed', 
-        prompt='Previous delegation failed. Provide alternative approach for [task]...')
+   ```bash
+   # Agent didn't respond with work
+   @strategist The previous agent didn't complete the task. Please provide alternative approach...
    ```
 
 2. **Task Breakdown**:
-   ```
+   ```bash
    # Break complex tasks into smaller pieces
-   Task(subagent_type='developer', description='Identify env issue',
-        prompt='Step 1: Just identify the environment variable loading issue...')
+   @developer Step 1: Just identify the environment variable loading issue...
    ```
 
 3. **Alternative Agent**:
-   ```
+   ```bash
    # Try different specialist
-   Task(subagent_type='analyst', description='Analyze env problem',
-        prompt='Developer unavailable. Please analyze the environment variable problem...')
+   @analyst Since @developer is not responding, please analyze the environment variable problem...
    ```
 
 4. **Direct User Escalation**:
-   ```
-   MISSION BLOCKED: Task tool not returning useful responses.
-   USER ACTION REQUIRED: Please use direct @agent calls manually
+   ```bash
+   MISSION BLOCKED: @agent not responding to delegation. 
+   USER ACTION REQUIRED: Please restart Claude Code or try manual @agent call
    ```
 
 ### SUCCESS INDICATORS
@@ -116,21 +113,18 @@ If Task tool doesn't return actual work:
 - Progress.md gets updated with actual results
 - Project-plan.md reflects completed work
 
-### SPECIALIST ROSTER (Use with Task tool subagent_type parameter)
+### SPECIALIST ROSTER
 
-- strategist - Requirements and strategic planning
-- architect - Technical design and architecture  
-- developer - Code implementation
-- designer - UI/UX design
-- tester - Quality assurance
-- documenter - Technical documentation
-- operator - DevOps and deployment
-- support - Customer success
-- analyst - Data and metrics
-- marketer - Growth and content
-
-**CRITICAL**: Use these names as the subagent_type parameter value when calling Task tool.
-Example: Task(subagent_type='developer', description='Fix bug', prompt='...')
+- @strategist - Requirements and strategic planning
+- @architect - Technical design and architecture  
+- @developer - Code implementation
+- @designer - UI/UX design
+- @tester - Quality assurance
+- @documenter - Technical documentation
+- @operator - DevOps and deployment
+- @support - Customer success
+- @analyst - Data and metrics
+- @marketer - Growth and content
 
 ### EXAMPLE USAGE
 
