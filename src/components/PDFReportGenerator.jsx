@@ -252,9 +252,18 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
       
       // Overall Score Box
       const scoreBoxY = currentY;
-      pdf.setFillColor(summary.overall.color.substring(1, 3) * 16 + parseInt(summary.overall.color.substring(1, 3), 16) * 0.1, 
-                      parseInt(summary.overall.color.substring(3, 5), 16) * 0.1,
-                      parseInt(summary.overall.color.substring(5, 7), 16) * 0.1, 0.1);
+      // Convert hex color to RGB with light background
+      const hexToRgb = (hex) => {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : { r: 200, g: 200, b: 200 };
+      };
+      const rgb = hexToRgb(summary.overall.color);
+      // Light tinted background (10% opacity effect)
+      pdf.setFillColor(255 - (255 - rgb.r) * 0.1, 255 - (255 - rgb.g) * 0.1, 255 - (255 - rgb.b) * 0.1);
       pdf.rect(contentWidth - 40, scoreBoxY - 5, 40, 20, 'F');
       
       pdf.setTextColor(summary.overall.color);
@@ -329,14 +338,25 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
         pdf.rect(margin + xOffset, yPos, contentWidth / 2 - 5, 22, 'F');
         
         pdf.setTextColor('#1F2937');
-        pdf.setFontSize(11);
+        pdf.setFontSize(9);
         pdf.setFont('helvetica', 'bold');
-        pdf.text(`${pillar.icon} ${pillar.name}`, margin + xOffset + 3, yPos + 6);
+        // Use abbreviated pillar names or split into two lines
+        pdf.setFontSize(8);
+        const pillarWords = pillar.name.split(' ');
+        if (pillarWords.length > 3) {
+          // For long names, use first line for main words
+          const firstLine = pillarWords.slice(0, 2).join(' ');
+          const secondLine = pillarWords.slice(2).join(' ');
+          pdf.text(firstLine, margin + xOffset + 3, yPos + 5);
+          pdf.text(secondLine, margin + xOffset + 3, yPos + 8);
+        } else {
+          pdf.text(pillar.name, margin + xOffset + 3, yPos + 6);
+        }
         
-        pdf.setFontSize(16);
+        pdf.setFontSize(14);
         pdf.setFont('helvetica', 'bold');
         pdf.setTextColor(pillar.color);
-        pdf.text(`${pillar.score}`, margin + xOffset + 3, yPos + 14);
+        pdf.text(`${pillar.score}`, margin + xOffset + 3, yPos + 13);
         
         pdf.setFontSize(9);
         pdf.setFont('helvetica', 'normal');
@@ -365,13 +385,14 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
             pdf.setFillColor(248, 250, 252);
             pdf.rect(margin - 2, currentY, contentWidth + 4, 12, 'F');
             
-            addText(`${pillar.icon} ${pillar.name}`, margin, currentY + 3, { 
-              fontSize: 14, 
-              fontStyle: 'bold', 
-              color: pillar.color 
-            });
+            // Place text inside the blue box properly
+            pdf.setTextColor(pillar.color);
+            pdf.setFontSize(12);
+            pdf.setFont('helvetica', 'bold');
+            // Skip emoji icons as jsPDF doesn't handle them well
+            pdf.text(pillar.name, margin, currentY + 8);
             
-            currentY += 8;
+            currentY += 15; // Add more space to prevent overlap
             
             // Factor details
             pillar.factors.forEach(factor => {
