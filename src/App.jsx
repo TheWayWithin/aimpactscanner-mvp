@@ -862,6 +862,17 @@ function AppContent() {
             localStorage.removeItem(key);
           });
           
+          // Set state to login view before signing out
+          setCurrentView('login');
+          setSession(null);
+          setUserTier('free');
+          setUsageData({
+            used: 0,
+            remaining: 5,
+            limit: 5,
+            analysesThisMonth: []
+          });
+          
           // Sign out from Supabase
           try {
             await supabase.auth.signOut();
@@ -872,9 +883,6 @@ function AppContent() {
           // Clear ALL localStorage to ensure clean state
           localStorage.clear();
           sessionStorage.clear();
-          
-          // Force hard reload to ensure clean state
-          window.location.reload(true);
         }}
       />
 
