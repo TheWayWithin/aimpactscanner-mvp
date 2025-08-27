@@ -868,6 +868,55 @@ function AppContent() {
     );
   }
 
+  // Handle privacy, terms, contact, and about pages (accessible without authentication)
+  if (currentView === 'privacy') {
+    return (
+      <div className="min-h-screen flex flex-col">
+        {/* <SimpleConsentBanner /> */}
+        <div className="flex-grow">
+          <PrivacyPolicyPage />
+        </div>
+        <Footer onNavigate={setCurrentView} />
+      </div>
+    );
+  }
+  
+  if (currentView === 'terms') {
+    return (
+      <div className="min-h-screen flex flex-col">
+        {/* <SimpleConsentBanner /> */}
+        <div className="flex-grow">
+          <TermsOfServicePage />
+        </div>
+        <Footer onNavigate={setCurrentView} />
+      </div>
+    );
+  }
+  
+  if (currentView === 'contact') {
+    return (
+      <div className="min-h-screen flex flex-col">
+        {/* <SimpleConsentBanner /> */}
+        <div className="flex-grow">
+          <ContactPage />
+        </div>
+        <Footer onNavigate={setCurrentView} />
+      </div>
+    );
+  }
+  
+  if (currentView === 'about') {
+    return (
+      <div className="min-h-screen flex flex-col">
+        {/* <SimpleConsentBanner /> */}
+        <div className="flex-grow">
+          <AboutPage />
+        </div>
+        <Footer onNavigate={setCurrentView} />
+      </div>
+    );
+  }
+
   // Show landing page for non-authenticated users by default
   if (!session) {
     if (currentView === 'landing' || currentView === 'dashboard' || currentView === 'input') {
@@ -1125,21 +1174,7 @@ function AppContent() {
 
         {/* ENZUZO TEST COMPONENT REMOVED - GDPR testing complete */}
 
-        {currentView === 'privacy' && (
-          <PrivacyPolicyPage />
-        )}
-
-        {currentView === 'terms' && (
-          <TermsOfServicePage />
-        )}
-
-        {currentView === 'contact' && (
-          <ContactPage />
-        )}
-
-        {currentView === 'about' && (
-          <AboutPage />
-        )}
+        {/* Privacy, Terms, Contact, and About pages are now handled above for both authenticated and non-authenticated users */}
       </main>
 
       <Footer onNavigate={setCurrentView} />
