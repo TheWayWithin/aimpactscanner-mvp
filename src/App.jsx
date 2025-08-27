@@ -17,6 +17,7 @@ import PreviewResults from './components/PreviewResults';
 import AuthWithPassword from './components/AuthWithPassword';
 import RegistrationFlow from './components/RegistrationFlow';
 import UnifiedRegistration from './components/UnifiedRegistration';
+import CoffeeTierSignup from './components/CoffeeTierSignup'; // New conversion-optimized signup
 import Login from './components/Login';
 import SimpleAnalysisProgress from './components/SimpleAnalysisProgress';
 import SimpleResultsDashboard from './components/SimpleResultsDashboard';
@@ -845,9 +846,12 @@ function AppContent() {
     return (
       <>
         {/* <SimpleConsentBanner /> */}
-        <AuthWithPassword 
-          defaultMode="register"
-          onSuccess={() => setCurrentView('dashboard')}
+        <CoffeeTierSignup 
+          onRegistrationComplete={(user) => {
+            setSession({ user });
+            setCurrentView('dashboard');
+          }}
+          onNavigate={(view) => setCurrentView(view)}
         />
       </>
     );

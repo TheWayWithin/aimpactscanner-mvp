@@ -1,0 +1,476 @@
+// CoffeeTierSignup.jsx - Conversion-optimized signup page focused on Coffee tier
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabaseClient';
+import { useUpgrade } from './UpgradeHandler';
+import AILogo from './AILogo';
+
+const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
+  const [selectedTier, setSelectedTier] = useState('coffee'); // Default to Coffee tier
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  const { handleUpgrade } = useUpgrade();
+
+  // Password strength calculation
+  const calculatePasswordStrength = () => {
+    if (!password) return 0;
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/\d/.test(password)) strength++;
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+    return strength;
+  };
+
+  const passwordStrength = calculatePasswordStrength();
+
+  const validateForm = () => {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setMessage('Please enter a valid email address');
+      setMessageType('error');
+      return false;
+    }
+
+    if (passwordStrength < 3) {
+      setMessage('Password must be stronger. Include uppercase, lowercase, and numbers.');
+      setMessageType('error');
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      setMessage('Passwords do not match');
+      setMessageType('error');
+      return false;
+    }
+
+    if (!agreeToTerms) {
+      setMessage('Please agree to the Terms of Service');
+      setMessageType('error');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+
+    setLoading(true);
+    setMessage('');
+
+    try {
+      // Create the user account
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: email.trim().toLowerCase(),
+        password: password,
+        options: {
+          emailRedirectTo: `${window.location.origin}`,
+          data: {
+            selected_tier: selectedTier,
+            signup_source: 'coffee-tier-signup'
+          }
+        }
+      });
+
+      if (authError) throw authError;
+
+      // If Coffee tier selected, redirect to Stripe checkout
+      if (selectedTier === 'coffee' && authData?.user) {
+        setMessage('Account created! Redirecting to secure payment...');
+        setMessageType('success');
+        
+        // Store user data for post-payment flow
+        sessionStorage.setItem('pendingCoffeeTier', JSON.stringify({
+          userId: authData.user.id,
+          email: email.trim().toLowerCase(),
+          tier: 'coffee'
+        }));
+
+        // Initiate Stripe checkout
+        setTimeout(async () => {
+          await handleUpgrade('coffee');
+        }, 1500);
+      } else {
+        // Free tier - direct to dashboard
+        setMessage('Welcome! Your free account is ready.');
+        setMessageType('success');
+        setTimeout(() => {
+          onRegistrationComplete?.(authData.user);
+        }, 1500);
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      if (error.message?.includes('already registered')) {
+        setMessage('This email is already registered. Please sign in instead.');
+        setMessageType('error');
+      } else {
+        setMessage(error.message || 'Signup failed. Please try again.');
+        setMessageType('error');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const tierOptions = [
+    { 
+      id: 'coffee', 
+      label: '☕ COFFEE - 100 monthly ($4.95/month)',
+      recommended: true 
+    },
+    { 
+      id: 'free', 
+      label: '🆓 FREE - 3 monthly ($0/month)',
+      recommended: false 
+    }
+  ];
+
+  // Dynamic benefits based on selected tier
+  const getBenefits = () => {
+    if (selectedTier === 'coffee') {
+      return {
+        title: '☕ COFFEE Plan Benefits',
+        items: [
+          { icon: '✅', text: '100 monthly analysis credits', highlight: true },
+          { icon: '✅', text: '200 pages per analysis (10x more than free)', highlight: true },
+          { icon: '✅', text: 'AI-powered content scoring for all pages', highlight: false },
+          { icon: '✅', text: 'Priority processing and support', highlight: false },
+          { icon: '✅', text: '30-day money-back guarantee', highlight: false }
+        ]
+      };
+    } else {
+      return {
+        title: '🆓 FREE Plan Limitations',
+        items: [
+          { icon: '⚠️', text: 'Only 3 analyses per month', warning: true },
+          { icon: '❌', text: 'Limited to 20 pages per analysis', strike: true },
+          { icon: '❌', text: 'Basic scoring only (no AI insights)', strike: true },
+          { icon: '❌', text: 'No priority support', strike: true },
+          { icon: '❌', text: 'No export to PDF options', strike: true }
+        ]
+      };
+    }
+  };
+
+  const benefits = getBenefits();
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl w-full">
+        {/* Logo Header */}
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <AILogo className="h-16 w-auto" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900">Create Your Account</h1>
+          <p className="mt-2 text-gray-600">Join early adopters making their businesses AI-discoverable</p>
+        </div>
+
+        <div className="bg-white shadow-xl rounded-lg overflow-hidden">
+          <div className="flex flex-col lg:flex-row">
+            {/* Left Column - Form */}
+            <div className="lg:w-1/2 p-8 lg:p-12">
+              <form onSubmit={handleSignUp} className="space-y-6">
+                {/* Tier Selection */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Select Your Plan
+                  </label>
+                  <select
+                    value={selectedTier}
+                    onChange={(e) => setSelectedTier(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    disabled={loading}
+                  >
+                    {tierOptions.map(tier => (
+                      <option key={tier.id} value={tier.id}>
+                        {tier.label}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  {selectedTier === 'coffee' && (
+                    <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-center">
+                        <span className="text-green-600 font-semibold">✓ SMART CHOICE!</span>
+                        <span className="ml-2 text-sm text-green-700">
+                          100 monthly analyses + 30-day guarantee + cancel instantly
+                        </span>
+                      </div>
+                      <p className="text-xs text-green-600 mt-1">
+                        After signup, secure Stripe payment ($4.95/month)
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Create a secure password"
+                      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                      disabled={loading}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    >
+                      <span className="text-gray-500 text-sm">
+                        {showPassword ? '👁️' : '👁️‍🗨️'}
+                      </span>
+                    </button>
+                  </div>
+                  {password && (
+                    <div className="mt-2">
+                      <div className="flex items-center">
+                        <div className="flex-1 bg-gray-200 rounded-full h-2 mr-2">
+                          <div 
+                            className={`h-2 rounded-full transition-all ${
+                              passwordStrength === 0 ? 'w-0' :
+                              passwordStrength === 1 ? 'w-1/5 bg-red-500' :
+                              passwordStrength === 2 ? 'w-2/5 bg-orange-500' :
+                              passwordStrength === 3 ? 'w-3/5 bg-yellow-500' :
+                              passwordStrength === 4 ? 'w-4/5 bg-blue-500' :
+                              'w-full bg-green-500'
+                            }`}
+                          />
+                        </div>
+                        <span className={`text-xs ${
+                          passwordStrength < 3 ? 'text-red-600' : 'text-green-600'
+                        }`}>
+                          {passwordStrength === 0 ? '' :
+                           passwordStrength < 3 ? 'Weak' :
+                           passwordStrength < 5 ? 'Good' : 'Strong'}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Confirm Password */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm your password"
+                      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                      disabled={loading}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    >
+                      <span className="text-gray-500 text-sm">
+                        {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Terms Agreement */}
+                <div className="flex items-start">
+                  <input
+                    type="checkbox"
+                    checked={agreeToTerms}
+                    onChange={(e) => setAgreeToTerms(e.target.checked)}
+                    className="h-4 w-4 text-blue-600 rounded border-gray-300 mt-1"
+                    disabled={loading}
+                  />
+                  <label className="ml-2 text-sm text-gray-600">
+                    By creating an account, you agree to our{' '}
+                    <a href="/terms" className="text-blue-600 hover:text-blue-700">
+                      Terms of Service
+                    </a>{' '}
+                    and{' '}
+                    <a href="/privacy" className="text-blue-600 hover:text-blue-700">
+                      Privacy Policy
+                    </a>
+                  </label>
+                </div>
+
+                {/* Error/Success Message */}
+                {message && (
+                  <div className={`p-3 rounded-lg text-sm ${
+                    messageType === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
+                    messageType === 'success' ? 'bg-green-50 text-green-700 border border-green-200' :
+                    'bg-blue-50 text-blue-700 border border-blue-200'
+                  }`}>
+                    {message}
+                  </div>
+                )}
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={loading || !agreeToTerms || passwordStrength < 3}
+                  className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors ${
+                    loading || !agreeToTerms || passwordStrength < 3
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  }`}
+                >
+                  {loading ? 'Creating Account...' : 
+                   selectedTier === 'coffee' ? 'Create Account → ' : 'Create Free Account'}
+                </button>
+
+                {/* Sign In Link */}
+                <p className="text-center text-sm text-gray-600">
+                  Already have an account?{' '}
+                  <button
+                    type="button"
+                    onClick={() => onNavigate?.('login')}
+                    className="text-blue-600 hover:text-blue-700 font-semibold"
+                  >
+                    Sign in
+                  </button>
+                </p>
+              </form>
+            </div>
+
+            {/* Right Column - Benefits */}
+            <div className="lg:w-1/2 bg-gray-50 p-8 lg:p-12 border-l border-gray-200">
+              {/* Benefits Section */}
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                  {benefits.title}
+                </h3>
+                <div className="space-y-3">
+                  {benefits.items.map((item, index) => (
+                    <div 
+                      key={index}
+                      className={`flex items-start ${
+                        item.warning ? 'text-orange-600' :
+                        item.strike ? 'text-gray-400' :
+                        item.highlight ? 'text-green-600 font-semibold' :
+                        'text-gray-700'
+                      }`}
+                    >
+                      <span className="mr-3 text-lg">{item.icon}</span>
+                      <span className={item.strike ? 'line-through' : ''}>
+                        {item.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Risk Reversal Section */}
+              <div className="border-t border-gray-300 pt-8">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                  🛡️ ZERO RISK - We Remove ALL Your Fears
+                </h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-gray-800 flex items-center">
+                      💰 30-Day Money Back Guarantee
+                    </h4>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Don't like the results? Get every penny back. No questions asked. No hoops to jump through.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-gray-800 flex items-center">
+                      ⚡ Cancel Instantly Anytime
+                    </h4>
+                    <p className="text-sm text-gray-600 mt-1">
+                      One click cancellation. No phone calls. No retention tactics. Cancel in 10 seconds flat.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-gray-800 flex items-center">
+                      🏆 Results in 24 Hours or Refund
+                    </h4>
+                    <p className="text-sm text-gray-600 mt-1">
+                      See dramatic improvements within 24 hours or get a full refund immediately.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-gray-800 flex items-center">
+                      🚀 Outperform Competitors or Refund
+                    </h4>
+                    <p className="text-sm text-gray-600 mt-1">
+                      We find 3x more pages than competitors or you get your money back. Guaranteed.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Bottom Trust Badge */}
+                <div className="mt-8 p-4 bg-white rounded-lg border border-gray-200">
+                  <div className="flex items-center justify-center text-sm text-gray-600">
+                    <span className="mr-2">✅</span>
+                    <span className="font-semibold">Built by Expert Solopreneur</span>
+                    <span className="mx-2">•</span>
+                    <span className="mr-2">✅</span>
+                    <span className="font-semibold">Not VC-Funded BS</span>
+                  </div>
+                  <div className="flex items-center justify-center text-sm text-gray-600 mt-2">
+                    <span className="mr-2">✅</span>
+                    <span className="font-semibold">Real Results for Real Businesses</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Security Notice */}
+              <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h4 className="font-semibold text-blue-900 flex items-center">
+                  🔒 Secure & Private
+                </h4>
+                <p className="text-sm text-blue-800 mt-1">
+                  Your data is encrypted and never shared. We only analyze public content and generate files you control.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CoffeeTierSignup;
