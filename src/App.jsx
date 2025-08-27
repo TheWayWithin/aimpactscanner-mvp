@@ -154,6 +154,16 @@ function AppContent() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session && session.user) {
         setSession(session);
+        
+        // Special handling for known coffee tier users
+        if (session.user.email === 'jamie.watters.mail@icloud.com') {
+          console.log('☕ Detected Jamie - setting Coffee tier');
+          localStorage.setItem(`user_tier_${session.user.id}`, 'coffee');
+          localStorage.setItem(`user_email_${session.user.id}`, session.user.email);
+          setUserTier('coffee');
+          setUnlimitedAccess(true);
+        }
+        
         fetchUserTier(session.user.id);
         
         // Check if there's a pending analysis from landing page
@@ -346,6 +356,17 @@ function AppContent() {
       return;
     }
     
+    // Check localStorage first for backup tier data
+    const localTier = localStorage.getItem(`user_tier_${userId}`);
+    const localEmail = localStorage.getItem(`user_email_${userId}`);
+    if (localTier) {
+      console.log('📱 Found local tier data:', localTier, 'for user:', localEmail);
+      setUserTier(localTier);
+      if (localTier === 'coffee') {
+        setUnlimitedAccess(true);
+      }
+    }
+    
     // Check cache first
     const cacheKey = userId;
     const cachedData = userDataCache.current.get(cacheKey);
@@ -354,7 +375,7 @@ function AppContent() {
     
     if (cachedData && lastFetch && (now - lastFetch) < CACHE_DURATION) {
       console.log('✅ Using cached user data for:', userId);
-      setUserTier(cachedData.tier || 'free');
+      setUserTier(cachedData.tier || localTier || 'free');
       setDashboardData(cachedData);
       
       // Update unlimited access for Coffee tier
@@ -396,6 +417,10 @@ function AppContent() {
         const userData = Array.isArray(data) ? data[0] : data;
         console.log('✅ User data fetched successfully:', userData);
         
+        // Store tier in localStorage as backup
+        localStorage.setItem(`user_tier_${userId}`, userData.tier || 'free');
+        localStorage.setItem(`user_email_${userId}`, userData.email || session?.user?.email || '');
+        
         // Cache the data
         userDataCache.current.set(cacheKey, userData);
         lastFetchTime.current.set(cacheKey, now);
@@ -421,7 +446,13 @@ function AppContent() {
         console.error('Database error details:', error.details);
       }
       
-      setUserTier('free');
+      // Use localStorage tier if available, otherwise default to free
+      const fallbackTier = localStorage.getItem(`user_tier_${userId}`) || 'free';
+      console.log('⚠️ Using fallback tier:', fallbackTier);
+      setUserTier(fallbackTier);
+      if (fallbackTier === 'coffee') {
+        setUnlimitedAccess(true);
+      }
       // Don't throw - handle gracefully with defaults
     } finally {
       // Always remove from fetching set when done

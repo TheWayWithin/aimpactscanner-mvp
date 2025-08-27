@@ -65,6 +65,11 @@ function UserInitializer({ session, onUserReady }) {
 
       if (existingUser) {
         console.log('✅ UserInitializer: User exists:', existingUser);
+        
+        // Store tier in localStorage for future fallback
+        localStorage.setItem(`user_tier_${userId}`, existingUser.tier || 'free');
+        localStorage.setItem(`user_email_${userId}`, existingUser.email || userEmail);
+        
         setStatus('ready');
         onUserReady?.(existingUser);
       } else {
@@ -110,9 +115,19 @@ function UserInitializer({ session, onUserReady }) {
       console.error('❌ UserInitializer: User initialization error:', err);
       // Auto-fallback on timeout or database issues
       if (err.message.includes('timeout') || err.message.includes('406') || err.message.includes('PGRST')) {
-        console.log('⚠️ UserInitializer: Auto-fallback - proceeding with default user data due to database issues');
+        console.log('⚠️ UserInitializer: Auto-fallback - proceeding with fallback data due to database issues');
+        
+        // Check localStorage for tier data before defaulting to free
+        const localTier = localStorage.getItem(`user_tier_${session.user.id}`) || 'free';
+        const localEmail = localStorage.getItem(`user_email_${session.user.id}`) || session.user.email;
+        console.log('📱 Using localStorage tier:', localTier, 'for', localEmail);
+        
         setStatus('ready');
-        onUserReady?.({ tier: 'free', monthly_analyses_used: 0 });
+        onUserReady?.({ 
+          tier: localTier, 
+          email: localEmail,
+          monthly_analyses_used: localTier === 'coffee' ? 0 : 0 
+        });
       } else {
         setError(err.message);
         setStatus('error');
@@ -157,9 +172,19 @@ function UserInitializer({ session, onUserReady }) {
             </button>
             <button 
               onClick={() => {
-                console.log('⏭️ UserInitializer: Bypassing initialization - proceeding with default data');
+                console.log('⏭️ UserInitializer: Bypassing initialization - proceeding with fallback data');
+                
+                // Check localStorage for tier data
+                const localTier = localStorage.getItem(`user_tier_${session.user.id}`) || 'free';
+                const localEmail = localStorage.getItem(`user_email_${session.user.id}`) || session.user.email;
+                console.log('📱 Using localStorage tier:', localTier, 'for', localEmail);
+                
                 setStatus('ready');
-                onUserReady?.({ tier: 'free', monthly_analyses_used: 0 });
+                onUserReady?.({ 
+                  tier: localTier, 
+                  email: localEmail,
+                  monthly_analyses_used: localTier === 'coffee' ? 0 : 0 
+                });
               }}
               className="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700"
             >
