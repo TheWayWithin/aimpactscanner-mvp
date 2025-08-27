@@ -57,6 +57,28 @@ Transform AImpactScanner from current 10-factor analysis into a complete 148-fac
 
 ## 📅 **Latest Update - August 27, 2025**
 
+### **UX & INFRASTRUCTURE IMPROVEMENTS**
+**Timeline**: August 27, 2025  
+**Status**: ✅ **COMPLETED**  
+
+#### **Navigation & Authentication Fixes**
+- ✅ **Sign Up Button**: Fixed navigation to properly route to registration page
+- ✅ **Browser History**: Implemented proper browser back button functionality within app
+- ✅ **Privacy/Terms Pages**: Made accessible without authentication requirement
+- ✅ **Page Scroll**: Fixed scroll position to start at top when navigating to pages
+- ✅ **Layout Issues**: Resolved privacy policy appearing beneath footer on landing page
+
+#### **GDPR & Analytics**
+- ✅ **Enzuzo Duplicate**: Resolved duplicate cookie banner loading issue
+- ✅ **GTM Configuration**: Cleaned up duplicate privacy policy tags
+- ✅ **Console Errors**: Eliminated all Enzuzo-related console errors
+
+#### **Footer Enhancement**
+- ✅ **Resource Links Added**: 
+  - AI Search Mastery: www.aisearchmastery.com
+  - LLMs.TXT Mastery: www.llmtxtmastery.com
+  - MASTERY-AI Framework: aisearchmastery.com/mastery-ai-framework
+
 ### **💰 PRICING OPTIMIZATION**
 **Timeline**: August 27, 2025  
 **Status**: ✅ **COMPLETED**  
@@ -622,7 +644,7 @@ Transform AImpactScanner from current 10-factor analysis into a complete 148-fac
 - **Experience**: Complete professional interface, no watermarks
 - **Target**: Individual website owners, evaluation users
 
-#### **Coffee Tier** ($5/month) - **REVENUE READY**
+#### **Coffee Tier** ($4.95/month) - **REVENUE READY**
 - **Usage**: Unlimited monthly analyses
 - **Features**: All Free tier capabilities plus unlimited access
 - **Payment**: Stripe integration complete (awaiting live keys)
@@ -1047,7 +1069,7 @@ src/components/TierSelection.jsx - Feature list updates
 
 ### **Tier Feature Matrix**
 - **Free Tier**: Disabled PDF button with upgrade CTA
-- **Coffee Tier ($5)**: Full PDF export access
+- **Coffee Tier ($4.95)**: Full PDF export access
 - **Professional Tier ($29)**: Advanced PDF reports  
 - **Enterprise Tier ($99)**: White-label PDF options
 
