@@ -188,7 +188,7 @@ const UsageDashboard = ({ user, onUpgrade, className = '' }) => {
                   Upgrade to Coffee Tier
                 </h4>
                 <p className="text-sm text-blue-700 mb-3">
-                  Get unlimited Phase A analyses for just $5/month. No more limits!
+                  Get unlimited Phase A analyses for just $4.95/month. No more limits!
                 </p>
                 <button
                   onClick={() => onUpgrade?.('coffee')}

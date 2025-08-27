@@ -130,7 +130,7 @@ function OpportunityFinder({ currentScore, monthlyTraffic = 5000 }) {
             </div>
             <div className="flex justify-between text-sm">
               <span>Coffee Tier Investment:</span>
-              <span>-$5/mo</span>
+              <span>-$4.95/mo</span>
             </div>
             <hr className="my-2 border-green-200" />
             <div className="flex justify-between">
@@ -158,7 +158,7 @@ function OpportunityFinder({ currentScore, monthlyTraffic = 5000 }) {
         <p className="text-xs text-yellow-800">
           <strong>Full Transparency:</strong> These calculations are based on actual average improvements from our 7 client sites. 
           Your results will vary based on your industry, competition, current optimization level, and how well you implement our recommendations. 
-          We show conservative estimates - some clients see much better results, others see less. The $5/month Coffee tier 
+          We show conservative estimates - some clients see much better results, others see less. The $4.95/month Coffee tier 
           gives you unlimited analyses to continuously improve.
         </p>
       </div>

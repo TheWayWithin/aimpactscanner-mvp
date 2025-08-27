@@ -19,7 +19,7 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
   const tiers = {
     coffee: {
       name: '☕ Coffee Plan',
-      price: '$5/month',
+      price: '$4.95/month',
       subtitle: 'Most Popular Choice',
       color: 'yellow',
       recommended: true
@@ -47,7 +47,7 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
           { icon: '✅', text: 'Cancel anytime, no questions asked', highlight: false }
         ],
         value: 'Less than the price of a coffee per month!',
-        cta: 'After signup, you\'ll be redirected to Stripe for payment ($5/month)'
+        cta: 'After signup, you\'ll be redirected to Stripe for payment ($4.95/month)'
       };
     } else {
       return {
@@ -231,7 +231,7 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
             <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-sm text-yellow-800">
                 ☕ <strong>Coffee Plan Selected</strong><br />
-                After signing in, you'll be redirected to secure Stripe checkout ($5/month)
+                After signing in, you'll be redirected to secure Stripe checkout ($4.95/month)
               </p>
             </div>
           )}
@@ -239,7 +239,7 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
           <div className="text-sm text-gray-500 mb-4">
             <p><strong>Your Account Details:</strong></p>
             <p>Email: {email}</p>
-            <p>Plan: {selectedTier === 'coffee' ? 'Coffee Plan ($5/month)' : 'Free Plan'}</p>
+            <p>Plan: {selectedTier === 'coffee' ? 'Coffee Plan ($4.95/month)' : 'Free Plan'}</p>
           </div>
 
           <div className="border-t pt-4">
@@ -313,7 +313,7 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
                   </div>
                   {selectedTier === 'coffee' && (
                     <div className="mt-2 ml-6 text-xs text-orange-600 bg-orange-50 inline-block px-2 py-1 rounded">
-                      ℹ️ After signup, you'll be redirected to Stripe for payment ($5/month)
+                      ℹ️ After signup, you'll be redirected to Stripe for payment ($4.95/month)
                     </div>
                   )}
                 </div>
@@ -541,7 +541,7 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
                   </div>
                   <div className="flex items-center">
                     <span className="text-green-500 mr-2">✅</span>
-                    <span className="text-green-700 font-semibold"><strong>AImpactScanner:</strong> Enterprise AI Analysis for $5/month</span>
+                    <span className="text-green-700 font-semibold"><strong>AImpactScanner:</strong> Enterprise AI Analysis for $4.95/month</span>
                   </div>
                 </div>
               </div>
@@ -600,7 +600,7 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
                 {/* Urgency & Value */}
                 <div className="text-center bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <h4 className="font-bold text-blue-800 mb-1">Less Than Your Daily Coffee</h4>
-                  <p className="text-sm text-blue-700">While competitors spend $5,000+ on consultants, you get enterprise insights for $5/month</p>
+                  <p className="text-sm text-blue-700">While competitors spend $5,000+ on consultants, you get enterprise insights for $4.95/month</p>
                   <p className="text-xs text-blue-600 mt-2 font-medium">⏰ Algorithm changes happen daily - don't wait</p>
                 </div>
               </div>

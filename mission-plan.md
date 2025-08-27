@@ -1,7 +1,25 @@
 # REGRESSION TESTING MISSION PLAN
 **Mission Start**: 2025-08-25 16:46 UTC
 **Coordinator**: AGENT-11
-**Status**: IN PROGRESS
+**Status**: IN PROGRESS - GTM FIX REQUIRED
+
+## 🔴 PRIORITY 1: Fix GTM/Enzuzo Configuration
+**Status**: URGENT - Blocking GDPR Compliance
+- [ ] Access Google Tag Manager Dashboard (https://tagmanager.google.com)
+- [ ] Open container GTM-WCQGG5N6
+- [ ] Audit all Enzuzo-related tags for duplicates
+- [ ] Remove/disable duplicate Enzuzo tags
+- [ ] Configure single Enzuzo tag with these settings:
+  - Cookie Consent Banner: ENABLED ✅
+  - Auto-blocking scripts: ENABLED ✅
+  - Privacy Policy Widget: DISABLED ❌
+  - Terms of Service Widget: DISABLED ❌
+  - Cookie Declaration Widget: DISABLED ❌
+- [ ] Publish GTM container changes
+- [ ] Clear browser cache and test
+- [ ] Verify cookie consent banner appears
+- [ ] Confirm privacy widget removed from page bottom
+- [ ] Check console for no duplicate banner errors
 
 ## Phase 1: Environment Setup & Test Preparation
 - [x] Verify Playwright installation and configuration

@@ -53,7 +53,7 @@ const TierPDFButton = ({ analysisId, url, analysisData, onReportGenerated, userE
           <button
             onClick={handlePDFClick}
             className="inline-flex items-center px-6 py-3 border-2 border-blue-300 text-sm font-semibold rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 hover:border-blue-400 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md transform hover:-translate-y-0.5 min-w-[200px] justify-center sm:min-w-0 sm:justify-start"
-            title="Upgrade to Coffee tier - Professional PDF reports for just $5/month"
+            title="Upgrade to Coffee tier - Professional PDF reports for just $4.95/month"
           >
             <svg className="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -77,7 +77,7 @@ const TierPDFButton = ({ analysisId, url, analysisData, onReportGenerated, userE
               <li>• Actionable recommendations</li>
               <li>• Professional branding</li>
             </ul>
-            <p className="text-xs text-blue-600 font-medium mt-2">Just $5/month - Cancel anytime</p>
+            <p className="text-xs text-blue-600 font-medium mt-2">Just $4.95/month - Cancel anytime</p>
           </div>
         </div>
         

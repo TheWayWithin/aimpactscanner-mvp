@@ -65,7 +65,7 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
       id: 'coffee',
       name: 'Starter',
       originalPrice: 10,
-      price: billingCycle === 'annual' ? 5 : 5,
+      price: billingCycle === 'annual' ? 4.95 : 4.95,
       analyses: 'Unlimited',
       features: [
         'Unlimited analyses for continuous optimization',

@@ -26,7 +26,7 @@ const TierSelection = ({ currentTier = 'free', onUpgrade, className = '', showRe
     {
       id: 'coffee',
       name: '☕ Coffee',
-      price: 5,
+      price: 4.95,
       analyses: 'Unlimited',
       features: [
         'Unlimited Phase A analyses',

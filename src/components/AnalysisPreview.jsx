@@ -266,7 +266,7 @@ function AnalysisPreview({ url, analysisId, onUpgradeClick, onFreeTrialClick }) 
               onClick={() => onUpgradeClick('coffee')}
               className="px-8 py-4 bg-yellow-400 text-gray-900 font-bold rounded-lg hover:bg-yellow-300 transition-all text-lg"
             >
-              ☕ Get Unlimited Analyses for $5/mo
+              ☕ Get Unlimited Analyses for $4.95/mo
             </button>
           </div>
           

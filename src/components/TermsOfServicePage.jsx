@@ -62,7 +62,7 @@ const TermsOfServicePage = () => {
                 </div>
                 
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">Coffee Tier ($5/month)</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">Coffee Tier ($4.95/month)</h3>
                   <ul className="list-disc list-inside text-gray-700 space-y-1">
                     <li>Unlimited website analyses</li>
                     <li>Detailed reports and recommendations</li>

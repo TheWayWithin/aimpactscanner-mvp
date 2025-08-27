@@ -1,0 +1,30 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--read-only",
+        "--project-ref=pdmtvkcxnqysujnpcnyh"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_c53e26663a7f13e0a43d3072c2703f3f594b37af"
+      }
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "context7-mcp"],
+      "env": {
+        "CONTEXT7_API_KEY": "6627946d-e2c5-4dbe-a63e-33ca82cdf6f7"
+      }
+    },
+    "firecrawl": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": {
+        "FIRECRAWL_API_KEY": "219dfadf849a46dd9a05a4bd0c2e65f9"
+      }
+    }
+  }
+}

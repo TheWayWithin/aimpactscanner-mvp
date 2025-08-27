@@ -62,7 +62,7 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
 
   const plans = [
     { id: 'free', name: 'Free Trial', price: '$0' },
-    { id: 'coffee', name: '☕ Coffee', price: '$5/mo' },
+    { id: 'coffee', name: '☕ Coffee', price: '$4.95/mo' },
     { id: 'growth', name: '🚀 Growth', price: '$29/mo' },
     { id: 'scale', name: '📈 Scale', price: '$99/mo' }
   ];

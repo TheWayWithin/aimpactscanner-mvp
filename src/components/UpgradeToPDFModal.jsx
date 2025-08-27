@@ -245,7 +245,7 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
                 </div>
                 <div>
                   <h5 className="font-semibold text-blue-900">Coffee Tier</h5>
-                  <p className="text-sm text-blue-600">$5/month</p>
+                  <p className="text-sm text-blue-600">$4.95/month</p>
                 </div>
               </div>
               <ul className="space-y-2 text-sm text-blue-800">
@@ -348,7 +348,7 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
                   <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
-                  Get Coffee Tier - $5/month
+                  Get Coffee Tier - $4.95/month
                   <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
