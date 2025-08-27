@@ -42,7 +42,16 @@ import Footer from './components/Footer.jsx';
 
 function AppContent() {
   const [session, setSession] = useState(null);
-  const [currentView, setCurrentView] = useState('landing'); // Start with landing page
+  const [currentView, setCurrentViewInternal] = useState('landing'); // Start with landing page
+  
+  // Wrapper for setCurrentView that manages browser history
+  const setCurrentView = (view) => {
+    if (view !== currentView) {
+      // Push to browser history for navigation tracking
+      window.history.pushState({ view }, '', `#${view}`);
+      setCurrentViewInternal(view);
+    }
+  };
   const [currentAnalysisId, setCurrentAnalysisId] = useState(null);
   const [currentUrl, setCurrentUrl] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -142,6 +151,43 @@ function AppContent() {
     handleUpgradeError
   );
 
+  useEffect(() => {
+    // Handle browser back/forward buttons
+    const handlePopState = (event) => {
+      if (event.state && event.state.view) {
+        setCurrentViewInternal(event.state.view);
+      } else {
+        // Handle direct URL navigation or initial load
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+          setCurrentViewInternal(hash);
+        }
+      }
+    };
+    
+    window.addEventListener('popstate', handlePopState);
+    
+    // Check initial URL
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      setCurrentViewInternal(hash);
+    } else if (window.location.pathname === '/login') {
+      setCurrentView('login');
+      // Clear URL to prevent issues with navigation
+      window.history.replaceState({}, document.title, '/#login');
+    } else if (window.location.pathname === '/register') {
+      setCurrentView('register');
+      window.history.replaceState({}, document.title, '/#register');
+    }
+    
+    // Set initial history state
+    window.history.replaceState({ view: currentView }, '', `#${currentView}`);
+    
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);  // Only run once on mount
+  
   useEffect(() => {
     // Check URL path for login route
     if (window.location.pathname === '/login') {
@@ -787,7 +833,10 @@ function AppContent() {
     return (
       <>
         {/* <SimpleConsentBanner /> */}
-        <AuthWithPassword />
+        <AuthWithPassword 
+          defaultMode="register"
+          onSuccess={() => setCurrentView('dashboard')}
+        />
       </>
     );
   }
