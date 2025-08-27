@@ -795,7 +795,11 @@ function AppContent() {
         <div className="min-h-screen flex flex-col">
           {/* <SimpleConsentBanner /> */}
           <div className="flex-grow">
-            <Landing onAnalysisComplete={handleLandingAnalysis} />
+            <Landing 
+              onAnalysisComplete={handleLandingAnalysis}
+              onNavigate={setCurrentView}
+              isAuthenticated={!!session}
+            />
           </div>
           <Footer onNavigate={setCurrentView} />
         </div>

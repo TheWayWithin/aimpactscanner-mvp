@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabaseClient';
 import TrustBadges from './TrustBadges';
 import AILogo from './AILogo';
 
-function Landing({ onAnalysisComplete }) {
+function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
   const [url, setUrl] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState('');
@@ -129,21 +129,32 @@ function Landing({ onAnalysisComplete }) {
                 </div>
               </div>
             </div>
-            {/* Sign In / Sign Up buttons */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => window.location.href = '/login'}
-                className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors"
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => window.location.href = '/register'}
-                className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Sign Up
-              </button>
-            </div>
+            {/* Sign In / Sign Up buttons - only show if not authenticated */}
+            {!isAuthenticated ? (
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => onNavigate ? onNavigate('login') : window.location.href = '/login'}
+                  className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => onNavigate ? onNavigate('register') : window.location.href = '/register'}
+                  className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Sign Up
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => onNavigate ? onNavigate('dashboard') : window.location.href = '/'}
+                  className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  Go to Dashboard
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
