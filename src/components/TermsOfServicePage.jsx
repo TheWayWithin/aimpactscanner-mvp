@@ -5,6 +5,12 @@ const TermsOfServicePage = () => {
   useEffect(() => {
     // Scroll to top when component mounts
     window.scrollTo(0, 0);
+    // Force scroll with a small delay to ensure DOM is ready
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    }, 100);
   }, []);
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">

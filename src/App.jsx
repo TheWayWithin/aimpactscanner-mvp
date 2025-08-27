@@ -52,6 +52,14 @@ function AppContent() {
       setCurrentViewInternal(view);
       // Scroll to top when changing views
       window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      // Force scroll with a small delay to ensure DOM is ready
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }, 100);
     }
   };
   const [currentAnalysisId, setCurrentAnalysisId] = useState(null);
@@ -873,13 +881,12 @@ function AppContent() {
   }
 
   // Handle privacy, terms, contact, and about pages (accessible without authentication)
+  // These must be checked FIRST before any other views
   if (currentView === 'privacy') {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-white">
         {/* <SimpleConsentBanner /> */}
-        <div className="flex-grow">
-          <PrivacyPolicyPage />
-        </div>
+        <PrivacyPolicyPage />
         <Footer onNavigate={setCurrentView} />
       </div>
     );
@@ -887,11 +894,9 @@ function AppContent() {
   
   if (currentView === 'terms') {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-white">
         {/* <SimpleConsentBanner /> */}
-        <div className="flex-grow">
-          <TermsOfServicePage />
-        </div>
+        <TermsOfServicePage />
         <Footer onNavigate={setCurrentView} />
       </div>
     );
@@ -899,11 +904,9 @@ function AppContent() {
   
   if (currentView === 'contact') {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-white">
         {/* <SimpleConsentBanner /> */}
-        <div className="flex-grow">
-          <ContactPage />
-        </div>
+        <ContactPage />
         <Footer onNavigate={setCurrentView} />
       </div>
     );
@@ -911,11 +914,9 @@ function AppContent() {
   
   if (currentView === 'about') {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-white">
         {/* <SimpleConsentBanner /> */}
-        <div className="flex-grow">
-          <AboutPage />
-        </div>
+        <AboutPage />
         <Footer onNavigate={setCurrentView} />
       </div>
     );
