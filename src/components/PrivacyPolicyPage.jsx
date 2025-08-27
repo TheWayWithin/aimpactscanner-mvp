@@ -1,7 +1,11 @@
 // Privacy Policy Page - Professional legal document
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const PrivacyPolicyPage = () => {
+  useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
       <div className="max-w-4xl mx-auto px-6">

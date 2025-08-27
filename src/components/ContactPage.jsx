@@ -1,7 +1,11 @@
 // Contact Us Page - Support and contact information
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ContactPage = () => {
+  useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+  }, []);
   const [formData, setFormData] = useState({
     name: '',
     email: '',

@@ -50,6 +50,8 @@ function AppContent() {
       // Push to browser history for navigation tracking
       window.history.pushState({ view }, '', `#${view}`);
       setCurrentViewInternal(view);
+      // Scroll to top when changing views
+      window.scrollTo(0, 0);
     }
   };
   const [currentAnalysisId, setCurrentAnalysisId] = useState(null);
@@ -156,11 +158,13 @@ function AppContent() {
     const handlePopState = (event) => {
       if (event.state && event.state.view) {
         setCurrentViewInternal(event.state.view);
+        window.scrollTo(0, 0);
       } else {
         // Handle direct URL navigation or initial load
         const hash = window.location.hash.slice(1);
         if (hash) {
           setCurrentViewInternal(hash);
+          window.scrollTo(0, 0);
         }
       }
     };
