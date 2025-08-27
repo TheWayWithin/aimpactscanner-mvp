@@ -125,12 +125,24 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
   const tierOptions = [
     { 
       id: 'coffee', 
-      label: '☕ COFFEE - 100 monthly ($4.95/month)',
+      label: '☕ COFFEE - Unlimited analyses ($4.95/month)',
       recommended: true 
     },
     { 
+      id: 'growth', 
+      label: '🚀 GROWTH - Advanced features ($29/month)',
+      recommended: false,
+      comingSoon: true
+    },
+    { 
+      id: 'scale', 
+      label: '📈 SCALE - Enterprise features ($99/month)',
+      recommended: false,
+      comingSoon: true
+    },
+    { 
       id: 'free', 
-      label: '🆓 FREE - 3 monthly ($0/month)',
+      label: '🆓 FREE - 3 analyses/month ($0/month)',
       recommended: false 
     }
   ];
@@ -141,11 +153,40 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
       return {
         title: '☕ COFFEE Plan Benefits',
         items: [
-          { icon: '✅', text: '100 monthly analysis credits', highlight: true },
-          { icon: '✅', text: '200 pages per analysis (10x more than free)', highlight: true },
-          { icon: '✅', text: 'AI-powered content scoring for all pages', highlight: false },
-          { icon: '✅', text: 'Priority processing and support', highlight: false },
+          { icon: '✅', text: 'Unlimited AI-powered analyses per month', highlight: true },
+          { icon: '✅', text: '10 MASTERY-AI Framework factors (Phase A)', highlight: true },
+          { icon: '✅', text: 'Professional PDF reports (no watermarks)', highlight: false },
+          { icon: '✅', text: 'Clean, exportable results dashboard', highlight: false },
+          { icon: '✅', text: 'Educational content & recommendations', highlight: false },
+          { icon: '✅', text: 'Email support', highlight: false },
           { icon: '✅', text: '30-day money-back guarantee', highlight: false }
+        ]
+      };
+    } else if (selectedTier === 'growth') {
+      return {
+        title: '🚀 GROWTH Plan Benefits',
+        items: [
+          { icon: '✅', text: 'Everything in Coffee Plan', highlight: false },
+          { icon: '✅', text: '22 total factors (Phase A + Phase B)', highlight: true },
+          { icon: '✅', text: 'Advanced PDF reports with deeper insights', highlight: true },
+          { icon: '✅', text: 'AI Remediation Planner', highlight: true },
+          { icon: '✅', text: 'Progress tracking dashboard', highlight: false },
+          { icon: '✅', text: 'Priority support', highlight: false },
+          { icon: '🔜', text: 'Coming soon!', highlight: false }
+        ]
+      };
+    } else if (selectedTier === 'scale') {
+      return {
+        title: '📈 SCALE Plan Benefits',
+        items: [
+          { icon: '✅', text: 'Everything in Growth Plan', highlight: false },
+          { icon: '✅', text: 'API access for automation', highlight: true },
+          { icon: '✅', text: 'White-label PDF reports', highlight: true },
+          { icon: '✅', text: 'Team collaboration features', highlight: true },
+          { icon: '✅', text: 'Custom reporting', highlight: false },
+          { icon: '✅', text: 'Webhook integrations', highlight: false },
+          { icon: '✅', text: 'Dedicated support', highlight: false },
+          { icon: '🔜', text: 'Coming soon!', highlight: false }
         ]
       };
     } else {
@@ -153,10 +194,11 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
         title: '🆓 FREE Plan Limitations',
         items: [
           { icon: '⚠️', text: 'Only 3 analyses per month', warning: true },
-          { icon: '❌', text: 'Limited to 20 pages per analysis', strike: true },
-          { icon: '❌', text: 'Basic scoring only (no AI insights)', strike: true },
-          { icon: '❌', text: 'No priority support', strike: true },
-          { icon: '❌', text: 'No export to PDF options', strike: true }
+          { icon: '❌', text: 'Basic recommendations only', strike: true },
+          { icon: '❌', text: 'Phase A factors only', strike: true },
+          { icon: '❌', text: 'Web-only results (no PDF export)', strike: true },
+          { icon: '❌', text: 'Community support only', strike: true },
+          { icon: '❌', text: 'No advanced AI insights', strike: true }
         ]
       };
     }
@@ -204,11 +246,39 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
                       <div className="flex items-center">
                         <span className="text-green-600 font-semibold">✓ SMART CHOICE!</span>
                         <span className="ml-2 text-sm text-green-700">
-                          100 monthly analyses + 30-day guarantee + cancel instantly
+                          Unlimited analyses + 30-day guarantee + cancel instantly
                         </span>
                       </div>
                       <p className="text-xs text-green-600 mt-1">
                         After signup, secure Stripe payment ($4.95/month)
+                      </p>
+                    </div>
+                  )}
+                  
+                  {(selectedTier === 'growth' || selectedTier === 'scale') && (
+                    <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-center">
+                        <span className="text-blue-600 font-semibold">🔜 COMING SOON</span>
+                        <span className="ml-2 text-sm text-blue-700">
+                          Advanced features in development
+                        </span>
+                      </div>
+                      <p className="text-xs text-blue-600 mt-1">
+                        Start with Coffee tier, upgrade when available
+                      </p>
+                    </div>
+                  )}
+                  
+                  {selectedTier === 'free' && (
+                    <div className="mt-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                      <div className="flex items-center">
+                        <span className="text-orange-600 font-semibold">⚠️ LIMITED ACCESS</span>
+                        <span className="ml-2 text-sm text-orange-700">
+                          Only 3 analyses per month
+                        </span>
+                      </div>
+                      <p className="text-xs text-orange-600 mt-1">
+                        Consider Coffee tier for unlimited analyses
                       </p>
                     </div>
                   )}
@@ -344,14 +414,15 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  disabled={loading || !agreeToTerms || passwordStrength < 3}
+                  disabled={loading || !agreeToTerms || passwordStrength < 3 || (selectedTier === 'growth' || selectedTier === 'scale')}
                   className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors ${
-                    loading || !agreeToTerms || passwordStrength < 3
+                    loading || !agreeToTerms || passwordStrength < 3 || (selectedTier === 'growth' || selectedTier === 'scale')
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       : 'bg-blue-600 hover:bg-blue-700 text-white'
                   }`}
                 >
                   {loading ? 'Creating Account...' : 
+                   (selectedTier === 'growth' || selectedTier === 'scale') ? 'Coming Soon' :
                    selectedTier === 'coffee' ? 'Create Account → ' : 'Create Free Account'}
                 </button>
 
