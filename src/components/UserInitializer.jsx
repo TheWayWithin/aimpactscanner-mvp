@@ -73,42 +73,67 @@ function UserInitializer({ session, onUserReady }) {
         setStatus('ready');
         onUserReady?.(existingUser);
       } else {
-        console.log('🔧 UserInitializer: User does not exist, creating...');
-        setStatus('creating');
+        console.log('🔧 UserInitializer: User does not exist in database');
+        
+        // Check user metadata for tier selection
+        const userMetadata = session?.user?.user_metadata;
+        const selectedTier = userMetadata?.selected_tier || userMetadata?.tier;
+        
+        console.log('🔍 UserInitializer: Checking user tier selection:', {
+          selectedTier,
+          userMetadata,
+          createdAt: session?.user?.created_at
+        });
+        
+        if (selectedTier === 'coffee') {
+          console.log('☕ UserInitializer: User selected Coffee tier - waiting for payment');
+          // Don't create database record - wait for Stripe webhook
+          setStatus('ready');
+          onUserReady?.({ tier: 'pending_payment', monthly_analyses_used: 0 });
+          return;
+        } else if (selectedTier === 'free') {
+          console.log('🆓 UserInitializer: User selected Free tier - creating account');
+          setStatus('creating');
+          
+          // Create user in database with timeout
+          const createPromise = supabase
+            .from('users')
+            .upsert({
+              id: userId,
+              email: userEmail,
+              tier: 'free',
+              monthly_analyses_used: 0,
+              subscription_status: 'active'
+            }, { 
+              onConflict: 'id',
+              ignoreDuplicates: false 
+            })
+            .select()
+            .single();
 
-        // Create user in database with timeout
-        const createPromise = supabase
-          .from('users')
-          .upsert({
-            id: userId,
-            email: userEmail,
-            tier: 'free',
-            monthly_analyses_used: 0,
-            subscription_status: 'active'
-          }, { 
-            onConflict: 'id',
-            ignoreDuplicates: false 
-          })
-          .select()
-          .single();
+          const { data: newUser, error: createError } = await Promise.race([createPromise, timeoutPromise]);
 
-        const { data: newUser, error: createError } = await Promise.race([createPromise, timeoutPromise]);
-
-        if (createError) {
-          console.log('User creation error:', createError);
-          // If user already exists (409 conflict), that's actually fine
-          if (createError.message && (createError.message.includes('409') || createError.message.includes('duplicate'))) {
-            console.log('User already exists, proceeding with default data');
-            setStatus('ready');
-            onUserReady?.({ tier: 'free', monthly_analyses_used: 0 });
-            return;
+          if (createError) {
+            console.log('User creation error:', createError);
+            // If user already exists (409 conflict), that's actually fine
+            if (createError.message && (createError.message.includes('409') || createError.message.includes('duplicate'))) {
+              console.log('User already exists, proceeding with default data');
+              setStatus('ready');
+              onUserReady?.({ tier: 'free', monthly_analyses_used: 0 });
+              return;
+            }
+            throw createError;
           }
-          throw createError;
-        }
 
-        console.log('✅ UserInitializer: User created:', newUser);
-        setStatus('ready');
-        onUserReady?.(newUser);
+          console.log('✅ UserInitializer: User created:', newUser);
+          setStatus('ready');
+          onUserReady?.(newUser);
+        } else {
+          // No tier selected - don't create user, needs tier selection
+          console.log('⚠️ UserInitializer: No tier selected - user needs to complete registration');
+          setStatus('ready');
+          onUserReady?.({ tier: 'pending_registration', monthly_analyses_used: 0 });
+        }
       }
 
     } catch (err) {
