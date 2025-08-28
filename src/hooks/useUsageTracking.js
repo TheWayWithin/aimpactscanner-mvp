@@ -30,21 +30,24 @@ export const useUsageTracking = (userEmail) => {
             
             // Update localStorage with correct tier from database
             if (tierInfo && tierInfo.tier) {
+              // Don't sync 'pending_payment' as a tier - keep existing or use 'free'
+              const effectiveTier = tierInfo.tier === 'pending_payment' ? 'coffee_pending' : tierInfo.tier;
               const unlimited = ['coffee', 'professional', 'enterprise'].includes(tierInfo.tier);
               const stored = localStorage.getItem(STORAGE_KEY);
               const existingData = stored ? JSON.parse(stored) : {};
               
               const syncedData = {
                 ...existingData,
-                tier: tierInfo.tier,
+                tier: effectiveTier,
                 isUnlimited: unlimited,
+                isPending: tierInfo.tier === 'pending_payment',
                 lastSynced: new Date().toISOString(),
                 monthlyUsed: existingData.monthlyUsed || 0,
                 lastUpdated: existingData.lastUpdated || new Date().toISOString()
               };
               
               localStorage.setItem(STORAGE_KEY, JSON.stringify(syncedData));
-              console.log(`Synced tier from database: ${tierInfo.tier} for ${userEmail}`);
+              console.log(`Synced tier from database: ${effectiveTier} for ${userEmail}${tierInfo.tier === 'pending_payment' ? ' (pending payment)' : ''}`);
             }
           }
         } catch (dbError) {

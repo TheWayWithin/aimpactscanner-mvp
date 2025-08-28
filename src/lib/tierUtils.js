@@ -28,8 +28,22 @@ export async function getActualUserTier(userId) {
       .single();
 
     if (userError) {
+      // Check if user has tier metadata (new sign-up waiting for tier selection/payment)
+      const { data: authData } = await supabase.auth.getUser();
+      const userMetadata = authData?.user?.user_metadata;
+      const selectedTier = userMetadata?.selected_tier || userMetadata?.tier;
+      
+      if (selectedTier === 'coffee') {
+        console.log('User has Coffee tier in metadata - waiting for payment');
+        return { tier: 'pending_payment', subscriptionStatus: 'pending' };
+      } else if (selectedTier === 'free') {
+        console.log('User has Free tier in metadata');
+        return { tier: 'free', subscriptionStatus: 'active' };
+      }
+      
       console.error('Error fetching user tier:', userError);
-      return { tier: 'free', subscriptionStatus: 'active' };
+      // Only default to free if no tier metadata found
+      return { tier: selectedTier || 'free', subscriptionStatus: 'active' };
     }
 
     // Check if tier is expired
