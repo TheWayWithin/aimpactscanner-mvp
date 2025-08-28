@@ -1,7 +1,7 @@
 // CoffeeTierSignup.jsx - Conversion-optimized signup page focused on Coffee tier
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { useUpgrade } from './UpgradeHandler';
+// useUpgrade removed - we create checkout session directly after sign-up
 import AILogo from './AILogo';
 
 const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
@@ -16,7 +16,8 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
-  const { handleUpgrade } = useUpgrade();
+  // Don't use the hook here since we don't have a user yet
+  // We'll create our own upgrade function that works with the newly created user
 
   // Password strength calculation
   const calculatePasswordStrength = () => {
@@ -97,9 +98,46 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
           tier: 'coffee'
         }));
 
-        // Initiate Stripe checkout
+        // Initiate Stripe checkout with the newly created user
         setTimeout(async () => {
-          await handleUpgrade('coffee');
+          console.log('Initiating Stripe checkout for Coffee tier...');
+          try {
+            // Create checkout session directly
+            const priceId = import.meta.env.VITE_STRIPE_COFFEE_PRICE_ID || 'price_coffee_tier_monthly';
+            
+            const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+              body: {
+                priceId,
+                userId: authData.user.id,
+                tier: 'coffee',
+                successUrl: `${window.location.origin}/upgrade-success?tier=coffee`,
+                cancelUrl: `${window.location.origin}/pricing`
+              }
+            });
+            
+            if (error) {
+              console.error('Failed to create checkout session:', error);
+              setMessage('Failed to redirect to payment. Please try upgrading from your dashboard.');
+              setMessageType('error');
+              return;
+            }
+            
+            if (data?.url) {
+              console.log('Redirecting to Stripe:', data.url);
+              window.location.href = data.url;
+            } else if (data?.sessionId) {
+              console.log('Redirecting to Stripe with session ID:', data.sessionId);
+              window.location.href = `https://checkout.stripe.com/pay/${data.sessionId}`;
+            } else {
+              console.error('No redirect URL or session ID received');
+              setMessage('Payment redirect failed. Please try upgrading from your dashboard.');
+              setMessageType('error');
+            }
+          } catch (err) {
+            console.error('Stripe checkout error:', err);
+            setMessage('Unable to process payment. Please try upgrading from your dashboard.');
+            setMessageType('error');
+          }
         }, 1500);
       } else {
         // Free tier - DON'T create database record yet
