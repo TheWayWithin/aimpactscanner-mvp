@@ -459,7 +459,7 @@ function AppContent() {
         // Fallback to direct query with error handling
         const result = await supabase
           .from('users')
-          .select('id, email, tier, stripe_customer_id, monthly_analyses_used, subscription_status')
+          .select('*') // Select all columns to avoid 406 errors
           .eq('id', userId)
           .maybeSingle(); // Use maybeSingle() instead of single() to avoid errors on missing rows
         
@@ -531,21 +531,29 @@ function AppContent() {
         throw new Error('No user email available');
       }
 
+      // Note: subscription_tier has a database constraint that only allows 'free', 'pro', 'agency', 'enterprise'
+      // We use 'tier' field for our custom tier names (free, coffee, growth, scale)
       const { data, error } = await supabase
         .from('users')
         .insert({
           id: userId,
           email: email,
-          tier: 'free',
-          subscription_tier: 'free',
+          tier: 'free', // Our custom tier names
+          subscription_tier: 'free', // Database constraint: must be 'free', 'pro', 'agency', or 'enterprise'
           monthly_analyses_used: 0,
-          subscription_status: 'inactive'
+          subscription_status: 'active' // Database constraint: must be 'active', 'canceled', 'past_due', or 'unpaid'
         })
         .select()
         .single();
 
       if (error) {
         console.error('❌ Failed to create default user:', error);
+        console.error('Error details:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        });
         return;
       }
 
