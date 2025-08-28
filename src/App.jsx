@@ -25,6 +25,7 @@ import URLInput from './components/URLInput';
 import TierIndicator from './components/TierIndicator';
 import TierSelection from './components/TierSelection';
 import AccountDashboard from './components/AccountDashboard';
+import SimpleAccountDashboard from './components/SimpleAccountDashboard';
 import UserInitializer from './components/UserInitializer';
 import AnalysisHistory from './components/AnalysisHistory';
 import { useUpgrade } from './components/UpgradeHandler';
@@ -1252,7 +1253,7 @@ function AppContent() {
         )}
 
         {currentView === 'account' && (
-          <AccountDashboard user={session?.user} />
+          <SimpleAccountDashboard user={session?.user} userTier={userTier} />
         )}
 
         {currentView === 'analytics-test' && (

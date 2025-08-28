@@ -143,16 +143,24 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
           }
         }, 1500);
       } else {
-        // Free tier - DON'T create database record yet
-        // Let the App.jsx fetchUserTier function handle it
-        setMessage('Welcome! Setting up your free account...');
+        // Free tier - Show email verification message
+        console.log('Free tier sign-up completed, user needs to verify email');
+        setMessage('✅ Account created! Please check your email to verify your account.');
         setMessageType('success');
         
-        // The database record will be created by App.jsx when it detects
-        // the user metadata with tier = 'free'
+        // Store sign-up data for after verification
+        localStorage.setItem('pendingFreeTier', JSON.stringify({
+          userId: authData.user.id,
+          email: email.trim().toLowerCase(),
+          tier: 'free',
+          timestamp: new Date().toISOString()
+        }));
+        
+        // Show extended message about email verification
         setTimeout(() => {
-          onRegistrationComplete?.(authData.user, 'free');
-        }, 1500);
+          setMessage(`📧 We've sent a verification link to ${email}. Please check your inbox (and spam folder) to complete sign-up.`);
+          // Don't auto-redirect - let user see the message
+        }, 2000);
       }
     } catch (error) {
       console.error('Signup error:', error);
