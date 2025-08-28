@@ -144,7 +144,7 @@ function AppContent() {
     
     // Refresh user tier after successful upgrade
     if (session?.user?.id) {
-      fetchUserTier(session.user.id);
+      fetchUserTier(session.user.id, session.user.email);
     }
     // Continue with pending analysis if exists
     if (pendingAnalysis) {
@@ -223,7 +223,7 @@ function AppContent() {
           setUnlimitedAccess(true);
         }
         
-        fetchUserTier(session.user.id);
+        fetchUserTier(session.user.id, session.user.email);
         
         // Check if there's a pending analysis from landing page
         const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
@@ -361,7 +361,7 @@ function AppContent() {
             localStorage.removeItem('selectedTier');
             
             // PRIORITY 2: Fetch user tier in background (non-blocking)
-            fetchUserTier(session.user.id).catch(error => {
+            fetchUserTier(session.user.id, session.user.email).catch(error => {
               console.warn('⚠️ Database error during pending analysis flow (non-blocking):', error);
               // Set default tier to prevent issues, but don't block the analysis flow
               setUserTier('free');
@@ -371,7 +371,7 @@ function AppContent() {
           } catch (error) {
             console.error('❌ Error parsing pending analysis data:', error);
             // Even on error, try to fetch user data before falling back
-            await fetchUserTier(session.user.id).catch(() => setUserTier('free'));
+            await fetchUserTier(session.user.id, session.user.email).catch(() => setUserTier('free'));
             setCurrentView('dashboard');
             return;
           }
@@ -379,7 +379,7 @@ function AppContent() {
         
         // PRIORITY 3: No pending analysis - proceed with normal dashboard flow
         try {
-          await fetchUserTier(session.user.id);
+          await fetchUserTier(session.user.id, session.user.email);
           if (!pendingAnalysisProcessed.current) {
             setCurrentView('dashboard');
           }
@@ -408,7 +408,7 @@ function AppContent() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchUserTier = async (userId) => {
+  const fetchUserTier = async (userId, userEmail = null) => {
     // Performance optimization: Prevent duplicate calls for same user
     if (fetchingUsers.current.has(userId)) {
       console.log('🔄 Already fetching user tier for:', userId, '- skipping duplicate call');
@@ -494,7 +494,8 @@ function AppContent() {
       } else {
         console.warn('⚠️ No user data found, creating default user');
         // Create user with defaults if they don't exist
-        await createDefaultUser(userId);
+        // Pass email if available, otherwise it will try to get from session
+        await createDefaultUser(userId, userEmail);
       }
     } catch (error) {
       console.error('❌ Could not fetch user tier:', error);
@@ -519,13 +520,14 @@ function AppContent() {
     }
   };
 
-  const createDefaultUser = async (userId) => {
+  const createDefaultUser = async (userId, userEmail = null) => {
     try {
-      console.log('🔧 Creating default user for:', userId);
+      console.log('🔧 Creating default user for:', userId, 'with email:', userEmail);
       
-      // Get email from session
-      const userEmail = session?.user?.email;
-      if (!userEmail) {
+      // Use passed email or fallback to session
+      const email = userEmail || session?.user?.email;
+      if (!email) {
+        console.error('❌ No email available for user creation. Session email:', session?.user?.email);
         throw new Error('No user email available');
       }
 
@@ -533,7 +535,7 @@ function AppContent() {
         .from('users')
         .insert({
           id: userId,
-          email: userEmail,
+          email: email,
           tier: 'free',
           subscription_tier: 'free',
           monthly_analyses_used: 0,

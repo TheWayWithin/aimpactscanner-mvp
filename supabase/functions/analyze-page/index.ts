@@ -1223,6 +1223,35 @@ serve(async (req) => {
       console.error('⚠️ Final progress update failed:', progressError);
     }
     
+    // Calculate pillar scores from factors
+    const pillarData = {
+      AI: { score: 0, weight: 23.8, factors: 0, name: "AI Response Optimization & Citation" },
+      A: { score: 0, weight: 17.9, factors: 0, name: "Authority & Trust Signals" },
+      M: { score: 0, weight: 14.6, factors: 0, name: "Machine Readability & Technical Infrastructure" },
+      S: { score: 0, weight: 13.9, factors: 0, name: "Semantic Content Quality" },
+      E: { score: 0, weight: 10.9, factors: 0, name: "Engagement & User Experience" },
+      T: { score: 0, weight: 8.9, factors: 0, name: "Topical Expertise & Experience" },
+      R: { score: 0, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
+      Y: { score: 0, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" }
+    };
+    
+    // Count factors and calculate average scores per pillar
+    factors.forEach(factor => {
+      const mapping = factorMappings[factor.name];
+      const pillar = mapping?.pillar || 'M';
+      if (pillarData[pillar]) {
+        pillarData[pillar].score += factor.score;
+        pillarData[pillar].factors += 1;
+      }
+    });
+    
+    // Calculate average scores for pillars with factors
+    Object.keys(pillarData).forEach(pillar => {
+      if (pillarData[pillar].factors > 0) {
+        pillarData[pillar].score = Math.round(pillarData[pillar].score / pillarData[pillar].factors);
+      }
+    });
+    
     console.log('=== ANALYSIS COMPLETE ===');
     console.log(`Overall score: ${overallScore}`);
     console.log(`Factors analyzed: ${factors.length}`);
@@ -1233,6 +1262,7 @@ serve(async (req) => {
       evidenceCount: f.evidence?.length || 0,
       recommendationsCount: f.recommendations?.length || 0
     })), null, 2));
+    console.log('📊 Pillar scores:', JSON.stringify(pillarData, null, 2));
     console.log('✅ Factors successfully inserted, analysis functional');
     
     return new Response(JSON.stringify({
@@ -1241,6 +1271,7 @@ serve(async (req) => {
       analysisId,
       factors_count: factors.length,
       factors: factors,
+      pillars: pillarData,
       overall_score: overallScore,
       processing_time_ms: 2000 + factors.length * 200,
       tier: 'coffee',

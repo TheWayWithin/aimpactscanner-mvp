@@ -92,17 +92,32 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
     factors: analysisData?.factors 
   });
   
+  // Transform pillars from Edge Function format to dashboard format
+  const transformPillars = (pillarsData) => {
+    if (!pillarsData) return null;
+    return {
+      ai: pillarsData.AI || { score: pillarScores.ai, weight: 23.8, factors: 3, name: "AI Response Optimization & Citation" },
+      authority: pillarsData.A || { score: pillarScores.authority, weight: 17.9, factors: 2, name: "Authority & Trust Signals" },
+      machine_readability: pillarsData.M || { score: pillarScores.machine_readability, weight: 14.6, factors: 4, name: "Machine Readability & Technical Infrastructure" },
+      semantic: pillarsData.S || { score: pillarScores.semantic, weight: 13.9, factors: 2, name: "Semantic Content Quality" },
+      engagement: pillarsData.E || { score: pillarScores.engagement, weight: 10.9, factors: 1, name: "Engagement & User Experience" },
+      topical: pillarsData.T || { score: pillarScores.topical, weight: 8.9, factors: 0, name: "Topical Expertise & Experience" },
+      reference: pillarsData.R || { score: pillarScores.reference, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
+      yield: pillarsData.Y || { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" }
+    };
+  };
+  
   const results = isRealAnalysis ? {
     overall_score: analysisData.overall_score,
     url: analysisData.url || url,
     created_at: analysisData.created_at || new Date().toISOString(),
-    pillars: analysisData.pillars || {
+    pillars: transformPillars(analysisData.pillars) || {
       ai: { score: pillarScores.ai, weight: 23.8, factors: 3, name: "AI Response Optimization & Citation" },
       authority: { score: pillarScores.authority, weight: 17.9, factors: 2, name: "Authority & Trust Signals" },
-      machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 3, name: "Machine Readability & Technical Infrastructure" },
+      machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 4, name: "Machine Readability & Technical Infrastructure" },
       semantic: { score: pillarScores.semantic, weight: 13.9, factors: 2, name: "Semantic Content Quality" },
       engagement: { score: pillarScores.engagement, weight: 10.9, factors: 1, name: "Engagement & User Experience" },
-      topical: { score: pillarScores.topical, weight: 8.9, factors: 1, name: "Topical Expertise & Experience" },
+      topical: { score: pillarScores.topical, weight: 8.9, factors: 0, name: "Topical Expertise & Experience" },
       reference: { score: pillarScores.reference, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
       yield: { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" }
     },
@@ -114,10 +129,10 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
     pillars: {
       ai: { score: pillarScores.ai, weight: 23.8, factors: 3, name: "AI Response Optimization & Citation" },
       authority: { score: pillarScores.authority, weight: 17.9, factors: 2, name: "Authority & Trust Signals" },
-      machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 3, name: "Machine Readability & Technical Infrastructure" },
+      machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 4, name: "Machine Readability & Technical Infrastructure" },
       semantic: { score: pillarScores.semantic, weight: 13.9, factors: 2, name: "Semantic Content Quality" },
       engagement: { score: pillarScores.engagement, weight: 10.9, factors: 1, name: "Engagement & User Experience" },
-      topical: { score: pillarScores.topical, weight: 8.9, factors: 1, name: "Topical Expertise & Experience" },
+      topical: { score: pillarScores.topical, weight: 8.9, factors: 0, name: "Topical Expertise & Experience" },
       reference: { score: pillarScores.reference, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
       yield: { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" }
     },
@@ -156,6 +171,13 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         pillar: "Machine Readability",
         evidence: ["Meta description present", "Length appropriate (145 characters)", "Contains call-to-action"],
         recommendations: ["Include more specific value propositions", "Test emotional triggers"]
+      },
+      {
+        name: "LLMs.txt Implementation",
+        score: 30,
+        pillar: "Machine Readability",
+        evidence: ["❌ No LLMs.txt file found at /llms.txt", "Missing AI content accessibility protocol"],
+        recommendations: ["Create /llms.txt following llmstxt.org standard", "Include structured content map for AI systems", "Add markdown format with H1 title and key sections"]
       }
     ]
   };
@@ -248,12 +270,29 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
     
     // Filter out empty groups and return as array
     return pillarOrder
-      .map(p => ({
-        name: p.name,
-        ...grouped[p.name],
-        weight: results.pillars[p.key.toLowerCase()]?.weight || 0,
-        score: results.pillars[p.key.toLowerCase()]?.score || 0
-      }))
+      .map(p => {
+        // Map pillar keys to the results.pillars structure
+        const pillarKey = {
+          'AI': 'ai',
+          'A': 'authority',
+          'M': 'machine_readability',
+          'S': 'semantic',
+          'E': 'engagement',
+          'T': 'topical',
+          'R': 'reference',
+          'Y': 'yield'
+        }[p.key] || p.key.toLowerCase();
+        
+        const pillarData = results.pillars[pillarKey] || {};
+        
+        return {
+          name: p.name,
+          ...grouped[p.name],
+          weight: pillarData.weight || 0,
+          score: pillarData.score || 0,
+          factorCount: pillarData.factors || grouped[p.name].factors.length
+        };
+      })
       .filter(group => group.factors.length > 0);
   };
 
@@ -398,7 +437,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
                     <div>
                       <h3 className="text-lg font-bold text-gray-900">{pillarGroup.name}</h3>
                       <p className="text-sm text-gray-600">
-                        Weight: {pillarGroup.weight}% | Pillar Score: {pillarGroup.score} | {pillarGroup.factors.length} factor{pillarGroup.factors.length !== 1 ? 's' : ''} analyzed
+                        Weight: {pillarGroup.weight || 0}% | Pillar Score: {pillarGroup.score || 0} | {pillarGroup.factorCount || pillarGroup.factors.length} factor{(pillarGroup.factorCount || pillarGroup.factors.length) !== 1 ? 's' : ''} analyzed
                       </p>
                     </div>
                   </div>
