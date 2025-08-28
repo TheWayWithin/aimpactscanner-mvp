@@ -361,7 +361,7 @@ function AppContent() {
             localStorage.removeItem('selectedTier');
             
             // PRIORITY 2: Fetch user tier in background (non-blocking)
-            fetchUserTier(session.user.id, session.user.email).catch(error => {
+            fetchUserTier(session.user.id, session.user.email, session).catch(error => {
               console.warn('⚠️ Database error during pending analysis flow (non-blocking):', error);
               // Set default tier to prevent issues, but don't block the analysis flow
               setUserTier('free');
@@ -371,7 +371,7 @@ function AppContent() {
           } catch (error) {
             console.error('❌ Error parsing pending analysis data:', error);
             // Even on error, try to fetch user data before falling back
-            await fetchUserTier(session.user.id, session.user.email).catch(() => setUserTier('free'));
+            await fetchUserTier(session.user.id, session.user.email, session).catch(() => setUserTier('free'));
             setCurrentView('dashboard');
             return;
           }
@@ -379,7 +379,7 @@ function AppContent() {
         
         // PRIORITY 3: No pending analysis - proceed with normal dashboard flow
         try {
-          await fetchUserTier(session.user.id, session.user.email);
+          await fetchUserTier(session.user.id, session.user.email, session);
           if (!pendingAnalysisProcessed.current) {
             setCurrentView('dashboard');
           }
@@ -408,7 +408,7 @@ function AppContent() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchUserTier = async (userId, userEmail = null) => {
+  const fetchUserTier = async (userId, userEmail = null, userSession = null) => {
     // Performance optimization: Prevent duplicate calls for same user
     if (fetchingUsers.current.has(userId)) {
       console.log('🔄 Already fetching user tier for:', userId, '- skipping duplicate call');
@@ -499,14 +499,35 @@ function AppContent() {
         const needsTierSelection = localStorage.getItem('needs_tier_selection');
         const selectedTier = localStorage.getItem('selectedTier');
         
-        // Check if this is a new sign-up (created within last 5 minutes)
-        const createdAt = session?.user?.created_at;
-        const isNewSignup = createdAt && (new Date() - new Date(createdAt)) < 300000; // 5 minutes
+        // Use passed session or fall back to state session for created_at
+        const createdAt = currentSession?.user?.created_at;
+        const createdTime = createdAt ? new Date(createdAt).getTime() : 0;
+        const currentTime = new Date().getTime();
+        const timeSinceCreation = currentTime - createdTime;
+        const isNewSignup = createdAt && timeSinceCreation < 600000; // 10 minutes
+        
+        // Use passed session or fall back to state session
+        const currentSession = userSession || session;
         
         // Check if user metadata indicates they're from signup flow
-        const isFromSignup = session?.user?.user_metadata?.signup_source || 
-                           session?.user?.user_metadata?.selected_tier ||
-                           session?.user?.user_metadata?.tier;
+        const isFromSignup = currentSession?.user?.user_metadata?.signup_source || 
+                           currentSession?.user?.user_metadata?.selected_tier ||
+                           currentSession?.user?.user_metadata?.tier;
+        
+        // Enhanced debugging
+        console.log('🔍 New user detection debug:', {
+          userId,
+          createdAt,
+          createdTime: new Date(createdAt).toISOString(),
+          currentTime: new Date(currentTime).toISOString(),
+          timeSinceCreation: Math.floor(timeSinceCreation / 1000) + ' seconds',
+          isNewSignup,
+          isFromSignup,
+          needsTierSelection,
+          userMetadata: currentSession?.user?.user_metadata,
+          pendingCoffeeTier,
+          selectedTier
+        });
         
         if (pendingCoffeeTier || selectedTier === 'coffee') {
           console.log('☕ User selected Coffee tier - waiting for Stripe payment');
@@ -515,41 +536,37 @@ function AppContent() {
           return;
         }
         
-        if (isNewSignup || isFromSignup || needsTierSelection) {
-          console.log('🆕 New user detected - needs tier selection');
-          console.log('Debug info:', {
-            isNewSignup,
-            isFromSignup,
-            needsTierSelection,
-            createdAt,
-            userMetadata: session?.user?.user_metadata
-          });
-          
-          // Check if they have a tier selected in metadata
-          const metadataTier = session?.user?.user_metadata?.selected_tier || 
-                              session?.user?.user_metadata?.tier;
-          
-          if (metadataTier === 'coffee') {
-            console.log('☕ User selected Coffee tier in signup - waiting for Stripe payment');
-            setUserTier('pending_payment');
-            // Don't redirect, let them complete the payment flow
-          } else if (metadataTier === 'free') {
-            console.log('🆓 User selected Free tier in signup - creating free account');
-            await createDefaultUser(userId, userEmail);
-          } else {
-            // No tier selected yet - send to tier selection
-            console.log('⚠️ No tier selected - redirecting to tier selection');
-            setUserTier('pending_registration');
-            // Don't redirect if already on register page
-            if (currentView !== 'register' && currentView !== 'coffee-signup') {
-              setCurrentView('coffee-signup'); // Send to coffee-signup by default
-            }
+        // ALWAYS treat users without database records as needing tier selection
+        // Unless they explicitly have metadata indicating their tier choice
+        const metadataTier = currentSession?.user?.user_metadata?.selected_tier || 
+                            currentSession?.user?.user_metadata?.tier;
+        
+        if (metadataTier === 'coffee') {
+          console.log('☕ User selected Coffee tier in signup - waiting for Stripe payment');
+          setUserTier('pending_payment');
+          // Don't redirect, let them complete the payment flow
+        } else if (metadataTier === 'free') {
+          console.log('🆓 User selected Free tier in signup - creating free account');
+          await createDefaultUser(userId, userEmail);
+        } else if (isNewSignup || !createdAt) {
+          // If they're new OR we can't determine their age, send to tier selection
+          console.log('🆕 User needs tier selection (new or unknown age)');
+          setUserTier('pending_registration');
+          // Store flag to indicate they need tier selection
+          localStorage.setItem('needs_tier_selection', 'true');
+          // Don't redirect if already on register page
+          if (currentView !== 'register' && currentView !== 'coffee-signup') {
+            setCurrentView('coffee-signup'); // Send to coffee-signup by default
           }
         } else {
-          // This is an older user without a database record (edge case)
-          // Create them as free tier for backward compatibility
-          console.log('🔄 Legacy user without data - creating as free tier');
-          await createDefaultUser(userId, userEmail);
+          // Only create as free tier if they're clearly an old user (>10 minutes)
+          // AND have no tier metadata
+          console.log('🔄 Legacy user (>10 min old) without tier selection - needs to choose tier');
+          setUserTier('pending_registration');
+          localStorage.setItem('needs_tier_selection', 'true');
+          if (currentView !== 'register' && currentView !== 'coffee-signup') {
+            setCurrentView('coffee-signup');
+          }
         }
       }
     } catch (error) {
