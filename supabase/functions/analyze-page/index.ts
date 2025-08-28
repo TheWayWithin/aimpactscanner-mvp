@@ -715,6 +715,115 @@ function analyzeEvidenceChunking(pageContent: string): FactorResult {
   };
 }
 
+// M.5.1 - LLMs.txt Implementation and Compliance
+async function analyzeLLMsTxtImplementation(url: string): Promise<FactorResult> {
+  let score = 30; // Base score for assessment
+  let evidence = [];
+  let recommendations = [];
+  
+  try {
+    // Extract domain from URL
+    const urlObj = new URL(url);
+    const llmsTxtUrl = `${urlObj.origin}/llms.txt`;
+    
+    evidence.push(`Checking for LLMs.txt at: ${llmsTxtUrl}`);
+    
+    // Attempt to fetch the LLMs.txt file
+    const response = await fetch(llmsTxtUrl, {
+      headers: {
+        'User-Agent': 'AImpactScanner/1.0 (LLMs.txt Compliance Check)'
+      },
+      signal: AbortSignal.timeout(5000) // 5 second timeout
+    });
+    
+    if (response.ok) {
+      const content = await response.text();
+      evidence.push('✅ LLMs.txt file found and accessible');
+      score = 50; // Boost for having the file
+      
+      // Check file size (should be reasonable, not empty)
+      if (content.length < 50) {
+        evidence.push('File appears to be empty or minimal');
+        recommendations.push('Add meaningful content to your LLMs.txt file');
+      } else {
+        evidence.push(`File size: ${content.length} characters`);
+        
+        // Check for required Markdown structure elements
+        const hasH1 = /^#\s+.+/m.test(content);
+        const hasBlockquote = /^>\s+.+/m.test(content);
+        const hasLinks = /\[.+\]\(.+\)/g.test(content);
+        const linkCount = (content.match(/\[.+\]\(.+\)/g) || []).length;
+        
+        // Score based on compliance
+        if (hasH1) {
+          score += 15;
+          evidence.push('✅ Has H1 title (required)');
+        } else {
+          recommendations.push('Add an H1 title at the beginning of your LLMs.txt');
+        }
+        
+        if (hasBlockquote) {
+          score += 15;
+          evidence.push('✅ Has blockquote summary (recommended)');
+        } else {
+          recommendations.push('Add a blockquote summary after your H1 title');
+        }
+        
+        if (hasLinks && linkCount >= 5) {
+          score += 20;
+          evidence.push(`✅ Contains ${linkCount} content links`);
+        } else if (hasLinks) {
+          score += 10;
+          evidence.push(`Contains ${linkCount} content links`);
+          recommendations.push('Add more links to your important content (aim for 10+)');
+        } else {
+          recommendations.push('Add links to your most important pages with descriptions');
+        }
+        
+        // Check for section headers (H2s)
+        const h2Count = (content.match(/^##\s+.+/gm) || []).length;
+        if (h2Count >= 2) {
+          score += 10;
+          evidence.push(`✅ Well-organized with ${h2Count} sections`);
+        } else if (h2Count === 1) {
+          score += 5;
+          evidence.push('Has some section organization');
+          recommendations.push('Consider organizing content into multiple H2 sections');
+        } else {
+          recommendations.push('Organize your content with H2 section headers');
+        }
+        
+        // Check for optional section marker
+        if (/^##\s+Optional/mi.test(content)) {
+          evidence.push('✅ Includes optional resources section');
+        }
+      }
+    } else if (response.status === 404) {
+      evidence.push('❌ No LLMs.txt file found at domain root');
+      recommendations.push('Create an LLMs.txt file at /llms.txt following llmstxt.org specification');
+      recommendations.push('Include your site title, summary, and links to key content');
+      recommendations.push('This helps AI systems better understand and access your content');
+    } else {
+      evidence.push(`Unable to access LLMs.txt (HTTP ${response.status})`);
+      recommendations.push('Ensure LLMs.txt is publicly accessible at /llms.txt');
+    }
+  } catch (error) {
+    evidence.push('Could not check LLMs.txt due to network error');
+    recommendations.push('Implement LLMs.txt for AI content accessibility');
+  }
+  
+  // Ensure minimum viable score
+  if (score < 30) score = 30;
+  
+  return {
+    name: 'LLMs.txt Implementation',
+    score: Math.min(score, 95), // Cap at 95 as no implementation is perfect
+    confidence: 90, // High confidence as this is a binary check with clear criteria
+    evidence,
+    recommendations
+  };
+}
+
 // E.1.1 - Page Load Speed Optimization
 function analyzePageLoadSpeed(pageContent: string): FactorResult {
   let score = 0;
@@ -924,6 +1033,7 @@ serve(async (req) => {
       analyzeSecurityAccessControl(url),                                // M.1.4
       analyzeTitleTagOptimization(documentTitle, url),                  // M.2.1
       analyzeMetaDescriptionQuality(metaDescription),                   // M.2.2
+      await analyzeLLMsTxtImplementation(url),                          // M.5.1 - NEW!
       analyzeHeadingStructure(pageContent),                             // S.2.2
       analyzeContentDepth(pageContent, documentTitle),                  // S.1.3
       analyzePageLoadSpeed(pageContent)                                 // E.1.1
@@ -939,6 +1049,7 @@ serve(async (req) => {
       'Security and Access Control': 'Machine Readability',
       'Title Tag Optimization': 'Machine Readability',
       'Meta Description Quality': 'Machine Readability',
+      'LLMs.txt Implementation': 'Machine Readability',
       'Heading Structure & Hierarchy': 'Semantic Content',
       'Content Depth and Comprehensiveness': 'Semantic Content',
       'Page Load Speed Optimization': 'Engagement'
@@ -1004,6 +1115,12 @@ serve(async (req) => {
         factor_id: 'M.2.2',
         weight: 0.70,
         education: 'Quality meta descriptions help AI systems understand page purpose and content relevance. Compelling descriptions with natural language improve click-through rates and user engagement.'
+      },
+      'LLMs.txt Implementation': { 
+        pillar: 'M', 
+        factor_id: 'M.5.1',
+        weight: 0.70,
+        education: 'LLMs.txt provides AI systems with a structured map of your most important content. This emerging standard (llmstxt.org) enables efficient content discovery and processing by AI platforms like ChatGPT, Claude, and Perplexity, significantly improving your AI accessibility.'
       },
       'Heading Structure & Hierarchy': { 
         pillar: 'S', 
