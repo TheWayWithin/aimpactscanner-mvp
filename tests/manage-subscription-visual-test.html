@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Subscription Button Visual Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            background: #f7fafc; 
+            padding: 2rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .demo-section {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Manage Subscription Button Visual Test</h1>
+        
+        <!-- Test Case 1: Free User (Button Hidden) -->
+        <div class="demo-section">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">❌ Free User - Button NOT Visible</h2>
+            <p class="text-gray-600 mb-4">User: free@example.com | Tier: Free | Customer ID: None</p>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="text-sm text-gray-500">Button would be hidden by condition: tier !== 'free' && stripe_customer_id</p>
+                <div class="mt-6 pt-6 border-t border-gray-200" style="display: none;">
+                    <p class="text-gray-400 text-sm">[Button would not render]</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Case 2: Coffee User with Customer ID (Button Visible) -->
+        <div class="demo-section">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">✅ Coffee User with Customer ID - Button Visible</h2>
+            <p class="text-gray-600 mb-4">User: coffee@example.com | Tier: Coffee | Customer ID: cus_test123456</p>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <button
+                        onclick="testManageSubscription()"
+                        class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Manage Subscription
+                    </button>
+                    <p class="mt-2 text-sm text-gray-500">
+                        Cancel anytime, update payment method, or download invoices
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Case 3: Coffee User without Customer ID (Button Hidden) -->
+        <div class="demo-section">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">❌ Coffee User without Customer ID - Button NOT Visible</h2>
+            <p class="text-gray-600 mb-4">User: coffee-no-id@example.com | Tier: Coffee | Customer ID: None</p>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="text-sm text-gray-500">Button would be hidden because stripe_customer_id is null</p>
+                <div class="mt-6 pt-6 border-t border-gray-200" style="display: none;">
+                    <p class="text-gray-400 text-sm">[Button would not render]</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accessibility Tests -->
+        <div class="demo-section">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">♿ Accessibility Features Test</h2>
+            <div class="space-y-4">
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h3 class="text-sm font-semibold text-green-800 mb-2">✅ Keyboard Navigation</h3>
+                    <p class="text-sm text-green-700">Use Tab to navigate to button, Enter/Space to activate</p>
+                    <button
+                        onclick="alert('Button activated via keyboard!')"
+                        class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    >
+                        Test Keyboard Focus
+                    </button>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h3 class="text-sm font-semibold text-green-800 mb-2">✅ Visual Indicators</h3>
+                    <p class="text-sm text-green-700">Hover and focus states provide clear visual feedback</p>
+                    <button class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        Hover to see state change
+                    </button>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h3 class="text-sm font-semibold text-green-800 mb-2">✅ Clear Text and Icon</h3>
+                    <p class="text-sm text-green-700">Descriptive text with supporting icon for clarity</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Handling Simulation -->
+        <div class="demo-section">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">🚨 Error Handling Test</h2>
+            <div class="space-y-4">
+                <button
+                    onclick="simulateNetworkError()"
+                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                >
+                    Simulate Network Error
+                </button>
+                
+                <button
+                    onclick="simulateNoCustomerId()"
+                    class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
+                >
+                    Simulate No Customer ID Error
+                </button>
+                
+                <button
+                    onclick="simulateInvalidResponse()"
+                    class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700"
+                >
+                    Simulate Invalid Response
+                </button>
+            </div>
+            <div id="error-output" class="mt-4 p-3 bg-gray-100 rounded-lg hidden">
+                <h4 class="font-semibold text-gray-800">Error Handling Result:</h4>
+                <p id="error-message" class="text-sm text-gray-600 mt-1"></p>
+            </div>
+        </div>
+
+        <!-- Edge Cases -->
+        <div class="demo-section">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">🔍 Edge Cases Test</h2>
+            <div class="space-y-4">
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <h3 class="text-sm font-semibold text-yellow-800 mb-2">⚠️ Multiple Rapid Clicks</h3>
+                    <p class="text-sm text-yellow-700 mb-2">Current implementation doesn't prevent rapid clicking</p>
+                    <button
+                        onclick="testRapidClicks(this)"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                        Test Rapid Clicking
+                    </button>
+                    <p class="text-xs text-yellow-600 mt-1">Click rapidly - each click would trigger API call</p>
+                </div>
+                
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h3 class="text-sm font-semibold text-blue-800 mb-2">✅ Responsive Design</h3>
+                    <p class="text-sm text-blue-700 mb-2">Button adapts to different screen sizes</p>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <button class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg">
+                            Mobile: Full Width
+                        </button>
+                        <span class="text-xs text-gray-500 self-center">→ Tablet/Desktop: Auto Width</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function testManageSubscription() {
+            const startTime = Date.now();
+            console.log('🔄 Manage Subscription clicked - simulating API call...');
+            
+            // Simulate the actual function behavior
+            setTimeout(() => {
+                const endTime = Date.now();
+                console.log(`✅ Portal session created in ${endTime - startTime}ms`);
+                console.log('🔄 Redirecting to Stripe Customer Portal...');
+                
+                alert('✅ Success! In production, you would be redirected to Stripe Customer Portal');
+            }, 1500);
+        }
+
+        function simulateNetworkError() {
+            console.error('Portal session error:', 'Network timeout');
+            showErrorResult('Network Error: Unable to open subscription management. Please try again.');
+        }
+
+        function simulateNoCustomerId() {
+            console.error('No Stripe customer ID found for user');
+            showErrorResult('No Customer ID: No active subscription found. Please subscribe first.');
+        }
+
+        function simulateInvalidResponse() {
+            console.error('No portal URL returned');
+            showErrorResult('Invalid Response: Unable to open subscription management. Please try again.');
+        }
+
+        function showErrorResult(message) {
+            const output = document.getElementById('error-output');
+            const messageEl = document.getElementById('error-message');
+            
+            messageEl.textContent = message;
+            output.classList.remove('hidden');
+            
+            setTimeout(() => {
+                output.classList.add('hidden');
+            }, 5000);
+        }
+
+        let clickCount = 0;
+        function testRapidClicks(button) {
+            clickCount++;
+            console.log(`Click #${clickCount} - API call would be triggered`);
+            
+            if (clickCount >= 3) {
+                button.disabled = true;
+                button.textContent = 'Multiple API calls triggered!';
+                button.className = button.className.replace('bg-blue-600', 'bg-red-600');
+                
+                setTimeout(() => {
+                    button.disabled = false;
+                    button.textContent = 'Test Rapid Clicking';
+                    button.className = button.className.replace('bg-red-600', 'bg-blue-600');
+                    clickCount = 0;
+                }, 3000);
+            }
+        }
+
+        // Keyboard navigation test
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                console.log('Tab navigation detected - testing keyboard accessibility');
+            }
+        });
+
+        console.log('🧪 Manage Subscription Button Visual Test Ready');
+        console.log('📝 Test all interactive elements and check console for detailed logs');
+    </script>
+</body>
+</html>

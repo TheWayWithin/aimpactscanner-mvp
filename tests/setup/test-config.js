@@ -2,6 +2,7 @@
 import { beforeAll, afterAll, beforeEach, afterEach } from 'vitest'
 import { createClient } from '@supabase/supabase-js'
 import { config } from 'dotenv'
+import '@testing-library/jest-dom/vitest'
 
 // Load test environment variables
 config({ path: '.env.test' })

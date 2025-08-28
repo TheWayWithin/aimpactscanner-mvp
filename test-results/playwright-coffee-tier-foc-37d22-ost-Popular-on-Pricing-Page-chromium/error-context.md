@@ -1,0 +1,71 @@
+# Page snapshot
+
+```yaml
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - img "LLM.txt Mastery"
+  - link "Back to App":
+    - /url: /
+    - button "Back to App":
+      - img
+      - text: Back to App
+- main:
+  - heading "Simple, Transparent Pricing" [level=2]
+  - paragraph: Start free, upgrade when you need more. No hidden fees, no surprises.
+  - img
+  - text: $0 Free Perfect for testing
+  - list:
+    - listitem:
+      - img
+      - text: 3 analyses per day
+    - listitem:
+      - img
+      - text: 20 pages per analysis
+    - listitem:
+      - img
+      - text: Basic categorization
+  - link "Get Started Free":
+    - /url: /
+    - button "Get Started Free"
+  - text: MOST POPULAR
+  - img
+  - text: $4.95 /month Coffee 100 analyses per month
+  - list:
+    - listitem:
+      - img
+      - text: 100 analyses per month
+    - listitem:
+      - img
+      - text: 200 pages per analysis
+    - listitem:
+      - img
+      - text: AI-enhanced quality
+  - img
+  - text: $9.95 /month Growth Professional power
+  - list:
+    - listitem:
+      - img
+      - text: Unlimited analyses
+    - listitem:
+      - img
+      - text: 1,000 pages per analysis
+    - listitem:
+      - img
+      - text: Smart caching
+  - img
+  - text: $19.95 /month Scale Enterprise ready
+  - list:
+    - listitem:
+      - img
+      - text: Unlimited everything
+    - listitem:
+      - img
+      - text: API access
+    - listitem:
+      - img
+      - text: White-label support
+  - heading "Manage Your Subscription" [level=3]
+  - paragraph: Please sign in to manage your subscription.
+```

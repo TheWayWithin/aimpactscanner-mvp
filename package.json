@@ -57,6 +57,8 @@
     "deploy:production": "npm run build && npm run deploy:functions",
     "coffee:status": "node scripts/verify-step-by-step.js && echo '\n🎯 Coffee Tier Status: Ready for Production Revenue Generation!'",
     "coffee:test": "node scripts/test-coffee-tier-stripe.js",
+    "test:webhook": "./tests/webhook/run-tests.sh",
+    "test:webhook:cancellation": "npx vitest run --config=vitest.webhook-minimal.config.js",
     "coffee:setup-guide": "cat scripts/setup-stripe-test-mode.md"
   },
   "dependencies": {
@@ -71,6 +73,10 @@
     "@eslint/js": "^9.29.0",
     "@playwright/test": "^1.54.2",
     "@tailwindcss/postcss": "^4.1.11",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^24.3.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react-swc": "^3.10.2",
