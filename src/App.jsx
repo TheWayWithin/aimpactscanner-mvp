@@ -494,20 +494,20 @@ function AppContent() {
       } else {
         console.warn('⚠️ No user data found for:', userId);
         
+        // Use passed session or fall back to state session
+        const currentSession = userSession || session;
+        
         // Check if we're in a registration flow
         const pendingCoffeeTier = sessionStorage.getItem('pendingCoffeeTier');
         const needsTierSelection = localStorage.getItem('needs_tier_selection');
         const selectedTier = localStorage.getItem('selectedTier');
         
-        // Use passed session or fall back to state session for created_at
+        // Check if this is a new sign-up (created within last 10 minutes)
         const createdAt = currentSession?.user?.created_at;
         const createdTime = createdAt ? new Date(createdAt).getTime() : 0;
         const currentTime = new Date().getTime();
         const timeSinceCreation = currentTime - createdTime;
         const isNewSignup = createdAt && timeSinceCreation < 600000; // 10 minutes
-        
-        // Use passed session or fall back to state session
-        const currentSession = userSession || session;
         
         // Check if user metadata indicates they're from signup flow
         const isFromSignup = currentSession?.user?.user_metadata?.signup_source || 
@@ -518,9 +518,9 @@ function AppContent() {
         console.log('🔍 New user detection debug:', {
           userId,
           createdAt,
-          createdTime: new Date(createdAt).toISOString(),
+          createdTime: createdAt ? new Date(createdAt).toISOString() : 'null',
           currentTime: new Date(currentTime).toISOString(),
-          timeSinceCreation: Math.floor(timeSinceCreation / 1000) + ' seconds',
+          timeSinceCreation: createdAt ? Math.floor(timeSinceCreation / 1000) + ' seconds' : 'unknown',
           isNewSignup,
           isFromSignup,
           needsTierSelection,
