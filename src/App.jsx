@@ -26,6 +26,7 @@ import TierIndicator from './components/TierIndicator';
 import TierSelection from './components/TierSelection';
 import AccountDashboard from './components/AccountDashboard';
 import SimpleAccountDashboard from './components/SimpleAccountDashboard';
+import EmailVerificationPending from './components/EmailVerificationPending';
 import UserInitializer from './components/UserInitializer';
 import AnalysisHistory from './components/AnalysisHistory';
 import { useUpgrade } from './components/UpgradeHandler';
@@ -73,6 +74,7 @@ function AppContent() {
   const [userReady, setUserReady] = useState(false);
   const [pendingAnalysis, setPendingAnalysis] = useState(null);
   const [analysisResults, setAnalysisResults] = useState(null);
+  const [pendingVerificationEmail, setPendingVerificationEmail] = useState(null);
 
   // GTM tracking hooks
   const {
@@ -280,8 +282,29 @@ function AppContent() {
       lastAuthStateChange.current = currentTime;
       
       try {
+        // Check if user email is verified
+        const isEmailVerified = session?.user?.email_confirmed_at || session?.user?.confirmed_at;
+        
+        // If user just signed up and email is not verified, don't process
+        if (session && !isEmailVerified) {
+          console.log('⚠️ User email not verified, preventing auto-login');
+          // Check if this is a fresh sign-up (not a returning unverified user)
+          const pendingFreeTier = localStorage.getItem('pendingFreeTier');
+          if (pendingFreeTier) {
+            const data = JSON.parse(pendingFreeTier);
+            // If this sign-up happened in the last 5 minutes, show email verification
+            if (new Date() - new Date(data.timestamp) < 300000) {
+              setPendingVerificationEmail(data.email);
+              setCurrentView('email-verification');
+              // Sign out to prevent access
+              await supabase.auth.signOut();
+              return;
+            }
+          }
+        }
+        
         setSession(session);
-        if (session?.user?.id) {
+        if (session?.user?.id && isEmailVerified) {
         // PRIORITY 1: Check for pending analysis BEFORE database operations
         let pendingUrl = localStorage.getItem('pendingAnalysisUrl');
         let pendingId = localStorage.getItem('pendingAnalysisId');
@@ -547,8 +570,16 @@ function AppContent() {
           setUserTier('pending_payment');
           // Don't redirect, let them complete the payment flow
         } else if (metadataTier === 'free') {
-          console.log('🆓 User selected Free tier in signup - creating free account');
-          await createDefaultUser(userId, userEmail);
+          // Check if email is verified before creating account
+          const isVerified = currentSession?.user?.email_confirmed_at || currentSession?.user?.confirmed_at;
+          if (isVerified) {
+            console.log('🆓 User selected Free tier and email verified - creating account');
+            await createDefaultUser(userId, userEmail);
+          } else {
+            console.log('⚠️ User selected Free tier but email not verified - waiting for verification');
+            setUserTier('pending_verification');
+            // Don't create account until email is verified
+          }
         } else if (isNewSignup || !createdAt) {
           // If they're new OR we can't determine their age, send to tier selection
           console.log('🆕 User needs tier selection (new or unknown age)');
@@ -935,6 +966,10 @@ function AppContent() {
             setCurrentView('dashboard');
           }}
           onNavigate={(view) => setCurrentView(view)}
+          onShowEmailVerification={(email) => {
+            setPendingVerificationEmail(email);
+            setCurrentView('email-verification');
+          }}
         />
       </>
     );
@@ -963,6 +998,22 @@ function AppContent() {
       <>
         {/* <SimpleConsentBanner /> */}
         <Login onLoginSuccess={handleLoginComplete} />
+      </>
+    );
+  }
+
+  // Email verification pending view
+  if (currentView === 'email-verification') {
+    return (
+      <>
+        {/* <SimpleConsentBanner /> */}
+        <EmailVerificationPending 
+          email={pendingVerificationEmail || 'your email'}
+          onNavigateToLogin={() => setCurrentView('login')}
+          onResendEmail={() => {
+            console.log('Resending verification email...');
+          }}
+        />
       </>
     );
   }

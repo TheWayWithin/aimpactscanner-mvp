@@ -85,8 +85,8 @@ function UserInitializer({ session, onUserReady }) {
           createdAt: session?.user?.created_at
         });
         
-        if (selectedTier === 'coffee') {
-          console.log('☕ UserInitializer: User selected Coffee tier - waiting for payment');
+        if (selectedTier === 'coffee' || selectedTier === 'growth' || selectedTier === 'scale') {
+          console.log(`💎 UserInitializer: User selected ${selectedTier} tier - waiting for payment`);
           // Don't create database record - wait for Stripe webhook
           setStatus('ready');
           onUserReady?.({ tier: 'pending_payment', monthly_analyses_used: 0 });

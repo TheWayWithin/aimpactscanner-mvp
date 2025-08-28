@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 // useUpgrade removed - we create checkout session directly after sign-up
 import AILogo from './AILogo';
 
-const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
+const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerification }) => {
   const [selectedTier, setSelectedTier] = useState('coffee'); // Default to Coffee tier
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -75,7 +75,7 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
         email: email.trim().toLowerCase(),
         password: password,
         options: {
-          emailRedirectTo: `${window.location.origin}`,
+          emailRedirectTo: `${window.location.origin}/#login?verified=true`,
           data: {
             selected_tier: selectedTier,
             tier: selectedTier,  // Add both for compatibility
@@ -86,81 +86,115 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
 
       if (authError) throw authError;
 
-      // If Coffee tier selected, redirect to Stripe checkout
-      if (selectedTier === 'coffee' && authData?.user) {
-        setMessage('Account created! Redirecting to secure payment...');
-        setMessageType('success');
-        
-        // Store user data for post-payment flow
-        sessionStorage.setItem('pendingCoffeeTier', JSON.stringify({
-          userId: authData.user.id,
-          email: email.trim().toLowerCase(),
-          tier: 'coffee'
-        }));
+      // Handle paid tier redirects to Stripe checkout
+      if ((selectedTier === 'coffee' || selectedTier === 'growth' || selectedTier === 'scale') && authData?.user) {
+        // Check if tier is currently enabled
+        const tierEnabled = {
+          'coffee': true,
+          'growth': false, // Set to true when Growth tier launches
+          'scale': false   // Set to true when Scale tier launches
+        };
 
-        // Initiate Stripe checkout with the newly created user
-        setTimeout(async () => {
-          console.log('Initiating Stripe checkout for Coffee tier...');
-          try {
-            // Create checkout session directly
-            const priceId = import.meta.env.VITE_STRIPE_COFFEE_PRICE_ID || 'price_coffee_tier_monthly';
-            
-            // For new sign-ups, don't pass userId since they don't exist in DB yet
-            // The Edge Function will handle this as a registration flow
-            const { data, error } = await supabase.functions.invoke('create-checkout-session', {
-              body: {
-                priceId,
-                tier: 'coffee',
-                mode: 'registration', // Important: Tell the function this is a new sign-up
-                // Don't pass userId for registration flow - user doesn't exist in DB yet
-                successUrl: `${window.location.origin}/upgrade-success?tier=coffee&authId=${authData.user.id}`,
-                cancelUrl: `${window.location.origin}/pricing`
+        if (!tierEnabled[selectedTier]) {
+          // Tier not yet available - treat as Free tier for now
+          console.log(`⏳ ${selectedTier} tier not yet available - defaulting to Free tier`);
+          selectedTier = 'free'; // Fall through to Free tier logic below
+        } else {
+          setMessage('Account created! Redirecting to secure payment...');
+          setMessageType('success');
+          
+          // Store user data for post-payment flow
+          sessionStorage.setItem(`pending${selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1)}Tier`, JSON.stringify({
+            userId: authData.user.id,
+            email: email.trim().toLowerCase(),
+            tier: selectedTier
+          }));
+
+          // Initiate Stripe checkout with the newly created user
+          setTimeout(async () => {
+            console.log(`Initiating Stripe checkout for ${selectedTier} tier...`);
+            try {
+              // Get the appropriate price ID for the selected tier
+              const priceIds = {
+                'coffee': import.meta.env.VITE_STRIPE_COFFEE_PRICE_ID || 'price_coffee_tier_monthly',
+                'growth': import.meta.env.VITE_STRIPE_GROWTH_PRICE_ID || 'price_growth_tier_monthly',
+                'scale': import.meta.env.VITE_STRIPE_SCALE_PRICE_ID || 'price_scale_tier_monthly'
+              };
+              
+              const priceId = priceIds[selectedTier];
+              
+              // For new sign-ups, don't pass userId since they don't exist in DB yet
+              // The Edge Function will handle this as a registration flow
+              const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+                body: {
+                  priceId,
+                  tier: selectedTier,
+                  mode: 'registration', // Important: Tell the function this is a new sign-up
+                  // Don't pass userId for registration flow - user doesn't exist in DB yet
+                  successUrl: `${window.location.origin}/upgrade-success?tier=${selectedTier}&authId=${authData.user.id}`,
+                  cancelUrl: `${window.location.origin}/pricing`
+                }
+              });
+              
+              if (error) {
+                console.error('Failed to create checkout session:', error);
+                setMessage('Failed to redirect to payment. Please try upgrading from your dashboard.');
+                setMessageType('error');
+                return;
               }
-            });
-            
-            if (error) {
-              console.error('Failed to create checkout session:', error);
-              setMessage('Failed to redirect to payment. Please try upgrading from your dashboard.');
-              setMessageType('error');
-              return;
-            }
-            
-            if (data?.url) {
-              console.log('Redirecting to Stripe:', data.url);
-              window.location.href = data.url;
-            } else if (data?.sessionId) {
-              console.log('Redirecting to Stripe with session ID:', data.sessionId);
-              window.location.href = `https://checkout.stripe.com/pay/${data.sessionId}`;
-            } else {
-              console.error('No redirect URL or session ID received');
-              setMessage('Payment redirect failed. Please try upgrading from your dashboard.');
+              
+              if (data?.url) {
+                console.log('Redirecting to Stripe:', data.url);
+                window.location.href = data.url;
+              } else if (data?.sessionId) {
+                console.log('Redirecting to Stripe with session ID:', data.sessionId);
+                window.location.href = `https://checkout.stripe.com/pay/${data.sessionId}`;
+              } else {
+                console.error('No redirect URL or session ID received');
+                setMessage('Payment redirect failed. Please try upgrading from your dashboard.');
+                setMessageType('error');
+              }
+            } catch (err) {
+              console.error('Stripe checkout error:', err);
+              setMessage('Unable to process payment. Please try upgrading from your dashboard.');
               setMessageType('error');
             }
-          } catch (err) {
-            console.error('Stripe checkout error:', err);
-            setMessage('Unable to process payment. Please try upgrading from your dashboard.');
-            setMessageType('error');
-          }
-        }, 1500);
+          }, 1500);
+          return; // Exit here for paid tiers
+        }
       } else {
-        // Free tier - Show email verification message
+        // Free tier - Sign out and show email verification
         console.log('Free tier sign-up completed, user needs to verify email');
-        setMessage('✅ Account created! Please check your email to verify your account.');
-        setMessageType('success');
         
         // Store sign-up data for after verification
         localStorage.setItem('pendingFreeTier', JSON.stringify({
-          userId: authData.user.id,
+          userId: authData?.user?.id,
           email: email.trim().toLowerCase(),
           tier: 'free',
           timestamp: new Date().toISOString()
         }));
         
-        // Show extended message about email verification
-        setTimeout(() => {
-          setMessage(`📧 We've sent a verification link to ${email}. Please check your inbox (and spam folder) to complete sign-up.`);
-          // Don't auto-redirect - let user see the message
-        }, 2000);
+        // Sign out the user to prevent auto-login
+        await supabase.auth.signOut();
+        console.log('User signed out after Free tier sign-up');
+        
+        // Show email verification page
+        if (onShowEmailVerification) {
+          onShowEmailVerification(email.trim().toLowerCase());
+        } else {
+          // Fallback: Show message and redirect
+          setMessage(`📧 Account created! Check ${email} for verification link.`);
+          setMessageType('success');
+          
+          setTimeout(() => {
+            // Redirect to login page
+            if (onNavigate) {
+              onNavigate('login');
+            } else {
+              window.location.href = '/login';
+            }
+          }, 3000);
+        }
       }
     } catch (error) {
       console.error('Signup error:', error);
