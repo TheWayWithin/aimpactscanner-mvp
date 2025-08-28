@@ -175,6 +175,8 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
           emailRedirectTo: loginUrl.toString(),
           data: {
             tier: selectedTier,
+            selected_tier: selectedTier,  // Add both for compatibility
+            signup_source: 'unified-registration',
             full_name: email.split('@')[0] // Use email prefix as default name
           }
         }

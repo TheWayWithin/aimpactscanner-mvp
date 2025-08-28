@@ -492,10 +492,65 @@ function AppContent() {
           setUnlimitedAccess(true);
         }
       } else {
-        console.warn('⚠️ No user data found, creating default user');
-        // Create user with defaults if they don't exist
-        // Pass email if available, otherwise it will try to get from session
-        await createDefaultUser(userId, userEmail);
+        console.warn('⚠️ No user data found for:', userId);
+        
+        // Check if we're in a registration flow
+        const pendingCoffeeTier = sessionStorage.getItem('pendingCoffeeTier');
+        const needsTierSelection = localStorage.getItem('needs_tier_selection');
+        const selectedTier = localStorage.getItem('selectedTier');
+        
+        // Check if this is a new sign-up (created within last 5 minutes)
+        const createdAt = session?.user?.created_at;
+        const isNewSignup = createdAt && (new Date() - new Date(createdAt)) < 300000; // 5 minutes
+        
+        // Check if user metadata indicates they're from signup flow
+        const isFromSignup = session?.user?.user_metadata?.signup_source || 
+                           session?.user?.user_metadata?.selected_tier ||
+                           session?.user?.user_metadata?.tier;
+        
+        if (pendingCoffeeTier || selectedTier === 'coffee') {
+          console.log('☕ User selected Coffee tier - waiting for Stripe payment');
+          // Don't create user yet - wait for Stripe webhook
+          setUserTier('pending_payment');
+          return;
+        }
+        
+        if (isNewSignup || isFromSignup || needsTierSelection) {
+          console.log('🆕 New user detected - needs tier selection');
+          console.log('Debug info:', {
+            isNewSignup,
+            isFromSignup,
+            needsTierSelection,
+            createdAt,
+            userMetadata: session?.user?.user_metadata
+          });
+          
+          // Check if they have a tier selected in metadata
+          const metadataTier = session?.user?.user_metadata?.selected_tier || 
+                              session?.user?.user_metadata?.tier;
+          
+          if (metadataTier === 'coffee') {
+            console.log('☕ User selected Coffee tier in signup - waiting for Stripe payment');
+            setUserTier('pending_payment');
+            // Don't redirect, let them complete the payment flow
+          } else if (metadataTier === 'free') {
+            console.log('🆓 User selected Free tier in signup - creating free account');
+            await createDefaultUser(userId, userEmail);
+          } else {
+            // No tier selected yet - send to tier selection
+            console.log('⚠️ No tier selected - redirecting to tier selection');
+            setUserTier('pending_registration');
+            // Don't redirect if already on register page
+            if (currentView !== 'register' && currentView !== 'coffee-signup') {
+              setCurrentView('coffee-signup'); // Send to coffee-signup by default
+            }
+          }
+        } else {
+          // This is an older user without a database record (edge case)
+          // Create them as free tier for backward compatibility
+          console.log('🔄 Legacy user without data - creating as free tier');
+          await createDefaultUser(userId, userEmail);
+        }
       }
     } catch (error) {
       console.error('❌ Could not fetch user tier:', error);

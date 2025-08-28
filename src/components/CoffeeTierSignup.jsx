@@ -77,6 +77,7 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
           emailRedirectTo: `${window.location.origin}`,
           data: {
             selected_tier: selectedTier,
+            tier: selectedTier,  // Add both for compatibility
             signup_source: 'coffee-tier-signup'
           }
         }
@@ -101,11 +102,15 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
           await handleUpgrade('coffee');
         }, 1500);
       } else {
-        // Free tier - direct to dashboard
-        setMessage('Welcome! Your free account is ready.');
+        // Free tier - DON'T create database record yet
+        // Let the App.jsx fetchUserTier function handle it
+        setMessage('Welcome! Setting up your free account...');
         setMessageType('success');
+        
+        // The database record will be created by App.jsx when it detects
+        // the user metadata with tier = 'free'
         setTimeout(() => {
-          onRegistrationComplete?.(authData.user);
+          onRegistrationComplete?.(authData.user, 'free');
         }, 1500);
       }
     } catch (error) {
