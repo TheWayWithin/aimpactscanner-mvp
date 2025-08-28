@@ -105,12 +105,15 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate }) => {
             // Create checkout session directly
             const priceId = import.meta.env.VITE_STRIPE_COFFEE_PRICE_ID || 'price_coffee_tier_monthly';
             
+            // For new sign-ups, don't pass userId since they don't exist in DB yet
+            // The Edge Function will handle this as a registration flow
             const { data, error } = await supabase.functions.invoke('create-checkout-session', {
               body: {
                 priceId,
-                userId: authData.user.id,
                 tier: 'coffee',
-                successUrl: `${window.location.origin}/upgrade-success?tier=coffee`,
+                mode: 'registration', // Important: Tell the function this is a new sign-up
+                // Don't pass userId for registration flow - user doesn't exist in DB yet
+                successUrl: `${window.location.origin}/upgrade-success?tier=coffee&authId=${authData.user.id}`,
                 cancelUrl: `${window.location.origin}/pricing`
               }
             });
