@@ -92,6 +92,22 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], channel: 'chrome' },
       testMatch: ['**/*.spec.js'],
     },
+
+    /* Tier Testing Configuration */
+    {
+      name: 'tier-testing',
+      use: { 
+        ...devices['Desktop Chrome'],
+        // Extended timeout for email processing
+        actionTimeout: 15000,
+        navigationTimeout: 45000,
+        // Additional context for tier testing
+        extraHTTPHeaders: {
+          'X-Test-Mode': 'tier-testing'
+        }
+      },
+      testMatch: ['**/tier-signup-flows.spec.js'],
+    },
   ],
 
   /* Global setup and teardown */

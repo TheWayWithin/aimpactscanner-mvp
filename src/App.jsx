@@ -33,13 +33,10 @@ import { useUpgrade } from './components/UpgradeHandler';
 import { useUsageTracking } from './hooks/useUsageTracking';
 import AuthenticatedHeader from './components/AuthenticatedHeader';
 import AILogo from './components/AILogo';
-import AnalyticsTestComponent from './components/AnalyticsTestComponent.jsx';
-// import EnzuzoTestComponent from './components/EnzuzoTestComponent.jsx';
 import PrivacyPolicyPage from './components/PrivacyPolicyPage.jsx';
 import TermsOfServicePage from './components/TermsOfServicePage.jsx';
 import ContactPage from './components/ContactPage.jsx';
 import AboutPage from './components/AboutPage.jsx';
-import PDFTestComponent from './components/PDFTestComponent.jsx'; // Phase 1: PDF library testing
 import Footer from './components/Footer.jsx';
 // import SimpleConsentBanner from './components/SimpleConsentBanner.jsx'; // Disabled - using Enzuzo via GTM
 
@@ -217,14 +214,6 @@ function AppContent() {
       if (session && session.user) {
         setSession(session);
         
-        // Special handling for known coffee tier users
-        if (session.user.email === 'jamie.watters.mail@icloud.com') {
-          console.log('☕ Detected Jamie - setting Coffee tier');
-          localStorage.setItem(`user_tier_${session.user.id}`, 'coffee');
-          localStorage.setItem(`user_email_${session.user.id}`, session.user.email);
-          setUserTier('coffee');
-          setUnlimitedAccess(true);
-        }
         
         fetchUserTier(session.user.id, session.user.email);
         
@@ -233,14 +222,7 @@ function AppContent() {
         const pendingId = localStorage.getItem('pendingAnalysisId');
         const landingData = localStorage.getItem('landingAnalysisData');
         
-        console.log('🔍 INITIAL SESSION DEBUG:', {
-          hasPendingUrl: !!pendingUrl,
-          hasPendingId: !!pendingId,
-          hasLandingData: !!landingData,
-          alreadyProcessed: pendingAnalysisProcessed.current,
-          pendingUrl: pendingUrl,
-          pendingId: pendingId
-        });
+        // Check for pending analysis from landing page
         
         if (pendingUrl && pendingId && landingData && !pendingAnalysisProcessed.current) {
           console.log('✅ Initial session: Found pending analysis, redirecting to results');
@@ -348,16 +330,7 @@ function AppContent() {
           }
         }
         
-        // Enhanced debugging for auth state change
-        console.log('🔍 AUTH STATE DEBUG:', {
-          hasPendingUrl: !!pendingUrl,
-          hasPendingId: !!pendingId,
-          hasLandingData: !!landingData,
-          alreadyProcessed: pendingAnalysisProcessed.current,
-          pendingUrl: pendingUrl,
-          pendingId: pendingId,
-          storageMethod: landingData?.includes('fromUrlParams') ? 'URL parameters' : 'localStorage'
-        });
+        // Check for pending analysis from landing page
         
         if (pendingUrl && pendingId && landingData && !pendingAnalysisProcessed.current) {
           console.log('🎯 Auth state changed, found pending analysis - redirecting to results');
@@ -538,20 +511,7 @@ function AppContent() {
                            currentSession?.user?.user_metadata?.selected_tier ||
                            currentSession?.user?.user_metadata?.tier;
         
-        // Enhanced debugging
-        console.log('🔍 New user detection debug:', {
-          userId,
-          createdAt,
-          createdTime: createdAt ? new Date(createdAt).toISOString() : 'null',
-          currentTime: new Date(currentTime).toISOString(),
-          timeSinceCreation: createdAt ? Math.floor(timeSinceCreation / 1000) + ' seconds' : 'unknown',
-          isNewSignup,
-          isFromSignup,
-          needsTierSelection,
-          userMetadata: currentSession?.user?.user_metadata,
-          pendingCoffeeTier,
-          selectedTier
-        });
+        // Determine if this is a new user requiring tier selection
         
         if (pendingCoffeeTier || selectedTier === 'coffee') {
           console.log('☕ User selected Coffee tier - waiting for Stripe payment');
@@ -866,9 +826,7 @@ function AppContent() {
 
       // Increment usage for free tier
       if (userTier === 'free') {
-        console.log('Incrementing usage. Current:', usageData.remaining);
         incrementUsage();
-        console.log('After increment:', usageData.remaining - 1);
       }
 
       // Switch to analysis view
@@ -1060,6 +1018,38 @@ function AppContent() {
     );
   }
 
+  // Add pricing page accessibility for unauthenticated users
+  if (currentView === 'pricing') {
+    return (
+      <div className="min-h-screen flex flex-col bg-white">
+        {/* <SimpleConsentBanner /> */}
+        <div className="flex-grow">
+          <TierSelection 
+            currentTier="free"
+            onUpgrade={(tier) => {
+              // User selected tier from pricing page
+              
+              // Block Coming Soon tiers
+              if (tier === 'growth' || tier === 'scale') {
+                alert('This tier is coming soon! Please check back later or contact us for early access.');
+                return;
+              }
+              
+              localStorage.setItem('selectedTier', tier);
+              if (tier === 'coffee') {
+                setCurrentView('register');
+              } else {
+                setCurrentView('register');
+              }
+            }}
+            showRegistrationFlow={false}
+          />
+        </div>
+        <Footer onNavigate={setCurrentView} />
+      </div>
+    );
+  }
+
   // Show landing page for non-authenticated users by default
   if (!session) {
     if (currentView === 'landing' || currentView === 'dashboard' || currentView === 'input') {
@@ -1215,27 +1205,6 @@ function AppContent() {
           >
             👤 Account
           </button>
-          <button
-            onClick={() => setCurrentView('analytics-test')}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-              currentView === 'analytics-test' 
-                ? 'bg-red-600 text-white' 
-                : 'bg-red-200 text-red-700 hover:bg-red-300'
-            }`}
-          >
-            🔬 Analytics Test
-          </button>
-          <button
-            onClick={() => setCurrentView('pdf-test')}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-              currentView === 'pdf-test' 
-                ? 'bg-orange-600 text-white' 
-                : 'bg-orange-200 text-orange-700 hover:bg-orange-300'
-            }`}
-          >
-            📄 PDF Test
-          </button>
-          {/* ENZUZO TEST BUTTON REMOVED - GDPR testing complete */}
         </div>
 
         {/* Content based on view */}
@@ -1307,15 +1276,6 @@ function AppContent() {
           <SimpleAccountDashboard user={session?.user} userTier={userTier} />
         )}
 
-        {currentView === 'analytics-test' && (
-          <AnalyticsTestComponent />
-        )}
-
-        {currentView === 'pdf-test' && (
-          <PDFTestComponent />
-        )}
-
-        {/* ENZUZO TEST COMPONENT REMOVED - GDPR testing complete */}
 
         {/* Privacy, Terms, Contact, and About pages are now handled above for both authenticated and non-authenticated users */}
       </main>
