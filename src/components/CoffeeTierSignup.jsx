@@ -98,7 +98,7 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
         if (!tierEnabled[selectedTier]) {
           // Tier not yet available - treat as Free tier for now
           console.log(`⏳ ${selectedTier} tier not yet available - defaulting to Free tier`);
-          selectedTier = 'free'; // Fall through to Free tier logic below
+          setSelectedTier('free'); // Fall through to Free tier logic below
         } else {
           setMessage('Account created! Redirecting to secure payment...');
           setMessageType('success');
