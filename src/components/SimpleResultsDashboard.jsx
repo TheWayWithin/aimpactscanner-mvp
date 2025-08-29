@@ -177,7 +177,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         score: 30,
         pillar: "Machine Readability",
         evidence: ["❌ No LLMs.txt file found at /llms.txt", "Missing AI content accessibility protocol"],
-        recommendations: ["Create /llms.txt following llmstxt.org standard", "Include structured content map for AI systems", "Add markdown format with H1 title and key sections"]
+        recommendations: ["Create a professional LLMs.txt file using llmtxtmastery.com", "Follow llmstxt.org standard for AI visibility", "Include structured content map with H1 title and key sections"]
       }
     ]
   };

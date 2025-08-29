@@ -824,10 +824,8 @@ function AppContent() {
         console.log("⚠️ Analysis record creation failed:", error.message);
       }
 
-      // Increment usage for free tier
-      if (userTier === 'free') {
-        incrementUsage();
-      }
+      // Increment usage tracking for all users (even unlimited for display purposes)
+      incrementUsage();
 
       // Switch to analysis view
       setCurrentView('analysis');

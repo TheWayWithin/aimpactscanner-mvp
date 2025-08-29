@@ -391,7 +391,7 @@ const AccountDashboard = ({ user, className = '' }) => {
       )}
 
       {/* Billing Actions */}
-      {accountData.user.tier !== 'free' && (
+      {accountData.user.tier !== 'free' && accountData.user.stripe_customer_id && (
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900">Billing Management</h2>
@@ -401,20 +401,15 @@ const AccountDashboard = ({ user, className = '' }) => {
               <p className="text-gray-600 mb-4">
                 Manage your subscription, update payment methods, and view billing history through Stripe.
               </p>
-              <div className="space-x-4">
-                <button
-                  onClick={() => alert('Billing portal integration coming soon!')}
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded font-medium transition-colors"
-                >
-                  Manage Billing
-                </button>
-                <button
-                  onClick={() => alert('Download invoices feature coming soon!')}
-                  className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded font-medium transition-colors"
-                >
-                  Download Invoices
-                </button>
-              </div>
+              <button
+                onClick={handleManageSubscription}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded font-medium transition-colors"
+              >
+                Open Billing Portal
+              </button>
+              <p className="mt-2 text-sm text-gray-500">
+                View invoices, update payment method, or cancel subscription
+              </p>
             </div>
           </div>
         </div>

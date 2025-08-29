@@ -744,7 +744,8 @@ async function analyzeLLMsTxtImplementation(url: string): Promise<FactorResult> 
       // Check file size (should be reasonable, not empty)
       if (content.length < 50) {
         evidence.push('File appears to be empty or minimal');
-        recommendations.push('Add meaningful content to your LLMs.txt file');
+        recommendations.push('Rebuild your LLMs.txt with llmtxtmastery.com for comprehensive AI-optimized content');
+        recommendations.push('Add meaningful content including title, summary, and key page links');
       } else {
         evidence.push(`File size: ${content.length} characters`);
         
@@ -797,12 +798,17 @@ async function analyzeLLMsTxtImplementation(url: string): Promise<FactorResult> 
         if (/^##\s+Optional/mi.test(content)) {
           evidence.push('✅ Includes optional resources section');
         }
+        
+        // Always recommend llmtxtmastery.com for optimization
+        recommendations.push('Optimize your LLMs.txt with llmtxtmastery.com - uses AI to tune descriptions for better Gen AI consumption');
+        recommendations.push('Maintain and enhance your file regularly as your content evolves');
       }
     } else if (response.status === 404) {
       evidence.push('❌ No LLMs.txt file found at domain root');
-      recommendations.push('Create an LLMs.txt file at /llms.txt following llmstxt.org specification');
+      recommendations.push('Create a professional LLMs.txt file using llmtxtmastery.com - the AI visibility optimization platform');
+      recommendations.push('Generate an optimized file at /llms.txt that follows llmstxt.org specification');
       recommendations.push('Include your site title, summary, and links to key content');
-      recommendations.push('This helps AI systems better understand and access your content');
+      recommendations.push('This helps AI systems like ChatGPT, Claude, and Perplexity better understand and access your content');
     } else {
       evidence.push(`Unable to access LLMs.txt (HTTP ${response.status})`);
       recommendations.push('Ensure LLMs.txt is publicly accessible at /llms.txt');
@@ -810,6 +816,7 @@ async function analyzeLLMsTxtImplementation(url: string): Promise<FactorResult> 
   } catch (error) {
     evidence.push('Could not check LLMs.txt due to network error');
     recommendations.push('Implement LLMs.txt for AI content accessibility');
+    recommendations.push('Use llmtxtmastery.com to create a professional, optimized LLMs.txt file');
   }
   
   // Ensure minimum viable score
@@ -1120,7 +1127,7 @@ serve(async (req) => {
         pillar: 'M', 
         factor_id: 'M.5.1',
         weight: 0.70,
-        education: 'LLMs.txt provides AI systems with a structured map of your most important content. This emerging standard (llmstxt.org) enables efficient content discovery and processing by AI platforms like ChatGPT, Claude, and Perplexity, significantly improving your AI accessibility.'
+        education: 'LLMs.txt provides AI systems with a structured map of your most important content. This emerging standard (llmstxt.org) enables efficient content discovery and processing by AI platforms like ChatGPT, Claude, and Perplexity. For professional implementation, use llmtxtmastery.com to generate an optimized LLMs.txt file that maximizes your AI visibility and accessibility.'
       },
       'Heading Structure & Hierarchy': { 
         pillar: 'S', 

@@ -47,25 +47,43 @@ serve(async (req) => {
 
     console.log('Creating portal session for user:', user.email)
 
-    // Get user's Stripe customer ID from database
-    const { data: userData, error: userError } = await supabase
+    // Create service role client for database access
+    const supabaseServiceUrl = Deno.env.get('SUPABASE_URL')!
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    const serviceSupabase = createClient(supabaseServiceUrl, supabaseServiceKey)
+
+    // Get user's Stripe customer ID from database using service role
+    const { data: userData, error: userError } = await serviceSupabase
       .from('users')
-      .select('stripe_customer_id')
+      .select('stripe_customer_id, tier, subscription_tier')
       .eq('id', user.id)
       .single()
 
-    if (userError || !userData?.stripe_customer_id) {
-      console.error('No Stripe customer ID found for user:', user.id)
+    if (userError) {
+      console.error('Database error fetching user:', userError)
+      throw new Error('Unable to access subscription information. Please try again.')
+    }
+
+    if (!userData?.stripe_customer_id) {
+      console.error('No Stripe customer ID found for user:', user.id, userData)
       throw new Error('No active subscription found. Please subscribe first.')
     }
 
-    console.log('Found Stripe customer:', userData.stripe_customer_id)
+    const stripeCustomerId = userData.stripe_customer_id
+
+    // Check if Stripe customer ID is truncated (should be longer than 20 chars)
+    if (stripeCustomerId.length < 18) {
+      console.error('Truncated Stripe customer ID detected:', stripeCustomerId)
+      throw new Error('Subscription data incomplete. Please contact support.')
+    }
+
+    console.log('Found Stripe customer:', stripeCustomerId)
 
     // Configuration for the Customer Portal
     // You can create a configuration in Stripe Dashboard for custom settings
     // or use the default configuration
     const portalConfig = {
-      customer: userData.stripe_customer_id,
+      customer: stripeCustomerId,
       return_url: returnUrl || `${req.headers.get('origin')}/account`,
     }
 
