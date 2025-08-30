@@ -1,84 +1,50 @@
-# AImpactScanner Development Plan
-**Last Updated**: 2025-08-30
-**Status**: Production Ready - All Critical Features Complete
+# Capacity Planning Mission - AImpactScanner
 
-## COMPLETED MISSIONS ✅
+## Mission Objective
+Create comprehensive CapacityPlan.md documenting current system capacity and infrastructure scaling roadmap as volumes increase.
 
-### 1. Account Page Fixes (2025-08-29)
-- [x] Fixed Manage Subscription button functionality
-- [x] Fixed usage tracking for all user tiers
-- [x] Removed duplicate billing sections
-- [x] Validated with Playwright testing (94.4% pass rate)
+## Phase 1: Current State Analysis
+- [x] Analyze current architecture capacity metrics
+- [x] Document existing performance baselines
+- [x] Identify current bottlenecks and limitations
+- [x] Review Supabase/Netlify platform limits
 
-### 2. LLMs.txt Enhancement - llmtxtmastery.com Integration (2025-08-29)
-- [x] Added recommendations for sites WITHOUT LLMs.txt
-- [x] Added different recommendations for sites WITH LLMs.txt
-- [x] Updated Edge Function with context-aware messaging
-- [x] Updated mock data in SimpleResultsDashboard
-- [x] Deployed and tested with real sites
+## Phase 2: Capacity Modeling
+- [x] Define growth scenarios (100, 1K, 10K, 100K users)
+- [x] Calculate resource requirements per tier
+- [x] Model database scaling needs
+- [x] Project Edge Function throughput requirements
 
-### 3. Messaging Clarity Updates (2025-08-30)
-- [x] Updated URL placeholders to "Enter a page URL to analyze..."
-- [x] Added helper text "Analyze one page at a time..."
-- [x] Added results header showing analyzed URL
-- [x] Added FAQ about page vs website analysis
-- [x] Updated Landing.jsx, LandingEnhanced.jsx, URLInput.jsx
-- [x] Updated ContactPage.jsx with FAQ content
+## Phase 3: Scaling Strategy Development
+- [x] Design horizontal scaling approach
+- [x] Plan database optimization strategies
+- [x] Define caching and CDN strategies
+- [x] Create monitoring and alerting framework
 
-### 4. Comprehensive Testing Suite (2025-08-30)
-- [x] Created 86+ test cases covering all features
-- [x] Executed messaging clarity tests - PASSED
-- [x] Tested llmtxtmastery.com integration - PASSED
-- [x] Validated account page fixes - PASSED
-- [x] Ran full regression suite (107 tests, 85% pass rate)
-- [x] Created formal test report (docs/TEST_RESULTS_2025-08-30.md)
-- [x] Production deployment approved (95% confidence)
+## Phase 4: Documentation Creation
+- [x] Write comprehensive CapacityPlan.md
+- [x] Write comprehensive Scaling Strategy document
+- [x] Include detailed implementation steps per phase
+- [x] Add cost projections per growth phase
+- [x] Define trigger points for scaling actions
 
-## PRODUCTION READINESS STATUS
+## Status: COMPLETE ✅
+Started: 2025-08-30
+Completed: 2025-08-30
 
-### Core Features ✅
-- **Analysis Engine**: 10-factor MASTERY-AI Framework analysis working
-- **Authentication**: Magic links and session management functional
-- **Payment Integration**: Stripe Coffee tier subscription active
-- **Results Display**: Professional dashboard with framework compliance
-- **PDF Generation**: Export functionality working
-- **Tier Management**: Free (3 analyses) and Coffee (unlimited) tiers
+## Deliverables:
+- ✅ **CapacityPlan.md** - Comprehensive capacity planning document with growth models from 100 to 100K+ users
+  - Location: `/docs/CapacityPlan.md`
+  - 676 lines of detailed capacity planning
+  - Covers all 4 growth phases with specific metrics and costs
+  - Includes implementation timeline and scaling triggers
 
-### Performance Metrics ✅
-- Landing page load: 2.3s (target: <3s)
-- Form response: 46ms (target: <1s)
-- Analysis completion: <15s (target: <60s)
-- Cross-browser: Chrome/Firefox working
-- Mobile responsive: 100% functional
+## Additional Fixes Completed:
 
-### Known Issues (Non-Blocking)
-- Some test selectors need updates (test environment issue)
-- Safari/Edge testing pending (post-deployment priority)
-- Advanced auth scenarios need test configuration
-
-## DEPLOYMENT STATUS
-**APPROVED FOR PRODUCTION** 🚀
-- Zero critical issues
-- 95% confidence level
-- All user journeys functional
-- Performance targets exceeded
-
-## POST-DEPLOYMENT PRIORITIES
-
-### Week 1
-- [ ] Monitor real user behavior
-- [ ] Validate production payment flows
-- [ ] Update test selectors for CI/CD
-
-### Month 1
-- [ ] Complete Safari/Edge testing
-- [ ] Load testing with concurrent users
-- [ ] Enhanced error monitoring setup
-
-## SUCCESS METRICS ACHIEVED
-- ✅ Complete user journey from landing to results
-- ✅ Professional UI/UX with clear messaging
-- ✅ Framework-compliant analysis results
-- ✅ Context-aware recommendations
-- ✅ Comprehensive test coverage
-- ✅ Production-ready performance
+### Tier Display Bug Fix (2025-08-30)
+- **Issue**: Coffee tier users seeing "Free" as active plan on pricing page
+- **Root Cause**: UserInitializer component passing tier data but App.jsx not processing it
+- **Solution**: Updated onUserReady handler to properly process tier data from UserInitializer
+- **Impact**: Tier information now correctly displays for all users, especially during database timeouts
+- **Files Modified**: `/src/App.jsx`
+- **Testing**: Verified with Coffee tier, Free tier, and database timeout scenarios
