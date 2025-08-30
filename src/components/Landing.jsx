@@ -212,7 +212,7 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
                 type="text"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="Enter your website URL..."
+                placeholder="Enter a page URL to analyze..."
                 className="flex-1 px-6 py-4 text-lg border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none"
                 disabled={isAnalyzing}
               />
@@ -234,6 +234,9 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
                 )}
               </button>
             </div>
+            <p className="text-sm text-gray-600 mt-2">
+              Analyze one page at a time - start with your homepage or most important page
+            </p>
             {error && (
               <p className="mt-2 text-red-600">{error}</p>
             )}

@@ -214,6 +214,14 @@ const ContactPage = () => {
                 </div>
                 
                 <div>
+                  <h3 className="font-semibold text-gray-800 mb-2">Does AImpactScanner analyze my entire website or individual pages?</h3>
+                  <p className="text-sm text-gray-600">
+                    AImpactScanner analyzes individual pages. Each URL you submit gets its own detailed analysis. 
+                    To evaluate your entire site, analyze your key pages separately - starting with your homepage, then your most important landing pages.
+                  </p>
+                </div>
+                
+                <div>
                   <h3 className="font-semibold text-gray-800 mb-2">How often should I re-analyze my site?</h3>
                   <p className="text-sm text-gray-600">
                     We recommend monthly analysis to track improvements and stay current with 

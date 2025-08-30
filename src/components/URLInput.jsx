@@ -63,7 +63,7 @@ function URLInput({ onAnalyze, isAnalyzing = false }) {
               type="text"
               value={url}
               onChange={handleInputChange}
-              placeholder="https://example.com or example.com"
+              placeholder="https://example.com/page or example.com/page"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               style={{ 
                 backgroundColor: '#FFFFFF',
@@ -79,6 +79,9 @@ function URLInput({ onAnalyze, isAnalyzing = false }) {
               </div>
             )}
           </div>
+          <p className="text-sm text-gray-600 mt-2">
+            Analyze one page at a time - start with your homepage or most important page
+          </p>
           {error && (
             <p className="mt-2 text-sm text-red-600 flex items-center">
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

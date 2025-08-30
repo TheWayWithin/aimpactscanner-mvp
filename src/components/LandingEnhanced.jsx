@@ -98,7 +98,7 @@ function LandingEnhanced({ onAnalysisComplete }) {
                   type="text"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="Enter your website URL..."
+                  placeholder="Enter a page URL to analyze..."
                   className="flex-1 px-6 py-4 text-lg rounded-lg focus:outline-none"
                   disabled={isAnalyzing}
                 />
@@ -121,6 +121,9 @@ function LandingEnhanced({ onAnalysisComplete }) {
                 </button>
               </div>
             </div>
+            <p className="text-sm text-gray-600 mt-2">
+              Analyze one page at a time - start with your homepage or most important page
+            </p>
             {error && (
               <p className="mt-4 text-red-600 text-sm">{error}</p>
             )}

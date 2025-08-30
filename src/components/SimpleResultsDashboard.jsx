@@ -306,6 +306,13 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
 
   return (
     <div className="results-dashboard max-w-6xl mx-auto p-6" data-testid="results-dashboard">
+      {/* Page Analysis Header */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+        <h2 className="text-lg font-semibold text-gray-900">
+          Analysis Results for: <span className="text-blue-600">{results.url || 'example.com'}</span>
+        </h2>
+      </div>
+      
       {/* Demo Mode Notice - Only show when using demo data */}
       {!isRealAnalysis && (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
