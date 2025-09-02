@@ -1,7 +1,8 @@
 // Contact Us Page - Support and contact information
 import React, { useState, useEffect } from 'react';
+import NavigationButtons from './NavigationButtons';
 
-const ContactPage = () => {
+const ContactPage = ({ onNavigate, isAuthenticated }) => {
   useEffect(() => {
     // Scroll to top when component mounts
     window.scrollTo(0, 0);
@@ -37,6 +38,13 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
+      {/* Navigation */}
+      <NavigationButtons 
+        currentView="contact" 
+        onNavigate={onNavigate} 
+        isAuthenticated={isAuthenticated} 
+      />
+      
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>

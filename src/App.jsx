@@ -38,6 +38,7 @@ import TermsOfServicePage from './components/TermsOfServicePage.jsx';
 import ContactPage from './components/ContactPage.jsx';
 import AboutPage from './components/AboutPage.jsx';
 import Footer from './components/Footer.jsx';
+import NavigationButtons from './components/NavigationButtons.jsx';
 // import SimpleConsentBanner from './components/SimpleConsentBanner.jsx'; // Disabled - using Enzuzo via GTM
 
 function AppContent() {
@@ -490,6 +491,15 @@ function AppContent() {
         }
       } else {
         console.warn('⚠️ No user data found for:', userId);
+        
+        // CRITICAL FIX: Check localStorage first before assuming new user
+        const existingLocalTier = localStorage.getItem(`user_tier_${userId}`);
+        if (existingLocalTier && existingLocalTier !== 'free') {
+          console.log('🔧 Database query failed but found existing tier in localStorage:', existingLocalTier);
+          console.log('📱 User is existing subscriber - keeping localStorage tier instead of treating as new user');
+          // Don't override the tier - it was already set correctly from localStorage
+          return;
+        }
         
         // Use passed session or fall back to state session
         const currentSession = userSession || session;
@@ -980,7 +990,10 @@ function AppContent() {
     return (
       <div className="min-h-screen flex flex-col bg-white">
         {/* <SimpleConsentBanner /> */}
-        <PrivacyPolicyPage />
+        <PrivacyPolicyPage 
+          onNavigate={setCurrentView} 
+          isAuthenticated={!!session}
+        />
         <Footer onNavigate={setCurrentView} />
       </div>
     );
@@ -990,7 +1003,10 @@ function AppContent() {
     return (
       <div className="min-h-screen flex flex-col bg-white">
         {/* <SimpleConsentBanner /> */}
-        <TermsOfServicePage />
+        <TermsOfServicePage 
+          onNavigate={setCurrentView} 
+          isAuthenticated={!!session}
+        />
         <Footer onNavigate={setCurrentView} />
       </div>
     );
@@ -1000,7 +1016,10 @@ function AppContent() {
     return (
       <div className="min-h-screen flex flex-col bg-white">
         {/* <SimpleConsentBanner /> */}
-        <ContactPage />
+        <ContactPage 
+          onNavigate={setCurrentView} 
+          isAuthenticated={!!session}
+        />
         <Footer onNavigate={setCurrentView} />
       </div>
     );
@@ -1010,18 +1029,29 @@ function AppContent() {
     return (
       <div className="min-h-screen flex flex-col bg-white">
         {/* <SimpleConsentBanner /> */}
-        <AboutPage />
+        <AboutPage 
+          onNavigate={setCurrentView} 
+          isAuthenticated={!!session}
+        />
         <Footer onNavigate={setCurrentView} />
       </div>
     );
   }
 
   // Add pricing page accessibility for unauthenticated users
-  if (currentView === 'pricing') {
+  if (currentView === 'pricing' && !session) {
     return (
       <div className="min-h-screen flex flex-col bg-white">
         {/* <SimpleConsentBanner /> */}
         <div className="flex-grow">
+          {/* Import NavigationButtons for non-authenticated pricing page */}
+          <div className="bg-gradient-to-b from-blue-50 to-white pt-8">
+            <NavigationButtons 
+              currentView="pricing" 
+              onNavigate={setCurrentView} 
+              isAuthenticated={false}
+            />
+          </div>
           <TierSelection 
             currentTier="free"
             onUpgrade={(tier) => {

@@ -1,12 +1,22 @@
 import React, { useEffect } from 'react';
+import NavigationButtons from './NavigationButtons';
 
-const AboutPage = () => {
+const AboutPage = ({ onNavigate, isAuthenticated }) => {
   useEffect(() => {
     // Scroll to top when component mounts
     window.scrollTo(0, 0);
   }, []);
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Navigation */}
+      <div className="bg-gradient-to-b from-blue-50 to-white py-8">
+        <NavigationButtons 
+          currentView="about" 
+          onNavigate={onNavigate} 
+          isAuthenticated={isAuthenticated} 
+        />
+      </div>
+      
       {/* Header */}
       <div className="bg-gradient-to-br from-blue-600 to-blue-800 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">

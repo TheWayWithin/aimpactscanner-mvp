@@ -1,7 +1,8 @@
 // Terms of Service Page - Legal terms and conditions
 import React, { useEffect } from 'react';
+import NavigationButtons from './NavigationButtons';
 
-const TermsOfServicePage = () => {
+const TermsOfServicePage = ({ onNavigate, isAuthenticated }) => {
   useEffect(() => {
     // Scroll to top when component mounts
     window.scrollTo(0, 0);
@@ -14,6 +15,13 @@ const TermsOfServicePage = () => {
   }, []);
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
+      {/* Navigation */}
+      <NavigationButtons 
+        currentView="terms" 
+        onNavigate={onNavigate} 
+        isAuthenticated={isAuthenticated} 
+      />
+      
       <div className="max-w-4xl mx-auto px-6">
         <div className="bg-white rounded-lg shadow-sm border p-8">
           <div className="mb-8">

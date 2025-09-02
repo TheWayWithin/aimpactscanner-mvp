@@ -1,7 +1,8 @@
 // Privacy Policy Page - Professional legal document
 import React, { useEffect } from 'react';
+import NavigationButtons from './NavigationButtons';
 
-const PrivacyPolicyPage = () => {
+const PrivacyPolicyPage = ({ onNavigate, isAuthenticated }) => {
   useEffect(() => {
     // Scroll to top when component mounts
     window.scrollTo(0, 0);
@@ -14,6 +15,13 @@ const PrivacyPolicyPage = () => {
   }, []);
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
+      {/* Navigation */}
+      <NavigationButtons 
+        currentView="privacy" 
+        onNavigate={onNavigate} 
+        isAuthenticated={isAuthenticated} 
+      />
+      
       <div className="max-w-4xl mx-auto px-6">
         <div className="bg-white rounded-lg shadow-sm border p-8">
           <div className="mb-8">

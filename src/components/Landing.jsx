@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import TrustBadges from './TrustBadges';
 import AILogo from './AILogo';
+import NavigationButtons from './NavigationButtons';
 
 function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
   const [url, setUrl] = useState('');
@@ -158,6 +159,13 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
           </div>
         </div>
       </header>
+      
+      {/* Navigation Buttons */}
+      <NavigationButtons 
+        currentView="landing" 
+        onNavigate={onNavigate} 
+        isAuthenticated={isAuthenticated}
+      />
       
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-16">
