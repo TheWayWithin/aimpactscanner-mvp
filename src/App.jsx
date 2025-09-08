@@ -837,39 +837,48 @@ function AppContent() {
       // Increment usage tracking for all users (even unlimited for display purposes)
       incrementUsage();
 
-      // Switch to analysis view
+      // Switch to analysis view to show progress
       setCurrentView('analysis');
 
-      // Call Edge Function
-      supabase.functions.invoke('analyze-page', {
+      // Call Edge Function and wait for results
+      const { data, error: invokeError } = await supabase.functions.invoke('analyze-page', {
         body: {
           url: url,
           analysisId: analysisId,
           userId: userId
         }
-      }).then(({ data, error: invokeError }) => {
-        const duration = Math.round((Date.now() - startTime) / 1000);
-        
-        if (invokeError) {
-          console.error('❌ Edge Function error:', invokeError);
-          trackError('edge_function', invokeError.message, 'analysis');
-          alert(`Analysis error: ${invokeError.message}`);
-        } else {
-          console.log('✅ Analysis completed:', data);
-          // Store the real analysis results
-          // Edge Function returns { success, overall_score, factors, etc }
-          if (data && data.success) {
-            const results = {
-              overall_score: data.overall_score,
-              factors: data.factors || [],
-              url: url,
-              created_at: new Date().toISOString()
-            };
-            setAnalysisResults(results);
-            trackAnalysisComplete(url, data.overall_score, duration);
-          }
-        }
       });
+      
+      const duration = Math.round((Date.now() - startTime) / 1000);
+      
+      if (invokeError) {
+        console.error('❌ Edge Function error:', invokeError);
+        trackError('edge_function', invokeError.message, 'analysis');
+        alert(`Analysis error: ${invokeError.message}`);
+        setCurrentView('input'); // Go back to input on error
+      } else {
+        console.log('✅ Analysis completed:', data);
+        // Store the real analysis results
+        if (data && data.success) {
+          const results = {
+            overall_score: data.overall_score,
+            factors: data.factors || [],
+            pillars: data.pillars || {},
+            url: url,
+            analysisId: analysisId,
+            created_at: new Date().toISOString()
+          };
+          setAnalysisResults(results);
+          trackAnalysisComplete(url, data.overall_score, duration);
+          
+          // Switch to results view once we have real data
+          setCurrentView('results');
+        } else {
+          console.error('❌ Invalid analysis response:', data);
+          alert('Analysis failed to return valid results');
+          setCurrentView('input');
+        }
+      }
 
     } catch (error) {
       console.error('❌ Error starting analysis:', error);
