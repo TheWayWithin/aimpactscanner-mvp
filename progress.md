@@ -1,5 +1,74 @@
 # MISSION PROGRESS LOG
 
+## Date: 2025-09-08
+## Mission: Weighted Scoring Implementation & Pillar Assignment Fixes
+
+### SESSION: Critical Scoring Algorithm Improvements ✅
+**Status**: Successfully implemented weighted pillar scoring with framework compliance
+
+#### Issue Discovery Phase
+- **Problem Reported**: Score flashing from 75→65 for freecalchub.com analysis
+- **Root Cause Investigation**: 
+  - Mock progress completing before real analysis, showing inconsistent scores
+  - Database schema mismatch (ai_score column not found)
+  - Factor pillar misassignment (Source Authority Signals in wrong pillar)
+
+#### Implementation Phase - Weighted Scoring ✅
+- **Replaced simple averaging with weighted calculations** based on MASTERY-AI Framework v3.1.1
+- **Updated factor weights** to match sub-pillar distributions:
+  - AI factors: 1.058% each (AI.1 sub-pillar: 26.7% of 23.8%)
+  - A factors: 1.193% each (A.3 sub-pillar: 20% of 17.9%)
+  - M factors: 0.73%, 0.80%, 1.46% (varies by sub-pillar)
+  - S factors: 0.76%, 0.74% (different sub-pillars)
+  - E factor: 0.64% (E.1 sub-pillar: 35% of 10.9%)
+- **Added totalWeight tracking** for proper weighted average calculations
+- **Fixed frontend display** to use API weighted scores instead of overriding
+
+**Files Modified**:
+- `/supabase/functions/analyze-page/index.ts` - Core weighted scoring implementation
+- `/src/components/PreviewResults.jsx` - Frontend fix to use API scores
+- `/WEIGHTED_SCORING_TEST_REPORT.md` - Comprehensive testing documentation
+
+#### UI Flow Fixes ✅
+- **Fixed score flashing issue**: Modified handleAnalysisComplete() to not switch views prematurely
+- **Database schema fix**: Updated analysis insert to use current schema (scores JSONB column)
+- **Mock score alignment**: Updated freecalchub mock score from 72→65 to match real analysis
+
+**Files Modified**:
+- `/src/App.jsx` - UI flow and database schema fixes
+- `/src/components/SimpleResultsDashboard.jsx` - Mock score alignment
+
+#### Pillar Assignment Correction ✅
+- **Critical Discovery**: Source Authority Signals (AI.1.2) was incorrectly assigned to Authority pillar
+- **Framework Verification**: Confirmed AI.1.2 belongs in AI pillar per official documentation
+- **Root Cause**: Conflicting mappings between factorPillarMap (display) and factorMappings (calculation)
+- **Fix Applied**: Moved Source Authority Signals from 'Authority & Trust' to 'AI Response Optimization'
+
+**Impact**:
+- AI pillar now correctly displays all 3 factors: Citation-Worthy (85), Source Authority (35), Evidence Chunking (60)
+- Weighted average is transparent: (85+35+60)/3 = 60 ✅
+- A pillar now correctly shows 2 factors instead of 3
+
+#### Testing & Validation ✅
+- **Comprehensive testing** via TESTER agent covering functional, integration, regression, and performance
+- **Mathematical verification**: Confirmed weighted calculations are correct
+- **Edge Function testing**: Verified all pillar assignments match framework
+- **Zero regressions**: All existing functionality preserved
+
+#### Deployment ✅
+- **Commit 1**: `1589163` - Weighted scoring implementation  
+- **Commit 2**: `99fce00` - UI fixes and database schema corrections
+- **Commit 3**: `02a7453` - Pillar assignment corrections
+- **Production Status**: All changes deployed and verified
+
+**Key Learnings**:
+- Framework compliance requires both calculation AND display alignment
+- Factor pillar assignments must match official documentation exactly
+- UI timing issues can create confusing user experiences
+- Database schema evolution requires careful migration of insert statements
+
+---
+
 ## Date: 2025-09-02
 ## Mission: Navigation Enhancement Implementation
 
