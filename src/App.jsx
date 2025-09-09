@@ -104,7 +104,8 @@ function AppContent() {
     usageData, 
     incrementUsage, 
     canAnalyze, 
-    setUnlimitedAccess 
+    setUnlimitedAccess,
+    resetMonthlyUsage
   } = useUsageTracking(session?.user?.email);
 
   // Track page views when current view changes
@@ -1167,12 +1168,7 @@ function AppContent() {
           setCurrentView('login');
           setSession(null);
           setUserTier('free');
-          setUsageData({
-            used: 0,
-            remaining: 5,
-            limit: 5,
-            analysesThisMonth: []
-          });
+          resetMonthlyUsage();
           
           // Sign out from Supabase
           try {
