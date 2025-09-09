@@ -1049,7 +1049,7 @@ serve(async (req) => {
     // Map factors to include pillar information for frontend display
     const factorPillarMap = {
       'Citation-Worthy Content Structure': 'AI Response Optimization',
-      'Source Authority Signals': 'Authority & Trust',
+      'Source Authority Signals': 'AI Response Optimization',
       'Evidence Chunking for RAG Optimization': 'AI Response Optimization',
       'Transparency & Disclosure Standards': 'Authority & Trust',
       'Contact Information & Accessibility': 'Authority & Trust',
