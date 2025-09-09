@@ -37,7 +37,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
     const urlLower = url.toLowerCase();
     
     // Known sites get specific scores
-    if (urlLower.includes('freecalchub')) return 72;
+    if (urlLower.includes('freecalchub')) return 65;
     if (urlLower.includes('evolve-7')) return 68;
     if (urlLower.includes('agent-11')) return 61;
     if (urlLower.includes('agentmarket')) return 63;

@@ -769,9 +769,11 @@ function AppContent() {
     }
   };
 
-  // Handle analysis complete
+  // Handle analysis complete (mock progress finished)
   const handleAnalysisComplete = () => {
-    setCurrentView('results');
+    // Don't switch views here - let the real analysis complete first
+    // The real analysis will switch to 'results' when it's done
+    console.log('🔄 Mock analysis progress completed, waiting for real analysis...');
   };
 
   // Start analysis (authenticated version)
@@ -812,19 +814,10 @@ function AppContent() {
             user_id: userId,
             url: url,
             status: 'in_progress',
-            overall_score: null,
-            ai_score: null,
-            authority_score: null,
-            machine_readability_score: null,
-            semantic_quality_score: null,
-            engagement_score: null,
-            topical_expertise_score: null,
-            reference_networks_score: null,
-            yield_optimization_score: null,
+            scores: null,
             framework_version: '3.1.1',
             analysis_duration: null,
-            created_at: new Date().toISOString(),
-            completed_at: null
+            created_at: new Date().toISOString()
           });
 
         if (analysisError) {
