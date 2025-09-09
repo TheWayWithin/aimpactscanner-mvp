@@ -57,8 +57,38 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
     return 'Needs Improvement';
   };
 
-  // Generate pillar scores from factors for visual appeal
+  // Use weighted pillar scores from API response, fallback to calculation if not available
   const calculatePillarScores = (factors) => {
+    // First, try to use the weighted pillar scores from the API response
+    const apiPillars = analysisData?.results?.pillars;
+    if (apiPillars) {
+      console.log('📊 Using weighted pillar scores from API:', apiPillars);
+      const pillarMapping = {
+        'AI': 'AI Response Optimization',
+        'A': 'Authority & Trust',
+        'M': 'Machine Readability', 
+        'S': 'Semantic Content',
+        'E': 'Engagement',
+        'T': 'Topical Expertise',
+        'R': 'Reference Networks',
+        'Y': 'Yield Optimization'
+      };
+      
+      const result = {};
+      Object.keys(pillarMapping).forEach(key => {
+        const pillarData = apiPillars[key];
+        if (pillarData && pillarData.score > 0) {
+          result[pillarMapping[key]] = pillarData.score;
+        }
+      });
+      
+      // If we have at least some pillar scores, return them
+      if (Object.keys(result).length > 0) {
+        return result;
+      }
+    }
+
+    // Fallback: calculate from factors if no API pillar data
     if (factors.length === 0) {
       // Fallback pillar scores based on overall score
       const baseScore = overallScore;
@@ -73,7 +103,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
       };
     }
 
-    // Calculate from actual factors
+    // Calculate unweighted averages from actual factors (fallback method)
     const pillarMap = {};
     factors.forEach(factor => {
       const pillarName = getPillarDisplayName(factor.pillar || 'Technical');

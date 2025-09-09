@@ -1078,73 +1078,73 @@ serve(async (req) => {
       'Citation-Worthy Content Structure': { 
         pillar: 'AI', 
         factor_id: 'AI.1.1',
-        weight: 1.03, // AI pillar: 23.8% / 23 factors ≈ 1.03%
+        weight: 1.058, // AI.1 sub-pillar: 26.7% of 23.8% = 6.35% framework / 6 factors = 1.058%
         education: 'Citation-worthy content structure is fundamental for AI systems to identify, extract, and cite your content. Proper fact density, hierarchical organization, and clear evidence support enable reliable AI citations.'
       },
       'Source Authority Signals': { 
         pillar: 'AI', 
         factor_id: 'AI.1.2',
-        weight: 1.03,
+        weight: 1.058, // AI.1 sub-pillar: 26.7% of 23.8% = 6.35% framework / 6 factors = 1.058%
         education: 'Source authority signals help AI systems assess credibility and trustworthiness. Clear author information, credentials, and professional indicators increase citation likelihood across AI platforms.'
       },
       'Evidence Chunking for RAG Optimization': { 
         pillar: 'AI', 
         factor_id: 'AI.1.5',
-        weight: 1.03,
+        weight: 1.058, // AI.1 sub-pillar: 26.7% of 23.8% = 6.35% framework / 6 factors = 1.058%
         education: 'Evidence chunking optimizes content for Retrieval-Augmented Generation systems. Proper 150-300 word segments with clear semantic boundaries improve AI processing and citation accuracy.'
       },
       'Transparency & Disclosure Standards': { 
         pillar: 'A', 
         factor_id: 'A.3.1',
-        weight: 1.19, // A pillar: 17.9% / 15 factors ≈ 1.19%
+        weight: 1.193, // A.3 sub-pillar: 20% of 17.9% = 3.58% framework / 3 factors = 1.193%
         education: 'Transparency and disclosure build trust with AI systems by providing clear information about funding, conflicts of interest, and methodology. This transparency increases citation confidence.'
       },
       'Contact Information & Accessibility': { 
         pillar: 'A', 
         factor_id: 'A.3.2',
-        weight: 1.19,
+        weight: 1.193, // A.3 sub-pillar: 20% of 17.9% = 3.58% framework / 3 factors = 1.193%
         education: 'Accessible contact information demonstrates accountability and enables verification. AI systems favor sources that provide clear ways to validate information and reach authors.'
       },
       'Security and Access Control': { 
         pillar: 'M', 
         factor_id: 'M.1.4',
-        weight: 0.70, // M pillar: 14.6% / 21 factors ≈ 0.70%
+        weight: 0.73, // M.1 sub-pillar: 25% of 14.6% = 3.65% framework / 5 factors = 0.73%
         education: 'HTTPS security and access controls ensure data integrity and user safety. AI systems prioritize secure sources for trustworthy information and citation reliability.'
       },
       'Title Tag Optimization': { 
         pillar: 'M', 
         factor_id: 'M.2.1',
-        weight: 0.70,
+        weight: 0.80, // M.2 sub-pillar: 22% of 14.6% = 3.21% framework / 4 factors = 0.80%
         education: 'Optimized title tags provide AI systems with clear content summaries and topic indicators. Well-structured titles with appropriate length and keywords improve discoverability.'
       },
       'Meta Description Quality': { 
         pillar: 'M', 
         factor_id: 'M.2.2',
-        weight: 0.70,
+        weight: 0.80, // M.2 sub-pillar: 22% of 14.6% = 3.21% framework / 4 factors = 0.80%
         education: 'Quality meta descriptions help AI systems understand page purpose and content relevance. Compelling descriptions with natural language improve click-through rates and user engagement.'
       },
       'LLMs.txt Implementation': { 
         pillar: 'M', 
         factor_id: 'M.5.1',
-        weight: 0.70,
+        weight: 1.46, // M.5 sub-pillar: 20% of 14.6% = 2.92% framework / 2 factors = 1.46%
         education: 'LLMs.txt provides AI systems with a structured map of your most important content. This emerging standard (llmstxt.org) enables efficient content discovery and processing by AI platforms like ChatGPT, Claude, and Perplexity. For professional implementation, use llmtxtmastery.com to generate an optimized LLMs.txt file that maximizes your AI visibility and accessibility.'
       },
       'Heading Structure & Hierarchy': { 
         pillar: 'S', 
         factor_id: 'S.2.2',
-        weight: 0.63, // S pillar: 13.9% / 22 factors ≈ 0.63%
+        weight: 0.76, // S.2 sub-pillar: 27.3% of 13.9% = 3.79% framework / 5 factors = 0.76%
         education: 'Proper heading hierarchy (H1, H2, H3) enables AI systems to understand content organization and topic relationships for better semantic comprehension and processing.'
       },
       'Content Depth and Comprehensiveness': { 
         pillar: 'S', 
         factor_id: 'S.1.3',
-        weight: 0.63,
+        weight: 0.74, // S.1 sub-pillar: 31.8% of 13.9% = 4.42% framework / 6 factors = 0.74%
         education: 'Comprehensive content depth provides AI systems with thorough information for accurate understanding and citation. Detailed coverage demonstrates expertise and authority.'
       },
       'Page Load Speed Optimization': { 
         pillar: 'E', 
         factor_id: 'E.1.1',
-        weight: 0.57, // E pillar: 10.9% / 19 factors ≈ 0.57%
+        weight: 0.64, // E.1 sub-pillar: 35% of 10.9% = 3.82% framework / 6 factors = 0.64%
         education: 'Fast-loading pages improve user experience and AI system access efficiency. Speed optimization ensures AI crawlers can efficiently process your content without timeouts.'
       }
     };
@@ -1232,30 +1232,33 @@ serve(async (req) => {
     
     // Calculate pillar scores from factors
     const pillarData = {
-      AI: { score: 0, weight: 23.8, factors: 0, name: "AI Response Optimization & Citation" },
-      A: { score: 0, weight: 17.9, factors: 0, name: "Authority & Trust Signals" },
-      M: { score: 0, weight: 14.6, factors: 0, name: "Machine Readability & Technical Infrastructure" },
-      S: { score: 0, weight: 13.9, factors: 0, name: "Semantic Content Quality" },
-      E: { score: 0, weight: 10.9, factors: 0, name: "Engagement & User Experience" },
-      T: { score: 0, weight: 8.9, factors: 0, name: "Topical Expertise & Experience" },
-      R: { score: 0, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
-      Y: { score: 0, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" }
+      AI: { score: 0, weight: 23.8, factors: 0, totalWeight: 0, name: "AI Response Optimization & Citation" },
+      A: { score: 0, weight: 17.9, factors: 0, totalWeight: 0, name: "Authority & Trust Signals" },
+      M: { score: 0, weight: 14.6, factors: 0, totalWeight: 0, name: "Machine Readability & Technical Infrastructure" },
+      S: { score: 0, weight: 13.9, factors: 0, totalWeight: 0, name: "Semantic Content Quality" },
+      E: { score: 0, weight: 10.9, factors: 0, totalWeight: 0, name: "Engagement & User Experience" },
+      T: { score: 0, weight: 8.9, factors: 0, totalWeight: 0, name: "Topical Expertise & Experience" },
+      R: { score: 0, weight: 5.9, factors: 0, totalWeight: 0, name: "Reference Networks & Citations" },
+      Y: { score: 0, weight: 4.1, factors: 0, totalWeight: 0, name: "Yield Optimization & Freshness" }
     };
     
-    // Count factors and calculate average scores per pillar
+    // Calculate weighted scores per pillar
     factors.forEach(factor => {
       const mapping = factorMappings[factor.name];
       const pillar = mapping?.pillar || 'M';
       if (pillarData[pillar]) {
-        pillarData[pillar].score += factor.score;
+        // Use factor weight for weighted average
+        const factorWeight = mapping?.weight || 1.0;
+        pillarData[pillar].score += factor.score * factorWeight;
+        pillarData[pillar].totalWeight += factorWeight;
         pillarData[pillar].factors += 1;
       }
     });
     
-    // Calculate average scores for pillars with factors
+    // Calculate weighted average scores for pillars with factors
     Object.keys(pillarData).forEach(pillar => {
-      if (pillarData[pillar].factors > 0) {
-        pillarData[pillar].score = Math.round(pillarData[pillar].score / pillarData[pillar].factors);
+      if (pillarData[pillar].totalWeight > 0) {
+        pillarData[pillar].score = Math.round(pillarData[pillar].score / pillarData[pillar].totalWeight);
       }
     });
     
