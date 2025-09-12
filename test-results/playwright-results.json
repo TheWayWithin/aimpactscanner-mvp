@@ -1,0 +1,432 @@
+{
+  "config": {
+    "configFile": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/playwright.config.js",
+    "rootDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/global-setup.js",
+    "globalTeardown": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/global-teardown.js",
+    "globalTimeout": 3600000,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "test-results/playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/playwright-results.json"
+        }
+      ],
+      [
+        "line",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.js"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.js"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.js"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/phase2-auth-pricing.spec.js"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Mobile Safari",
+        "name": "Mobile Safari",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/phase2-auth-pricing.spec.js"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Microsoft Edge",
+        "name": "Microsoft Edge",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.js"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Google Chrome",
+        "name": "Google Chrome",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.js"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "tier-testing",
+        "name": "tier-testing",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/tier-signup-flows.spec.js"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.54.2",
+    "workers": 5,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:5173",
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "env": {
+        "NODE_ENV": "test"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "playwright/navigation-buttons-simple.spec.js",
+      "file": "playwright/navigation-buttons-simple.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Navigation Buttons - Core Functionality",
+          "file": "playwright/navigation-buttons-simple.spec.js",
+          "line": 50,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display all navigation buttons on landing page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4356,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Testing navigation buttons visibility...\n"
+                        },
+                        {
+                          "text": "✓ Dashboard button is visible\n"
+                        },
+                        {
+                          "text": "✓ New Analysis button is visible\n"
+                        },
+                        {
+                          "text": "✓ Upgrade button is visible\n"
+                        },
+                        {
+                          "text": "✓ Account button is visible\n"
+                        },
+                        {
+                          "text": "✓ All navigation buttons displayed correctly\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+520ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+19ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+326ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5173/\", waiting until \"load\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+45ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+258ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForLoadState started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+77ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+29ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"about:blank\" \u001b[38;5;45m+674ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+1s\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForLoadState succeeded \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.isVisible started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  checking visibility of locator('.ez-consent').first() \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.isVisible succeeded \u001b[38;5;45m+15ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForTimeout started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForTimeout succeeded \u001b[38;5;45m+2s\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+4ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 10000ms \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"🏠 Dashboard\")') \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button title=\"Sign in to access Dashboard\" class=\"px-4 py-2 rounded-lg font-semibold transition-colors bg-gray-100 text-gray-500 hover:bg-gray-200 cursor-pointer\">🏠 Dashboard</button> \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toBeVisible succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 10000ms \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"🔍 New Analysis\")') \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button title=\"Sign in to start analysis\" class=\"px-4 py-2 rounded-lg font-semibold transition-colors bg-gray-100 text-gray-500 hover:bg-gray-200 cursor-pointer\">🔍 New Analysis</button> \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toBeVisible succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 10000ms \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"💎 Upgrade\")') \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button class=\"px-4 py-2 rounded-lg font-semibold transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300\">💎 Upgrade</button> \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toBeVisible succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 10000ms \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"👤 Account\")') \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button title=\"Sign in to access Account\" class=\"px-4 py-2 rounded-lg font-semibold transition-colors bg-gray-100 text-gray-500 hover:bg-gray-200 cursor-pointer\">👤 Account</button> \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toBeVisible succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.setViewportSize started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.setViewportSize succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.screenshot started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.screenshot succeeded \u001b[38;5;45m+79ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-02T10:41:26.822Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "469705a5cee6af7071f3-070b8d5e04e376859ad2",
+              "file": "playwright/navigation-buttons-simple.spec.js",
+              "line": 52,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-09-02T10:41:23.979Z",
+    "duration": 8141.039,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
