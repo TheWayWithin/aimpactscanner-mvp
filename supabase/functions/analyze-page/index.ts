@@ -116,6 +116,86 @@ function analyzeSourceAuthoritySignals(pageContent: string, url: string): Factor
     recommendations.push('Include clear author attribution and bio');
   }
   
+  // Check for structured data/schema markup (NEW)
+  const jsonLdMatches = pageContent.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/gis);
+  let hasAuthoritySchema = false;
+  let schemaScore = 0;
+  
+  if (jsonLdMatches) {
+    for (const match of jsonLdMatches) {
+      try {
+        const content = match.replace(/<script[^>]*>|<\/script>/gi, '').trim();
+        const parsed = JSON.parse(content);
+        const schemas = Array.isArray(parsed) ? parsed : [parsed];
+        
+        for (const schema of schemas) {
+          // Check for Person schema (author credentials)
+          if (schema['@type'] === 'Person') {
+            hasAuthoritySchema = true;
+            schemaScore += 15;
+            evidence.push('Person schema found for author authority');
+            
+            // Check for authority-relevant Person properties
+            const authorityFields = ['jobTitle', 'worksFor', 'affiliation', 'sameAs', 'knowsAbout', 'alumniOf'];
+            const foundFields = authorityFields.filter(field => schema[field]);
+            if (foundFields.length >= 2) {
+              schemaScore += 10;
+              evidence.push(`Person schema includes authority fields: ${foundFields.join(', ')}`);
+            }
+          }
+          
+          // Check for Organization schema (institutional authority)
+          if (schema['@type'] === 'Organization') {
+            hasAuthoritySchema = true;
+            schemaScore += 10;
+            evidence.push('Organization schema found for institutional authority');
+            
+            const orgFields = ['sameAs', 'address', 'contactPoint', 'foundingDate'];
+            const foundOrgFields = orgFields.filter(field => schema[field]);
+            if (foundOrgFields.length >= 1) {
+              schemaScore += 5;
+              evidence.push('Organization schema includes credibility indicators');
+            }
+          }
+          
+          // Check for Article/BlogPosting schema with author
+          if (['Article', 'BlogPosting'].includes(schema['@type'])) {
+            if (schema.author) {
+              hasAuthoritySchema = true;
+              schemaScore += 10;
+              evidence.push('Article schema links to author information');
+              
+              if (typeof schema.author === 'object' && (schema.author['@type'] === 'Person' || schema.author.name)) {
+                schemaScore += 5;
+                evidence.push('Article author includes detailed Person information');
+              }
+            }
+            
+            if (schema.publisher && typeof schema.publisher === 'object') {
+              schemaScore += 5;
+              evidence.push('Article includes publisher authority information');
+            }
+          }
+        }
+      } catch (e) {
+        // Invalid JSON-LD, continue
+      }
+    }
+  }
+  
+  score += Math.min(schemaScore, 30); // Cap schema contribution at 30 points
+  
+  // Add schema recommendations if missing
+  if (!hasAuthoritySchema) {
+    recommendations.push('Add Person schema markup with author credentials and affiliations');
+    recommendations.push('Include Organization schema for institutional authority');
+    recommendations.push('Implement Article schema linking content to credible authors');
+    recommendations.push('Use sameAs property in schema to connect to authoritative profiles (LinkedIn, academic profiles)');
+  } else if (schemaScore < 20) {
+    recommendations.push('Enhance existing schema markup with more authority indicators');
+    recommendations.push('Add sameAs properties to link to authoritative external profiles');
+  }
+  
   // Check for institutional affiliation
   const domainParts = new URL(url).hostname.split('.');
   const isEduOrg = domainParts.some(part => ['edu', 'org', 'gov'].includes(part));
@@ -1085,7 +1165,7 @@ serve(async (req) => {
         pillar: 'AI', 
         factor_id: 'AI.1.2',
         weight: 1.058, // AI.1 sub-pillar: 26.7% of 23.8% = 6.35% framework / 6 factors = 1.058%
-        education: 'Source authority signals help AI systems assess credibility and trustworthiness. Clear author information, credentials, and professional indicators increase citation likelihood across AI platforms.'
+        education: 'Source authority signals help AI systems assess credibility and trustworthiness. Clear author information, credentials, professional indicators, and structured data markup (Person/Organization schema) increase citation likelihood across AI platforms by providing machine-readable authority validation.'
       },
       'Evidence Chunking for RAG Optimization': { 
         pillar: 'AI', 
