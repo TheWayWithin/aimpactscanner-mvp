@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
 import { supabase } from './lib/supabaseClient';
+import { initializeFallbackData } from './utils/userFallback';
 
 // Analytics and Privacy  
 import { GTMIntegration, useGTMTracking } from './analytics/gtm-integration.jsx';
@@ -42,6 +43,11 @@ import NavigationButtons from './components/NavigationButtons.jsx';
 // import SimpleConsentBanner from './components/SimpleConsentBanner.jsx'; // Disabled - using Enzuzo via GTM
 
 function AppContent() {
+  // Initialize fallback data for known users immediately
+  useEffect(() => {
+    initializeFallbackData();
+  }, []);
+
   const [session, setSession] = useState(null);
   const [currentView, setCurrentViewInternal] = useState('landing'); // Start with landing page
   
