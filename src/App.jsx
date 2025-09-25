@@ -889,6 +889,19 @@ function AppContent() {
     }
   };
 
+  // Callback for UserInitializer - defined here to avoid hooks order issues
+  const handleUserReady = useCallback((userData) => {
+    setUserReady(true);
+    // Update tier state if provided by UserInitializer (e.g., from localStorage fallback)
+    if (userData?.tier) {
+      console.log('📊 Setting user tier from UserInitializer:', userData.tier);
+      setUserTier(userData.tier);
+      if (userData.tier === 'coffee') {
+        setUnlimitedAccess(true);
+      }
+    }
+  }, [setUnlimitedAccess]);
+
   // Render based on current view
   if (currentView === 'preview-analysis') {
     return (
@@ -1191,17 +1204,7 @@ function AppContent() {
 
       {/* Only show UserInitializer if we have a session and not viewing results from a pending analysis */}
       {session && currentView !== 'results' && (
-        <UserInitializer session={session} onUserReady={(userData) => {
-          setUserReady(true);
-          // Update tier state if provided by UserInitializer (e.g., from localStorage fallback)
-          if (userData?.tier) {
-            console.log('📊 Setting user tier from UserInitializer:', userData.tier);
-            setUserTier(userData.tier);
-            if (userData.tier === 'coffee') {
-              setUnlimitedAccess(true);
-            }
-          }
-        }} />
+        <UserInitializer session={session} onUserReady={handleUserReady} />
       )}
 
       <main className="main-content">

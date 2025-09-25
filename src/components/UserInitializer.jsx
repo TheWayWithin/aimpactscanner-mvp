@@ -4,10 +4,12 @@ import { useUserInitializer } from '../hooks/useUserInitializer';
 
 function UserInitializer({ session, onUserReady }) {
   const { status, error, userData, retry, skipWithFallback, isReady } = useUserInitializer(session);
+  const onUserReadyCalled = React.useRef(false);
 
-  // Call onUserReady when user data is available
+  // Call onUserReady when user data is available (only once)
   useEffect(() => {
-    if (isReady && userData && onUserReady) {
+    if (isReady && userData && onUserReady && !onUserReadyCalled.current) {
+      onUserReadyCalled.current = true;
       onUserReady(userData);
     }
   }, [isReady, userData, onUserReady]);

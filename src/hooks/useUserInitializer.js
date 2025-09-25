@@ -38,6 +38,16 @@ export const useUserInitializer = (session) => {
 
       console.log('🔧 useUserInitializer: Starting initialization for user:', userId, userEmail, retryCount ? `(retry ${retryCount})` : '');
 
+      // Quick fallback for known users if we have cached data
+      const cachedTier = localStorage.getItem(`user_tier_${userId}`);
+      if (cachedTier && retryCount === 0) {
+        console.log('📱 Using cached tier data for quick initialization:', cachedTier);
+        const cachedData = getUserFallbackData(userId, userEmail);
+        setStatus('ready');
+        setUserData(cachedData);
+        return cachedData;
+      }
+
       // Create a more robust timeout with proper cleanup
       const controller = new AbortController();
       const timeoutId = setTimeout(() => {
@@ -47,12 +57,23 @@ export const useUserInitializer = (session) => {
       try {
         // First check if user exists with proper error handling
         console.log('🔍 useUserInitializer: Checking if user exists in database...');
-        const { data: existingUser, error: checkError } = await supabase
+        
+        // Create a Promise.race to ensure timeout works
+        const queryPromise = supabase
           .from('users')
           .select('id, email, tier, monthly_analyses_used, subscription_status')
           .eq('id', userId)
           .abortSignal(controller.signal)
           .single();
+        
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Database query timeout')), 5000);
+        });
+        
+        const { data: existingUser, error: checkError } = await Promise.race([
+          queryPromise,
+          timeoutPromise.then(() => ({ data: null, error: new Error('Database query timeout') }))
+        ]).catch(err => ({ data: null, error: err }));
 
         clearTimeout(timeoutId);
 
@@ -61,6 +82,15 @@ export const useUserInitializer = (session) => {
         if (checkError && checkError.code !== 'PGRST116') {
           // PGRST116 = no rows returned, which is expected for new users
           console.log('Database check error:', checkError);
+          
+          // Handle timeout specifically
+          if (checkError.message && checkError.message.includes('timeout')) {
+            console.log('⏱️ Database query timed out - using fallback');
+            const fallbackData = getUserFallbackData(userId, userEmail);
+            setStatus('ready');
+            setUserData(fallbackData);
+            return fallbackData;
+          }
           
           // Handle specific error cases
           if (checkError.message && checkError.message.includes('406')) {
