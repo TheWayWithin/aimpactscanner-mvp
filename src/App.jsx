@@ -79,6 +79,7 @@ function AppContent() {
   const [pendingAnalysis, setPendingAnalysis] = useState(null);
   const [analysisResults, setAnalysisResults] = useState(null);
   const [pendingVerificationEmail, setPendingVerificationEmail] = useState(null);
+  const [analysisError, setAnalysisError] = useState(null);
 
   // GTM tracking hooks
   const {
@@ -791,11 +792,18 @@ function AppContent() {
       return;
     }
 
+    // Clear any previous errors
+    setAnalysisError(null);
+
     // Check usage limits for free tier
     if (userTier === 'free' && !canAnalyze()) {
-      alert(`You've reached your monthly limit of 3 analyses. Upgrade to Coffee tier for unlimited analyses!`);
+      setAnalysisError({
+        title: 'Usage Limit Reached',
+        message: 'You\'ve reached your monthly limit of 3 analyses. Upgrade to Coffee tier for unlimited analyses!',
+        action: 'upgrade'
+      });
       trackFeatureUsage('usage_limit_reached', 'analysis_blocked');
-      setCurrentView('pricing');
+      setTimeout(() => setCurrentView('pricing'), 2000);
       return;
     }
 
@@ -812,9 +820,10 @@ function AppContent() {
       setCurrentUrl(url);
       setCurrentAnalysisId(analysisId);
 
-      // Try to create analysis record
+      // Try to create analysis record with timeout
+      let dbInsertSuccess = false;
       try {
-        const { error: analysisError } = await supabase
+        const dbInsertPromise = supabase
           .from('analyses')
           .insert({
             id: analysisId,
@@ -827,11 +836,24 @@ function AppContent() {
             created_at: new Date().toISOString()
           });
 
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Database insert timeout')), 5000)
+        );
+
+        const { error: analysisError } = await Promise.race([
+          dbInsertPromise,
+          timeoutPromise
+        ]).catch(err => ({ error: err }));
+
         if (analysisError) {
-          console.log("⚠️ Could not create analysis record:", analysisError.message);
+          console.log("⚠️ Could not create analysis record:", analysisError.message || analysisError);
+          // Continue anyway - analysis can still work without DB record
+        } else {
+          dbInsertSuccess = true;
         }
       } catch (error) {
         console.log("⚠️ Analysis record creation failed:", error.message);
+        // Continue anyway - analysis can still work without DB record
       }
 
       // Increment usage tracking for all users (even unlimited for display purposes)
@@ -840,21 +862,48 @@ function AppContent() {
       // Switch to analysis view to show progress
       setCurrentView('analysis');
 
-      // Call Edge Function and wait for results
-      const { data, error: invokeError } = await supabase.functions.invoke('analyze-page', {
-        body: {
-          url: url,
-          analysisId: analysisId,
-          userId: userId
+      // Call Edge Function with timeout
+      let data, invokeError;
+      try {
+        const edgeFunctionPromise = supabase.functions.invoke('analyze-page', {
+          body: {
+            url: url,
+            analysisId: analysisId,
+            userId: userId
+          }
+        });
+
+        const edgeTimeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Analysis timeout - please try again')), 30000) // 30 second timeout
+        );
+
+        const result = await Promise.race([
+          edgeFunctionPromise,
+          edgeTimeoutPromise
+        ]).catch(err => ({ error: err }));
+
+        if (result.error) {
+          invokeError = result.error;
+        } else {
+          data = result.data;
+          invokeError = result.error;
         }
-      });
+      } catch (error) {
+        invokeError = error;
+      }
       
       const duration = Math.round((Date.now() - startTime) / 1000);
       
       if (invokeError) {
         console.error('❌ Edge Function error:', invokeError);
-        trackError('edge_function', invokeError.message, 'analysis');
-        alert(`Analysis error: ${invokeError.message}`);
+        trackError('edge_function', invokeError.message || invokeError, 'analysis');
+        
+        // Set error state for display
+        setAnalysisError({
+          title: 'Analysis Failed',
+          message: invokeError.message || 'The analysis service is temporarily unavailable. Please try again.',
+          action: 'retry'
+        });
         setCurrentView('input'); // Go back to input on error
       } else {
         console.log('✅ Analysis completed:', data);
@@ -875,7 +924,11 @@ function AppContent() {
           setCurrentView('results');
         } else {
           console.error('❌ Invalid analysis response:', data);
-          alert('Analysis failed to return valid results');
+          setAnalysisError({
+            title: 'Invalid Results',
+            message: 'The analysis completed but returned invalid data. Please try again or contact support.',
+            action: 'retry'
+          });
           setCurrentView('input');
         }
       }
@@ -883,7 +936,11 @@ function AppContent() {
     } catch (error) {
       console.error('❌ Error starting analysis:', error);
       trackError('analysis_start', error.message, 'analysis');
-      alert(`Error starting analysis: ${error.message}`);
+      setAnalysisError({
+        title: 'Analysis Error',
+        message: error.message || 'An unexpected error occurred. Please try again.',
+        action: 'retry'
+      });
     } finally {
       setIsAnalyzing(false);
     }
@@ -1290,7 +1347,25 @@ function AppContent() {
         )}
 
         {currentView === 'input' && (
-          <URLInput onAnalyze={startAnalysis} isAnalyzing={isAnalyzing} />
+          <>
+            {analysisError && (
+              <div className="error-banner">
+                <div className="error-icon">⚠️</div>
+                <div className="error-content">
+                  <h3>{analysisError.title}</h3>
+                  <p>{analysisError.message}</p>
+                </div>
+                <button 
+                  className="error-close"
+                  onClick={() => setAnalysisError(null)}
+                  aria-label="Dismiss error"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+            <URLInput onAnalyze={startAnalysis} isAnalyzing={isAnalyzing} />
+          </>
         )}
 
         {currentView === 'analysis' && currentAnalysisId && (
