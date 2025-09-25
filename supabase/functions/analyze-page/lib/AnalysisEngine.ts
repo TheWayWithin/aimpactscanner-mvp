@@ -29,8 +29,6 @@ export class AnalysisEngine {
   // Fetch webpage data for analysis
   private async fetchPageData(url: string): Promise<{title: string, metaDescription: string, content: string}> {
     try {
-      console.log(`📥 Fetching page data for: ${url}`);
-      
       const response = await fetch(url, {
         headers: {
           'User-Agent': 'AImpactScanner/1.0 (AI Search Optimization Analysis)'
@@ -71,7 +69,7 @@ export class AnalysisEngine {
       // Keep script tags for structured data analysis, then clean for content analysis
       const content = html; // Keep full HTML for structured data detection
       
-      console.log(`✅ Page data extracted - Title: "${title.substring(0, 50)}...", Meta: "${metaDescription.substring(0, 50)}..."`);
+      // Page data extracted successfully
       
       return { title, metaDescription, content };
       
@@ -89,9 +87,7 @@ export class AnalysisEngine {
     
     // Helper function for progress updates
     const updateProgress = async (factorNumber: number, factorName: string, educationalContent: string) => {
-      console.log(`🎯 updateProgress called for factor ${factorNumber}: ${factorName}`);
       if (progressCallback) {
-        console.log(`📞 Calling progress callback for factor ${factorNumber}`);
         const progress = Math.round((factorNumber / 10) * 80) + 10; // 10% start + 80% for factors
         await progressCallback(
           `analyzing_${factorName.toLowerCase().replace(/\s+/g, '_')}`,
@@ -99,28 +95,19 @@ export class AnalysisEngine {
           `Analyzing: ${factorName}`,
           educationalContent
         );
-        console.log(`⏱️ Starting 1-second delay after factor ${factorNumber}`);
         // Longer delay to ensure progress update is visible to frontend
         await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log(`✅ Delay completed for factor ${factorNumber}`);
-      } else {
-        console.log(`❌ No progress callback available for factor ${factorNumber}`);
       }
     };
     
     try {
-      console.log(`🔍 Starting instant analysis for: ${url}`);
-      console.log(`📞 Progress callback available: ${!!progressCallback}`);
-      
       // Fetch the webpage content for analysis
       const pageData = await this.fetchPageData(url);
       
       // Factor 1: HTTPS Security (AI.1.1) - Protocol analysis
-      console.log('🔍 Starting Factor 1: HTTPS Security');
       await updateProgress(1, 'HTTPS Security', 'Checking if your site uses secure HTTPS protocol - essential for AI search rankings and user trust.');
       const httpsResult = await this.analyzeHTTPS(url);
       factors.push(httpsResult);
-      console.log('✅ Completed Factor 1: HTTPS Security');
       
       // Factor 2: Title Optimization (AI.1.2) - Content analysis
       await updateProgress(2, 'Title Optimization', 'Analyzing your page title for length, keywords, and AI search optimization best practices.');
@@ -171,8 +158,7 @@ export class AnalysisEngine {
       const overall_score = this.calculateOverallScore(factors);
       const processing_time_ms = Date.now() - startTime;
       
-      console.log(`✅ Phase A analysis completed in ${processing_time_ms}ms`);
-      console.log(`📊 Analyzed ${factors.length}/10 factors with overall score: ${overall_score}`);
+      // Phase A analysis completed
       
       return {
         factors,
@@ -1213,7 +1199,6 @@ export class AnalysisEngine {
       let structuredData = [];
       
       if (jsonLdMatches) {
-        console.log(`🔍 Found ${jsonLdMatches.length} JSON-LD scripts for FAQ analysis`);
         for (const match of jsonLdMatches) {
           try {
             const scriptContent = match.replace(/<script[^>]*>|<\/script>/gi, '').trim();
@@ -1226,15 +1211,12 @@ export class AnalysisEngine {
               structuredData.push(parsed);
             }
           } catch (e) {
-            console.log('⚠️ Invalid JSON-LD in FAQ analysis:', e.message);
+            // Invalid JSON-LD in FAQ analysis
           }
         }
       }
       
-      console.log(`📊 FAQ Analysis: Found ${structuredData.length} structured data items`);
-      structuredData.forEach((item, index) => {
-        console.log(`📋 Item ${index}: @type = ${item['@type']}`);
-      });
+      // FAQ Analysis: Found structured data items
       
       // Check for FAQ schema in structured data (handle various formats)
       let faqSchema = structuredData.find(item => item['@type'] === 'FAQPage');
@@ -1251,13 +1233,10 @@ export class AnalysisEngine {
       if (faqSchema) {
         score += 50;
         evidence.push('FAQPage schema detected');
-        console.log(`✅ FAQ Schema found with mainEntity: ${!!faqSchema.mainEntity}`);
-        
         if (faqSchema.mainEntity && Array.isArray(faqSchema.mainEntity)) {
           const questionCount = faqSchema.mainEntity.length;
           score += 30;
           evidence.push(`${questionCount} structured questions found`);
-          console.log(`📝 ${questionCount} questions in FAQ schema`);
           
           // Enhanced scoring for comprehensive FAQ implementations
           if (questionCount >= 10) {
