@@ -459,7 +459,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
                     <div>
                       <h3 className="text-lg font-bold text-gray-900">{pillarGroup.name}</h3>
                       <p className="text-sm text-gray-600">
-                        Weight: {pillarGroup.weight || 0}% | Pillar Score: {pillarGroup.score || 0} | {pillarGroup.factorCount || pillarGroup.factors.length} factor{(pillarGroup.factorCount || pillarGroup.factors.length) !== 1 ? 's' : ''} analyzed
+                        Weight: {pillarGroup.weight || 0}% | Pillar Score: {pillarGroup.score || 0} | {pillarGroup.factors.length} factor{pillarGroup.factors.length !== 1 ? 's' : ''} analyzed
                       </p>
                     </div>
                   </div>

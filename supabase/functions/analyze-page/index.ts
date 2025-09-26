@@ -1252,14 +1252,31 @@ serve(async (req) => {
   try {
     console.log('=== 15-FACTOR ANALYSIS START ===');
     
-    const { url, userId, analysisId } = await req.json();
+    let { url, userId, analysisId } = await req.json();
     
-    console.log('Parameters:', { url, userId, analysisId });
+    console.log('Parameters (raw):', { url, userId, analysisId });
     
     // Validate inputs
     if (!url || !userId || !analysisId) {
       throw new Error('Missing required parameters: url, userId, or analysisId');
     }
+    
+    // Clean and validate URL
+    url = url.trim();
+    // Fix common URL malformations
+    if (url.startsWith('https://https//')) {
+      url = url.replace('https://https//', 'https://');
+    }
+    if (url.startsWith('https://https//:')) {
+      url = url.replace('https://https//:', 'https://');
+    }
+    if (url.startsWith('https://:')) {
+      url = url.replace('https://:', 'https://');
+    }
+    // Remove duplicate www
+    url = url.replace(/\/\/www\.www\./, '//www.');
+    
+    console.log('Parameters (cleaned):', { url, userId, analysisId });
     
     // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL');
@@ -1411,7 +1428,6 @@ serve(async (req) => {
         .from('analyses')
         .update({ 
           status: 'completed',
-          overall_score: overallScore,
           page_title: pageData.title || null,
           page_description: pageData.metaDescription || null,
           framework_version: '3.1.1',
@@ -1428,6 +1444,15 @@ serve(async (req) => {
               return acc;
             }, {})
           },
+          factor_results: factors.reduce((acc, f) => {
+            acc[f.factor_id] = {
+              score: f.score,
+              confidence: f.confidence,
+              evidence: f.evidence,
+              recommendations: f.recommendations
+            };
+            return acc;
+          }, {}),
           analysis_duration: analysisResult.processing_time_ms
         })
         .eq('id', analysisId);

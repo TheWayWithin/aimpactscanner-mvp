@@ -809,7 +809,7 @@ function AppContent() {
             overall_score: analysis.scores?.overall_score || 0,
             factors: factors || [],
             pillars: analysis.scores?.pillars || {},
-            url: url || analysis.url,
+            url: analysis.url,
             analysisId: analysisId,
             created_at: analysis.created_at
           };
