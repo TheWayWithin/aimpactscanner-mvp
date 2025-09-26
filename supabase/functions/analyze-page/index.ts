@@ -1,24 +1,686 @@
-import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
-import { corsHeaders } from '../_shared/cors.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
+import { corsHeaders } from '../_shared/cors.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-// Factor Analysis Functions
+// Complete 15-factor analysis implementation for AImpactScanner MVP
+// MASTERY-AI Framework v3.1.1 compliant
+
+// Factor types
 interface FactorResult {
-  name: string;
+  factor_id: string;
+  factor_name: string;
+  pillar: string;
+  phase: 'instant' | 'background';
   score: number;
   confidence: number;
+  weight: number;
   evidence: string[];
   recommendations: string[];
+  processing_time_ms: number;
 }
 
-// AI.1.1 - Citation-Worthy Content Structure
-function analyzeCitationWorthyContent(pageContent: string, title: string): FactorResult {
+interface AnalysisResult {
+  factors: FactorResult[];
+  overall_score: number;
+  processing_time_ms: number;
+  success: boolean;
+  error?: string;
+}
+
+// Factor 1: HTTPS Security (M.1.1)
+function analyzeHTTPS(url: string): FactorResult {
+  const startTime = Date.now();
+  const isHTTPS = url.startsWith('https://');
+  const score = isHTTPS ? 100 : 0;
+  
+  return {
+    factor_id: 'M.1.1',
+    factor_name: 'HTTPS Security',
+    pillar: 'M',
+    phase: 'instant',
+    score,
+    confidence: 100,
+    weight: 0.73,
+    evidence: [
+      isHTTPS ? 'Site uses HTTPS protocol' : 'Site uses HTTP protocol',
+      isHTTPS ? 'Secure connection established' : 'Insecure connection detected'
+    ],
+    recommendations: isHTTPS ? [] : [
+      'Enable HTTPS for improved security and SEO',
+      'Configure SSL/TLS certificate',
+      'Implement HTTP to HTTPS redirects'
+    ],
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
+// Factor 2: Title Optimization (M.2.1)
+function analyzeTitle(title: string): FactorResult {
+  const startTime = Date.now();
   let score = 0;
-  let evidence = [];
-  let recommendations = [];
+  const evidence = [];
+  const recommendations = [];
+  
+  if (!title) {
+    evidence.push('No title tag found');
+    recommendations.push('Add a descriptive title tag');
+    recommendations.push('Keep title between 50-60 characters');
+  } else {
+    const length = title.length;
+    evidence.push(`Title: "${title}"`);
+    evidence.push(`Length: ${length} characters`);
+    
+    // Length scoring
+    if (length >= 50 && length <= 60) {
+      score += 40;
+      evidence.push('Title length is optimal');
+    } else if (length >= 40 && length <= 70) {
+      score += 35;
+      evidence.push('Title length is good');
+    } else if (length >= 30 && length <= 80) {
+      score += 25;
+      evidence.push('Title length is acceptable');
+      if (length < 50) recommendations.push('Consider making title longer');
+      if (length > 60) recommendations.push('Consider shortening title');
+    } else {
+      score += 15;
+      evidence.push('Title length needs optimization');
+      if (length < 30) recommendations.push('Title is too short');
+      if (length > 80) recommendations.push('Title is too long');
+    }
+    
+    // Content quality
+    const wordCount = title.split(/\s+/).length;
+    if (wordCount >= 3 && wordCount <= 12) {
+      score += 30;
+      evidence.push('Good descriptive title');
+    } else {
+      score += 15;
+      recommendations.push('Improve title descriptiveness');
+    }
+    
+    // Keyword diversity
+    const uniqueWords = new Set(title.toLowerCase().split(/\s+/));
+    if (uniqueWords.size / wordCount > 0.7) {
+      score += 30;
+      evidence.push('Good keyword diversity');
+    } else {
+      score += 15;
+      recommendations.push('Reduce keyword repetition');
+    }
+  }
+  
+  return {
+    factor_id: 'M.2.1',
+    factor_name: 'Title Optimization',
+    pillar: 'M',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 95,
+    weight: 0.80,
+    evidence,
+    recommendations,
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
+// Factor 3: Meta Description (M.2.2)
+function analyzeMetaDescription(metaDescription: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
+  
+  if (!metaDescription || metaDescription.length === 0) {
+    evidence.push('No meta description found');
+    recommendations.push('Add compelling meta description');
+    recommendations.push('Include primary keywords naturally');
+    recommendations.push('Keep between 150-160 characters');
+    recommendations.push('Include call-to-action');
+  } else {
+    const length = metaDescription.length;
+    evidence.push(`Meta description: "${metaDescription}"`);
+    evidence.push(`Length: ${length} characters`);
+    
+    // Length scoring
+    if (length >= 150 && length <= 160) {
+      score += 40;
+      evidence.push('Meta description length is optimal');
+    } else if (length >= 120 && length <= 180) {
+      score += 25;
+      if (length < 150) {
+        recommendations.push('Expand meta description to 150-160 characters');
+      } else {
+        recommendations.push('Shorten meta description to 150-160 characters');
+      }
+    } else {
+      score += 10;
+      recommendations.push('Optimize meta description length to 150-160 characters');
+    }
+    
+    // CTA check
+    const ctaWords = ['learn', 'discover', 'find', 'get', 'download', 'start', 'explore', 'see'];
+    const hasCtaWords = ctaWords.some(word => metaDescription.toLowerCase().includes(word));
+    if (hasCtaWords) {
+      score += 30;
+      evidence.push('Contains compelling call-to-action language');
+    } else {
+      recommendations.push('Add call-to-action words');
+    }
+    
+    // Natural language
+    const hasNaturalFlow = /\b(and|or|the|of|in|to|for|with|by)\b/i.test(metaDescription);
+    if (hasNaturalFlow) {
+      score += 30;
+      evidence.push('Natural language flow detected');
+    } else {
+      recommendations.push('Use natural language and avoid keyword stuffing');
+    }
+  }
+  
+  return {
+    factor_id: 'M.2.2',
+    factor_name: 'Meta Description',
+    pillar: 'M',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 100,
+    weight: 0.80,
+    evidence,
+    recommendations,
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
+// Factor 4: Author Information (A.2.1)
+function analyzeAuthor(content: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
+  
+  const hasAuthor = /author|by\s+[A-Z][a-z]+|written\s+by/i.test(content);
+  const authorCredentials = /phd|md|professor|dr\.|certified|licensed/i.test(content);
+  
+  if (hasAuthor) {
+    score += 50;
+    evidence.push('Author information present');
+    if (authorCredentials) {
+      score += 30;
+      evidence.push('Author credentials indicated');
+    } else {
+      recommendations.push('Add author credentials and qualifications');
+    }
+  } else {
+    score = 20;
+    recommendations.push('Include clear author attribution');
+    recommendations.push('Add author bio and credentials');
+  }
+  
+  // Check for professional indicators
+  const professionalTerms = /expertise|experience|specializ|certified|published|research|study/gi;
+  const professionalMatches = (content.match(professionalTerms) || []).length;
+  
+  if (professionalMatches >= 3) {
+    score += 20;
+    evidence.push('Multiple professional authority indicators');
+  } else if (professionalMatches >= 1) {
+    score += 10;
+    evidence.push('Some professional indicators present');
+  }
+  
+  return {
+    factor_id: 'A.2.1',
+    factor_name: 'Author Information',
+    pillar: 'A',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 90,
+    weight: 1.2,
+    evidence,
+    recommendations,
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
+// Factor 5: Contact Information (A.3.2)
+function analyzeContact(url: string, content: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
+  
+  const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+  const phonePattern = /\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/;
+  const contactTerms = /contact|email|phone|address|reach\s+us|get\s+in\s+touch/i;
+  
+  const hasEmail = emailPattern.test(content);
+  const hasPhone = phonePattern.test(content);
+  const hasContactSection = contactTerms.test(content);
+  
+  if (hasEmail) {
+    score += 35;
+    evidence.push('Email address found');
+  }
+  if (hasPhone) {
+    score += 30;
+    evidence.push('Phone number found');
+  }
+  if (hasContactSection) {
+    score += 25;
+    evidence.push('Contact section present');
+  }
+  
+  // Base score if no contact info
+  if (!hasEmail && !hasPhone && !hasContactSection) {
+    score = 10;
+    recommendations.push('Add clear contact information');
+    recommendations.push('Include email and phone');
+    recommendations.push('Create dedicated contact section');
+  } else if (score < 50) {
+    if (!hasEmail) recommendations.push('Add email contact');
+    if (!hasPhone) recommendations.push('Consider adding phone number');
+    if (!hasContactSection) recommendations.push('Create dedicated contact section');
+  }
+  
+  // Address check
+  const addressTerms = /address|location|street|city|state|zip|postal/i;
+  const hasAddress = addressTerms.test(content);
+  if (hasAddress) {
+    score += 10;
+    evidence.push('Address information indicated');
+  }
+  
+  return {
+    factor_id: 'A.3.2',
+    factor_name: 'Contact Information',
+    pillar: 'A',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 95,
+    weight: 1.193,
+    evidence,
+    recommendations,
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
+// Factor 6: Heading Hierarchy (S.2.2)
+function analyzeHeadings(content: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
+  
+  const h1Tags = (content.match(/<h1[^>]*>([^<]*)<\/h1>/gi) || []).map(h => h.replace(/<[^>]*>/g, '').trim());
+  const h2Tags = (content.match(/<h2[^>]*>/gi) || []).length;
+  const h3Tags = (content.match(/<h3[^>]*>/gi) || []).length;
+  
+  evidence.push(`H1 tags: ${h1Tags.length}`);
+  evidence.push(`H2 tags: ${h2Tags}`);
+  evidence.push(`H3 tags: ${h3Tags}`);
+  
+  // H1 structure
+  if (h1Tags.length === 1) {
+    score += 30;
+    evidence.push('Proper H1 structure (exactly one H1)');
+    const h1 = h1Tags[0];
+    if (h1.length >= 20 && h1.length <= 70) {
+      score += 20;
+      evidence.push('H1 length is appropriate');
+    } else {
+      recommendations.push('Optimize H1 length to 20-70 characters');
+    }
+  } else if (h1Tags.length === 0) {
+    evidence.push('No H1 tag found');
+    recommendations.push('Add exactly one H1 tag');
+  } else {
+    evidence.push(`Multiple H1 tags found: ${h1Tags.length}`);
+    recommendations.push('Use only one H1 tag per page');
+    score += 10;
+  }
+  
+  // H2 structure
+  if (h2Tags >= 2) {
+    score += 30;
+    evidence.push('Good H2 structure for content organization');
+  } else if (h2Tags >= 1) {
+    score += 15;
+    recommendations.push('Add more H2 headings to improve structure');
+  } else {
+    recommendations.push('Add H2 headings to organize content');
+  }
+  
+  // H3 structure
+  if (h3Tags >= 1) {
+    score += 20;
+    evidence.push('H3 tags present for detailed hierarchy');
+  } else {
+    recommendations.push('Consider adding H3 tags for detailed organization');
+  }
+  
+  return {
+    factor_id: 'S.2.2',
+    factor_name: 'Heading Hierarchy',
+    pillar: 'S',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 95,
+    weight: 0.76,
+    evidence,
+    recommendations,
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
+// Factor 7: Structured Data Detection (M.3.1)
+function analyzeStructuredData(content: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
+  
+  // Check for JSON-LD
+  const jsonLdMatches = content.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/gis);
+  
+  if (jsonLdMatches && jsonLdMatches.length > 0) {
+    score += 50;
+    evidence.push(`Found ${jsonLdMatches.length} JSON-LD blocks`);
+    
+    // Try to parse and analyze
+    for (const match of jsonLdMatches) {
+      try {
+        const jsonContent = match.replace(/<script[^>]*>|<\/script>/gi, '').trim();
+        const parsed = JSON.parse(jsonContent);
+        const schemas = Array.isArray(parsed) ? parsed : [parsed];
+        
+        for (const schema of schemas) {
+          if (schema['@type']) {
+            evidence.push(`Schema type: ${schema['@type']}`);
+            score += 10;
+          }
+        }
+      } catch (e) {
+        // Invalid JSON
+      }
+    }
+    score = Math.min(score, 100);
+  } else {
+    score = 20;
+    recommendations.push('Add JSON-LD structured data');
+    recommendations.push('Implement Schema.org markup');
+    recommendations.push('Use Article or BlogPosting schema');
+  }
+  
+  // Check for microdata
+  if (content.includes('itemscope') || content.includes('itemtype')) {
+    score += 20;
+    evidence.push('Microdata markup detected');
+  }
+  
+  // Check for RDFa
+  if (content.includes('typeof=') || content.includes('property=')) {
+    score += 10;
+    evidence.push('RDFa markup detected');
+  }
+  
+  if (score < 50) {
+    recommendations.push('Implement comprehensive structured data');
+  }
+  
+  return {
+    factor_id: 'M.3.1',
+    factor_name: 'Structured Data Detection',
+    pillar: 'M',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 90,
+    weight: 1.0,
+    evidence,
+    recommendations,
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
+// Factor 8: FAQ Schema Analysis (AI.2.3)
+function analyzeFAQ(content: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
+  
+  // Check for FAQ patterns
+  const faqTerms = /frequently\s+asked\s+questions?|faq|q\s*&\s*a|questions?\s+and\s+answers?/i;
+  const hasFAQSection = faqTerms.test(content);
+  
+  if (hasFAQSection) {
+    score += 30;
+    evidence.push('FAQ section detected');
+  }
+  
+  // Check for question patterns
+  const questionMatches = content.match(/\?[^?]{10,}/g) || [];
+  if (questionMatches.length >= 3) {
+    score += 30;
+    evidence.push(`Found ${questionMatches.length} questions`);
+  } else if (questionMatches.length >= 1) {
+    score += 15;
+    evidence.push(`Found ${questionMatches.length} question(s)`);
+    recommendations.push('Add more Q&A content');
+  }
+  
+  // Check for FAQ schema
+  const jsonLdMatches = content.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/gis);
+  let hasFAQSchema = false;
+  
+  if (jsonLdMatches) {
+    for (const match of jsonLdMatches) {
+      try {
+        const jsonContent = match.replace(/<script[^>]*>|<\/script>/gi, '').trim();
+        const parsed = JSON.parse(jsonContent);
+        const schemas = Array.isArray(parsed) ? parsed : [parsed];
+        
+        for (const schema of schemas) {
+          if (schema['@type'] === 'FAQPage') {
+            hasFAQSchema = true;
+            score += 40;
+            evidence.push('FAQPage schema implemented');
+            
+            if (schema.mainEntity && Array.isArray(schema.mainEntity)) {
+              evidence.push(`${schema.mainEntity.length} FAQ items in schema`);
+            }
+          }
+        }
+      } catch (e) {
+        // Invalid JSON
+      }
+    }
+  }
+  
+  if (!hasFAQSchema) {
+    recommendations.push('Implement FAQPage schema markup');
+  }
+  
+  if (score < 30) {
+    score = 20;
+    recommendations.push('Add FAQ section with common questions');
+    recommendations.push('Structure Q&A content clearly');
+  }
+  
+  return {
+    factor_id: 'AI.2.3',
+    factor_name: 'FAQ Schema Analysis',
+    pillar: 'AI',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 85,
+    weight: 1.0,
+    evidence,
+    recommendations,
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
+// Factor 9: Image Alt Text Analysis (M.2.3)
+function analyzeImages(content: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
+  
+  const imageTags = content.match(/<img[^>]*>/gi) || [];
+  const imageCount = imageTags.length;
+  
+  if (imageCount === 0) {
+    score = 50; // Neutral if no images
+    evidence.push('No images found on page');
+    recommendations.push('Consider adding relevant images');
+  } else {
+    evidence.push(`Total images: ${imageCount}`);
+    
+    let imagesWithAlt = 0;
+    let imagesWithGoodAlt = 0;
+    
+    for (const img of imageTags) {
+      const altMatch = img.match(/alt=["']([^"']*)/i);
+      if (altMatch && altMatch[1]) {
+        imagesWithAlt++;
+        if (altMatch[1].length > 5 && !altMatch[1].match(/^(image|photo|picture|img)/i)) {
+          imagesWithGoodAlt++;
+        }
+      }
+    }
+    
+    const altCoverage = (imagesWithAlt / imageCount) * 100;
+    evidence.push(`Images with alt text: ${imagesWithAlt}/${imageCount} (${altCoverage.toFixed(0)}%)`);
+    
+    if (altCoverage === 100) {
+      score += 50;
+      evidence.push('All images have alt text');
+    } else if (altCoverage >= 80) {
+      score += 40;
+      evidence.push('Good alt text coverage');
+      recommendations.push('Add alt text to remaining images');
+    } else if (altCoverage >= 50) {
+      score += 25;
+      evidence.push('Moderate alt text coverage');
+      recommendations.push('Improve alt text coverage');
+    } else {
+      score += 10;
+      evidence.push('Poor alt text coverage');
+      recommendations.push('Add descriptive alt text to images');
+    }
+    
+    // Quality check
+    const qualityCoverage = (imagesWithGoodAlt / imageCount) * 100;
+    if (qualityCoverage >= 80) {
+      score += 50;
+      evidence.push('High-quality descriptive alt text');
+    } else if (qualityCoverage >= 50) {
+      score += 25;
+      recommendations.push('Improve alt text descriptions');
+    } else {
+      score += 10;
+      recommendations.push('Make alt text more descriptive');
+    }
+  }
+  
+  return {
+    factor_id: 'M.2.3',
+    factor_name: 'Image Alt Text Analysis',
+    pillar: 'M',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 95,
+    weight: 1.0,
+    evidence,
+    recommendations,
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
+// Factor 10: Content Depth (S.3.1)
+function analyzeWordCount(content: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
   
   // Remove HTML tags for text analysis
-  const textContent = pageContent.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  const textContent = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  const wordCount = textContent.split(' ').filter(word => word.length > 2).length;
+  const sentences = textContent.split(/[.!?]+/).filter(s => s.trim().length > 10);
+  
+  evidence.push(`Word count: ${wordCount}`);
+  evidence.push(`Sentences: ${sentences.length}`);
+  
+  // Score based on content depth
+  if (wordCount >= 1500) {
+    score += 50;
+    evidence.push('Exceptionally comprehensive content (1500+ words)');
+  } else if (wordCount >= 1000) {
+    score += 45;
+    evidence.push('Comprehensive content length (1000+ words)');
+  } else if (wordCount >= 500) {
+    score += 35;
+    evidence.push('Substantial content length (500+ words)');
+  } else if (wordCount >= 300) {
+    score += 25;
+    evidence.push('Adequate content length (300+ words)');
+    recommendations.push('Consider expanding content for better depth');
+  } else if (wordCount >= 100) {
+    score += 15;
+    evidence.push('Minimal content length');
+    recommendations.push('Increase content to 500+ words');
+  } else {
+    score += 5;
+    evidence.push('Very limited content');
+    recommendations.push('Add substantial content (500+ words)');
+  }
+  
+  // Structure check
+  const paragraphs = (content.match(/<p[^>]*>/gi) || []).length;
+  const lists = (content.match(/<(ul|ol)[^>]*>/gi) || []).length;
+  
+  if (paragraphs >= 5) {
+    score += 30;
+    evidence.push('Well-structured paragraph organization');
+  } else if (paragraphs >= 3) {
+    score += 15;
+    recommendations.push('Add more paragraphs for better flow');
+  }
+  
+  if (lists >= 2) {
+    score += 20;
+    evidence.push('Lists used for content structure');
+  } else if (lists >= 1) {
+    score += 10;
+    evidence.push('Some structured lists present');
+  }
+  
+  return {
+    factor_id: 'S.3.1',
+    factor_name: 'Content Depth',
+    pillar: 'S',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 80,
+    weight: 0.74,
+    evidence,
+    recommendations,
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
+// Factor 11: Citation-Worthy Content (AI.1.1)
+function analyzeCitationWorthyContent(content: string, title: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
+  
+  // Remove HTML tags for text analysis
+  const textContent = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
   const sentences = textContent.split(/[.!?]+/).filter(s => s.trim().length > 10);
   const factualClaims = sentences.filter(s => 
     /\b(shows?|proves?|demonstrates?|indicates?|reveals?|studies?|research|data|evidence|according to|based on)\b/i.test(s)
@@ -26,13 +688,13 @@ function analyzeCitationWorthyContent(pageContent: string, title: string): Facto
   
   // Fact density assessment
   const wordCount = textContent.split(' ').filter(w => w.length > 2).length;
-  const factDensity = wordCount > 0 ? (factualClaims / Math.ceil(wordCount / 100)) : 0;
+  const factDensity = wordCount > 0 ? factualClaims / Math.ceil(wordCount / 100) : 0;
   
   evidence.push(`Word count: ${wordCount}`);
   evidence.push(`Factual claims identified: ${factualClaims}`);
   evidence.push(`Fact density: ${factDensity.toFixed(2)} claims per 100 words`);
   
-  // Score based on fact density with more varied ranges
+  // Score based on fact density
   if (factDensity >= 1.5) {
     score += 45;
     evidence.push('Exceptional fact density for AI citation');
@@ -60,7 +722,7 @@ function analyzeCitationWorthyContent(pageContent: string, title: string): Facto
   }
   
   // Hierarchical structure assessment
-  const headings = (pageContent.match(/<h[1-6][^>]*>/gi) || []).length;
+  const headings = (content.match(/<h[1-6][^>]*>/gi) || []).length;
   if (headings >= 3) {
     score += 30;
     evidence.push('Clear hierarchical structure with multiple headings');
@@ -72,7 +734,7 @@ function analyzeCitationWorthyContent(pageContent: string, title: string): Facto
   }
   
   // Citation anchors (links to sources)
-  const citations = (pageContent.match(/<a[^>]*href[^>]*>/gi) || []).length;
+  const citations = (content.match(/<a[^>]*href[^>]*>/gi) || []).length;
   if (citations >= 3) {
     score += 30;
     evidence.push('Multiple citation anchors found');
@@ -85,23 +747,29 @@ function analyzeCitationWorthyContent(pageContent: string, title: string): Facto
   }
   
   return {
-    name: 'Citation-Worthy Content Structure',
+    factor_id: 'AI.1.1',
+    factor_name: 'Citation-Worthy Content Structure',
+    pillar: 'AI',
+    phase: 'instant',
     score: Math.min(score, 100),
     confidence: 85,
+    weight: 1.058,
     evidence,
-    recommendations
+    recommendations,
+    processing_time_ms: Date.now() - startTime
   };
 }
 
-// AI.1.2 - Source Authority Signals
-function analyzeSourceAuthoritySignals(pageContent: string, url: string): FactorResult {
+// Factor 12: Source Authority Signals (AI.1.2)
+function analyzeSourceAuthoritySignals(content: string, url: string): FactorResult {
+  const startTime = Date.now();
   let score = 0;
-  let evidence = [];
-  let recommendations = [];
+  const evidence = [];
+  const recommendations = [];
   
   // Check for author information
-  const hasAuthor = /author|by\s+[A-Z][a-z]+|written\s+by/i.test(pageContent);
-  const authorCredentials = /phd|md|professor|dr\.|certified|licensed/i.test(pageContent);
+  const hasAuthor = /author|by\s+[A-Z][a-z]+|written\s+by/i.test(content);
+  const authorCredentials = /phd|md|professor|dr\.|certified|licensed/i.test(content);
   
   if (hasAuthor) {
     score += 25;
@@ -116,90 +784,9 @@ function analyzeSourceAuthoritySignals(pageContent: string, url: string): Factor
     recommendations.push('Include clear author attribution and bio');
   }
   
-  // Check for structured data/schema markup (NEW)
-  const jsonLdMatches = pageContent.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/gis);
-  let hasAuthoritySchema = false;
-  let schemaScore = 0;
-  
-  if (jsonLdMatches) {
-    for (const match of jsonLdMatches) {
-      try {
-        const content = match.replace(/<script[^>]*>|<\/script>/gi, '').trim();
-        const parsed = JSON.parse(content);
-        const schemas = Array.isArray(parsed) ? parsed : [parsed];
-        
-        for (const schema of schemas) {
-          // Check for Person schema (author credentials)
-          if (schema['@type'] === 'Person') {
-            hasAuthoritySchema = true;
-            schemaScore += 15;
-            evidence.push('Person schema found for author authority');
-            
-            // Check for authority-relevant Person properties
-            const authorityFields = ['jobTitle', 'worksFor', 'affiliation', 'sameAs', 'knowsAbout', 'alumniOf'];
-            const foundFields = authorityFields.filter(field => schema[field]);
-            if (foundFields.length >= 2) {
-              schemaScore += 10;
-              evidence.push(`Person schema includes authority fields: ${foundFields.join(', ')}`);
-            }
-          }
-          
-          // Check for Organization schema (institutional authority)
-          if (schema['@type'] === 'Organization') {
-            hasAuthoritySchema = true;
-            schemaScore += 10;
-            evidence.push('Organization schema found for institutional authority');
-            
-            const orgFields = ['sameAs', 'address', 'contactPoint', 'foundingDate'];
-            const foundOrgFields = orgFields.filter(field => schema[field]);
-            if (foundOrgFields.length >= 1) {
-              schemaScore += 5;
-              evidence.push('Organization schema includes credibility indicators');
-            }
-          }
-          
-          // Check for Article/BlogPosting schema with author
-          if (['Article', 'BlogPosting'].includes(schema['@type'])) {
-            if (schema.author) {
-              hasAuthoritySchema = true;
-              schemaScore += 10;
-              evidence.push('Article schema links to author information');
-              
-              if (typeof schema.author === 'object' && (schema.author['@type'] === 'Person' || schema.author.name)) {
-                schemaScore += 5;
-                evidence.push('Article author includes detailed Person information');
-              }
-            }
-            
-            if (schema.publisher && typeof schema.publisher === 'object') {
-              schemaScore += 5;
-              evidence.push('Article includes publisher authority information');
-            }
-          }
-        }
-      } catch (e) {
-        // Invalid JSON-LD, continue
-      }
-    }
-  }
-  
-  score += Math.min(schemaScore, 30); // Cap schema contribution at 30 points
-  
-  // Add schema recommendations if missing
-  if (!hasAuthoritySchema) {
-    recommendations.push('Add Person schema markup with author credentials and affiliations');
-    recommendations.push('Include Organization schema for institutional authority');
-    recommendations.push('Implement Article schema linking content to credible authors');
-    recommendations.push('Use sameAs property in schema to connect to authoritative profiles (LinkedIn, academic profiles)');
-  } else if (schemaScore < 20) {
-    recommendations.push('Enhance existing schema markup with more authority indicators');
-    recommendations.push('Add sameAs properties to link to authoritative external profiles');
-  }
-  
   // Check for institutional affiliation
   const domainParts = new URL(url).hostname.split('.');
   const isEduOrg = domainParts.some(part => ['edu', 'org', 'gov'].includes(part));
-  
   if (isEduOrg) {
     score += 20;
     evidence.push('Institutional domain detected (.edu/.org/.gov)');
@@ -207,7 +794,7 @@ function analyzeSourceAuthoritySignals(pageContent: string, url: string): Factor
   
   // Check for professional indicators
   const professionalTerms = /expertise|experience|specializ|certified|published|research|study/gi;
-  const professionalMatches = (pageContent.match(professionalTerms) || []).length;
+  const professionalMatches = (content.match(professionalTerms) || []).length;
   
   if (professionalMatches >= 3) {
     score += 20;
@@ -217,8 +804,8 @@ function analyzeSourceAuthoritySignals(pageContent: string, url: string): Factor
     evidence.push('Some professional indicators present');
   }
   
-  // Check for citations and references
-  const references = /reference|citation|source|bibliography/i.test(pageContent);
+  // Check for references
+  const references = /reference|citation|source|bibliography/i.test(content);
   if (references) {
     score += 20;
     evidence.push('References or bibliography section found');
@@ -228,510 +815,34 @@ function analyzeSourceAuthoritySignals(pageContent: string, url: string): Factor
   
   // Base score varies based on actual content quality
   if (score < 15) {
-    score = Math.max(score, 15); // Lower floor for truly poor sites
+    score = Math.max(score, 15);
     recommendations.push('Establish clear expertise and authority indicators');
     recommendations.push('Include professional background and credentials');
-  } else if (score < 25) {
-    // Slight boost for sites with minimal authority
-    recommendations.push('Strengthen authority signals with more credentials');
   }
   
   return {
-    name: 'Source Authority Signals',
+    factor_id: 'AI.1.2',
+    factor_name: 'Source Authority Signals',
+    pillar: 'AI',
+    phase: 'instant',
     score: Math.min(score, 100),
     confidence: 80,
+    weight: 1.058,
     evidence,
-    recommendations
+    recommendations,
+    processing_time_ms: Date.now() - startTime
   };
 }
 
-// A.3.1 - Transparency & Disclosure Standards
-function analyzeTransparencyDisclosure(pageContent: string): FactorResult {
+// Factor 13: Evidence Chunking for RAG (AI.1.5)
+function analyzeEvidenceChunking(content: string): FactorResult {
+  const startTime = Date.now();
   let score = 0;
-  let evidence = [];
-  let recommendations = [];
-  
-  // Check for disclosure statements
-  const disclosureTerms = /disclosure|conflict\s+of\s+interest|sponsored|paid\s+partnership|affiliate|disclaimer/i;
-  const hasDisclosure = disclosureTerms.test(pageContent);
-  
-  if (hasDisclosure) {
-    score += 30;
-    evidence.push('Disclosure statements found');
-  } else {
-    recommendations.push('Add disclosure statements for transparency');
-    recommendations.push('Include conflict of interest information if applicable');
-  }
-  
-  // Check for funding information
-  const fundingTerms = /funded\s+by|grant|supported\s+by|sponsored\s+by/i;
-  const hasFunding = fundingTerms.test(pageContent);
-  
-  if (hasFunding) {
-    score += 25;
-    evidence.push('Funding source transparency present');
-  } else {
-    recommendations.push('Include funding source information if applicable');
-  }
-  
-  // Check for methodology or process transparency
-  const methodTerms = /method|process|approach|criteria|how\s+we|our\s+process/i;
-  const hasMethod = methodTerms.test(pageContent);
-  
-  if (hasMethod) {
-    score += 25;
-    evidence.push('Methodology or process information included');
-  } else {
-    recommendations.push('Explain your methodology and process');
-  }
-  
-  // Check for last updated information
-  const updatedTerms = /updated|revised|last\s+modified|published/i;
-  const hasUpdated = updatedTerms.test(pageContent);
-  
-  if (hasUpdated) {
-    score += 20;
-    evidence.push('Update information provided');
-  } else {
-    recommendations.push('Include publication and update dates');
-  }
-  
-  // Base transparency score varies by content quality
-  if (score === 0) {
-    score = 15; // Lower base for sites with no transparency
-    recommendations.push('Implement basic transparency standards');
-  } else if (score < 30) {
-    score += 10; // Boost for sites with some transparency
-  }
-  
-  return {
-    name: 'Transparency & Disclosure Standards',
-    score: Math.min(score, 100),
-    confidence: 75,
-    evidence,
-    recommendations
-  };
-}
-
-// A.3.2 - Contact Information & Accessibility
-function analyzeContactAccessibility(pageContent: string): FactorResult {
-  let score = 0;
-  let evidence = [];
-  let recommendations = [];
-  
-  // Check for contact information
-  const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-  const phonePattern = /\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/;
-  const contactTerms = /contact|email|phone|address|reach\s+us|get\s+in\s+touch/i;
-  
-  const hasEmail = emailPattern.test(pageContent);
-  const hasPhone = phonePattern.test(pageContent);
-  const hasContactSection = contactTerms.test(pageContent);
-  
-  if (hasEmail) {
-    score += 30;
-    evidence.push('Email address found');
-  }
-  
-  if (hasPhone) {
-    score += 25;
-    evidence.push('Phone number found');
-  }
-  
-  if (hasContactSection) {
-    score += 25;
-    evidence.push('Contact section or information present');
-  }
-  
-  // Check for physical address
-  const addressTerms = /address|location|street|city|state|zip|postal/i;
-  const hasAddress = addressTerms.test(pageContent);
-  
-  if (hasAddress) {
-    score += 10;
-    evidence.push('Address information indicated');
-  }
-  
-  // Check for accessibility features
-  const accessibilityTerms = /accessibility|alt=|aria-|role=|tabindex/i;
-  const hasAccessibility = accessibilityTerms.test(pageContent);
-  
-  if (hasAccessibility) {
-    score += 10;
-    evidence.push('Accessibility features detected');
-  } else {
-    recommendations.push('Add accessibility attributes (alt text, aria labels)');
-  }
-  
-  // Provide recommendations and varied base scores
-  if (!hasEmail && !hasPhone && !hasContactSection) {
-    recommendations.push('Add clear contact information (email, phone)');
-    recommendations.push('Include dedicated contact section');
-    score = Math.max(score, 10); // Lower minimum for no contact info
-  } else if (score < 30) {
-    // Boost sites with some contact information
-    score += 15;
-    if (!hasEmail) recommendations.push('Add email contact method');
-    if (!hasPhone) recommendations.push('Consider adding phone number');
-    if (!hasContactSection) recommendations.push('Create dedicated contact section');
-  } else {
-    if (!hasEmail) recommendations.push('Add email contact method');
-    if (!hasPhone) recommendations.push('Consider adding phone number');
-    if (!hasContactSection) recommendations.push('Create dedicated contact section');
-  }
-  
-  return {
-    name: 'Contact Information & Accessibility',
-    score: Math.min(score, 100),
-    confidence: 85,
-    evidence,
-    recommendations
-  };
-}
-
-// M.1.4 - Security and Access Control (HTTPS)
-function analyzeSecurityAccessControl(url: string): FactorResult {
-  let score = 0;
-  let evidence = [];
-  let recommendations = [];
-  
-  const isHTTPS = url.toLowerCase().startsWith('https://');
-  
-  if (isHTTPS) {
-    score += 80;
-    evidence.push('HTTPS encryption implemented');
-    evidence.push('Secure data transmission enabled');
-  } else {
-    evidence.push('Insecure HTTP connection detected');
-    recommendations.push('Implement HTTPS encryption for security');
-    recommendations.push('Obtain SSL certificate from trusted provider');
-    recommendations.push('Redirect all HTTP traffic to HTTPS');
-  }
-  
-  // Additional security indicators (if available in URL analysis)
-  try {
-    const urlObj = new URL(url);
-    
-    // Check for security-related subdomains
-    if (urlObj.hostname.includes('secure') || urlObj.hostname.includes('ssl')) {
-      score += 10;
-      evidence.push('Security-focused domain structure');
-    }
-    
-    // Port analysis
-    if (urlObj.port === '443' || (isHTTPS && !urlObj.port)) {
-      score += 10;
-      evidence.push('Standard HTTPS port configuration');
-    }
-    
-  } catch (e) {
-    // URL parsing error, continue with basic analysis
-  }
-  
-  // Base score for any security implementation
-  if (score === 0) {
-    score = 15;
-    recommendations.push('Implement comprehensive security measures');
-  }
-  
-  return {
-    name: 'Security and Access Control',
-    score: Math.min(score, 100),
-    confidence: 100,
-    evidence,
-    recommendations
-  };
-}
-
-// M.2.1 - Title Tag Optimization
-function analyzeTitleTagOptimization(title: string, url: string): FactorResult {
-  let score = 0;
-  let evidence = [];
-  let recommendations = [];
-  
-  if (!title || title.length === 0) {
-    evidence.push('No title tag found');
-    recommendations.push('Add descriptive title tag');
-    recommendations.push('Include primary keyword near beginning');
-    recommendations.push('Keep title between 30-60 characters');
-  } else {
-    evidence.push(`Title: "${title}"`);
-    evidence.push(`Length: ${title.length} characters`);
-    
-    // Score based on length (optimal 30-60 characters)
-    if (title.length >= 30 && title.length <= 60) {
-      score += 40;
-      evidence.push('Title length optimized for search engines');
-    } else if (title.length >= 20 && title.length < 80) {
-      score += 25;
-      if (title.length < 30) {
-        recommendations.push('Expand title to 30-60 characters for better visibility');
-      } else {
-        recommendations.push('Shorten title to under 60 characters to prevent truncation');
-      }
-    } else {
-      score += 10;
-      recommendations.push('Optimize title length to 30-60 characters');
-    }
-    
-    // Check for descriptive quality
-    const words = title.split(' ').filter(w => w.length > 2);
-    const uniqueWords = new Set(words.map(w => w.toLowerCase()));
-    
-    if (words.length >= 4) {
-      score += 30;
-      evidence.push('Title contains sufficient descriptive content');
-    } else {
-      recommendations.push('Make title more descriptive with additional relevant keywords');
-    }
-    
-    // Check for keyword diversity (avoid stuffing)
-    if (uniqueWords.size / words.length > 0.7) {
-      score += 30;
-      evidence.push('Good keyword diversity (avoids stuffing)');
-    } else if (words.length > 2) {
-      recommendations.push('Reduce keyword repetition for better readability');
-    }
-    
-    if (score === 0) score = 10; // Minimal score for having a title
-  }
-  
-  return {
-    name: 'Title Tag Optimization',
-    score: Math.min(score, 100),
-    confidence: title ? 95 : 100,
-    evidence,
-    recommendations
-  };
-}
-
-// M.2.2 - Meta Description Quality
-function analyzeMetaDescriptionQuality(metaDescription: string): FactorResult {
-  let score = 0;
-  let evidence = [];
-  let recommendations = [];
-  
-  if (!metaDescription || metaDescription.length === 0) {
-    evidence.push('No meta description found');
-    recommendations.push('Add compelling meta description');
-    recommendations.push('Include primary keywords naturally');
-    recommendations.push('Keep between 150-160 characters');
-    recommendations.push('Include call-to-action');
-  } else {
-    evidence.push(`Meta description: "${metaDescription}"`);
-    evidence.push(`Length: ${metaDescription.length} characters`);
-    
-    // Score based on length (optimal 150-160 characters)
-    if (metaDescription.length >= 150 && metaDescription.length <= 160) {
-      score += 40;
-      evidence.push('Meta description length is optimal');
-    } else if (metaDescription.length >= 120 && metaDescription.length <= 180) {
-      score += 25;
-      if (metaDescription.length < 150) {
-        recommendations.push('Expand meta description to 150-160 characters');
-      } else {
-        recommendations.push('Shorten meta description to 150-160 characters');
-      }
-    } else {
-      score += 10;
-      recommendations.push('Optimize meta description length to 150-160 characters');
-    }
-    
-    // Check for compelling language and CTA
-    const ctaWords = ['learn', 'discover', 'find', 'get', 'download', 'start', 'explore', 'see'];
-    const hasCtaWords = ctaWords.some(word => metaDescription.toLowerCase().includes(word));
-    
-    if (hasCtaWords) {
-      score += 30;
-      evidence.push('Contains compelling call-to-action language');
-    } else {
-      recommendations.push('Add call-to-action words like "learn", "discover", "get"');
-    }
-    
-    // Check for keyword relevance and natural language
-    const hasNaturalFlow = /\b(and|or|the|of|in|to|for|with|by)\b/i.test(metaDescription);
-    if (hasNaturalFlow) {
-      score += 30;
-      evidence.push('Natural language flow detected');
-    } else {
-      recommendations.push('Use natural language and avoid keyword stuffing');
-    }
-    
-    if (score === 0) score = 5; // Minimal score for having a description
-  }
-  
-  return {
-    name: 'Meta Description Quality',
-    score: Math.min(score, 100),
-    confidence: metaDescription ? 90 : 100,
-    evidence,
-    recommendations
-  };
-}
-
-// S.2.2 - Heading Structure & Hierarchy
-function analyzeHeadingStructure(pageContent: string): FactorResult {
-  let score = 0;
-  let evidence = [];
-  let recommendations = [];
-  
-  // Extract all headings
-  const h1Tags = (pageContent.match(/<h1[^>]*>([^<]*)<\/h1>/gi) || []).map(h => h.replace(/<[^>]*>/g, '').trim());
-  const h2Tags = (pageContent.match(/<h2[^>]*>/gi) || []).length;
-  const h3Tags = (pageContent.match(/<h3[^>]*>/gi) || []).length;
-  const h4Tags = (pageContent.match(/<h4[^>]*>/gi) || []).length;
-  
-  evidence.push(`H1 tags: ${h1Tags.length}`);
-  evidence.push(`H2 tags: ${h2Tags}`);
-  evidence.push(`H3 tags: ${h3Tags}`);
-  
-  // Check H1 structure (should be exactly one)
-  if (h1Tags.length === 1) {
-    score += 30;
-    evidence.push('Proper H1 structure (exactly one H1)');
-    
-    const h1 = h1Tags[0];
-    if (h1.length >= 20 && h1.length <= 70) {
-      score += 20;
-      evidence.push('H1 length is appropriate');
-    } else {
-      recommendations.push('Optimize H1 length to 20-70 characters');
-    }
-  } else if (h1Tags.length === 0) {
-    evidence.push('No H1 tag found');
-    recommendations.push('Add exactly one H1 tag to your page');
-  } else {
-    evidence.push(`Multiple H1 tags found: ${h1Tags.length}`);
-    recommendations.push('Use only one H1 tag per page');
-    score += 10;
-  }
-  
-  // Check heading hierarchy
-  if (h2Tags >= 2) {
-    score += 30;
-    evidence.push('Good H2 structure for content organization');
-  } else if (h2Tags >= 1) {
-    score += 15;
-    recommendations.push('Add more H2 headings to improve content structure');
-  } else {
-    recommendations.push('Add H2 headings to organize your content');
-  }
-  
-  if (h3Tags >= 1) {
-    score += 20;
-    evidence.push('H3 tags present for detailed content hierarchy');
-  } else {
-    recommendations.push('Consider adding H3 tags for detailed content organization');
-  }
-  
-  // Overall hierarchy score
-  const totalHeadings = h1Tags.length + h2Tags + h3Tags + h4Tags;
-  if (totalHeadings >= 4) {
-    evidence.push('Comprehensive heading structure detected');
-  } else if (totalHeadings >= 2) {
-    evidence.push('Basic heading structure present');
-  }
-  
-  return {
-    name: 'Heading Structure & Hierarchy',
-    score: Math.min(score, 100),
-    confidence: 95,
-    evidence,
-    recommendations
-  };
-}
-
-// S.1.3 - Content Depth and Comprehensiveness
-function analyzeContentDepth(pageContent: string, title: string): FactorResult {
-  let score = 0;
-  let evidence = [];
-  let recommendations = [];
+  const evidence = [];
+  const recommendations = [];
   
   // Remove HTML tags for text analysis
-  const textContent = pageContent.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-  const wordCount = textContent.split(' ').filter(word => word.length > 2).length;
-  const sentences = textContent.split(/[.!?]+/).filter(s => s.trim().length > 10);
-  
-  evidence.push(`Word count: ${wordCount}`);
-  evidence.push(`Sentences: ${sentences.length}`);
-  
-  // Score based on content depth - more varied ranges
-  if (wordCount >= 1500) {
-    score += 45;
-    evidence.push('Exceptionally comprehensive content (1500+ words)');
-  } else if (wordCount >= 1000) {
-    score += 40;
-    evidence.push('Comprehensive content length (1000+ words)');
-  } else if (wordCount >= 500) {
-    score += 30;
-    evidence.push('Substantial content length (500+ words)');
-  } else if (wordCount >= 300) {
-    score += 20;
-    evidence.push('Adequate content length (300+ words)');
-    recommendations.push('Consider expanding content for better depth');
-  } else if (wordCount >= 100) {
-    score += 10;
-    evidence.push('Minimal content length');
-    recommendations.push('Increase content length to 500+ words for better comprehensiveness');
-  } else {
-    score += 5;
-    evidence.push('Very limited content');
-    recommendations.push('Add substantial content (500+ words) for meaningful analysis');
-  }
-  
-  // Check for content structure indicators
-  const sections = (pageContent.match(/<section[^>]*>/gi) || []).length;
-  const lists = (pageContent.match(/<(ul|ol)[^>]*>/gi) || []).length;
-  const paragraphs = (pageContent.match(/<p[^>]*>/gi) || []).length;
-  
-  if (sections >= 2) {
-    score += 20;
-    evidence.push('Multiple content sections for organization');
-  }
-  
-  if (lists >= 2) {
-    score += 20;
-    evidence.push('Lists used for content structure');
-  } else if (lists >= 1) {
-    score += 10;
-    evidence.push('Some structured lists present');
-  }
-  
-  if (paragraphs >= 5) {
-    score += 20;
-    evidence.push('Well-structured paragraph organization');
-  } else if (paragraphs >= 3) {
-    score += 10;
-    recommendations.push('Add more paragraphs for better content flow');
-  }
-  
-  // Check for comprehensive topic coverage
-  const uniqueWords = new Set(textContent.toLowerCase().split(/\W+/).filter(w => w.length > 4));
-  const vocabularyRichness = uniqueWords.size / Math.max(wordCount / 10, 1);
-  
-  if (vocabularyRichness > 3) {
-    evidence.push('Rich vocabulary indicates comprehensive coverage');
-  } else {
-    recommendations.push('Expand topic coverage with more detailed information');
-  }
-  
-  return {
-    name: 'Content Depth and Comprehensiveness',
-    score: Math.min(score, 100),
-    confidence: 80,
-    evidence,
-    recommendations
-  };
-}
-
-// AI.1.5 - Evidence Chunking for RAG Optimization
-function analyzeEvidenceChunking(pageContent: string): FactorResult {
-  let score = 0;
-  let evidence = [];
-  let recommendations = [];
-  
-  // Remove HTML tags for text analysis
-  const textContent = pageContent.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  const textContent = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
   const paragraphs = textContent.split(/\n\s*\n/).filter(p => p.trim().length > 50);
   const sentences = textContent.split(/[.!?]+/).filter(s => s.trim().length > 20);
   
@@ -758,9 +869,9 @@ function analyzeEvidenceChunking(pageContent: string): FactorResult {
     recommendations.push('Structure content in 150-300 word chunks for AI processing');
   }
   
-  // Check for semantic boundaries (headings, lists, clear sections)
-  const headings = (pageContent.match(/<h[1-6][^>]*>/gi) || []).length;
-  const lists = (pageContent.match(/<(ul|ol)[^>]*>/gi) || []).length;
+  // Check for semantic boundaries
+  const headings = (content.match(/<h[1-6][^>]*>/gi) || []).length;
+  const lists = (content.match(/<(ul|ol)[^>]*>/gi) || []).length;
   
   if (headings >= 3 && lists >= 1) {
     score += 30;
@@ -772,9 +883,9 @@ function analyzeEvidenceChunking(pageContent: string): FactorResult {
     recommendations.push('Add headings and lists for better content segmentation');
   }
   
-  // Check for cross-references and internal links
-  const internalLinks = (pageContent.match(/<a[^>]*href=["'][^"']*["'][^>]*>/gi) || [])
-    .filter(link => link.includes('href="/') || (!link.includes('http'))).length;
+  // Check for internal links
+  const internalLinks = (content.match(/<a[^>]*href=["'][^"']*["'][^>]*>/gi) || [])
+    .filter(link => link.includes('href="/') || !link.includes('http')).length;
   
   if (internalLinks >= 3) {
     score += 30;
@@ -787,163 +898,127 @@ function analyzeEvidenceChunking(pageContent: string): FactorResult {
   }
   
   return {
-    name: 'Evidence Chunking for RAG Optimization',
+    factor_id: 'AI.1.5',
+    factor_name: 'Evidence Chunking for RAG Optimization',
+    pillar: 'AI',
+    phase: 'instant',
     score: Math.min(score, 100),
     confidence: 75,
+    weight: 1.058,
     evidence,
-    recommendations
+    recommendations,
+    processing_time_ms: Date.now() - startTime
   };
 }
 
-// M.5.1 - LLMs.txt Implementation and Compliance
-async function analyzeLLMsTxtImplementation(url: string): Promise<FactorResult> {
-  let score = 30; // Base score for assessment
-  let evidence = [];
-  let recommendations = [];
+// Factor 14: Transparency & Disclosure (A.3.1)
+function analyzeTransparencyDisclosure(content: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
   
-  try {
-    // Extract domain from URL
-    const urlObj = new URL(url);
-    const llmsTxtUrl = `${urlObj.origin}/llms.txt`;
-    
-    evidence.push(`Checking for LLMs.txt at: ${llmsTxtUrl}`);
-    
-    // Attempt to fetch the LLMs.txt file
-    const response = await fetch(llmsTxtUrl, {
-      headers: {
-        'User-Agent': 'AImpactScanner/1.0 (LLMs.txt Compliance Check)'
-      },
-      signal: AbortSignal.timeout(5000) // 5 second timeout
-    });
-    
-    if (response.ok) {
-      const content = await response.text();
-      evidence.push('✅ LLMs.txt file found and accessible');
-      score = 50; // Boost for having the file
-      
-      // Check file size (should be reasonable, not empty)
-      if (content.length < 50) {
-        evidence.push('File appears to be empty or minimal');
-        recommendations.push('Rebuild your LLMs.txt with llmtxtmastery.com for comprehensive AI-optimized content');
-        recommendations.push('Add meaningful content including title, summary, and key page links');
-      } else {
-        evidence.push(`File size: ${content.length} characters`);
-        
-        // Check for required Markdown structure elements
-        const hasH1 = /^#\s+.+/m.test(content);
-        const hasBlockquote = /^>\s+.+/m.test(content);
-        const hasLinks = /\[.+\]\(.+\)/g.test(content);
-        const linkCount = (content.match(/\[.+\]\(.+\)/g) || []).length;
-        
-        // Score based on compliance
-        if (hasH1) {
-          score += 15;
-          evidence.push('✅ Has H1 title (required)');
-        } else {
-          recommendations.push('Add an H1 title at the beginning of your LLMs.txt');
-        }
-        
-        if (hasBlockquote) {
-          score += 15;
-          evidence.push('✅ Has blockquote summary (recommended)');
-        } else {
-          recommendations.push('Add a blockquote summary after your H1 title');
-        }
-        
-        if (hasLinks && linkCount >= 5) {
-          score += 20;
-          evidence.push(`✅ Contains ${linkCount} content links`);
-        } else if (hasLinks) {
-          score += 10;
-          evidence.push(`Contains ${linkCount} content links`);
-          recommendations.push('Add more links to your important content (aim for 10+)');
-        } else {
-          recommendations.push('Add links to your most important pages with descriptions');
-        }
-        
-        // Check for section headers (H2s)
-        const h2Count = (content.match(/^##\s+.+/gm) || []).length;
-        if (h2Count >= 2) {
-          score += 10;
-          evidence.push(`✅ Well-organized with ${h2Count} sections`);
-        } else if (h2Count === 1) {
-          score += 5;
-          evidence.push('Has some section organization');
-          recommendations.push('Consider organizing content into multiple H2 sections');
-        } else {
-          recommendations.push('Organize your content with H2 section headers');
-        }
-        
-        // Check for optional section marker
-        if (/^##\s+Optional/mi.test(content)) {
-          evidence.push('✅ Includes optional resources section');
-        }
-        
-        // Always recommend llmtxtmastery.com for optimization
-        recommendations.push('Optimize your LLMs.txt with llmtxtmastery.com - uses AI to tune descriptions for better Gen AI consumption');
-        recommendations.push('Maintain and enhance your file regularly as your content evolves');
-      }
-    } else if (response.status === 404) {
-      evidence.push('❌ No LLMs.txt file found at domain root');
-      recommendations.push('Create a professional LLMs.txt file using llmtxtmastery.com - the AI visibility optimization platform');
-      recommendations.push('Generate an optimized file at /llms.txt that follows llmstxt.org specification');
-      recommendations.push('Include your site title, summary, and links to key content');
-      recommendations.push('This helps AI systems like ChatGPT, Claude, and Perplexity better understand and access your content');
-    } else {
-      evidence.push(`Unable to access LLMs.txt (HTTP ${response.status})`);
-      recommendations.push('Ensure LLMs.txt is publicly accessible at /llms.txt');
-    }
-  } catch (error) {
-    evidence.push('Could not check LLMs.txt due to network error');
-    recommendations.push('Implement LLMs.txt for AI content accessibility');
-    recommendations.push('Use llmtxtmastery.com to create a professional, optimized LLMs.txt file');
+  // Check for disclosure statements
+  const disclosureTerms = /disclosure|conflict\s+of\s+interest|sponsored|paid\s+partnership|affiliate|disclaimer/i;
+  const hasDisclosure = disclosureTerms.test(content);
+  
+  if (hasDisclosure) {
+    score += 30;
+    evidence.push('Disclosure statements found');
+  } else {
+    recommendations.push('Add disclosure statements for transparency');
+    recommendations.push('Include conflict of interest information if applicable');
   }
   
-  // Ensure minimum viable score
-  if (score < 30) score = 30;
+  // Check for funding information
+  const fundingTerms = /funded\s+by|grant|supported\s+by|sponsored\s+by/i;
+  const hasFunding = fundingTerms.test(content);
+  
+  if (hasFunding) {
+    score += 25;
+    evidence.push('Funding source transparency present');
+  } else {
+    recommendations.push('Include funding source information if applicable');
+  }
+  
+  // Check for methodology
+  const methodTerms = /method|process|approach|criteria|how\s+we|our\s+process/i;
+  const hasMethod = methodTerms.test(content);
+  
+  if (hasMethod) {
+    score += 25;
+    evidence.push('Methodology or process information included');
+  } else {
+    recommendations.push('Explain your methodology and process');
+  }
+  
+  // Check for update info
+  const updatedTerms = /updated|revised|last\s+modified|published/i;
+  const hasUpdated = updatedTerms.test(content);
+  
+  if (hasUpdated) {
+    score += 20;
+    evidence.push('Update information provided');
+  } else {
+    recommendations.push('Include publication and update dates');
+  }
+  
+  // Base transparency score
+  if (score === 0) {
+    score = 15;
+    recommendations.push('Implement basic transparency standards');
+  } else if (score < 30) {
+    score += 10;
+  }
   
   return {
-    name: 'LLMs.txt Implementation',
-    score: Math.min(score, 95), // Cap at 95 as no implementation is perfect
-    confidence: 90, // High confidence as this is a binary check with clear criteria
+    factor_id: 'A.3.1',
+    factor_name: 'Transparency & Disclosure Standards',
+    pillar: 'A',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 75,
+    weight: 1.193,
     evidence,
-    recommendations
+    recommendations,
+    processing_time_ms: Date.now() - startTime
   };
 }
 
-// E.1.1 - Page Load Speed Optimization
-function analyzePageLoadSpeed(pageContent: string): FactorResult {
+// Factor 15: Page Load Speed (E.1.1)
+function analyzePageLoadSpeed(content: string): FactorResult {
+  const startTime = Date.now();
   let score = 0;
-  let evidence = [];
-  let recommendations = [];
+  const evidence = [];
+  const recommendations = [];
   
   // Analyze page size indicators
-  const pageSize = pageContent.length;
-  const imageTags = (pageContent.match(/<img[^>]*>/gi) || []).length;
-  const scriptTags = (pageContent.match(/<script[^>]*>/gi) || []).length;
-  const styleTags = (pageContent.match(/<style[^>]*>/gi) || []).length;
-  const cssLinks = (pageContent.match(/<link[^>]*rel=["']stylesheet["'][^>]*>/gi) || []).length;
+  const pageSize = content.length;
+  const imageTags = (content.match(/<img[^>]*>/gi) || []).length;
+  const scriptTags = (content.match(/<script[^>]*>/gi) || []).length;
+  const styleTags = (content.match(/<style[^>]*>/gi) || []).length;
+  const cssLinks = (content.match(/<link[^>]*rel=["']stylesheet["'][^>]*>/gi) || []).length;
   
   evidence.push(`Page content size: ${Math.round(pageSize / 1024)} KB`);
   evidence.push(`Images: ${imageTags}`);
   evidence.push(`Scripts: ${scriptTags}`);
   evidence.push(`CSS files: ${cssLinks + styleTags}`);
   
-  // Score based on page size with more granular ranges
-  if (pageSize < 50000) { // < 50KB - very lightweight
+  // Score based on page size
+  if (pageSize < 50000) {
     score += 45;
     evidence.push('Exceptionally lightweight page for optimal loading');
-  } else if (pageSize < 100000) { // < 100KB
+  } else if (pageSize < 100000) {
     score += 40;
     evidence.push('Lightweight page size for fast loading');
-  } else if (pageSize < 250000) { // < 250KB
+  } else if (pageSize < 250000) {
     score += 30;
     evidence.push('Reasonable page size');
-  } else if (pageSize < 500000) { // < 500KB
+  } else if (pageSize < 500000) {
     score += 20;
     evidence.push('Moderate page size');
     recommendations.push('Consider optimizing images and content for faster loading');
-  } else if (pageSize < 1000000) { // < 1MB
+  } else if (pageSize < 1000000) {
     score += 10;
     evidence.push('Large page size may impact loading speed');
     recommendations.push('Optimize page size - consider compressing content');
@@ -954,9 +1029,8 @@ function analyzePageLoadSpeed(pageContent: string): FactorResult {
   }
   
   // Check for optimization indicators
-  const hasLazyLoading = /loading=["']lazy["']|data-src/i.test(pageContent);
-  const hasMinification = /\.min\.(js|css)/i.test(pageContent);
-  const hasCompression = /gzip|deflate|br/i.test(pageContent);
+  const hasLazyLoading = /loading=["']lazy["']|data-src/i.test(content);
+  const hasMinification = /\.min\.(js|css)/i.test(content);
   
   if (hasLazyLoading) {
     score += 20;
@@ -972,9 +1046,9 @@ function analyzePageLoadSpeed(pageContent: string): FactorResult {
     recommendations.push('Minify CSS and JavaScript files');
   }
   
-  // Check for performance-related meta tags
-  const hasPreload = /<link[^>]*rel=["']preload["']/i.test(pageContent);
-  const hasPrefetch = /<link[^>]*rel=["']prefetch["']/i.test(pageContent);
+  // Check for performance meta tags
+  const hasPreload = /<link[^>]*rel=["']preload["']/i.test(content);
+  const hasPrefetch = /<link[^>]*rel=["']prefetch["']/i.test(content);
   
   if (hasPreload || hasPrefetch) {
     score += 20;
@@ -983,34 +1057,200 @@ function analyzePageLoadSpeed(pageContent: string): FactorResult {
     recommendations.push('Consider preloading critical resources');
   }
   
-  // Base score varies by optimization level
+  // Base score
   if (score === 0) {
-    score = 15; // Lower base for unoptimized sites
+    score = 15;
     recommendations.push('Implement basic page speed optimizations');
   } else if (score < 25) {
-    score += 5; // Small boost for minimal optimization
+    score += 5;
   }
   
   return {
-    name: 'Page Load Speed Optimization',
+    factor_id: 'E.1.1',
+    factor_name: 'Page Load Speed Optimization',
+    pillar: 'E',
+    phase: 'instant',
     score: Math.min(score, 100),
-    confidence: 70, // Medium confidence without actual speed testing
+    confidence: 70,
+    weight: 0.64,
     evidence,
-    recommendations
+    recommendations,
+    processing_time_ms: Date.now() - startTime
   };
 }
 
+// Main analysis function
+async function analyzeAllFactors(url: string, pageContent: string, title: string, metaDescription: string, progressCallback?: (stage: string, percent: number, message: string, educational: string) => Promise<void>): Promise<AnalysisResult> {
+  const startTime = Date.now();
+  const factors: FactorResult[] = [];
+  
+  // Helper function for progress updates
+  const updateProgress = async (factorNumber: number, factorName: string, educationalContent: string) => {
+    if (progressCallback) {
+      const progress = Math.round((factorNumber / 15) * 80) + 10; // 10% start + 80% for 15 factors
+      await progressCallback(
+        `analyzing_${factorName.toLowerCase().replace(/\s+/g, '_')}`,
+        progress,
+        `Analyzing: ${factorName}`,
+        educationalContent
+      );
+      // Delay to ensure progress update is visible
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  };
+  
+  try {
+    // Factor 1: HTTPS Security
+    await updateProgress(1, 'HTTPS Security', 'Checking if your site uses secure HTTPS protocol - essential for AI search rankings and user trust.');
+    factors.push(analyzeHTTPS(url));
+    
+    // Factor 2: Title Optimization
+    await updateProgress(2, 'Title Optimization', 'Analyzing your page title for length, keywords, and AI search optimization best practices.');
+    factors.push(analyzeTitle(title));
+    
+    // Factor 3: Meta Description
+    await updateProgress(3, 'Meta Description Quality', 'Evaluating your meta description for search snippet optimization and user engagement factors.');
+    factors.push(analyzeMetaDescription(metaDescription));
+    
+    // Factor 4: Author Information
+    await updateProgress(4, 'Author Information', 'Detecting author bylines and credibility signals that establish expertise and trustworthiness.');
+    factors.push(analyzeAuthor(pageContent));
+    
+    // Factor 5: Contact Information
+    await updateProgress(5, 'Contact Information', 'Scanning for contact methods (email, phone, address) that build trust and authority signals.');
+    factors.push(analyzeContact(url, pageContent));
+    
+    // Factor 6: Heading Hierarchy
+    await updateProgress(6, 'Heading Hierarchy', 'Analyzing your heading structure (H1-H6) for semantic organization and content accessibility.');
+    factors.push(analyzeHeadings(pageContent));
+    
+    // Factor 7: Structured Data
+    await updateProgress(7, 'Structured Data', 'Checking for JSON-LD, microdata, and schema markup that helps AI understand your content.');
+    factors.push(analyzeStructuredData(pageContent));
+    
+    // Factor 8: FAQ Schema
+    await updateProgress(8, 'FAQ Content', 'Identifying question-answer patterns and FAQ structured data for enhanced AI comprehension.');
+    factors.push(analyzeFAQ(pageContent));
+    
+    // Factor 9: Image Alt Text
+    await updateProgress(9, 'Image Accessibility', 'Evaluating image alt text coverage and quality for accessibility and AI image understanding.');
+    factors.push(analyzeImages(pageContent));
+    
+    // Factor 10: Content Depth
+    await updateProgress(10, 'Content Depth', 'Analyzing content length, readability, and depth for comprehensive topic coverage.');
+    factors.push(analyzeWordCount(pageContent));
+    
+    // Factor 11: Citation-Worthy Content
+    await updateProgress(11, 'Citation-Worthy Content', 'Checking if your content has the structure and depth needed for AI systems to cite it.');
+    factors.push(analyzeCitationWorthyContent(pageContent, title));
+    
+    // Factor 12: Source Authority
+    await updateProgress(12, 'Source Authority', 'Evaluating authority signals that help AI systems assess credibility and trustworthiness.');
+    factors.push(analyzeSourceAuthoritySignals(pageContent, url));
+    
+    // Factor 13: Evidence Chunking
+    await updateProgress(13, 'Evidence Chunking', 'Analyzing content chunking for optimal AI retrieval-augmented generation processing.');
+    factors.push(analyzeEvidenceChunking(pageContent));
+    
+    // Factor 14: Transparency & Disclosure
+    await updateProgress(14, 'Transparency Standards', 'Checking for transparency and disclosure standards that build trust with AI systems.');
+    factors.push(analyzeTransparencyDisclosure(pageContent));
+    
+    // Factor 15: Page Load Speed
+    await updateProgress(15, 'Page Load Speed', 'Evaluating page load speed optimization for better user experience and AI crawler efficiency.');
+    factors.push(analyzePageLoadSpeed(pageContent));
+    
+    // Calculate overall score
+    const overall_score = calculateOverallScore(factors);
+    const processing_time_ms = Date.now() - startTime;
+    
+    return {
+      factors,
+      overall_score,
+      processing_time_ms,
+      success: true
+    };
+    
+  } catch (error) {
+    console.error('Analysis failed:', error);
+    return {
+      factors,
+      overall_score: 0,
+      processing_time_ms: Date.now() - startTime,
+      success: false,
+      error: error.message
+    };
+  }
+}
 
+// Calculate overall score from factors
+function calculateOverallScore(factors: FactorResult[]): number {
+  if (factors.length === 0) return 0;
+  
+  let totalScore = 0;
+  let totalWeight = 0;
+  
+  factors.forEach(factor => {
+    // Weight by confidence to account for reliability
+    const weightedScore = factor.score * (factor.confidence / 100) * factor.weight;
+    totalScore += weightedScore;
+    totalWeight += factor.weight;
+  });
+  
+  return totalWeight > 0 ? Math.round(totalScore / totalWeight) : 0;
+}
 
+// Fetch webpage data
+async function fetchPageData(url: string): Promise<{title: string, metaDescription: string, content: string}> {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'AImpactScanner/1.0 (AI Search Optimization Analysis)'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    const html = await response.text();
+    
+    // Extract title
+    const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
+    const title = titleMatch ? titleMatch[1].trim() : '';
+    
+    // Extract meta description
+    let metaDescription = '';
+    
+    // Standard meta description
+    let metaMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)/i);
+    if (!metaMatch) {
+      // Try reversed order
+      metaMatch = html.match(/<meta[^>]*content=["']([^"']*)[^>]*name=["']description/i);
+    }
+    if (!metaMatch) {
+      // Try Open Graph
+      metaMatch = html.match(/<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']*)/i);
+    }
+    
+    metaDescription = metaMatch ? metaMatch[1].trim() : '';
+    
+    return { title, metaDescription, content: html };
+    
+  } catch (error) {
+    console.error(`Failed to fetch page data: ${error.message}`);
+    return { title: '', metaDescription: '', content: '' };
+  }
+}
 
 serve(async (req) => {
   // Handle CORS
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders });
   }
-
+  
   try {
-    console.log('=== SIMPLIFIED ANALYSIS START ===');
+    console.log('=== 15-FACTOR ANALYSIS START ===');
     
     const { url, userId, analysisId } = await req.json();
     
@@ -1055,262 +1295,84 @@ serve(async (req) => {
       }
     };
     
-    // Update analysis status
+    // Insert new analysis record
     await supabase
       .from('analyses')
-      .update({ status: 'processing' })
-      .eq('id', analysisId);
+      .insert({
+        id: analysisId,
+        user_id: userId,
+        url: url,
+        status: 'processing',
+        scores: {
+          overall_score: 0,
+          pillars: {},
+          factors: {}
+        },
+        factor_results: {},
+        framework_version: '3.1.1',
+        created_at: new Date().toISOString()
+      });
     
-    // Start analysis with real progress updates
+    // Start analysis
     await updateProgress('initialization', 10, 'Initializing analysis engine...', 'Setting up secure analysis environment...');
     
     // Brief delay to ensure frontend subscription is ready
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    // Fetch and analyze actual webpage content
-    let pageContent = '';
-    let documentTitle = '';
-    let metaDescription = '';
-    let h1Tags = [];
-    let imageCount = 0;
-    let imagesWithAlt = 0;
+    // Fetch webpage content
+    await updateProgress('fetching', 15, 'Fetching webpage content...', 'Downloading HTML and analyzing page structure...');
+    const pageData = await fetchPageData(url);
     
-    try {
-      await updateProgress('fetching', 15, 'Fetching webpage content...', 'Downloading HTML and analyzing page structure...');
-      
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'AImpactScanner/1.0 (AI Optimization Analysis)'
-        },
-        signal: AbortSignal.timeout(8000) // 8 second timeout
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch page: ${response.status} ${response.statusText}`);
-      }
-      
-      pageContent = await response.text();
-      
-      // Parse HTML for analysis
-      const titleMatch = pageContent.match(/<title[^>]*>([^<]*)<\/title>/i);
-      documentTitle = titleMatch ? titleMatch[1].trim() : '';
-      
-      const metaDescMatch = pageContent.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["'][^>]*>/i);
-      metaDescription = metaDescMatch ? metaDescMatch[1].trim() : '';
-      
-      const h1Matches = pageContent.match(/<h1[^>]*>([^<]*)<\/h1>/gi);
-      h1Tags = h1Matches ? h1Matches.map(h1 => h1.replace(/<[^>]*>/g, '').trim()) : [];
-      
-      const imageMatches = pageContent.match(/<img[^>]*>/gi);
-      imageCount = imageMatches ? imageMatches.length : 0;
-      imagesWithAlt = imageMatches ? imageMatches.filter(img => /alt=["'][^"']*["']/.test(img) && !/alt=["']\s*["']/.test(img)).length : 0;
-      
-    } catch (error) {
-      console.warn('Error fetching page content, using fallback analysis:', error.message);
-      // Continue with limited analysis if fetch fails
+    // Perform 15-factor analysis
+    const analysisResult = await analyzeAllFactors(url, pageData.content, pageData.title, pageData.metaDescription, updateProgress);
+    
+    if (!analysisResult.success) {
+      throw new Error(`Analysis failed: ${analysisResult.error}`);
     }
-
-    // Framework-compliant factor analysis with official mappings
-    const rawFactors = [
-      analyzeCitationWorthyContent(pageContent, documentTitle),         // AI.1.1
-      analyzeSourceAuthoritySignals(pageContent, url),                  // AI.1.2  
-      analyzeEvidenceChunking(pageContent),                             // AI.1.5
-      analyzeTransparencyDisclosure(pageContent),                       // A.3.1
-      analyzeContactAccessibility(pageContent),                         // A.3.2
-      analyzeSecurityAccessControl(url),                                // M.1.4
-      analyzeTitleTagOptimization(documentTitle, url),                  // M.2.1
-      analyzeMetaDescriptionQuality(metaDescription),                   // M.2.2
-      await analyzeLLMsTxtImplementation(url),                          // M.5.1 - NEW!
-      analyzeHeadingStructure(pageContent),                             // S.2.2
-      analyzeContentDepth(pageContent, documentTitle),                  // S.1.3
-      analyzePageLoadSpeed(pageContent)                                 // E.1.1
-    ];
     
-    // Map factors to include pillar information for frontend display
-    const factorPillarMap = {
-      'Citation-Worthy Content Structure': 'AI Response Optimization',
-      'Source Authority Signals': 'AI Response Optimization',
-      'Evidence Chunking for RAG Optimization': 'AI Response Optimization',
-      'Transparency & Disclosure Standards': 'Authority & Trust',
-      'Contact Information & Accessibility': 'Authority & Trust',
-      'Security and Access Control': 'Machine Readability',
-      'Title Tag Optimization': 'Machine Readability',
-      'Meta Description Quality': 'Machine Readability',
-      'LLMs.txt Implementation': 'Machine Readability',
-      'Heading Structure & Hierarchy': 'Semantic Content',
-      'Content Depth and Comprehensiveness': 'Semantic Content',
-      'Page Load Speed Optimization': 'Engagement'
-    };
+    const factors = analysisResult.factors;
     
-    const factors = rawFactors.map(factor => ({
-      ...factor,
-      pillar: factorPillarMap[factor.name] || 'Machine Readability'
-    }));
-    
-    console.log('📊 Factors analyzed:', {
+    console.log('Factors analyzed:', {
       count: factors.length,
-      factors: factors.map(f => ({ name: f.name, score: f.score, pillar: f.pillar }))
+      factors: factors.map(f => ({ 
+        factor_id: f.factor_id, 
+        factor_name: f.factor_name, 
+        score: f.score, 
+        pillar: f.pillar 
+      }))
     });
     
-    let progress = 20;
-    // Official MASTERY-AI Framework v3.1.1 factor mappings with weights
-    const factorMappings = {
-      'Citation-Worthy Content Structure': { 
-        pillar: 'AI', 
-        factor_id: 'AI.1.1',
-        weight: 1.058, // AI.1 sub-pillar: 26.7% of 23.8% = 6.35% framework / 6 factors = 1.058%
-        education: 'Citation-worthy content structure is fundamental for AI systems to identify, extract, and cite your content. Proper fact density, hierarchical organization, and clear evidence support enable reliable AI citations.'
-      },
-      'Source Authority Signals': { 
-        pillar: 'AI', 
-        factor_id: 'AI.1.2',
-        weight: 1.058, // AI.1 sub-pillar: 26.7% of 23.8% = 6.35% framework / 6 factors = 1.058%
-        education: 'Source authority signals help AI systems assess credibility and trustworthiness. Clear author information, credentials, professional indicators, and structured data markup (Person/Organization schema) increase citation likelihood across AI platforms by providing machine-readable authority validation.'
-      },
-      'Evidence Chunking for RAG Optimization': { 
-        pillar: 'AI', 
-        factor_id: 'AI.1.5',
-        weight: 1.058, // AI.1 sub-pillar: 26.7% of 23.8% = 6.35% framework / 6 factors = 1.058%
-        education: 'Evidence chunking optimizes content for Retrieval-Augmented Generation systems. Proper 150-300 word segments with clear semantic boundaries improve AI processing and citation accuracy.'
-      },
-      'Transparency & Disclosure Standards': { 
-        pillar: 'A', 
-        factor_id: 'A.3.1',
-        weight: 1.193, // A.3 sub-pillar: 20% of 17.9% = 3.58% framework / 3 factors = 1.193%
-        education: 'Transparency and disclosure build trust with AI systems by providing clear information about funding, conflicts of interest, and methodology. This transparency increases citation confidence.'
-      },
-      'Contact Information & Accessibility': { 
-        pillar: 'A', 
-        factor_id: 'A.3.2',
-        weight: 1.193, // A.3 sub-pillar: 20% of 17.9% = 3.58% framework / 3 factors = 1.193%
-        education: 'Accessible contact information demonstrates accountability and enables verification. AI systems favor sources that provide clear ways to validate information and reach authors.'
-      },
-      'Security and Access Control': { 
-        pillar: 'M', 
-        factor_id: 'M.1.4',
-        weight: 0.73, // M.1 sub-pillar: 25% of 14.6% = 3.65% framework / 5 factors = 0.73%
-        education: 'HTTPS security and access controls ensure data integrity and user safety. AI systems prioritize secure sources for trustworthy information and citation reliability.'
-      },
-      'Title Tag Optimization': { 
-        pillar: 'M', 
-        factor_id: 'M.2.1',
-        weight: 0.80, // M.2 sub-pillar: 22% of 14.6% = 3.21% framework / 4 factors = 0.80%
-        education: 'Optimized title tags provide AI systems with clear content summaries and topic indicators. Well-structured titles with appropriate length and keywords improve discoverability.'
-      },
-      'Meta Description Quality': { 
-        pillar: 'M', 
-        factor_id: 'M.2.2',
-        weight: 0.80, // M.2 sub-pillar: 22% of 14.6% = 3.21% framework / 4 factors = 0.80%
-        education: 'Quality meta descriptions help AI systems understand page purpose and content relevance. Compelling descriptions with natural language improve click-through rates and user engagement.'
-      },
-      'LLMs.txt Implementation': { 
-        pillar: 'M', 
-        factor_id: 'M.5.1',
-        weight: 1.46, // M.5 sub-pillar: 20% of 14.6% = 2.92% framework / 2 factors = 1.46%
-        education: 'LLMs.txt provides AI systems with a structured map of your most important content. This emerging standard (llmstxt.org) enables efficient content discovery and processing by AI platforms like ChatGPT, Claude, and Perplexity. For professional implementation, use llmtxtmastery.com to generate an optimized LLMs.txt file that maximizes your AI visibility and accessibility.'
-      },
-      'Heading Structure & Hierarchy': { 
-        pillar: 'S', 
-        factor_id: 'S.2.2',
-        weight: 0.76, // S.2 sub-pillar: 27.3% of 13.9% = 3.79% framework / 5 factors = 0.76%
-        education: 'Proper heading hierarchy (H1, H2, H3) enables AI systems to understand content organization and topic relationships for better semantic comprehension and processing.'
-      },
-      'Content Depth and Comprehensiveness': { 
-        pillar: 'S', 
-        factor_id: 'S.1.3',
-        weight: 0.74, // S.1 sub-pillar: 31.8% of 13.9% = 4.42% framework / 6 factors = 0.74%
-        education: 'Comprehensive content depth provides AI systems with thorough information for accurate understanding and citation. Detailed coverage demonstrates expertise and authority.'
-      },
-      'Page Load Speed Optimization': { 
-        pillar: 'E', 
-        factor_id: 'E.1.1',
-        weight: 0.64, // E.1 sub-pillar: 35% of 10.9% = 3.82% framework / 6 factors = 0.64%
-        education: 'Fast-loading pages improve user experience and AI system access efficiency. Speed optimization ensures AI crawlers can efficiently process your content without timeouts.'
-      }
-    };
-    
-    for (let i = 0; i < factors.length; i++) {
-      const factor = factors[i];
-      progress = 20 + (i / factors.length) * 70; // Progress from 20% to 90%
-      
-      await updateProgress(
-        `analyzing_${factor.name.toLowerCase().replace(/\s+/g, '_')}`,
-        Math.floor(progress),
-        `Analyzing ${factor.name}...`,
-        `Evaluating ${factor.name} for AI optimization impact...`
-      );
-      
-      // Insert factor result with real analysis data
-      const mapping = factorMappings[factor.name];
+    // Insert factor results
+    for (const factor of factors) {
       const insertResult = await supabase
         .from('analysis_factors')
         .insert({
           analysis_id: analysisId,
-          factor_id: mapping?.factor_id || `UNKNOWN.${i + 1}.1`,
-          factor_name: factor.name,
-          pillar: mapping?.pillar || 'M',
-          phase: 'instant',
+          factor_id: factor.factor_id,
+          factor_name: factor.factor_name,
+          pillar: factor.pillar,
+          phase: factor.phase,
           score: factor.score,
           confidence: factor.confidence,
-          weight: mapping?.weight || 1.0,
+          weight: factor.weight,
           evidence: factor.evidence,
           recommendations: factor.recommendations,
-          processing_time_ms: 200 + Math.floor(Math.random() * 100),
-          educational_content: mapping?.education || `${factor.name} is essential for AI optimization and search visibility.`
+          processing_time_ms: factor.processing_time_ms,
+          educational_content: `${factor.factor_name} is essential for AI optimization and search visibility.`
         });
       
       if (insertResult.error) {
-        console.error(`Error inserting factor ${factor.name}:`, insertResult.error);
+        console.error(`Error inserting factor ${factor.factor_name}:`, insertResult.error);
       } else {
-        console.log(`✅ Successfully inserted factor: ${factor.name} (Score: ${factor.score})`);
+        console.log(`Successfully inserted factor: ${factor.factor_name} (Score: ${factor.score})`);
       }
-      
-      // Delay to show real-time progress and ensure updates propagate
-      await new Promise(resolve => setTimeout(resolve, 800));
     }
     
     await updateProgress('finalization', 95, 'Finalizing results...', 'Calculating overall optimization score...');
     
-    const overallScore = Math.floor(factors.reduce((sum, f) => sum + f.score, 0) / factors.length);
+    const overallScore = analysisResult.overall_score;
     
-    // Update analysis as completed
-    console.log('🔄 Updating analysis status to completed...');
-    console.log('📊 Analysis ID:', analysisId);
-    console.log('📊 Overall score:', overallScore);
-    
-    try {
-      const updateResult = await supabase
-        .from('analyses')
-        .update({ 
-          status: 'completed',
-          overall_score: overallScore
-        })
-        .eq('id', analysisId);
-      
-      if (updateResult.error) {
-        console.error('❌ Database update error:', JSON.stringify(updateResult.error, null, 2));
-        console.error('❌ Error code:', updateResult.error.code);
-        console.error('❌ Error message:', updateResult.error.message);
-        console.error('❌ Error details:', updateResult.error.details);
-        console.error('❌ Error hint:', updateResult.error.hint);
-        
-        // Continue anyway - factors are already inserted
-        console.log('⚠️ Analysis status update failed, but factors were saved successfully');
-      } else {
-        console.log('✅ Analysis status updated to completed');
-      }
-    } catch (dbError) {
-      console.error('❌ Database operation exception:', dbError);
-      console.log('⚠️ Continuing despite database error - factors are saved');
-    }
-    
-    try {
-      await updateProgress('complete', 100, 'Analysis complete!', 'Review your factor scores and recommendations for optimization opportunities.');
-    } catch (progressError) {
-      console.error('⚠️ Final progress update failed:', progressError);
-    }
-    
-    // Calculate pillar scores from factors
+    // Calculate pillar scores
     const pillarData = {
       AI: { score: 0, weight: 23.8, factors: 0, totalWeight: 0, name: "AI Response Optimization & Citation" },
       A: { score: 0, weight: 17.9, factors: 0, totalWeight: 0, name: "Authority & Trust Signals" },
@@ -1324,36 +1386,73 @@ serve(async (req) => {
     
     // Calculate weighted scores per pillar
     factors.forEach(factor => {
-      const mapping = factorMappings[factor.name];
-      const pillar = mapping?.pillar || 'M';
+      const pillar = factor.pillar;
       if (pillarData[pillar]) {
-        // Use factor weight for weighted average
-        const factorWeight = mapping?.weight || 1.0;
+        const factorWeight = factor.weight || 1.0;
         pillarData[pillar].score += factor.score * factorWeight;
         pillarData[pillar].totalWeight += factorWeight;
         pillarData[pillar].factors += 1;
       }
     });
     
-    // Calculate weighted average scores for pillars with factors
+    // Calculate weighted average scores
     Object.keys(pillarData).forEach(pillar => {
       if (pillarData[pillar].totalWeight > 0) {
         pillarData[pillar].score = Math.round(pillarData[pillar].score / pillarData[pillar].totalWeight);
       }
     });
     
+    // Update analysis as completed
+    console.log('Updating analysis status to completed...');
+    console.log('Overall score:', overallScore);
+    
+    try {
+      const updateResult = await supabase
+        .from('analyses')
+        .update({ 
+          status: 'completed',
+          overall_score: overallScore,
+          page_title: pageData.title || null,
+          page_description: pageData.metaDescription || null,
+          framework_version: '3.1.1',
+          scores: {
+            overall_score: overallScore,
+            pillars: pillarData,
+            factors: factors.reduce((acc, f) => {
+              acc[f.factor_id] = {
+                score: f.score,
+                confidence: f.confidence,
+                evidence: f.evidence,
+                recommendations: f.recommendations
+              };
+              return acc;
+            }, {})
+          },
+          analysis_duration: analysisResult.processing_time_ms
+        })
+        .eq('id', analysisId);
+      
+      if (updateResult.error) {
+        console.error('Database update error:', updateResult.error);
+        console.log('Analysis status update failed, but factors were saved successfully');
+      } else {
+        console.log('Analysis status updated to completed');
+      }
+    } catch (dbError) {
+      console.error('Database operation exception:', dbError);
+      console.log('Continuing despite database error - factors are saved');
+    }
+    
+    try {
+      await updateProgress('complete', 100, 'Analysis complete!', 'Review your factor scores and recommendations for optimization opportunities.');
+    } catch (progressError) {
+      console.error('Final progress update failed:', progressError);
+    }
+    
     console.log('=== ANALYSIS COMPLETE ===');
     console.log(`Overall score: ${overallScore}`);
     console.log(`Factors analyzed: ${factors.length}`);
-    console.log('📋 Factor details:', JSON.stringify(factors.map(f => ({
-      name: f.name,
-      score: f.score,
-      pillar: f.pillar,
-      evidenceCount: f.evidence?.length || 0,
-      recommendationsCount: f.recommendations?.length || 0
-    })), null, 2));
-    console.log('📊 Pillar scores:', JSON.stringify(pillarData, null, 2));
-    console.log('✅ Factors successfully inserted, analysis functional');
+    console.log('Factors successfully inserted, analysis functional');
     
     return new Response(JSON.stringify({
       success: true,
@@ -1363,7 +1462,7 @@ serve(async (req) => {
       factors: factors,
       pillars: pillarData,
       overall_score: overallScore,
-      processing_time_ms: 2000 + factors.length * 200,
+      processing_time_ms: analysisResult.processing_time_ms,
       tier: 'coffee',
       remainingAnalyses: 'unlimited'
     }), {

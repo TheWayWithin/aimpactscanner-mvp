@@ -14,7 +14,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
     has_factors: !!analysisData?.factors,
     factors_count: analysisData?.factors?.length || 0,
     overall_score: analysisData?.overall_score,
-    first_factor_name: analysisData?.factors?.[0]?.name
+    first_factor_name: analysisData?.factors?.[0]?.factor_name || analysisData?.factors?.[0]?.name
   }, null, 2));
 
   // Handle PDF generation callback
@@ -457,7 +457,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
                   <div key={factorIndex} className="bg-white rounded-lg shadow p-6 border-l-2 border-gray-200" data-testid="factor-card">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900 mb-1">{factor.name}</h4>
+                        <h4 className="font-semibold text-gray-900 mb-1">{factor.factor_name || factor.name}</h4>
                         <span className={`text-xs ${pillarStyle.text} ${pillarStyle.badge} px-2 py-1 rounded font-medium`}>
                           {pillarGroup.key} Pillar Factor
                         </span>

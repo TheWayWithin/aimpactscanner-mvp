@@ -830,7 +830,12 @@ function AppContent() {
             user_id: userId,
             url: url,
             status: 'in_progress',
-            scores: null,
+            scores: {
+              overall_score: 0,
+              pillars: {},
+              factors: {}
+            },
+            factor_results: {},
             framework_version: '3.1.1',
             analysis_duration: null,
             created_at: new Date().toISOString()

@@ -1,10 +1,13 @@
 # Mission: DEPLOY 🚀
-## Production Deployment Preparation and Execution
+## Production Deployment with Mandatory Guardrails
 
 **Mission Code**: DEPLOY  
 **Estimated Duration**: 1-2 hours  
-**Complexity**: Medium  
+**Complexity**: High (Production Impact)  
 **Squad Required**: Operator, Tester, Developer
+
+## 🚨 CRITICAL GUARDRAILS INTEGRATION
+This mission includes mandatory deployment validation to prevent incidents like the "130-factor regression" of July 2025. ALL validation steps are REQUIRED.
 
 ## Mission Briefing
 

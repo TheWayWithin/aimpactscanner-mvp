@@ -309,7 +309,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                       <div className="flex-1">
                         <div className="flex items-center mb-2">
                           <span className="text-red-600 font-bold mr-3">{index + 1}.</span>
-                          <h4 className="font-semibold">{factor.name}</h4>
+                          <h4 className="font-semibold">{factor.factor_name || factor.name}</h4>
                           <span className="ml-auto text-sm bg-red-100 text-red-700 px-2 py-1 rounded">
                             Score: {factor.score}/100
                           </span>
@@ -347,7 +347,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
               <div className="space-y-4">
                 {analysisFactors.improvements.map((factor) => (
                   <div key={factor.id} className="border-l-4 border-yellow-500 pl-4">
-                    <h4 className="font-semibold mb-1">{factor.name}</h4>
+                    <h4 className="font-semibold mb-1">{factor.factor_name || factor.name}</h4>
                     <p className="text-gray-600 text-sm mb-2">{factor.description}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-sm bg-yellow-100 text-yellow-700 px-2 py-1 rounded">
@@ -366,7 +366,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
               <div className="space-y-4">
                 {analysisFactors.strengths.map((factor) => (
                   <div key={factor.id} className="border-l-4 border-green-500 pl-4">
-                    <h4 className="font-semibold mb-1">{factor.name}</h4>
+                    <h4 className="font-semibold mb-1">{factor.factor_name || factor.name}</h4>
                     <p className="text-gray-600 text-sm mb-2">{factor.description}</p>
                     <span className="text-sm bg-green-100 text-green-700 px-2 py-1 rounded">
                       {factor.status}

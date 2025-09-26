@@ -46,6 +46,13 @@ Parse the arguments to determine:
 
 **View detailed mission briefings**: Check `/missions/mission-[name].md`
 
+### DEPLOYMENT GUARDRAILS INTEGRATION
+When orchestrating deployment-related missions:
+- **Pre-deployment**: Ensure @operator runs validation scripts
+- **Factor changes**: Verify @developer runs factor-count-validator.js
+- **System changes**: Confirm deployment validation passes before proceeding
+- **Emergency response**: Follow CLAUDE.md emergency procedures for failures
+
 ### EXECUTION PROTOCOL
 
 1. **No Mission Specified**:

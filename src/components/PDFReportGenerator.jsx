@@ -117,7 +117,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
     criticalFactors.forEach(factor => {
       recommendations.push({
         priority: 'High',
-        factor: factor.name,
+        factor: factor.factor_name || factor.name,
         pillar: factor.pillar,
         score: factor.score,
         actions: factor.recommendations || ['Review and optimize this factor'],
@@ -130,7 +130,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
     moderateFactors.slice(0, 3).forEach(factor => {
       recommendations.push({
         priority: 'Medium',
-        factor: factor.name,
+        factor: factor.factor_name || factor.name,
         pillar: factor.pillar,
         score: factor.score,
         actions: factor.recommendations || ['Enhance optimization for this factor'],
@@ -143,7 +143,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
     optimizationFactors.slice(0, 2).forEach(factor => {
       recommendations.push({
         priority: 'Low',
-        factor: factor.name,
+        factor: factor.factor_name || factor.name,
         pillar: factor.pillar,
         score: factor.score,
         actions: factor.recommendations || ['Fine-tune optimization for maximum impact'],
@@ -295,7 +295,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
       if (summary.strengths.length > 0) {
         addText('Top Performing Factors:', margin, currentY, { fontSize: 12, fontStyle: 'bold', color: '#059669' });
         summary.strengths.forEach((factor, index) => {
-          addText(`${index + 1}. ${factor.name}: ${factor.score}/100`, margin + 5, currentY, { fontSize: 10 });
+          addText(`${index + 1}. ${factor.factor_name || factor.name}: ${factor.score}/100`, margin + 5, currentY, { fontSize: 10 });
         });
       }
 
@@ -303,7 +303,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
       if (summary.improvements.length > 0) {
         addText('Priority Improvement Areas:', margin, currentY, { fontSize: 12, fontStyle: 'bold', color: '#DC2626' });
         summary.improvements.forEach((factor, index) => {
-          addText(`${index + 1}. ${factor.name}: ${factor.score}/100`, margin + 5, currentY, { fontSize: 10 });
+          addText(`${index + 1}. ${factor.factor_name || factor.name}: ${factor.score}/100`, margin + 5, currentY, { fontSize: 10 });
         });
       }
 
@@ -399,7 +399,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
               checkPageBreak(30);
               
               // Factor name and score
-              addText(`${factor.name}`, margin + 5, currentY, { fontSize: 12, fontStyle: 'bold' });
+              addText(`${factor.factor_name || factor.name}`, margin + 5, currentY, { fontSize: 12, fontStyle: 'bold' });
               
               pdf.setTextColor(factor.score >= 70 ? '#059669' : factor.score >= 50 ? '#EAB308' : '#DC2626');
               pdf.setFontSize(14);

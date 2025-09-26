@@ -213,7 +213,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                 <div key={index} className="border border-gray-200 rounded-lg p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 mb-1">{factor.name}</h3>
+                      <h3 className="font-semibold text-gray-900 mb-1">{factor.factor_name || factor.name}</h3>
                       <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
                         {getPillarDisplayName(factor.pillar || 'Technical')} • {factor.factor_id || 'FRAMEWORK.X.X'}
                       </span>
@@ -285,7 +285,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                 <div key={index} className="border border-gray-200 rounded-lg p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 mb-1">{factor.name}</h3>
+                      <h3 className="font-semibold text-gray-900 mb-1">{factor.factor_name || factor.name}</h3>
                       <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
                         {factor.pillar}
                       </span>
