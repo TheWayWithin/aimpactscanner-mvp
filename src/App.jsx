@@ -784,6 +784,63 @@ function AppContent() {
     console.log('🔄 Mock analysis progress completed, waiting for real analysis...');
   };
 
+  // Handle viewing an analysis from history
+  const handleViewHistoryAnalysis = async (analysisId, url) => {
+    console.log('📊 Viewing analysis from history:', { analysisId, url });
+    
+    try {
+      // First try to fetch the analysis from database
+      const { data: analysis, error } = await supabase
+        .from('analyses')
+        .select('*')
+        .eq('id', analysisId)
+        .single();
+      
+      if (!error && analysis) {
+        // Fetch the analysis factors
+        const { data: factors, error: factorsError } = await supabase
+          .from('analysis_factors')
+          .select('*')
+          .eq('analysis_id', analysisId);
+        
+        if (!factorsError && factors) {
+          // Format the results to match expected structure
+          const results = {
+            overall_score: analysis.scores?.overall_score || 0,
+            factors: factors || [],
+            pillars: analysis.scores?.pillars || {},
+            url: url || analysis.url,
+            analysisId: analysisId,
+            created_at: analysis.created_at
+          };
+          
+          setAnalysisResults(results);
+          setCurrentAnalysisId(analysisId);
+          setCurrentUrl(url || analysis.url);
+          setCurrentView('results');
+        } else {
+          console.error('Failed to load analysis factors:', factorsError);
+          // Fall back to showing basic results from scores
+          setAnalysisResults({
+            overall_score: analysis.scores?.overall_score || 0,
+            factors: [],
+            url: url || analysis.url,
+            analysisId: analysisId
+          });
+          setCurrentAnalysisId(analysisId);
+          setCurrentUrl(url || analysis.url);
+          setCurrentView('results');
+        }
+      } else {
+        console.error('Failed to load analysis:', error);
+        alert('Failed to load analysis results. The analysis may have been deleted.');
+      }
+    } catch (err) {
+      console.error('Error loading analysis from history:', err);
+      alert('Error loading analysis. Please try again.');
+    }
+  };
+
   // Start analysis (authenticated version)
   const startAnalysis = async (url) => {
     if (!session?.user) {
@@ -1347,7 +1404,7 @@ function AppContent() {
                 </div>
               </div>
           </div>
-          <AnalysisHistory />
+          <AnalysisHistory onViewAnalysis={handleViewHistoryAnalysis} />
           </div>
         )}
 

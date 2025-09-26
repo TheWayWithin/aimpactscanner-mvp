@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
-const AnalysisHistory = () => {
+const AnalysisHistory = ({ onViewAnalysis }) => {
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -924,7 +924,13 @@ const AnalysisHistory = () => {
                 
                 <div className="flex items-center space-x-2">
                   <button
-                    onClick={() => window.location.href = `/analysis/${item.id}`}
+                    onClick={() => {
+                      if (onViewAnalysis) {
+                        onViewAnalysis(item.id, item.url);
+                      } else {
+                        console.error('onViewAnalysis callback not provided');
+                      }
+                    }}
                     className="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                     title="View Full Report"
                   >
