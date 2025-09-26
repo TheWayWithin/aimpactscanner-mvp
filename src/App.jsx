@@ -829,7 +829,7 @@ function AppContent() {
             id: analysisId,
             user_id: userId,
             url: url,
-            status: 'in_progress',
+            status: 'processing',
             scores: {
               overall_score: 0,
               pillars: {},

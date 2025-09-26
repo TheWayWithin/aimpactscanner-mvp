@@ -249,8 +249,20 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
     
     // Group factors
     factors.forEach(factor => {
-      // Map short pillar names to full names
-      const pillarMapping = {
+      // Map pillar codes to full names (Edge Function returns codes like "M", "AI", etc.)
+      const pillarCodeMapping = {
+        'AI': 'AI Response Optimization & Citation',
+        'A': 'Authority & Trust Signals',
+        'M': 'Machine Readability & Technical Infrastructure',
+        'S': 'Semantic Content Quality',
+        'E': 'Engagement & User Experience',
+        'T': 'Topical Expertise & Experience',
+        'R': 'Reference Networks & Citations',
+        'Y': 'Yield Optimization & Freshness'
+      };
+      
+      // Also support legacy full names for mock data
+      const pillarNameMapping = {
         'AI Response Optimization': 'AI Response Optimization & Citation',
         'Authority & Trust': 'Authority & Trust Signals',
         'Machine Readability': 'Machine Readability & Technical Infrastructure',
@@ -261,7 +273,10 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         'Yield Optimization': 'Yield Optimization & Freshness'
       };
       
-      const fullPillarName = pillarMapping[factor.pillar] || factor.pillar;
+      // Try to map from code first (real data), then from name (mock data)
+      const fullPillarName = pillarCodeMapping[factor.pillar] || 
+                             pillarNameMapping[factor.pillar] || 
+                             factor.pillar;
       
       if (grouped[fullPillarName]) {
         grouped[fullPillarName].factors.push(factor);
