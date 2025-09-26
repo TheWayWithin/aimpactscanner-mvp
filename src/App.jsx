@@ -386,14 +386,19 @@ function AppContent() {
         // PRIORITY 3: No pending analysis - proceed with normal dashboard flow
         try {
           await fetchUserTier(session.user.id, session.user.email, session);
-          if (!pendingAnalysisProcessed.current) {
+          // Only change view if we're currently on landing or login page
+          // This prevents overriding the view set by handleLoginComplete
+          if (!pendingAnalysisProcessed.current && (currentView === 'landing' || currentView === 'login')) {
+            console.log('🎯 Auth state change: navigating from', currentView, 'to dashboard');
             setCurrentView('dashboard');
           }
         } catch (error) {
           console.warn('⚠️ Database error during normal auth flow:', error);
           // Set default tier and proceed to dashboard
           setUserTier('free');
-          if (!pendingAnalysisProcessed.current) {
+          // Only change view if we're currently on landing or login page
+          if (!pendingAnalysisProcessed.current && (currentView === 'landing' || currentView === 'login')) {
+            console.log('🎯 Auth state change (error path): navigating from', currentView, 'to dashboard');
             setCurrentView('dashboard');
           }
         }
@@ -402,7 +407,9 @@ function AppContent() {
         console.error('❌ Error in auth state change handler:', error);
         // Set default tier and proceed to dashboard on any auth error
         setUserTier('free');
-        if (!pendingAnalysisProcessed.current) {
+        // Only change view if we're currently on landing or login page
+        if (!pendingAnalysisProcessed.current && (currentView === 'landing' || currentView === 'login')) {
+          console.log('🎯 Auth state change (main error): navigating from', currentView, 'to dashboard');
           setCurrentView('dashboard');
         }
       } finally {
@@ -728,7 +735,14 @@ function AppContent() {
   const handleLoginComplete = (routingData) => {
     console.log('Login completed with routing data:', routingData);
     
-    const { user, isNewUser, hasAnalysisData, tier } = routingData;
+    const { user, isNewUser, hasAnalysisData, tier } = routingData || {};
+    
+    // If no routing data provided, just go to dashboard
+    if (!routingData) {
+      console.log('🎯 No routing data provided → redirecting to dashboard');
+      setCurrentView('dashboard');
+      return;
+    }
     
     // Smart routing based on user type and context
     if (isNewUser && hasAnalysisData) {
