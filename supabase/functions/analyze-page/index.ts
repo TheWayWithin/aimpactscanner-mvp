@@ -1642,15 +1642,23 @@ async function fetchPageData(url: string): Promise<{title: string, metaDescripti
     // Extract meta description
     let metaDescription = '';
     
-    // Standard meta description
-    let metaMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)/i);
+    // Try with double quotes (most common) - capture everything until closing double quote
+    let metaMatch = html.match(/<meta[^>]*name="description"[^>]*content="([^"]*)"/i);
     if (!metaMatch) {
-      // Try reversed order
-      metaMatch = html.match(/<meta[^>]*content=["']([^"']*)[^>]*name=["']description/i);
+      // Try reversed order (content before name) with double quotes
+      metaMatch = html.match(/<meta[^>]*content="([^"]*)"[^>]*name="description"/i);
     }
     if (!metaMatch) {
-      // Try Open Graph
-      metaMatch = html.match(/<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']*)/i);
+      // Try with single quotes - capture everything until closing single quote
+      metaMatch = html.match(/<meta[^>]*name='description'[^>]*content='([^']*)'/i);
+    }
+    if (!metaMatch) {
+      // Try reversed order with single quotes
+      metaMatch = html.match(/<meta[^>]*content='([^']*)'[^>]*name='description'/i);
+    }
+    if (!metaMatch) {
+      // Try Open Graph with double quotes
+      metaMatch = html.match(/<meta[^>]*property="og:description"[^>]*content="([^"]*)"/i);
     }
     
     metaDescription = metaMatch ? metaMatch[1].trim() : '';

@@ -48,22 +48,36 @@ export class AnalysisEngine {
       // Extract meta description - try multiple patterns
       let metaDescription = '';
       
-      // Standard meta description
-      let metaMatch = html.match(/<meta[^>]*name=["\']description["\'][^>]*content=["\']([^"']*)["\'][^>]*>/i);
+      // Try with double quotes (most common) - capture everything until closing double quote
+      let metaMatch = html.match(/<meta[^>]*name="description"[^>]*content="([^"]*)"/i);
       if (!metaMatch) {
-        // Try reversed order (content before name)
-        metaMatch = html.match(/<meta[^>]*content=["\']([^"']*)["\'][^>]*name=["\']description["\'][^>]*>/i);
+        // Try reversed order (content before name) with double quotes
+        metaMatch = html.match(/<meta[^>]*content="([^"]*)"[^>]*name="description"/i);
       }
       if (!metaMatch) {
-        // Try with property instead of name (Open Graph)
-        metaMatch = html.match(/<meta[^>]*property=["\']og:description["\'][^>]*content=["\']([^"']*)["\'][^>]*>/i);
+        // Try with single quotes - capture everything until closing single quote
+        metaMatch = html.match(/<meta[^>]*name='description'[^>]*content='([^']*)'/i);
       }
       if (!metaMatch) {
-        // Try Twitter description
-        metaMatch = html.match(/<meta[^>]*name=["\']twitter:description["\'][^>]*content=["\']([^"']*)["\'][^>]*>/i);
+        // Try reversed order with single quotes
+        metaMatch = html.match(/<meta[^>]*content='([^']*)'[^>]*name='description'/i);
+      }
+      if (!metaMatch) {
+        // Try with property instead of name (Open Graph) with double quotes
+        metaMatch = html.match(/<meta[^>]*property="og:description"[^>]*content="([^"]*)"/i);
+      }
+      if (!metaMatch) {
+        // Try Twitter description with double quotes
+        metaMatch = html.match(/<meta[^>]*name="twitter:description"[^>]*content="([^"]*)"/i);
       }
       
       metaDescription = metaMatch ? metaMatch[1].trim() : '';
+      
+      // Log for debugging
+      if (metaDescription && metaDescription.length < 50) {
+        console.log(`Warning: Short meta description extracted (${metaDescription.length} chars): "${metaDescription}"`);
+        console.log('HTML snippet:', html.substring(0, 500));
+      }
       
       // Extract content while preserving structured data
       // Keep script tags for structured data analysis, then clean for content analysis
