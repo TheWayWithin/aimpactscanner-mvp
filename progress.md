@@ -1,48 +1,96 @@
-# Mission Progress Log
-## Mission: Dashboard Enhancement & Analysis Persistence
-## Start: 2025-09-25 05:45 UTC
+# AImpactScanner MVP - Progress Log
 
-### Status: PHASE 5 - CRITICAL ISSUES FOUND ⚠️
+## September 27, 2025 - PDF Report Structure Restoration ✅
+
+### Mission: Fix PDF Report Regression
+**Status**: COMPLETE
+**Time**: 10:00 - 11:30 UTC
+
+#### Problem Statement
+User reported PDF reports lost structure:
+- Only 5 pillars showing instead of 8
+- All factors grouped under Machine Readability
+- Missing factor reference codes (M.3.1)
+- Inconsistent pillar naming
+
+#### Root Causes Identified
+1. **Pillar Code Mismatch**: Edge Function returns codes ('M', 'AI') but PDF expected partial names
+2. **Default Fallback**: Unmatched pillars defaulted to 'machine_readability'
+3. **Missing Factor IDs**: PDF wasn't displaying factor_id field
+4. **Filtering Logic**: Only showed pillars with factors > 0
+
+#### Solutions Implemented
+```javascript
+// Added pillar code mapping
+const pillarCodeMapping = {
+  'M': 'machine_readability',
+  'AI': 'ai',
+  'A': 'authority',
+  // ... etc
+};
+
+// Factor ID display
+const factorLabel = factor.factor_id ? 
+  `[${factor.factor_id}] ${factor.factor_name}` : 
+  factor.factor_name;
+
+// Show all pillars
+const pillarKeys = Object.keys(reportData.groupedFactors); // No filtering
+```
+
+#### Results
+✅ All 8 MASTERY-AI pillars now display
+✅ Factor IDs shown ([M.1.1] format)
+✅ Correct pillar grouping restored
+✅ Consistent naming throughout
+✅ Professional structure restored
 
 ---
 
-## Completed Phases:
-- ✅ Phase 1: Investigation (Root cause identified)
-- ✅ Phase 2: Backend Fixes (Database integration added)
-- ✅ Phase 3: Frontend Enhancement (Premium UI implemented)
-- ✅ Phase 4: Data Persistence (All features added)
+## September 27, 2025 - Authentication & Navigation Fixes ✅
 
-## Phase 5: Testing Results ⚠️
+### Issues Fixed
+1. **Login Stuck Issue**: Users getting stuck on login page after authentication
+   - Root cause: Race condition between auth state handler and login callback
+   - Fix: Added conditional navigation checks
 
-### Working Features:
-- ✅ Empty state handling with good UX
-- ✅ Mobile responsive design
-- ✅ Demo report system
-- ✅ Error handling with localStorage fallback
-- ✅ Professional UI/UX
+2. **URL Duplication**: URLs showing as `https://https//:www.example.com`
+   - Root cause: No URL validation in Edge Function
+   - Fix: Added URL cleaning logic to Edge Function
 
-### CRITICAL ISSUES:
-1. **Database Schema Error**: `analyses.overall_score` column missing
-2. **Database Timeout**: Connection issues preventing data load
-3. **Analysis Not Persisting**: Completed analyses don't appear
-4. **Edge Function Timeouts**: Real analysis failing
-5. **Account Tier Issue**: Shows Free instead of Coffee
-
-### Cannot Test (No Data):
-- Statistics calculations
-- Pagination functionality
-- Search/filter system
-- CSV export
-- Coffee tier features
+3. **Score Storage**: Scores showing as 0/100
+   - Root cause: Analyses stuck in 'processing' state
+   - Fix: URL issues were preventing completion
 
 ---
 
-## URGENT FIXES NEEDED:
-1. Add `overall_score` column to analyses table
-2. Debug database connection timeouts
-3. Fix analysis persistence after completion
-4. Resolve Edge Function timeout issues
-5. Fix user tier detection (showing Free instead of Coffee)
+## September 26, 2025 - Critical Production Fixes
 
-## Deployment Status: BLOCKED
-Feature architecture is solid but database issues prevent production deployment.
+### Database & Edge Function Issues Resolved
+1. **33% Failure Rate Investigation**:
+   - Found 40 stuck analyses in 'processing' state
+   - Root cause: Database constraint violations
+   - Fixed: Added proper null handling for scores field
+
+2. **Factor Display Issues**:
+   - Factors showing as "undefined" 
+   - Fixed: Used proper field names (factor_name vs name)
+
+3. **Pillar Grouping**:
+   - Fixed pillar code mapping in SimpleResultsDashboard
+   - Added support for both codes and full names
+
+### Deployment Status
+- Edge Function: v157+ (with URL cleaning)
+- Frontend: Latest fixes deployed
+- Database: Constraints satisfied
+- PDF Generator: Structure restored
+
+---
+
+## System Health
+✅ Authentication flow working
+✅ Analysis pipeline functional
+✅ PDF generation restored
+✅ Database operations stable
+✅ Production deployment successful

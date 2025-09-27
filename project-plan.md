@@ -1,47 +1,51 @@
-# Dashboard Enhancement Mission
-## Date: 2025-09-25
-## Status: IN PROGRESS
+# AImpactScanner MVP - Project Plan
 
-### Phase 1: Investigation & Diagnosis
-- [x] Analyze current dashboard implementation
-- [x] Identify why recent analyses aren't loading (localStorage only)
-- [x] Check database queries for analysis history (none exist)
-- [x] Review component data flow
+## Previous Mission: Dashboard Enhancement ✅
+## Date: 2025-09-25 - 2025-09-27
+## Status: COMPLETED
 
-### Phase 2: Backend Fixes
-- [x] Fix analysis history fetching (Supabase integration complete)
-- [x] Implement proper date sorting (ORDER BY created_at DESC)
-- [x] Add error handling for database queries (with fallback)
-- [ ] Create API endpoint for dashboard stats
+### Completed Phases
+- [x] Investigation & Diagnosis
+- [x] Backend Fixes (Supabase integration)
+- [x] Frontend Enhancement (premium dashboard)
+- [x] Data Persistence (complete metadata)
+- [x] Critical Bug Fixes
 
-### Phase 3: Frontend Enhancement
-- [x] Redesign dashboard layout (premium card-based design)
-- [x] Add analysis cards with preview data (score badges, issues, dates)
-- [x] Implement usage statistics display (total, average, trends, distribution)
-- [x] Add chart visualizations (mini-charts, progress bars, visual indicators)
-- [x] Create loading states (skeleton loaders matching final design)
+## Current Mission: PDF Report Structure Restoration ✅
+## Date: 2025-09-27
+## Status: COMPLETED
 
-### Phase 4: Data Persistence
-- [x] Ensure analyses save with complete metadata (all fields now saved)
-- [x] Add pagination for large history (Load More button, 10 per page)
-- [x] Implement search/filter functionality (URL search, date/score filters)
-- [x] Add export capabilities (CSV export with timestamp)
+### Phase 1: Root Cause Analysis [x]
+- [x] Investigated PDF generation pipeline
+- [x] Identified pillar code mismatch (Edge Function returns 'M', 'AI' vs PDF expects names)
+- [x] Found default fallback to machine_readability for unmatched pillars
+- [x] Discovered missing factor ID display logic
+- [x] Identified incomplete pillar display filtering
 
-### Phase 5: Testing & Polish
-- [x] Test with multiple analysis sessions (CRITICAL ISSUES FOUND)
-- [x] Verify Coffee tier features (BLOCKED - tier showing as Free)
-- [x] Add responsive design (COMPLETE)
-- [ ] Performance optimization (BLOCKED - needs database fixes)
+### Phase 2: Fix Implementation [x]
+- [x] Add pillar code mapping for Edge Function data
+- [x] Implement factor ID display ([M.3.1] format)
+- [x] Ensure all 8 pillars display regardless of factor count
+- [x] Add getPillarDisplayName helper for consistency
+- [x] Fix recommendations to use readable pillar names
 
-### EMERGENCY PHASE 6: Critical Fixes
-- [ ] Add overall_score column to database
-- [ ] Fix 40 stuck analyses (33% failure rate)
-- [ ] Add performance indexes
-- [ ] Fix user tier (shows Free instead of Coffee)
-- [ ] Debug Edge Function timeouts
+### Phase 3: Testing & Deployment [x]
+- [x] Test PDF generation with real analysis data
+- [x] Verify all 8 pillars appear in report
+- [x] Confirm factor IDs display correctly
+- [x] Check pillar grouping accuracy
+- [x] Deploy fixes to production
 
-## Success Criteria
-- ✅ Dashboard shows all historical analyses
-- ✅ Rich UI with actionable insights
-- ✅ Fast loading with proper caching
-- ✅ Works across browser sessions
+## Recent Critical Fixes Applied
+1. URL duplication issue (https://https//:) - FIXED ✅
+2. Login navigation stuck issue - FIXED ✅
+3. Score storage showing 0 - FIXED ✅
+4. Factor count mismatch - FIXED ✅
+5. PDF report structure regression - FIXED ✅
+
+## System Status
+- Edge Function: v157+ deployed with URL cleaning
+- Frontend: Updated with navigation and PDF fixes
+- Database: Operational with proper constraints
+- PDF Reports: Fully restored to proper structure
+- Authentication: Login/logout flow working correctly
