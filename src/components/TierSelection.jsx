@@ -19,7 +19,7 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
         'Community support',
         '❌ No PDF export'
       ],
-      cta: showRegistrationFlow ? 'Start Free Trial' : 'Current Plan',
+      cta: showRegistrationFlow ? 'Start Free Trial' : 'Switch to Free',
       highlight: false,
       popular: false
     },
@@ -80,7 +80,9 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
   ];
 
   const handleUpgrade = async (tierId) => {
-    if (loading || currentTier === tierId) return;
+    // Check if this tier matches the current tier (case-insensitive)
+    const isCurrentTier = currentTier && (currentTier.toLowerCase() === tierId.toLowerCase());
+    if (loading || isCurrentTier) return;
     
     setLoading(true);
     try {
@@ -97,7 +99,11 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
       return 'w-full py-3 px-4 border border-gray-300 rounded-md text-gray-500 bg-gray-100 cursor-not-allowed text-sm font-medium';
     }
     
-    if (!showRegistrationFlow && currentTier && currentTier === tier.id) {
+    // Check if this tier matches the current tier (case-insensitive)
+    const isCurrentTier = !showRegistrationFlow && currentTier && 
+      (currentTier.toLowerCase() === tier.id.toLowerCase());
+    
+    if (isCurrentTier) {
       return 'w-full py-3 px-4 border-2 border-green-500 rounded-md text-green-700 bg-green-50 cursor-default text-sm font-medium flex items-center justify-center';
     }
     
@@ -111,7 +117,12 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
   const getButtonText = (tier) => {
     if (tier.comingSoon && !showRegistrationFlow) return 'Coming Soon';
     if (tier.comingSoon && showRegistrationFlow) return `Choose ${tier.name.replace(/[^A-Za-z\s]/g, '').trim()}`;
-    if (!showRegistrationFlow && currentTier && currentTier === tier.id) return (
+    
+    // Check if this tier matches the current tier (case-insensitive)
+    const isCurrentTier = !showRegistrationFlow && currentTier && 
+      (currentTier.toLowerCase() === tier.id.toLowerCase());
+    
+    if (isCurrentTier) return (
       <>
         <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -201,14 +212,14 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
             <div className="mt-auto">
               <button
                 onClick={() => handleUpgrade(tier.id)}
-                disabled={(tier.comingSoon && !showRegistrationFlow) || (!showRegistrationFlow && currentTier && currentTier === tier.id) || loading}
+                disabled={(tier.comingSoon && !showRegistrationFlow) || (!showRegistrationFlow && currentTier && currentTier.toLowerCase() === tier.id.toLowerCase()) || loading}
                 className={getButtonClass(tier)}
               >
                 {getButtonText(tier)}
               </button>
             </div>
 
-            {tier.id === 'coffee' && currentTier === 'free' && (
+            {tier.id === 'coffee' && currentTier && currentTier.toLowerCase() === 'free' && (
               <div className="mt-3 text-center">
                 <p className="text-xs text-gray-600">
                   Start your unlimited analysis journey

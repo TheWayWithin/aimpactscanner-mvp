@@ -74,7 +74,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
   };
 
   const getRemainingAnalyses = () => {
-    if (usageData.isUnlimited || userTier === 'coffee') {
+    if (usageData.isUnlimited || (userTier && userTier.toLowerCase() === 'coffee')) {
       return 'Unlimited';
     }
     return usageData.remaining || 3;
@@ -86,13 +86,13 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
 
   const getSubscriptionStatus = () => {
     if (userTier === 'free') return 'Free Plan';
-    if (userTier === 'coffee') return 'Active';
+    if (userTier && userTier.toLowerCase() === 'coffee') return 'Active';
     if (userTier === 'coffee_pending' || userTier === 'pending_payment') return 'Pending Payment';
     if (userTier === 'pending_registration') return 'Registration Incomplete';
     return 'Active';
   };
 
-  const showManageButton = userTier === 'coffee' || userTier === 'growth' || userTier === 'scale';
+  const showManageButton = userTier && (['coffee', 'growth', 'scale'].includes(userTier.toLowerCase()));
   const showUpgradeButton = userTier === 'free';
   const showPaymentPending = userTier === 'coffee_pending' || userTier === 'pending_payment';
 

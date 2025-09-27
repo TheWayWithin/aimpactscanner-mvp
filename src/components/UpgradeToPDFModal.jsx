@@ -203,7 +203,7 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
                 </div>
                 <div>
                   <h5 className="font-semibold text-gray-900">Free Tier</h5>
-                  <p className="text-sm text-gray-600">{currentTier === 'free' ? 'Current Plan' : 'Basic Plan'}</p>
+                  <p className="text-sm text-gray-600">{currentTier && currentTier.toLowerCase() === 'free' ? 'Current Plan' : 'Basic Plan'}</p>
                 </div>
               </div>
               <ul className="space-y-2 text-sm text-gray-600">

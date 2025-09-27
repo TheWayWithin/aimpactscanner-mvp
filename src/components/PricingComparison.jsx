@@ -153,7 +153,7 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
                   </span>
                 </div>
               )}
-              {currentTier === plan.id && (
+              {currentTier && currentTier.toLowerCase() === plan.id.toLowerCase() && (
                 <div className="mt-2">
                   <span className="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
                     CURRENT PLAN

@@ -132,7 +132,9 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
   ];
 
   const handleUpgrade = async (tierId) => {
-    if (loading || currentTier === tierId) return;
+    // Check if this tier matches the current tier (case-insensitive)
+    const isCurrentTier = currentTier && (currentTier.toLowerCase() === tierId.toLowerCase());
+    if (loading || isCurrentTier) return;
     
     setLoading(true);
     try {
@@ -168,7 +170,10 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
   };
 
   const getButtonClass = (tier) => {
-    if (currentTier === tier.id) {
+    // Check if this tier matches the current tier (case-insensitive)
+    const isCurrentTier = currentTier && (currentTier.toLowerCase() === tier.id.toLowerCase());
+    
+    if (isCurrentTier) {
       return 'w-full py-4 px-6 rounded-xl text-sm font-bold border-2 border-green-500 text-green-700 bg-green-50 cursor-default flex items-center justify-center';
     }
     
@@ -352,22 +357,22 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
             <div className="mt-auto">
               <button
                 onClick={() => handleUpgrade(tier.id)}
-                disabled={currentTier === tier.id || loading}
+                disabled={(currentTier && currentTier.toLowerCase() === tier.id.toLowerCase()) || loading}
                 className={getButtonClass(tier)}
                 style={getButtonStyle(tier)}
               >
-                {currentTier === tier.id ? (
+                {(currentTier && currentTier.toLowerCase() === tier.id.toLowerCase()) ? (
                   <>
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
-                    Current Plan
+                    Active Plan
                   </>
                 ) : loading ? 'Processing...' : tier.cta}
               </button>
 
               {/* Money-back Guarantee */}
-              {tier.guarantee && currentTier !== tier.id && (
+              {tier.guarantee && !(currentTier && currentTier.toLowerCase() === tier.id.toLowerCase()) && (
                 <div className="mt-3 text-center">
                   <p className="text-xs text-gray-600 flex items-center justify-center">
                     <svg className="w-3 h-3 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">
