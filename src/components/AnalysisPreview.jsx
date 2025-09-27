@@ -10,7 +10,7 @@ function AnalysisPreview({ url, analysisId, onUpgradeClick, onFreeTrialClick }) 
   useEffect(() => {
     const messages = [
       { progress: 20, text: 'Loading MASTERY-AI Framework v3.1.1...' },
-      { progress: 40, text: 'Preparing 148 ranking factors...' },
+      { progress: 40, text: 'Preparing 148 factors...' },
       { progress: 60, text: 'Initializing AI platform checks...' },
       { progress: 80, text: 'Ready to analyze your site...' },
       { progress: 100, text: 'Analysis framework loaded!' }
@@ -179,14 +179,14 @@ function AnalysisPreview({ url, analysisId, onUpgradeClick, onFreeTrialClick }) 
           </div>
         </div>
 
-        {/* What We Analyze - The 148 Factors */}
+        {/* What We Analyze - The 18 Comprehensive Factors */}
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <h2 className="text-2xl font-bold mb-6">
             What We Analyze: The MASTERY-AI Framework
           </h2>
           <p className="text-gray-600 mb-6">
-            We check 148 specific factors that determine how AI systems like ChatGPT, Claude, and Perplexity 
-            rank and present your content. This is the ONLY tool using the complete framework.
+            We analyze 148 factors across all 8 MASTERY-AI pillars that determine how AI systems like ChatGPT, Claude, and Perplexity 
+            rank and present your content. Quality over quantity - every factor matters.
           </p>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

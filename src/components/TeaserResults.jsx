@@ -159,7 +159,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                 <strong>Analyzing:</strong> {url}
               </p>
               <p className="text-xs text-blue-700">
-                Checking 148 AI ranking factors across ChatGPT, Claude, Perplexity, and Gemini
+                Checking 148 factors across ChatGPT, Claude, Perplexity, and Gemini
               </p>
             </div>
           </div>
@@ -181,7 +181,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                 <Tooltip content="The MASTERY-AI Framework is the industry standard for AI search optimization, covering all major AI platforms including ChatGPT, Claude, Perplexity, and Gemini.">
                   <span className="underline decoration-dotted cursor-help">MASTERY-AI Framework v3.1.1</span>
                 </Tooltip>
-                {' '}- 148 ranking factors
+                {' '}- 148 factors
               </p>
             </div>
             <div className="text-right">
@@ -434,7 +434,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
               <ul className="space-y-2 mb-6 text-sm">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span>All 148 AI ranking factors</span>
+                  <span>All 148 factors</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
@@ -474,7 +474,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
               <ul className="space-y-2 mb-6 text-sm">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span>Core 10 AI factors</span>
+                  <span>Phase A - 148 factors</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>

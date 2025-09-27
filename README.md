@@ -11,7 +11,7 @@
 
 ### 🚀 **Lightning-Fast Analysis**
 - **Sub-15 second results** with real-time progress tracking
-- **10 critical factors** analyzed instantly (Phase A)
+- **18 comprehensive factors** across all 8 MASTERY-AI pillars (Phase A)
 - **Professional recommendations** with actionable insights
 - **Real-time educational content** during analysis
 
@@ -38,7 +38,7 @@
 
 ### **Analysis Engine**
 - **Framework**: MASTERY-AI Framework v3.1.1
-- **Factors**: 10 Phase A factors (22 total planned)
+- **Factors**: 18 Phase A factors with complete MASTERY-AI coverage
 - **Performance**: Circuit breakers and fallback strategies
 - **Accuracy**: Real-world validated with systematic testing
 
@@ -219,7 +219,7 @@ npx supabase functions deploy analyze-page
 
 ### **Tier Structure**
 - **🆓 Free**: 3 analyses/month, basic features
-- **☕ Coffee ($5/month)**: Unlimited Phase A, professional results
+- **☕ Coffee ($5/month)**: Unlimited Phase A, 18-factor professional results
 - **💼 Professional ($29/month)**: Complete analysis, advanced features
 - **🏢 Enterprise ($99/month)**: API access, team collaboration
 

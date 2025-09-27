@@ -37,7 +37,7 @@ function SmartUpgradePrompt({
     'low-score': {
       title: 'Your Score Needs Immediate Attention',
       message: `With a score of ${score}/100, you are losing significant traffic to AI search engines.`,
-      benefit: 'Get your complete recovery roadmap with step-by-step fixes for all 148 factors.',
+      benefit: 'Get your complete recovery roadmap with step-by-step fixes across all 8 MASTERY-AI pillars.',
       cta: 'Start Recovering Traffic →',
       color: 'red'
     },

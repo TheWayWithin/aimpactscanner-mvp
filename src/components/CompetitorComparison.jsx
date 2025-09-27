@@ -93,7 +93,7 @@ function CompetitorComparison({ yourScore, url }) {
         <ul className="space-y-2 text-sm text-gray-700">
           <li className="flex items-start">
             <span className="text-green-500 mr-2">✓</span>
-            <span>Implement all 148 MASTERY-AI factors systematically</span>
+            <span>Implement all 148 factors systematically</span>
           </li>
           <li className="flex items-start">
             <span className="text-green-500 mr-2">✓</span>

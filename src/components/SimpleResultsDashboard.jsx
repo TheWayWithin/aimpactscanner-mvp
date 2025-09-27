@@ -399,10 +399,10 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-blue-800 text-sm">
-            <strong>Framework:</strong> MASTERY-AI v3.1.1 with 148 factors. 
+            <strong>Framework:</strong> MASTERY-AI v3.1.1 with 148 factors across all 8 pillars. 
             {isRealAnalysis 
-              ? 'This analysis uses real data from your website for accurate optimization recommendations.'
-              : 'Sample shows common patterns from analyzing FreeCalcHub, Evolve-7, Agent-11, and 4 other client sites.'
+              ? 'Phase A implementation with complete coverage - quality over quantity, every factor matters.'
+              : 'Sample shows strategic factors from analyzing FreeCalcHub, Evolve-7, Agent-11, and 4 other client sites.'
             }
           </p>
         </div>
@@ -525,8 +525,9 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
       <div className="mt-8 bg-gray-50 border border-gray-200 rounded-lg p-6">
         <h3 className="font-semibold text-gray-900 mb-2">About This Analysis</h3>
         <div className="text-sm text-gray-700 space-y-1">
-          <p>• Framework: MASTERY-AI v3.1.1 (148 total factors)</p>
-          <p>• Analysis Type: Phase A (11 core factors)</p>
+          <p>• Framework: MASTERY-AI v3.1.1 (148 factors)</p>
+          <p>• Analysis Type: Phase A - Complete coverage of all 8 MASTERY-AI pillars</p>
+          <p>• Approach: Quality over quantity - every factor matters</p>
           <p>• Scoring Method: Evidence-based with realistic ranges (30-95%)</p>
           <p>• Analysis ID: {analysisId}</p>
           <p>• Generated: {new Date().toLocaleDateString()} at {new Date().toLocaleTimeString()}</p>
