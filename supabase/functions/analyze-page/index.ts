@@ -1079,6 +1079,399 @@ function analyzePageLoadSpeed(content: string): FactorResult {
   };
 }
 
+// Factor 16: Topic Knowledge Depth (T.1.1)
+function analyzeTopicDepth(pageContent: string, title: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
+  
+  // Extract text content for analysis
+  const textContent = pageContent
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .toLowerCase()
+    .trim();
+  
+  // Check for specialized terminology and concepts
+  const technicalTerms = textContent.match(/\b(?:algorithm|framework|methodology|implementation|optimization|architecture|infrastructure|analytics|integration|deployment|scalability|protocol|api|sdk|authentication|authorization|encryption|database|cache|microservice|container|orchestration|pipeline|workflow|automation)\b/gi) || [];
+  const conceptualTerms = textContent.match(/\b(?:strategy|approach|principle|philosophy|theory|hypothesis|analysis|evaluation|assessment|interpretation|methodology|paradigm|perspective|insight|implication|correlation|causation|synthesis|innovation)\b/gi) || [];
+  
+  const uniqueTechnical = new Set(technicalTerms.map(t => t.toLowerCase()));
+  const uniqueConceptual = new Set(conceptualTerms.map(t => t.toLowerCase()));
+  
+  // Check for depth indicators
+  const hasDefinitions = /\b(?:define[sd]?|definition|means?|refers? to|is (?:a|an|the)|describes?)\b/i.test(textContent);
+  const hasExplanations = /\b(?:explain[sed]?|explanation|because|therefore|consequently|as a result|due to|reason|why|how)\b/i.test(textContent);
+  const hasExamples = /\b(?:example|instance|such as|like|including|e\.g\.|for example|for instance|case study|scenario)\b/i.test(textContent);
+  const hasComparisons = /\b(?:compare[sd]?|comparison|versus|vs\.?|unlike|similar|different|better|worse|advantage|disadvantage|pro[s]?|con[s]?)\b/i.test(textContent);
+  
+  // Scoring for specialized terminology
+  if (uniqueTechnical.size >= 10) {
+    score += 25;
+    evidence.push(`Strong technical vocabulary (${uniqueTechnical.size} technical terms)`);
+  } else if (uniqueTechnical.size >= 5) {
+    score += 15;
+    evidence.push(`Good technical vocabulary (${uniqueTechnical.size} technical terms)`);
+  } else if (uniqueTechnical.size >= 2) {
+    score += 8;
+    evidence.push(`Some technical terminology present`);
+  } else {
+    recommendations.push('Add more technical terminology relevant to your field');
+  }
+  
+  // Scoring for conceptual depth
+  if (uniqueConceptual.size >= 8) {
+    score += 25;
+    evidence.push(`Deep conceptual coverage (${uniqueConceptual.size} conceptual terms)`);
+  } else if (uniqueConceptual.size >= 4) {
+    score += 15;
+    evidence.push(`Good conceptual coverage (${uniqueConceptual.size} conceptual terms)`);
+  } else if (uniqueConceptual.size >= 2) {
+    score += 8;
+    evidence.push(`Basic conceptual coverage`);
+  } else {
+    recommendations.push('Include more conceptual analysis and theoretical discussion');
+  }
+  
+  // Scoring for explanatory content
+  let explanatoryScore = 0;
+  if (hasDefinitions) {
+    explanatoryScore += 10;
+    evidence.push('Includes term definitions');
+  } else {
+    recommendations.push('Define key terms and concepts');
+  }
+  
+  if (hasExplanations) {
+    explanatoryScore += 10;
+    evidence.push('Contains detailed explanations');
+  } else {
+    recommendations.push('Add explanations of how and why things work');
+  }
+  
+  if (hasExamples) {
+    explanatoryScore += 10;
+    evidence.push('Provides concrete examples');
+  } else {
+    recommendations.push('Include examples and case studies');
+  }
+  
+  if (hasComparisons) {
+    explanatoryScore += 10;
+    evidence.push('Makes comparisons and contrasts');
+  } else {
+    recommendations.push('Compare different approaches or solutions');
+  }
+  
+  score += Math.min(explanatoryScore, 30);
+  
+  // Check for industry trends and current developments
+  const currentYear = new Date().getFullYear();
+  const hasRecentDates = new RegExp(`\\b(${currentYear}|${currentYear-1}|${currentYear-2})\\b`).test(textContent);
+  const hasTrends = /\b(?:trend|emerging|latest|recent|new|upcoming|future|forecast|prediction|outlook)\b/i.test(textContent);
+  
+  if (hasRecentDates && hasTrends) {
+    score += 20;
+    evidence.push('Discusses current trends and developments');
+  } else if (hasRecentDates || hasTrends) {
+    score += 10;
+    evidence.push('Some coverage of recent developments');
+  } else {
+    recommendations.push('Include current industry trends and recent developments');
+  }
+  
+  // Ensure minimum score for any content
+  if (score < 30 && textContent.length > 500) {
+    score = 30;
+    evidence.push('Basic topical content present');
+  }
+  
+  return {
+    factor_id: 'T.1.1',
+    factor_name: 'Topic Knowledge Depth',
+    pillar: 'T',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 85,
+    weight: 0.45, // Will be scaled later
+    evidence,
+    recommendations: recommendations.length > 0 ? recommendations : ['Maintain current depth of expertise'],
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
+// Factor 17: Citation Source Quality (R.1.1)
+function analyzeCitationQuality(pageContent: string, url: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
+  
+  // Extract all links
+  const allLinks = pageContent.match(/<a[^>]*href=["']([^"']+)["'][^>]*>/gi) || [];
+  const uniqueLinks = new Set();
+  const externalLinks = [];
+  
+  allLinks.forEach(link => {
+    const hrefMatch = link.match(/href=["']([^"']+)["']/i);
+    if (hrefMatch && hrefMatch[1]) {
+      const href = hrefMatch[1];
+      uniqueLinks.add(href);
+      
+      // Check if external link
+      if (href.startsWith('http://') || href.startsWith('https://')) {
+        try {
+          const linkUrl = new URL(href);
+          const pageUrl = new URL(url);
+          if (linkUrl.hostname !== pageUrl.hostname) {
+            externalLinks.push(href);
+          }
+        } catch (e) {
+          // Invalid URL, skip
+        }
+      }
+    }
+  });
+  
+  evidence.push(`Total links: ${uniqueLinks.size}`);
+  evidence.push(`External links: ${externalLinks.length}`);
+  
+  // Check for authoritative domains
+  const authoritativeDomains = [
+    'wikipedia.org', 'wikimedia.org',
+    'gov', '.edu', '.ac.uk',
+    'nature.com', 'science.org', 'sciencedirect.com',
+    'pubmed.ncbi.nlm.nih.gov', 'ncbi.nlm.nih.gov',
+    'ieee.org', 'acm.org',
+    'harvard.edu', 'mit.edu', 'stanford.edu',
+    'nytimes.com', 'wsj.com', 'ft.com', 'economist.com',
+    'github.com', 'stackoverflow.com',
+    'w3.org', 'ietf.org', 'iso.org'
+  ];
+  
+  let authoritativeCount = 0;
+  const citedAuthorities = [];
+  
+  externalLinks.forEach(link => {
+    const linkLower = link.toLowerCase();
+    for (const domain of authoritativeDomains) {
+      if (linkLower.includes(domain)) {
+        authoritativeCount++;
+        citedAuthorities.push(domain);
+        break;
+      }
+    }
+  });
+  
+  // Scoring for external citations
+  if (externalLinks.length >= 10) {
+    score += 20;
+    evidence.push('Rich external citation network');
+  } else if (externalLinks.length >= 5) {
+    score += 15;
+    evidence.push('Good external citation coverage');
+  } else if (externalLinks.length >= 2) {
+    score += 10;
+    evidence.push('Some external citations present');
+  } else if (externalLinks.length === 0) {
+    score += 0;
+    recommendations.push('Add external citations to credible sources');
+  }
+  
+  // Scoring for authoritative sources
+  if (authoritativeCount >= 5) {
+    score += 35;
+    evidence.push(`Strong authoritative citations (${authoritativeCount} authoritative sources)`);
+    evidence.push(`Cited authorities: ${[...new Set(citedAuthorities)].join(', ')}`);
+  } else if (authoritativeCount >= 3) {
+    score += 25;
+    evidence.push(`Good authoritative citations (${authoritativeCount} authoritative sources)`);
+  } else if (authoritativeCount >= 1) {
+    score += 15;
+    evidence.push(`Some authoritative citations (${authoritativeCount} authoritative source${authoritativeCount > 1 ? 's' : ''})`);
+  } else {
+    recommendations.push('Cite authoritative sources like academic papers, government sites, or industry leaders');
+  }
+  
+  // Check for citation context (text near links)
+  const linksWithContext = allLinks.filter(link => {
+    return /\b(?:according to|source|reference|cited|study|research|report|article|paper)\b/i.test(link);
+  }).length;
+  
+  if (linksWithContext >= 3) {
+    score += 20;
+    evidence.push('Citations include proper context');
+  } else if (linksWithContext >= 1) {
+    score += 10;
+    evidence.push('Some citations with context');
+  } else {
+    recommendations.push('Add context around citations (e.g., "according to", "research shows")');
+  }
+  
+  // Check for diverse citation types
+  const hasAcademic = /\b(?:journal|paper|study|research|publication|doi)\b/i.test(pageContent);
+  const hasNews = /\b(?:news|article|report|press)\b/i.test(pageContent);
+  const hasOfficial = /\b(?:official|government|organization|institution)\b/i.test(pageContent);
+  
+  let diversityScore = 0;
+  if (hasAcademic) {
+    diversityScore += 8;
+    evidence.push('Includes academic references');
+  }
+  if (hasNews) {
+    diversityScore += 8;
+    evidence.push('Includes news/media references');
+  }
+  if (hasOfficial) {
+    diversityScore += 9;
+    evidence.push('Includes official/institutional references');
+  }
+  
+  score += diversityScore;
+  
+  if (diversityScore < 15) {
+    recommendations.push('Diversify citation sources across academic, news, and official sources');
+  }
+  
+  // Ensure minimum score
+  if (score < 30 && externalLinks.length > 0) {
+    score = 30;
+    evidence.push('Basic citation network present');
+  }
+  
+  return {
+    factor_id: 'R.1.1',
+    factor_name: 'Citation Source Quality',
+    pillar: 'R',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 80,
+    weight: 0.24, // Will be scaled later
+    evidence,
+    recommendations: recommendations.length > 0 ? recommendations : ['Maintain current citation quality'],
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
+// Factor 18: Comprehensive Metrics Collection (Y.1.1)
+function analyzeMetricsCollection(pageContent: string): FactorResult {
+  const startTime = Date.now();
+  let score = 0;
+  const evidence = [];
+  const recommendations = [];
+  
+  // Check for analytics and tracking scripts
+  const hasGoogleAnalytics = /(?:google-analytics\.com|googletagmanager\.com|gtag|ga\(['"])/i.test(pageContent);
+  const hasGTM = /googletagmanager\.com/i.test(pageContent);
+  const hasFacebookPixel = /(?:facebook\.com\/tr|fbq\(['"])/i.test(pageContent);
+  const hasOtherAnalytics = /(?:segment\.com|mixpanel\.com|amplitude\.com|heap\.io|hotjar\.com|clarity\.microsoft|matomo|piwik|plausible|fathom|umami)/i.test(pageContent);
+  
+  // Check for structured data that indicates metrics awareness
+  const hasStructuredData = /<script[^>]*type=["']application\/ld\+json["'][^>]*>/i.test(pageContent);
+  const hasOpenGraph = /<meta[^>]*property=["']og:/i.test(pageContent);
+  const hasTwitterCard = /<meta[^>]*name=["']twitter:/i.test(pageContent);
+  
+  // Check for performance optimization indicators
+  const hasWebVitals = /\b(?:LCP|FID|CLS|FCP|TTFB|web.vitals)\b/i.test(pageContent);
+  const hasPerformanceAPI = /\b(?:performance\.(?:now|mark|measure|timing)|PerformanceObserver)\b/i.test(pageContent);
+  
+  // Check for conversion tracking
+  const hasConversionTracking = /\b(?:conversion|goal|event|track|dataLayer\.push|gtag\(['"]event)/i.test(pageContent);
+  
+  // Scoring for analytics implementation
+  let analyticsScore = 0;
+  if (hasGoogleAnalytics || hasGTM) {
+    analyticsScore += 20;
+    evidence.push('Google Analytics/GTM implemented');
+  }
+  if (hasFacebookPixel) {
+    analyticsScore += 10;
+    evidence.push('Facebook Pixel tracking present');
+  }
+  if (hasOtherAnalytics) {
+    analyticsScore += 10;
+    evidence.push('Additional analytics platforms detected');
+  }
+  
+  if (analyticsScore === 0) {
+    recommendations.push('Implement analytics tracking (Google Analytics, GTM, or alternatives)');
+  } else {
+    score += Math.min(analyticsScore, 35);
+  }
+  
+  // Scoring for metadata and structured data
+  let metadataScore = 0;
+  if (hasStructuredData) {
+    metadataScore += 15;
+    evidence.push('Structured data for rich metrics');
+  } else {
+    recommendations.push('Add JSON-LD structured data for better metrics visibility');
+  }
+  
+  if (hasOpenGraph) {
+    metadataScore += 10;
+    evidence.push('Open Graph metadata present');
+  } else {
+    recommendations.push('Add Open Graph metadata for social sharing metrics');
+  }
+  
+  if (hasTwitterCard) {
+    metadataScore += 10;
+    evidence.push('Twitter Card metadata present');
+  } else {
+    recommendations.push('Add Twitter Card metadata for social metrics');
+  }
+  
+  score += Math.min(metadataScore, 30);
+  
+  // Scoring for performance metrics
+  if (hasWebVitals || hasPerformanceAPI) {
+    score += 20;
+    evidence.push('Performance metrics tracking detected');
+  } else {
+    recommendations.push('Implement Core Web Vitals tracking');
+  }
+  
+  // Scoring for conversion tracking
+  if (hasConversionTracking) {
+    score += 15;
+    evidence.push('Conversion/goal tracking implemented');
+  } else {
+    recommendations.push('Set up conversion and goal tracking');
+  }
+  
+  // Check for data privacy compliance (important for metrics)
+  const hasPrivacyPolicy = /\b(?:privacy|cookie|gdpr|ccpa)\b/i.test(pageContent);
+  if (hasPrivacyPolicy) {
+    score += 10;
+    evidence.push('Privacy compliance for data collection');
+  } else {
+    recommendations.push('Ensure privacy policy covers data collection');
+  }
+  
+  // Ensure minimum score
+  if (score < 30 && (hasGoogleAnalytics || hasStructuredData)) {
+    score = 30;
+    evidence.push('Basic metrics infrastructure present');
+  }
+  
+  return {
+    factor_id: 'Y.1.1',
+    factor_name: 'Comprehensive Metrics Collection',
+    pillar: 'Y',
+    phase: 'instant',
+    score: Math.min(score, 100),
+    confidence: 75,
+    weight: 0.16, // Will be scaled later
+    evidence,
+    recommendations: recommendations.length > 0 ? recommendations : ['Maintain current metrics collection'],
+    processing_time_ms: Date.now() - startTime
+  };
+}
+
 // Main analysis function
 async function analyzeAllFactors(url: string, pageContent: string, title: string, metaDescription: string, progressCallback?: (stage: string, percent: number, message: string, educational: string) => Promise<void>): Promise<AnalysisResult> {
   const startTime = Date.now();
@@ -1087,7 +1480,7 @@ async function analyzeAllFactors(url: string, pageContent: string, title: string
   // Helper function for progress updates
   const updateProgress = async (factorNumber: number, factorName: string, educationalContent: string) => {
     if (progressCallback) {
-      const progress = Math.round((factorNumber / 15) * 80) + 10; // 10% start + 80% for 15 factors
+      const progress = Math.round((factorNumber / 18) * 80) + 10; // 10% start + 80% for 18 factors
       await progressCallback(
         `analyzing_${factorName.toLowerCase().replace(/\s+/g, '_')}`,
         progress,
@@ -1160,6 +1553,18 @@ async function analyzeAllFactors(url: string, pageContent: string, title: string
     await updateProgress(15, 'Page Load Speed', 'Evaluating page load speed optimization for better user experience and AI crawler efficiency.');
     factors.push(analyzePageLoadSpeed(pageContent));
     
+    // Factor 16: Topic Knowledge Depth (NEW - T.1.1)
+    await updateProgress(16, 'Topic Knowledge Depth', 'Assessing depth of subject matter expertise and specialized knowledge demonstration for topical authority.');
+    factors.push(analyzeTopicDepth(pageContent, title));
+    
+    // Factor 17: Citation Source Quality (NEW - R.1.1)
+    await updateProgress(17, 'Citation Source Quality', 'Evaluating the quality and authority of external citations and reference networks for credibility.');
+    factors.push(analyzeCitationQuality(pageContent, url));
+    
+    // Factor 18: Comprehensive Metrics Collection (NEW - Y.1.1)
+    await updateProgress(18, 'Metrics Collection', 'Checking for analytics, tracking, and performance monitoring infrastructure for optimization insights.');
+    factors.push(analyzeMetricsCollection(pageContent));
+    
     // Calculate overall score
     const overall_score = calculateOverallScore(factors);
     const processing_time_ms = Date.now() - startTime;
@@ -1187,17 +1592,32 @@ async function analyzeAllFactors(url: string, pageContent: string, title: string
 function calculateOverallScore(factors: FactorResult[]): number {
   if (factors.length === 0) return 0;
   
+  // Weight scaling factor to maintain balance with 18 factors
+  // Original total weight was ~11.48 for 15 factors, new total would be ~12.33 with 18
+  // Scale factor = 11.48 / 12.33 = 0.931
+  const WEIGHT_SCALE_FACTOR = 0.931;
+  
   let totalScore = 0;
   let totalWeight = 0;
   
   factors.forEach(factor => {
+    // Apply scaling factor to all weights to maintain balance
+    const scaledWeight = factor.weight * WEIGHT_SCALE_FACTOR;
+    
     // Weight by confidence to account for reliability
-    const weightedScore = factor.score * (factor.confidence / 100) * factor.weight;
+    const weightedScore = factor.score * (factor.confidence / 100) * scaledWeight;
     totalScore += weightedScore;
-    totalWeight += factor.weight;
+    totalWeight += scaledWeight;
   });
   
-  return totalWeight > 0 ? Math.round(totalScore / totalWeight) : 0;
+  // Calculate normalized score
+  const normalizedScore = totalWeight > 0 ? (totalScore / totalWeight) : 0;
+  
+  // Apply slight scaling to ensure realistic score distribution (30-85 range)
+  // Most sites should score between 45-75
+  const scaledScore = 30 + (normalizedScore * 0.55);
+  
+  return Math.round(Math.min(Math.max(scaledScore, 30), 85));
 }
 
 // Fetch webpage data
