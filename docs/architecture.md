@@ -1,7 +1,7 @@
 # System Architecture - AImpactScanner
 
-**Last Updated**: 2025-08-30  
-**Document Version**: 2.0.0  
+**Last Updated**: 2025-09-26  
+**Document Version**: 2.1.0  
 **System Version**: v1.0.0 (Production Ready)  
 **Authors**: Jamie Watters, Claude Code Team
 
@@ -19,14 +19,17 @@
 
 ## Executive Summary
 
-AImpactScanner is a freemium SaaS web application that analyzes websites against the MASTERY-AI Framework v3.1.1, providing AI optimization scores and recommendations across 10 critical factors. The system enables businesses to understand and improve their visibility to AI systems, search engines, and LLMs through comprehensive technical and content analysis.
+AImpactScanner is a freemium SaaS web application that analyzes websites against the MASTERY-AI Framework v3.1.1, providing AI optimization scores and recommendations across 18 critical factors. The system enables businesses to understand and improve their visibility to AI systems, search engines, and LLMs through comprehensive technical and content analysis.
 
 **Core Capabilities:**
-- Real-time website analysis against 10 MASTERY-AI framework factors
+- 18-factor comprehensive analysis across all 8 MASTERY-AI pillars
+- Professional PDF report generation with full framework structure
+- Enhanced dashboard with premium tier features
+- Complete Phase A implementation with all pillars covered
+- Improved authentication and navigation flow
 - AI-powered content quality scoring and recommendations
 - Freemium business model with tiered access (Free/Coffee/Growth/Scale)
 - Real-time progress tracking during analysis
-- Professional PDF report generation
 
 **Technology Stack:** React 19 frontend, Supabase backend (Edge Functions, PostgreSQL, Auth), Stripe payments
 
@@ -38,6 +41,28 @@ AImpactScanner is a freemium SaaS web application that analyzes websites against
 - Maintained by 1-2 engineers
 
 The system has capacity headroom for 5x immediate growth and a defined scaling path to 100K+ users through four progressive phases. For detailed capacity projections and scaling triggers, see CapacityPlan.md.
+
+### New Phase A Factors Implementation
+
+The 18-factor Phase A implementation includes three strategic additions to provide comprehensive coverage across all 8 MASTERY-AI pillars:
+
+#### T.1.1: Topic Knowledge Depth
+- **Purpose**: Assesses specialized terminology and conceptual depth
+- **Analysis**: Evaluates domain-specific vocabulary, technical accuracy, and expert-level content indicators
+- **Scoring**: Measures depth of subject matter expertise and authoritative content signals
+- **Impact**: Critical for AI systems determining content expertise and topical authority
+
+#### R.1.1: Citation Source Quality  
+- **Purpose**: Evaluates external link authority and reference networks
+- **Analysis**: Examines outbound link quality, citation patterns, and reference authority
+- **Scoring**: Assesses credibility through external validation and authoritative source connections
+- **Impact**: Essential for AI trust signals and content credibility assessment
+
+#### Y.1.1: Comprehensive Metrics Collection
+- **Purpose**: Checks analytics and performance tracking implementation
+- **Analysis**: Validates presence of tracking codes, measurement frameworks, and data collection systems
+- **Scoring**: Evaluates completeness of performance monitoring and analytics setup
+- **Impact**: Enables AI systems to understand site performance and user engagement patterns
 
 **Key Architectural Strengths:** 
 - **Simplified Architecture**: Works around database issues with client-side solutions
@@ -91,7 +116,7 @@ External Services:
 - **Frontend (React)**: Single-page application with component-based architecture, real-time updates, and database workarounds
 - **Supabase Backend**: Edge Functions for analysis, PostgreSQL database (with connectivity issues), Auth service, Real-time subscriptions
 - **Payment System**: Stripe integration for Coffee/Growth/Scale tiers with webhook processing
-- **Analysis Engine**: Simplified Edge Function analyzing 10 MASTERY-AI factors in <15 seconds
+- **Analysis Engine**: Simplified Edge Function analyzing 18 MASTERY-AI factors in <15 seconds
 - **Progress System**: Real-time WebSocket updates with educational content during analysis
 
 ### External Dependencies
@@ -105,7 +130,7 @@ External Services:
 
 1. User enters website URL for analysis
 2. System validates URL and checks usage limits
-3. Edge Function performs 10-factor analysis
+3. Edge Function performs 18-factor analysis
 4. Real-time progress updates sent via WebSocket
 5. Results displayed with scores and recommendations
 6. Optional PDF report generation
@@ -327,7 +352,7 @@ Frontend Stack                    Backend Stack
 
 #### Progressive Enhancement Strategy
 - **Quick Factors (2s)**: Immediate results for basic metrics (HTTPS, title tags, meta descriptions)
-- **Core Factors (5s)**: Main analysis covering 10 essential framework factors
+- **Core Factors (5s)**: Main analysis covering 18 essential framework factors
 - **Deep Analysis (Background)**: Comprehensive 148-factor analysis via queue system
 
 #### Microservices Roadmap
@@ -555,17 +580,17 @@ interface UserProfile {
 
 ---
 
-### ADR-003: 10-Factor Analysis Limit
-**Date**: 2025-07-21  
+### ADR-003: 18-Factor Phase A Implementation
+**Date**: 2025-09-26  
 **Status**: Accepted  
-**Context**: Edge Function 60-second timeout constraint
+**Context**: Strategic Phase A implementation covering all 8 MASTERY-AI pillars
 
-**Decision**: Limit initial analysis to 10 high-impact factors
+**Decision**: Implement strategic 18-factor Phase A analysis following the 80/20 principle
 
 **Consequences:**
-- **Positive**: Reliable completion within timeout
-- **Negative**: Not comprehensive (148 factors in full framework)
-- **Neutral**: Can expand with queue-based processing later
+- **Positive**: Comprehensive coverage of all 8 pillars, 80% of insights delivered
+- **Negative**: More complex than initial 10-factor approach, requires additional computational resources
+- **Neutral**: Foundation for full 148-factor implementation in later phases
 
 ---
 
@@ -691,8 +716,8 @@ interface UserProfile {
 
 ### Performance Constraints
 
-- **Edge Function Timeout**: 60-second hard limit (currently using ~15 seconds)
-- **Analysis Depth**: Limited to 10 factors (full framework has 148)
+- **Edge Function Timeout**: 60-second hard limit (18-factor analysis completes in <15 seconds)
+- **Analysis Depth**: Covers 18 factors in Phase A implementation (full framework has 148)
 - **Concurrent Users**: Tested with 20+, theoretical limit unknown
 - **Real-time Subscriptions**: Unreliable with database issues
 
@@ -711,7 +736,7 @@ interface UserProfile {
 - Analysis history storage
 
 **Priority 2 (Feature Enhancement):**
-- Full 148-factor analysis
+- Full 148-factor analysis (Phase A complete with 18 factors)
 - Advanced reporting features
 - Team collaboration features
 
