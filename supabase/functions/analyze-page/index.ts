@@ -1623,11 +1623,18 @@ function calculateOverallScore(factors: FactorResult[]): number {
 // Fetch webpage data
 async function fetchPageData(url: string): Promise<{title: string, metaDescription: string, content: string}> {
   try {
+    // Add timeout to prevent hanging
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
     const response = await fetch(url, {
       headers: {
         'User-Agent': 'AImpactScanner/1.0 (AI Search Optimization Analysis)'
-      }
+      },
+      signal: controller.signal
     });
+    
+    clearTimeout(timeout);
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);

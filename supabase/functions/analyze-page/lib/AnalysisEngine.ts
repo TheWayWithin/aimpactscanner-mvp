@@ -29,11 +29,18 @@ export class AnalysisEngine {
   // Fetch webpage data for analysis
   private async fetchPageData(url: string): Promise<{title: string, metaDescription: string, content: string}> {
     try {
+      // Add timeout to prevent hanging
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      
       const response = await fetch(url, {
         headers: {
           'User-Agent': 'AImpactScanner/1.0 (AI Search Optimization Analysis)'
-        }
+        },
+        signal: controller.signal
       });
+      
+      clearTimeout(timeout);
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -72,12 +79,6 @@ export class AnalysisEngine {
       }
       
       metaDescription = metaMatch ? metaMatch[1].trim() : '';
-      
-      // Log for debugging
-      if (metaDescription && metaDescription.length < 50) {
-        console.log(`Warning: Short meta description extracted (${metaDescription.length} chars): "${metaDescription}"`);
-        console.log('HTML snippet:', html.substring(0, 500));
-      }
       
       // Extract content while preserving structured data
       // Keep script tags for structured data analysis, then clean for content analysis
