@@ -18,6 +18,30 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
   const [progress, setProgress] = useState(0);
   const reportRef = useRef(null);
 
+  // Helper function to get display name for pillar codes
+  const getPillarDisplayName = (pillarCode) => {
+    const pillarNames = {
+      'M': 'Machine Readability',
+      'AI': 'AI Response Optimization',
+      'A': 'Authority & Trust',
+      'S': 'Semantic Content',
+      'E': 'Engagement & UX',
+      'T': 'Topical Expertise',
+      'R': 'Reference Networks',
+      'Y': 'Yield Optimization',
+      // Also handle lowercase keys for pillars
+      'machine_readability': 'Machine Readability',
+      'ai': 'AI Response Optimization',
+      'authority': 'Authority & Trust',
+      'semantic': 'Semantic Content',
+      'engagement': 'Engagement & UX',
+      'topical': 'Topical Expertise',
+      'reference': 'Reference Networks',
+      'yield': 'Yield Optimization'
+    };
+    return pillarNames[pillarCode] || pillarCode;
+  };
+
   // Extract data from analysisData - handles both real and mock data
   const extractReportData = () => {
     if (!analysisData) {
@@ -61,7 +85,19 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
 
     // Group factors by pillar
     reportData.factors.forEach(factor => {
-      // Map factor pillar names to keys
+      // Map pillar codes from Edge Function (e.g., 'M', 'AI', 'A')
+      const pillarCodeMapping = {
+        'M': 'machine_readability',
+        'AI': 'ai',
+        'A': 'authority',
+        'S': 'semantic',
+        'E': 'engagement',
+        'T': 'topical',
+        'R': 'reference',
+        'Y': 'yield'
+      };
+      
+      // Map factor pillar names to keys (for backward compatibility with mock data)
       const pillarMappings = {
         'AI Response Optimization': 'ai',
         'Authority & Trust': 'authority',
@@ -73,7 +109,11 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
         'Yield Optimization': 'yield'
       };
       
-      const pillarKey = pillarMappings[factor.pillar] || 'machine_readability';
+      // Try pillar codes first (real data), then pillar names (mock data), then default
+      const pillarKey = pillarCodeMapping[factor.pillar] || 
+                       pillarMappings[factor.pillar] || 
+                       'machine_readability';
+      
       if (groupedFactors[pillarKey]) {
         groupedFactors[pillarKey].factors.push(factor);
       }
@@ -103,7 +143,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
       keyInsights: [
         `${data.factors.length} factors analyzed using MASTERY-AI Framework v3.1.1`,
         `Framework compliance score: ${data.overallScore}/100`,
-        `Primary optimization focus: ${bottomFactors[0]?.pillar || 'Technical Infrastructure'}`
+        `Primary optimization focus: ${getPillarDisplayName(bottomFactors[0]?.pillar) || 'Technical Infrastructure'}`
       ]
     };
   };
@@ -115,10 +155,13 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
     // High priority - factors scoring below 50
     const criticalFactors = data.factors.filter(f => f.score < 50);
     criticalFactors.forEach(factor => {
+      const factorLabel = factor.factor_id ? 
+        `[${factor.factor_id}] ${factor.factor_name || factor.name}` : 
+        factor.factor_name || factor.name;
       recommendations.push({
         priority: 'High',
-        factor: factor.factor_name || factor.name,
-        pillar: factor.pillar,
+        factor: factorLabel,
+        pillar: getPillarDisplayName(factor.pillar),
         score: factor.score,
         actions: factor.recommendations || ['Review and optimize this factor'],
         impact: 'Critical for AI visibility improvement'
@@ -128,10 +171,13 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
     // Medium priority - factors scoring 50-70
     const moderateFactors = data.factors.filter(f => f.score >= 50 && f.score < 70);
     moderateFactors.slice(0, 3).forEach(factor => {
+      const factorLabel = factor.factor_id ? 
+        `[${factor.factor_id}] ${factor.factor_name || factor.name}` : 
+        factor.factor_name || factor.name;
       recommendations.push({
         priority: 'Medium',
-        factor: factor.factor_name || factor.name,
-        pillar: factor.pillar,
+        factor: factorLabel,
+        pillar: getPillarDisplayName(factor.pillar),
         score: factor.score,
         actions: factor.recommendations || ['Enhance optimization for this factor'],
         impact: 'Significant opportunity for score improvement'
@@ -141,10 +187,13 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
     // Low priority - factors scoring 70-85
     const optimizationFactors = data.factors.filter(f => f.score >= 70 && f.score < 85);
     optimizationFactors.slice(0, 2).forEach(factor => {
+      const factorLabel = factor.factor_id ? 
+        `[${factor.factor_id}] ${factor.factor_name || factor.name}` : 
+        factor.factor_name || factor.name;
       recommendations.push({
         priority: 'Low',
-        factor: factor.factor_name || factor.name,
-        pillar: factor.pillar,
+        factor: factorLabel,
+        pillar: getPillarDisplayName(factor.pillar),
         score: factor.score,
         actions: factor.recommendations || ['Fine-tune optimization for maximum impact'],
         impact: 'Incremental improvement potential'
@@ -295,7 +344,10 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
       if (summary.strengths.length > 0) {
         addText('Top Performing Factors:', margin, currentY, { fontSize: 12, fontStyle: 'bold', color: '#059669' });
         summary.strengths.forEach((factor, index) => {
-          addText(`${index + 1}. ${factor.factor_name || factor.name}: ${factor.score}/100`, margin + 5, currentY, { fontSize: 10 });
+          const factorLabel = factor.factor_id ? 
+            `[${factor.factor_id}] ${factor.factor_name || factor.name}` : 
+            factor.factor_name || factor.name;
+          addText(`${index + 1}. ${factorLabel}: ${factor.score}/100`, margin + 5, currentY, { fontSize: 10 });
         });
       }
 
@@ -303,7 +355,10 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
       if (summary.improvements.length > 0) {
         addText('Priority Improvement Areas:', margin, currentY, { fontSize: 12, fontStyle: 'bold', color: '#DC2626' });
         summary.improvements.forEach((factor, index) => {
-          addText(`${index + 1}. ${factor.factor_name || factor.name}: ${factor.score}/100`, margin + 5, currentY, { fontSize: 10 });
+          const factorLabel = factor.factor_id ? 
+            `[${factor.factor_id}] ${factor.factor_name || factor.name}` : 
+            factor.factor_name || factor.name;
+          addText(`${index + 1}. ${factorLabel}: ${factor.score}/100`, margin + 5, currentY, { fontSize: 10 });
         });
       }
 
@@ -318,10 +373,8 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
       
       currentY += 5;
 
-      // Pillar Scores Grid
-      const pillarKeys = Object.keys(reportData.groupedFactors).filter(key => 
-        reportData.groupedFactors[key].score > 0 || reportData.groupedFactors[key].factors.length > 0
-      );
+      // Pillar Scores Grid - Show all 8 pillars
+      const pillarKeys = Object.keys(reportData.groupedFactors); // Show all pillars, even with 0 factors
       
       pillarKeys.forEach((key, index) => {
         const pillar = reportData.groupedFactors[key];
@@ -378,28 +431,32 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
         pillarKeys.forEach(key => {
           const pillar = reportData.groupedFactors[key];
           
+          checkPageBreak(20);
+          
+          // Pillar section header
+          pdf.setFillColor(248, 250, 252);
+          pdf.rect(margin - 2, currentY, contentWidth + 4, 12, 'F');
+          
+          // Place text inside the blue box properly
+          pdf.setTextColor(pillar.color);
+          pdf.setFontSize(12);
+          pdf.setFont('helvetica', 'bold');
+          // Skip emoji icons as jsPDF doesn't handle them well
+          pdf.text(pillar.name, margin, currentY + 8);
+          
+          currentY += 15; // Add more space to prevent overlap
+          
+          // Check if pillar has factors
           if (pillar.factors.length > 0) {
-            checkPageBreak(20);
-            
-            // Pillar section header
-            pdf.setFillColor(248, 250, 252);
-            pdf.rect(margin - 2, currentY, contentWidth + 4, 12, 'F');
-            
-            // Place text inside the blue box properly
-            pdf.setTextColor(pillar.color);
-            pdf.setFontSize(12);
-            pdf.setFont('helvetica', 'bold');
-            // Skip emoji icons as jsPDF doesn't handle them well
-            pdf.text(pillar.name, margin, currentY + 8);
-            
-            currentY += 15; // Add more space to prevent overlap
-            
             // Factor details
             pillar.factors.forEach(factor => {
               checkPageBreak(30);
               
-              // Factor name and score
-              addText(`${factor.factor_name || factor.name}`, margin + 5, currentY, { fontSize: 12, fontStyle: 'bold' });
+              // Factor name with ID and score
+              const factorLabel = factor.factor_id ? 
+                `[${factor.factor_id}] ${factor.factor_name || factor.name}` : 
+                factor.factor_name || factor.name;
+              addText(factorLabel, margin + 5, currentY, { fontSize: 12, fontStyle: 'bold' });
               
               pdf.setTextColor(factor.score >= 70 ? '#059669' : factor.score >= 50 ? '#EAB308' : '#DC2626');
               pdf.setFontSize(14);
@@ -428,6 +485,13 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
             });
             
             currentY += 3;
+          } else {
+            // No factors analyzed for this pillar
+            pdf.setTextColor('#6B7280');
+            pdf.setFontSize(10);
+            pdf.setFont('helvetica', 'italic');
+            pdf.text('No factors analyzed in Phase A for this pillar', margin + 5, currentY);
+            currentY += 8;
           }
         });
       }
