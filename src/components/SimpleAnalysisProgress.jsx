@@ -93,7 +93,7 @@ function SimpleAnalysisProgress({ analysisId, url, onAnalysisComplete }) {
           
           <div className="mt-3 text-xs text-blue-700">
             <p className="mb-1">• Framework: MASTERY-AI v3.1.1 (148 factors)</p>
-            <p className="mb-1">• Phase A Analysis: Complete coverage of all 8 pillars</p>
+            <p className="mb-1">• Phase A Analysis: 18 comprehensive factors across all 8 pillars</p>
             <p>• Real-time evidence collection and scoring</p>
           </div>
         </div>
