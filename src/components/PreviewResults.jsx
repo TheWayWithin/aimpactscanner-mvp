@@ -203,7 +203,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
               Your Factor Analysis Results
             </h2>
             <div className="text-sm text-gray-600">
-              Showing 3 of {factors.length || 11} factors analyzed
+              Showing 3 of {factors.length || 18} factors analyzed
             </div>
           </div>
           
@@ -402,7 +402,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
           </p>
           <div className="grid md:grid-cols-3 gap-4 my-6 text-left">
             <div className="bg-blue-800 bg-opacity-40 border border-white border-opacity-30 rounded-lg p-4">
-              <div className="font-semibold mb-2 text-white">✅ All {factors.length || 11} Factor Results</div>
+              <div className="font-semibold mb-2 text-white">✅ All {factors.length || 18} Factor Results</div>
               <div className="text-sm text-blue-100">Complete detailed analysis with evidence and recommendations</div>
             </div>
             <div className="bg-blue-800 bg-opacity-40 border border-white border-opacity-30 rounded-lg p-4">

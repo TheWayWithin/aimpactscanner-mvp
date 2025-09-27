@@ -1097,7 +1097,7 @@ describe('Factor Analysis Unit Tests', () => {
 })
 
 describe('Factor Performance Tests', () => {
-  it('should complete all 10 factor analysis within timeout', async () => {
+  it('should complete all 18 factor analysis within timeout', async () => {
     const startTime = Date.now()
     
     // Test data for comprehensive factor testing
@@ -1131,7 +1131,7 @@ describe('Factor Performance Tests', () => {
       longContent: 'word '.repeat(1000) // 1000 words
     }
     
-    // Test all 10 factors
+    // Test all 18 factors
     const results = [
       mockFactors.checkHTTPS(testData.url),
       mockFactors.analyzeTitle(testData.title),
@@ -1169,7 +1169,7 @@ describe('Factor Performance Tests', () => {
       expect(result.confidence).toBeLessThanOrEqual(100)
     })
     
-    console.log(`✅ All 10 factors analyzed in ${duration}ms`)
+    console.log(`✅ All 18 factors analyzed in ${duration}ms`)
   })
 
   it('should handle edge cases efficiently', async () => {

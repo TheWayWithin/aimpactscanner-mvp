@@ -96,7 +96,7 @@ test.describe('Conversion Flow Tests', () => {
     await expect(page.locator('text=These are your real scores and recommendations, not generic samples')).toBeVisible();
     
     // Check feature highlights in locked section
-    await expect(page.locator('text=All 11 Factor Results')).toBeVisible();
+    await expect(page.locator('text=All 18 Factor Results')).toBeVisible();
     await expect(page.locator('text=Detailed Scoring')).toBeVisible();
     await expect(page.locator('text=Action Plan')).toBeVisible();
     

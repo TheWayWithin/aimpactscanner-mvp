@@ -80,7 +80,7 @@ export class AnalysisEngine {
     }
   }
 
-  // Phase A: Instant Analysis (4 factors initially, <15 seconds)
+  // Phase A: Instant Analysis (18 factors, <15 seconds)
   async analyzeInstantFactors(url: string, progressCallback?: (stage: string, progress: number, message: string, educationalContent: string) => Promise<void>): Promise<AnalysisResult> {
     const startTime = Date.now();
     const factors: FactorResult[] = [];
@@ -88,7 +88,7 @@ export class AnalysisEngine {
     // Helper function for progress updates
     const updateProgress = async (factorNumber: number, factorName: string, educationalContent: string) => {
       if (progressCallback) {
-        const progress = Math.round((factorNumber / 10) * 80) + 10; // 10% start + 80% for factors
+        const progress = Math.round((factorNumber / 18) * 80) + 10; // 10% start + 80% for factors
         await progressCallback(
           `analyzing_${factorName.toLowerCase().replace(/\s+/g, '_')}`,
           progress,

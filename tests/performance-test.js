@@ -194,7 +194,7 @@ const performanceTests = {
     console.log('📊 Testing Large Dataset Performance...');
     
     const datasets = [
-      { name: 'Small (10 factors)', data: generateLargeAnalysisData(10) },
+      { name: 'Small (18 factors)', data: generateLargeAnalysisData(18) },
       { name: 'Medium (25 factors)', data: generateLargeAnalysisData(25) },
       { name: 'Large (50 factors)', data: generateLargeAnalysisData(50) }
     ];

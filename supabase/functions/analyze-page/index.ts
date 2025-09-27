@@ -1760,7 +1760,7 @@ serve(async (req) => {
     await updateProgress('fetching', 15, 'Fetching webpage content...', 'Downloading HTML and analyzing page structure...');
     const pageData = await fetchPageData(url);
     
-    // Perform 15-factor analysis
+    // Perform 18-factor analysis
     const analysisResult = await analyzeAllFactors(url, pageData.content, pageData.title, pageData.metaDescription, updateProgress);
     
     if (!analysisResult.success) {

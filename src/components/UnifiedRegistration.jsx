@@ -40,7 +40,7 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
         title: '☕ COFFEE Plan Benefits',
         benefits: [
           { icon: '✅', text: 'Unlimited AI-powered analysis', highlight: true },
-          { icon: '✅', text: 'All 11 factors with detailed recommendations', highlight: true },
+          { icon: '✅', text: 'All 18 factors with detailed recommendations', highlight: true },
           { icon: '✅', text: 'Professional reports (no watermarks)', highlight: false },
           { icon: '✅', text: 'Export to PDF and share', highlight: false },
           { icon: '✅', text: 'Priority email support', highlight: false },

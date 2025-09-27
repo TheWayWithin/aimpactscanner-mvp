@@ -579,7 +579,7 @@ test.describe('Comprehensive Factor Analysis E2E Tests', () => {
   });
 
   test.describe('Cross-Factor Integration', () => {
-    test('should analyze all 10 factors comprehensively', async ({ page }) => {
+    test('should analyze all 18 factors comprehensively', async ({ page }) => {
       test.setTimeout(testConfig.analysisTimeout + 15000); // Extra time for comprehensive analysis
       
       if (!await ensureAuthenticated(page)) return;
@@ -611,10 +611,10 @@ test.describe('Comprehensive Factor Analysis E2E Tests', () => {
         }
       });
       
-      // Should detect at least 6 out of 10 factors (being conservative for E2E test)
+      // Should detect at least 6 out of 18 factors (being conservative for E2E test)
       expect(detectedFactors).toBeGreaterThanOrEqual(6);
       
-      console.log(`✅ Comprehensive analysis complete - detected ${detectedFactors}/10 factor types`);
+      console.log(`✅ Comprehensive analysis complete - detected ${detectedFactors}/18 factor types`);
     });
 
     test('should provide nuanced scoring across all factors', async ({ page }) => {
