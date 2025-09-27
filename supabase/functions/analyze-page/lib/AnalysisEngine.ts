@@ -438,20 +438,22 @@ export class AnalysisEngine {
         // Length scoring (optimal: 150-160 chars)
         if (length >= 150 && length <= 160) {
           score += 50; // Optimal length
-          evidence.push('Meta description length is optimal');
+          evidence.push('Meta description length is optimal (150-160 characters)');
         } else if (length >= 140 && length <= 170) {
           score += 40; // Good length
           evidence.push('Meta description length is good');
+          if (length < 150) recommendations.push('Consider expanding meta description slightly for optimal length (150-160 characters)');
+          if (length > 160) recommendations.push('Consider shortening slightly to prevent truncation (optimal: 150-160 characters)');
         } else if (length >= 120 && length <= 180) {
           score += 30; // Acceptable length
-          evidence.push('Meta description length is acceptable');
-          if (length < 140) recommendations.push('Consider expanding meta description for better keyword coverage');
-          if (length > 160) recommendations.push('Consider shortening to prevent truncation in search results');
+          evidence.push('Meta description length is acceptable but not optimal');
+          if (length < 140) recommendations.push('Expand meta description to 150-160 characters for better keyword coverage');
+          if (length > 170) recommendations.push('Shorten meta description to 150-160 characters to prevent truncation');
         } else {
           score += 15; // Poor length
           evidence.push('Meta description length needs optimization');
-          if (length < 120) recommendations.push('Meta description is too short - expand with more details');
-          if (length > 180) recommendations.push('Meta description is too long - will be truncated');
+          if (length < 120) recommendations.push('Meta description is too short - expand to 150-160 characters');
+          if (length > 180) recommendations.push('Meta description is too long - shorten to 150-160 characters');
         }
         
         // Content quality analysis
@@ -501,11 +503,23 @@ export class AnalysisEngine {
           evidence.push('Excellent meta description optimization');
         } else if (score >= 70) {
           evidence.push('Good meta description, minor improvements possible');
+          // Only add generic improvement if no specific recommendations exist
+          if (recommendations.length === 0) {
+            recommendations.push('Consider adding more engaging elements to maximize click-through rate');
+          }
         } else if (score >= 50) {
           evidence.push('Average meta description, several improvements needed');
+          if (recommendations.length === 0) {
+            recommendations.push('Improve meta description with better structure and content');
+          }
         } else {
           evidence.push('Meta description needs significant optimization');
-          recommendations.push('Rewrite meta description with proper length and engaging content');
+          if (length >= 150 && length <= 160) {
+            // If length is optimal but score is low, focus on content quality
+            recommendations.push('Length is optimal, but content needs improvement - add call-to-action and value proposition');
+          } else {
+            recommendations.push('Rewrite meta description with proper length (150-160 chars) and engaging content');
+          }
         }
       }
       
