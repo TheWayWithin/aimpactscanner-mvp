@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useTabVisibility } from '../hooks/useTabVisibility';
+import { normalizeUrl, getDomainFromUrl } from '../utils/urlUtils';
 
 const AnalysisHistory = ({ onViewAnalysis }) => {
   const [history, setHistory] = useState([]);
@@ -935,13 +936,13 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
                       </svg>
                     </div>
                     <a 
-                      href={item.url.startsWith('http') ? item.url : `https://${item.url}`}
+                      href={normalizeUrl(item.url)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors truncate group-hover:text-blue-600"
                       title={item.url}
                     >
-                      {item.url.replace(/^https?:\/\/(www\.)?/, '')}
+                      {getDomainFromUrl(item.url)}
                     </a>
                   </div>
                   {item.page_title && (

@@ -1705,6 +1705,10 @@ serve(async (req) => {
     if (url.startsWith('https://https//:')) {
       url = url.replace('https://https//:', 'https://');
     }
+    if (url.startsWith('https//:')) {
+      // Fix malformed protocol (missing colon after https)
+      url = url.replace('https//:', 'https://');
+    }
     if (url.startsWith('https://:')) {
       url = url.replace('https://:', 'https://');
     }
