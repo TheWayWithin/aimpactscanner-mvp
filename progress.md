@@ -1,5 +1,56 @@
 # AImpactScanner MVP - Progress Log
 
+## September 28, 2025 - Dashboard Persistence & Display Issues
+
+### Mission: Fix Dashboard Analysis History Issues
+**Status**: COMPLETE  
+**Time**: 17:00 - 18:30 UTC
+
+#### Issues Resolved
+
+##### 1. Analysis History Not Persisting ✅
+**Problem**: Analyses not showing in dashboard immediately after scan
+**Root Cause**: Database insert timeout too short (5 seconds)
+
+**Solution**:
+- Increased database insert timeout from 5s to 15s
+- Better handles slower database connections
+- Allows sufficient time for complex analysis data insertion
+
+**File Updated**: App.jsx
+
+##### 2. Hardcoded "Top Issues Found" ✅  
+**Problem**: Every analysis showing same generic issues ("Missing meta description", "No alt text on images")
+**Root Cause**: generateSampleIssues function returning hardcoded array
+
+**Solution**:
+- Modified function to extract real recommendations from analysis scores data
+- Checks both scores.factors and scores.factor_scores structures
+- Filters for factors with score < 70 and takes first recommendation
+- Falls back to contextual issues if no real data available
+- Passes full scores data from database to enable extraction
+
+**File Updated**: AnalysisHistory.jsx
+
+##### 3. Missing Timezone Indicators ✅
+**Problem**: Timestamps showing time without timezone (e.g., "Today at 2:45 PM")
+**Root Cause**: formatDate function not including timezone information
+
+**Solution**:
+- Added automatic timezone detection using browser's locale
+- Appends timezone abbreviation (PST, EST, UTC, etc.) to all timestamps
+- Consistent format: "Today at 2:45 PM PST"
+
+**File Updated**: AnalysisHistory.jsx
+
+#### Deployment Status
+✅ All fixes committed and pushed to GitHub
+✅ Database timeout improvement active
+✅ Real recommendations extraction implemented
+✅ Timezone display enhanced
+
+---
+
 ## September 28, 2025 - Production Issues & UX Refinements
 
 ### Mission: Fix Critical Production Issues
