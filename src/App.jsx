@@ -912,8 +912,9 @@ function AppContent() {
             created_at: new Date().toISOString()
           });
 
+        // Increased timeout to handle slower database connections
         const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Database insert timeout')), 5000)
+          setTimeout(() => reject(new Error('Database insert timeout')), 15000)
         );
 
         const { error: analysisError } = await Promise.race([

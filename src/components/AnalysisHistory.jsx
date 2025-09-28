@@ -143,7 +143,8 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
           page_title: analysis.page_title,
           page_description: analysis.page_description,
           framework_version: analysis.framework_version,
-          analysis_duration: analysis.analysis_duration
+          analysis_duration: analysis.analysis_duration,
+          scores: analysis.scores // Include full scores data for recommendations
         }));
 
         if (loadMore) {
@@ -267,19 +268,34 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
+    
+    // Get timezone abbreviation (e.g., PST, EST, UTC)
+    const timeZoneAbbr = new Date().toLocaleTimeString('en-US', {
+      timeZoneName: 'short'
+    }).split(' ').pop();
 
     if (date.toDateString() === today.toDateString()) {
-      return `Today at ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+      return `Today at ${date.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      })} ${timeZoneAbbr}`;
     } else if (date.toDateString() === yesterday.toDateString()) {
-      return `Yesterday at ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+      return `Yesterday at ${date.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      })} ${timeZoneAbbr}`;
     } else {
-      return date.toLocaleDateString('en-US', { 
+      // For older dates, include full date and time with timezone
+      const formattedDate = date.toLocaleDateString('en-US', { 
         month: 'short', 
         day: 'numeric', 
-        year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined,
+        year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined
+      });
+      const formattedTime = date.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit'
       });
+      return `${formattedDate} at ${formattedTime} ${timeZoneAbbr}`;
     }
   };
 
@@ -404,23 +420,49 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
     };
   }, [filteredHistory, history]);
 
-  // Generate sample issues for demo purposes
-  const generateSampleIssues = (url, score) => {
-    const allIssues = [
-      'Missing meta description',
-      'No alt text on images',
-      'Slow loading speed',
-      'Mobile usability issues',
-      'Missing structured data',
-      'Poor heading structure',
-      'Broken links detected',
-      'No SSL certificate',
-      'Missing social media tags',
-      'Low content quality score'
+  // Extract real recommendations from analysis data
+  const generateSampleIssues = (url, score, item) => {
+    // Try to extract real recommendations from the scores data
+    if (item && item.scores && typeof item.scores === 'object') {
+      const recommendations = [];
+      
+      // Check if scores contains factor data
+      if (item.scores.factors) {
+        // Extract recommendations from factors
+        Object.values(item.scores.factors).forEach(factor => {
+          if (factor && factor.recommendations && Array.isArray(factor.recommendations)) {
+            // Add recommendations that indicate issues (score < 70)
+            if (factor.score < 70 && factor.recommendations.length > 0) {
+              recommendations.push(...factor.recommendations.slice(0, 1)); // Take first recommendation
+            }
+          }
+        });
+      } else if (item.scores.factor_scores) {
+        // Alternative structure with factor_scores
+        Object.values(item.scores.factor_scores).forEach(factor => {
+          if (factor && factor.recommendations && Array.isArray(factor.recommendations)) {
+            if (factor.score < 70 && factor.recommendations.length > 0) {
+              recommendations.push(...factor.recommendations.slice(0, 1));
+            }
+          }
+        });
+      }
+      
+      // If we found real recommendations, return them (limited to 3)
+      if (recommendations.length > 0) {
+        return recommendations.slice(0, 3);
+      }
+    }
+    
+    // Fallback to generic issues based on score if no real data
+    const fallbackIssues = [
+      'Optimize meta descriptions for better AI understanding',
+      'Improve structured data implementation',
+      'Enhance content quality and depth'
     ];
     
     const issueCount = score >= 75 ? 1 : score >= 50 ? 2 : 3;
-    return allIssues.slice(0, issueCount);
+    return fallbackIssues.slice(0, issueCount);
   };
 
   // Show modern loading skeleton while loading
@@ -853,7 +895,7 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
       {/* Analysis Cards Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {(filteredHistory.length > 0 ? filteredHistory : history).map((item) => {
-          const sampleIssues = generateSampleIssues(item.url, item.score);
+          const sampleIssues = generateSampleIssues(item.url, item.score, item);
           
           return (
             <div key={item.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition-all duration-200 group">
