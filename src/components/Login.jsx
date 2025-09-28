@@ -101,24 +101,28 @@ const Login = ({ onLoginSuccess }) => {
       // Clean up registration data
       localStorage.removeItem('registrationEmail');
 
-      // Call success handler with user data and routing info
-      if (onLoginSuccess) {
-        const routingData = {
-          user: data.user,
-          isNewUser: isVerifiedUser,
-          hasAnalysisData: !!analysisData,
-          tier: analysisData?.tier || 'free'
-        };
-        onLoginSuccess(routingData);
-      }
-
-      // Success message
+      // Success message first
       if (isVerifiedUser) {
         setMessage('Welcome! Redirecting to your analysis results...');
       } else {
         setMessage('Welcome back! Redirecting to your dashboard...');
       }
       setMessageType('success');
+
+      // Call success handler with user data and routing info
+      // Use setTimeout to ensure the auth state change completes first
+      setTimeout(() => {
+        if (onLoginSuccess) {
+          const routingData = {
+            user: data.user,
+            isNewUser: isVerifiedUser,
+            hasAnalysisData: !!analysisData,
+            tier: analysisData?.tier || 'free'
+          };
+          console.log('Login completed with routing data:', routingData);
+          onLoginSuccess(routingData);
+        }
+      }, 100); // Small delay to let auth state settle
 
     } catch (error) {
       console.error('❌ Login error:', error);

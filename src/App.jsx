@@ -268,7 +268,8 @@ function AppContent() {
       const currentTime = Date.now();
       
       // Skip auth state processing if tab is not visible (user switched tabs)
-      if (!isTabVisible) {
+      // Check if isTabVisible is defined and false (not just falsy)
+      if (isTabVisible === false) {
         console.log('👁️ Tab not visible - skipping auth state change processing');
         return;
       }
@@ -433,7 +434,8 @@ function AppContent() {
 
   const fetchUserTier = async (userId, userEmail = null, userSession = null) => {
     // Skip fetching if tab is not visible (prevents duplicate calls when returning to tab)
-    if (!isTabVisible && wasRecentlyHidden()) {
+    // Only skip if explicitly false, not undefined
+    if (isTabVisible === false && wasRecentlyHidden && wasRecentlyHidden()) {
       console.log('👁️ Tab recently hidden - skipping user tier fetch to prevent duplicates');
       return;
     }
@@ -1352,8 +1354,9 @@ function AppContent() {
         }}
       />
 
-      {/* Only show UserInitializer if we have a session, tab is visible, and not viewing results from a pending analysis */}
-      {session && currentView !== 'results' && isTabVisible && (
+      {/* Only show UserInitializer if we have a session and not viewing results from a pending analysis */}
+      {/* Don't check isTabVisible here as it might prevent initial load */}
+      {session && currentView !== 'results' && (
         <UserInitializer session={session} onUserReady={handleUserReady} />
       )}
 
