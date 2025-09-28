@@ -5,7 +5,37 @@ import { useUsageTracking } from '../hooks/useUsageTracking';
 
 const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
   const [loading, setLoading] = useState(false);
+  const [actualMonthlyCount, setActualMonthlyCount] = useState(null);
   const { usageData } = useUsageTracking(user?.email);
+  
+  // Fetch actual analysis count from database
+  useEffect(() => {
+    const fetchActualCount = async () => {
+      if (!user?.id) return;
+      
+      try {
+        // Get current month's start date
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        
+        // Count analyses from this month
+        const { count, error } = await supabase
+          .from('analyses')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+          .gte('created_at', startOfMonth);
+        
+        if (!error && count !== null) {
+          setActualMonthlyCount(count);
+          console.log(`📊 Actual analyses this month: ${count}`);
+        }
+      } catch (error) {
+        console.error('Failed to fetch actual analysis count:', error);
+      }
+    };
+    
+    fetchActualCount();
+  }, [user?.id]);
   
   // Get tier display info
   const getTierDisplayName = (tier) => {
@@ -81,6 +111,10 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
   };
 
   const getUsedAnalyses = () => {
+    // Prefer actual database count over localStorage tracking
+    if (actualMonthlyCount !== null) {
+      return actualMonthlyCount;
+    }
     return usageData.monthlyUsed || 0;
   };
 
