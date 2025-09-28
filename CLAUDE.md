@@ -262,6 +262,65 @@ All guardrail scripts integrate with coordinator workflows:
 - `./guardrails/escalation-trigger.sh` - Automatic escalation based on thresholds
 - `./guardrails/deployment-report.sh` - Comprehensive deployment summary
 
+## Critical Path Protection
+
+### 🚨 NEVER BLOCK These Operations
+These are critical paths that must ALWAYS execute, regardless of optimization state:
+
+1. **Authentication State Changes**
+   - Login/logout flows
+   - Session validation
+   - Auth state callbacks
+   - User initialization after auth
+   ```javascript
+   // ❌ WRONG - Blocks critical auth flow
+   if (!isTabVisible) return; // In auth handler
+   
+   // ✅ CORRECT - Only block non-critical operations
+   if (!isTabVisible && !isAuthOperation) return;
+   ```
+
+2. **Navigation State Updates**
+   - View changes (landing → login → dashboard)
+   - Post-authentication redirects
+   - Route guards and protections
+
+3. **Payment Processing**
+   - Stripe checkout sessions
+   - Webhook handlers
+   - Subscription updates
+
+4. **User Data Initialization**
+   - First-time user creation
+   - Tier assignment
+   - Critical user preferences
+
+### ⚡ Optimizable Operations (Can Defer/Block)
+These operations can be deferred or blocked for optimization:
+
+1. **Data Fetching**
+   - Analysis history loading
+   - Usage statistics
+   - Non-critical API calls
+
+2. **UI Updates**
+   - Tooltips and hints
+   - Background animations
+   - Non-essential component renders
+
+3. **Analytics & Tracking**
+   - Event logging
+   - Performance metrics
+   - Usage analytics
+
+### Implementation Guidelines
+When adding optimization logic (tab visibility, debouncing, etc.):
+
+1. **Ask**: Is this a critical path?
+2. **Test**: Does blocking this prevent user access?
+3. **Document**: Add operation to appropriate list above
+4. **Validate**: Test auth flow after ANY App.jsx changes
+
 ## Development Guidelines
 
 ### Code Quality Standards
@@ -269,12 +328,14 @@ All guardrail scripts integrate with coordinator workflows:
 - Mark temporary code with FIXME comments
 - Maximum file size: 1000 lines (monitor for Supabase updates)
 - Factor implementations must align with MASTERY framework
+- **CRITICAL**: Test authentication flow after ANY App.jsx modifications
 
 ### Performance Requirements
 - Edge Function timeout: 30 seconds maximum
 - Analysis success rate: >95%
 - Factor processing: Must complete within timeout constraints
 - Database queries: Optimize for <100ms response times
+- **Authentication redirect: Must complete within 2 seconds**
 
 ## Integration Patterns
 
