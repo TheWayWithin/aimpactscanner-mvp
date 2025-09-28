@@ -1,5 +1,73 @@
 # AImpactScanner MVP - Progress Log
 
+## September 28, 2025 - Production Issues & UX Refinements
+
+### Mission: Fix Critical Production Issues
+**Status**: COMPLETE
+**Time**: 14:00 - 17:00 UTC
+
+#### Issues Resolved
+
+##### 1. Pricing Tier Display Confusion ✅
+**Problem**: Both Free and Coffee tiers showed as "active" for Coffee tier users
+**Root Cause**: 
+- Case-sensitive tier comparisons ("coffee" vs "Coffee")
+- Hardcoded "Current Plan" text in Free tier
+
+**Solution**:
+- Made all tier comparisons case-insensitive
+- Fixed button text logic across components
+- Ensured only actual tier shows "Active Plan"
+
+**Files Updated**:
+- TierSelection.jsx
+- PricingTiers.jsx
+- PricingComparison.jsx
+- SimpleAccountDashboard.jsx
+
+##### 2. Meta Description Scoring Issues ✅
+**Problem**: Meta descriptions at optimal length (153 chars) getting "optimize length" recommendations
+**Root Cause**: Score included content quality factors but recommendations implied length issue
+
+**Solution**:
+- Clarified evidence messages for optimal length
+- Fixed recommendations to differentiate length vs content issues
+- Added specific character ranges in recommendations
+
+**File Updated**: AnalysisEngine.ts
+
+##### 3. Meta Description Extraction Bug ✅
+**Problem**: FreeCalcHub meta description truncated from 181 to 36 characters
+**Root Cause**: Regex pattern `([^"']*)` stopped at first apostrophe in "FreeCalcHub's"
+
+**Solution**:
+- Separate regex patterns for double and single quotes
+- Each pattern captures until matching closing quote
+- Fixed: `content="([^"]*)"` for double quotes
+
+**Files Updated**:
+- index.ts (analyze-page function)
+- AnalysisEngine.ts
+
+##### 4. Analysis Timeout Issues ✅
+**Problem**: Analysis timing out with "Analysis timeout - please try again" errors
+**Root Cause**: No timeout on fetch operations, causing Edge Function to hang
+
+**Solution**:
+- Added 30-second AbortController timeout
+- Proper cleanup on successful fetch
+- Applied to both main files
+
+**Files Updated**:
+- index.ts (analyze-page function)
+- AnalysisEngine.ts
+
+#### Deployment Status
+✅ All fixes deployed to Supabase Edge Functions
+✅ All changes pushed to GitHub repository
+
+---
+
 ## September 26, 2025 - PDF Report Structure Restoration ✅
 
 ### Mission: Fix PDF Report Regression
