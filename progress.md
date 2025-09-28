@@ -1,5 +1,44 @@
 # AImpactScanner MVP - Progress Log
 
+## September 28, 2025 - CRITICAL AUTH BUG FIX
+
+### Mission: Fix Login Redirect Blocking Bug
+**Status**: COMPLETE ✅
+**Time**: 20:30 - 21:00 UTC
+
+#### Critical Issue Resolved
+
+##### Authentication Success but Users Stuck on Landing Page
+**Problem**: Users successfully authenticate but are redirected back to landing page instead of dashboard
+**Impact**: CRITICAL - Users cannot access the application after login
+
+**Console Evidence**:
+1. "✅ Authentication successful for user: [user-id]"
+2. "🎯 Returning user → redirecting to dashboard" 
+3. BUT "👁️ Tab not visible - skipping auth state change processing" (blocking messages)
+4. User ends up back at landing page, not dashboard
+
+**Root Cause**: Tab visibility checks were too aggressive and blocked legitimate authentication flows
+- Line 272: `if (isTabVisible === false)` blocked ALL auth processing when tab not visible
+- This prevented the auth state change handler from redirecting users to dashboard
+- Race condition between tab visibility detection and authentication state changes
+
+**Solution**:
+- Modified auth state change handler to only block when **both** tab recently hidden AND auth change in progress
+- Updated fetchUserTier to only block when **both** recent hiding and duplicate fetch detected
+- Allows legitimate login flows while preserving duplicate call prevention
+- Changed condition from simple `isTabVisible === false` to multi-factor check
+
+**Files Updated**: 
+- `src/App.jsx` (lines 272-275, 438-441)
+
+**Testing**:
+- Created comprehensive test scenarios covering normal auth flows and edge cases
+- Verified all legitimate login flows now properly redirect to dashboard
+- Confirmed duplicate call prevention still works when actually needed
+
+---
+
 ## September 28, 2025 - Account Page Real Data Integration
 
 ### Mission: Fix Account Page Data Display and Subscription Management
