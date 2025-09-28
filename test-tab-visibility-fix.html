@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab Visibility Fix Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .log {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .test-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Tab Visibility Fix Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Scenario</h2>
+        <p>This test simulates the dashboard white-out issue when clicking external links.</p>
+        <ol>
+            <li>Open the AImpactScanner dashboard in another tab</li>
+            <li>Sign in and navigate to the dashboard</li>
+            <li>Click one of the test links below to open an external site</li>
+            <li>Return to the dashboard tab</li>
+            <li>Check if the dashboard displays correctly without white-out</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Links (Open in New Tab)</h2>
+        <a href="https://freecalchub.com" target="_blank" class="test-link">Open FreecalcHub.com</a>
+        <a href="https://example.com" target="_blank" class="test-link">Open Example.com</a>
+        <a href="https://google.com" target="_blank" class="test-link">Open Google.com</a>
+    </div>
+
+    <div class="test-section">
+        <h2>Expected Console Output</h2>
+        <p>When switching tabs, you should see these console logs:</p>
+        <div class="log">
+            🔍 Tab visibility changed: HIDDEN (change #1)<br>
+            💨 Window lost focus<br>
+            ⏱️ Tab was hidden for XXXms<br>
+            🔍 Tab visibility changed: VISIBLE (change #2)<br>
+            🎯 Window gained focus<br>
+            👁️ Tab not visible - skipping auth state change processing<br>
+            👁️ Tab not visible - skipping history load<br>
+            👁️ Tab recently hidden - skipping user tier fetch to prevent duplicates<br>
+            🔄 useUserInitializer: Skipping duplicate initialization for user: XXX
+        </div>
+    </div>
+
+    <div class="test-section success">
+        <h2>✅ Success Indicators</h2>
+        <ul>
+            <li>Dashboard loads without white-out when returning from external tab</li>
+            <li>No duplicate "Loading analysis history" messages in console</li>
+            <li>UserInitializer doesn't re-trigger when returning to tab</li>
+            <li>No duplicate API calls visible in Network tab</li>
+            <li>Smooth transition when switching between tabs</li>
+        </ul>
+    </div>
+
+    <div class="test-section warning">
+        <h2>⚠️ Previous Issues (Should Not Occur)</h2>
+        <ul>
+            <li>White-out/blank screen when returning to dashboard</li>
+            <li>Multiple "Loading analysis history" messages</li>
+            <li>"Skipping duplicate initialization" appearing multiple times</li>
+            <li>404 errors for get_user_data RPC function</li>
+            <li>Duplicate network requests when tab regains focus</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Test Steps</h2>
+        <button onclick="window.open('http://localhost:5173', '_blank')">1. Open Dashboard</button>
+        <button onclick="alert('Sign in with: jamie.watters.mail@icloud.com')">2. Get Test Credentials</button>
+        <button onclick="window.open('https://freecalchub.com', '_blank')">3. Open External Site</button>
+        <button onclick="alert('Switch back to dashboard tab and check for white-out')">4. Check Dashboard</button>
+    </div>
+
+    <script>
+        // Monitor tab visibility for testing
+        document.addEventListener('visibilitychange', () => {
+            console.log(`Tab visibility: ${document.hidden ? 'HIDDEN' : 'VISIBLE'}`);
+        });
+        
+        window.addEventListener('focus', () => {
+            console.log('Window gained focus');
+        });
+        
+        window.addEventListener('blur', () => {
+            console.log('Window lost focus');
+        });
+    </script>
+</body>
+</html>

@@ -32,6 +32,7 @@ import UserInitializer from './components/UserInitializer';
 import AnalysisHistory from './components/AnalysisHistory';
 import { useUpgrade } from './components/UpgradeHandler';
 import { useUsageTracking } from './hooks/useUsageTracking';
+import { useTabVisibility } from './hooks/useTabVisibility';
 import AuthenticatedHeader from './components/AuthenticatedHeader';
 import AILogo from './components/AILogo';
 import PrivacyPolicyPage from './components/PrivacyPolicyPage.jsx';
@@ -114,6 +115,9 @@ function AppContent() {
     setUnlimitedAccess,
     resetMonthlyUsage
   } = useUsageTracking(session?.user?.email);
+
+  // Tab visibility tracking
+  const { isTabVisible, wasRecentlyHidden } = useTabVisibility();
 
   // Track page views when current view changes
   useEffect(() => {
@@ -262,6 +266,12 @@ function AppContent() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       const currentTime = Date.now();
+      
+      // Skip auth state processing if tab is not visible (user switched tabs)
+      if (!isTabVisible) {
+        console.log('👁️ Tab not visible - skipping auth state change processing');
+        return;
+      }
       
       // Debounce rapid auth state changes
       if (authStateChangeInProgress.current || (currentTime - lastAuthStateChange.current) < AUTH_DEBOUNCE_DELAY) {
@@ -422,6 +432,12 @@ function AppContent() {
   }, []);
 
   const fetchUserTier = async (userId, userEmail = null, userSession = null) => {
+    // Skip fetching if tab is not visible (prevents duplicate calls when returning to tab)
+    if (!isTabVisible && wasRecentlyHidden()) {
+      console.log('👁️ Tab recently hidden - skipping user tier fetch to prevent duplicates');
+      return;
+    }
+    
     // Performance optimization: Prevent duplicate calls for same user
     if (fetchingUsers.current.has(userId)) {
       console.log('🔄 Already fetching user tier for:', userId, '- skipping duplicate call');
@@ -1336,8 +1352,8 @@ function AppContent() {
         }}
       />
 
-      {/* Only show UserInitializer if we have a session and not viewing results from a pending analysis */}
-      {session && currentView !== 'results' && (
+      {/* Only show UserInitializer if we have a session, tab is visible, and not viewing results from a pending analysis */}
+      {session && currentView !== 'results' && isTabVisible && (
         <UserInitializer session={session} onUserReady={handleUserReady} />
       )}
 

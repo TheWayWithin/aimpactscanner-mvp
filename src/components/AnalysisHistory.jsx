@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { useTabVisibility } from '../hooks/useTabVisibility';
 
 const AnalysisHistory = ({ onViewAnalysis }) => {
   const [history, setHistory] = useState([]);
@@ -14,10 +15,27 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
   const [scoreFilter, setScoreFilter] = useState('all'); // all, excellent, good, needs-work
   const [filteredHistory, setFilteredHistory] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
+  const lastLoadTime = useRef(0);
+  
+  // Tab visibility tracking
+  const { isTabVisible } = useTabVisibility();
 
   useEffect(() => {
     // Get current session and listen for auth changes
     const initSession = async () => {
+      // Skip if tab is not visible
+      if (!isTabVisible) {
+        console.log('👁️ Tab not visible - skipping history load');
+        return;
+      }
+      
+      // Prevent duplicate loads within 2 seconds
+      const timeSinceLast = Date.now() - lastLoadTime.current;
+      if (timeSinceLast < 2000) {
+        console.log('⏳ Skipping history load - too recent:', timeSinceLast + 'ms');
+        return;
+      }
+      
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
       if (session?.user) {
@@ -30,6 +48,12 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
     initSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      // Skip auth state processing if tab is not visible
+      if (!isTabVisible) {
+        console.log('👁️ Tab not visible - skipping history auth state change');
+        return;
+      }
+      
       setSession(session);
       if (session?.user) {
         loadHistory(session.user.id);
@@ -39,7 +63,7 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [isTabVisible]);
 
   // Filter and search functionality
   useEffect(() => {
@@ -98,6 +122,8 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
   }, [history, searchTerm, dateFilter, scoreFilter]);
 
   const loadHistory = async (userId, loadMore = false) => {
+    lastLoadTime.current = Date.now();
+    
     if (!userId) {
       loadLocalStorageHistory();
       return;

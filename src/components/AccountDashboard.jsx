@@ -1,24 +1,36 @@
 // AccountDashboard.jsx - Account and billing management component
 // Shows subscription details, usage, and billing management
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useUsageTracking } from '../hooks/useUsageTracking';
 import { getActualUserTier, getTierDisplayInfo, syncUserTier } from '../lib/tierUtils';
+import { useTabVisibility } from '../hooks/useTabVisibility';
 
 const AccountDashboard = ({ user, className = '' }) => {
   const [accountData, setAccountData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const lastFetchTime = useRef(0);
   
   // Use the same client-side usage tracking as the main app
   const { usageData } = useUsageTracking(user?.email);
+  
+  // Tab visibility tracking
+  const { isTabVisible } = useTabVisibility();
 
   useEffect(() => {
-    if (user?.id) {
+    // Only fetch data if tab is visible and user exists
+    if (user?.id && isTabVisible) {
+      // Prevent duplicate fetches within 2 seconds
+      const timeSinceLast = Date.now() - lastFetchTime.current;
+      if (timeSinceLast < 2000) {
+        console.log('⏳ Skipping account data fetch - too recent:', timeSinceLast + 'ms');
+        return;
+      }
       fetchAccountData();
     }
-  }, [user]);
+  }, [user, isTabVisible]);
 
   const handleManageSubscription = async () => {
     try {
@@ -50,6 +62,7 @@ const AccountDashboard = ({ user, className = '' }) => {
 
   const fetchAccountData = async () => {
     try {
+      lastFetchTime.current = Date.now();
       setLoading(true);
       setError(null);
 

@@ -10,11 +10,19 @@ export const useUserInitializer = (session) => {
   // Performance optimization: Prevent duplicate initialization
   const initializationAttempted = useRef(false);
   const currentUserId = useRef(null);
+  const lastInitTime = useRef(0);
 
   useEffect(() => {
     if (session?.user?.id) {
       // Initialize fallback data for known users
       initializeFallbackData();
+      
+      // Skip if tab was recently switched (within 1 second)
+      const timeSinceLastInit = Date.now() - lastInitTime.current;
+      if (timeSinceLastInit < 1000) {
+        console.log('🔄 useUserInitializer: Skipping - too soon after last init:', timeSinceLastInit + 'ms');
+        return;
+      }
       
       // Performance optimization: Prevent duplicate initialization for same user
       if (currentUserId.current === session.user.id && initializationAttempted.current) {
@@ -24,6 +32,7 @@ export const useUserInitializer = (session) => {
       
       currentUserId.current = session.user.id;
       initializationAttempted.current = true;
+      lastInitTime.current = Date.now();
       initializeUser();
     }
   }, [session]);
