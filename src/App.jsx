@@ -267,10 +267,10 @@ function AppContent() {
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       const currentTime = Date.now();
       
-      // Skip auth state processing if tab is not visible (user switched tabs)
-      // Check if isTabVisible is defined and false (not just falsy)
-      if (isTabVisible === false) {
-        console.log('👁️ Tab not visible - skipping auth state change processing');
+      // CRITICAL FIX: Only skip processing if tab was recently hidden AND we're processing rapid changes
+      // Don't block initial auth flows or legitimate login processes
+      if (isTabVisible === false && wasRecentlyHidden && wasRecentlyHidden() && authStateChangeInProgress.current) {
+        console.log('👁️ Tab recently hidden and auth change in progress - skipping to prevent duplicates');
         return;
       }
       
@@ -433,10 +433,10 @@ function AppContent() {
   }, []);
 
   const fetchUserTier = async (userId, userEmail = null, userSession = null) => {
-    // Skip fetching if tab is not visible (prevents duplicate calls when returning to tab)
-    // Only skip if explicitly false, not undefined
-    if (isTabVisible === false && wasRecentlyHidden && wasRecentlyHidden()) {
-      console.log('👁️ Tab recently hidden - skipping user tier fetch to prevent duplicates');
+    // CRITICAL FIX: Only skip if tab was recently hidden AND we're making duplicate calls
+    // Don't block initial auth flows or legitimate data fetching
+    if (isTabVisible === false && wasRecentlyHidden && wasRecentlyHidden() && fetchingUsers.current.has(userId)) {
+      console.log('👁️ Tab recently hidden and already fetching - skipping user tier fetch to prevent duplicates');
       return;
     }
     
