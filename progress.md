@@ -1,5 +1,48 @@
 # AImpactScanner MVP - Progress Log
 
+## September 28, 2025 - Account Page Real Data Integration
+
+### Mission: Fix Account Page Data Display and Subscription Management
+**Status**: COMPLETE
+**Time**: 18:30 - 19:00 UTC
+
+#### Issues Resolved
+
+##### 1. "Analyses Used This Month" Showing 0 ✅
+**Problem**: Account page always showed 0 analyses regardless of actual usage
+**Root Cause**: Only using localStorage tracking, not fetching real database count
+
+**Solution**:
+- Added database query to fetch actual monthly analysis count
+- Queries `analyses` table filtered by current month and user_id
+- Falls back to localStorage if database unavailable
+- Uses `count` aggregate with `head: true` for efficiency
+
+**File Updated**: SimpleAccountDashboard.jsx
+
+##### 2. "Manage Subscription" Button Not Working ✅
+**Problem**: Clicking button did nothing, no portal opened
+**Root Cause**: Edge Function `create-portal-session` was not deployed
+
+**Solution**:
+- Deployed the Edge Function to Supabase
+- Function creates Stripe Customer Portal sessions
+- Allows users to manage subscriptions, update payment, cancel
+
+**Deployment**: `npx supabase functions deploy create-portal-session`
+
+#### Technical Details
+- Database query uses current month start date for filtering
+- Stripe customer ID correctly stored in `users` table
+- Portal session returns URL for redirect to Stripe
+
+#### Deployment Status
+✅ Edge Function deployed to Supabase
+✅ Account page updated with real data fetching
+✅ All changes committed and pushed to GitHub
+
+---
+
 ## September 28, 2025 - Dashboard Persistence & Display Issues
 
 ### Mission: Fix Dashboard Analysis History Issues

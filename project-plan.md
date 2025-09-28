@@ -12,6 +12,8 @@
 - [x] Increased database insert timeout from 5s to 15s
 - [x] Replaced hardcoded issues with real recommendations extraction
 - [x] Added timezone indicators to all timestamps
+- [x] Fixed "Analyses Used This Month" showing real database count
+- [x] Fixed "Manage Subscription" button by deploying Edge Function
 
 ## Previous Mission: Dashboard Enhancement ✅
 ## Date: 2025-09-25 - 2025-09-26
