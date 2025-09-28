@@ -55,11 +55,19 @@ export function getDomainFromUrl(url) {
   // First normalize the URL
   url = normalizeUrl(url);
   
-  // Remove protocol and www
-  return url
-    .replace(/^https?:\/\/(www\.)?/, '')
-    .replace(/^https?\/\/:?(www\.)?/, '') // Also handle malformed protocols
-    .split('/')[0]; // Get just the domain part
+  // Remove protocol and www - handle both correct and malformed formats
+  let domain = url
+    .replace(/^https?:\/\/(www\.)?/, '') // Remove correct protocol
+    .replace(/^https?\/\/:?(www\.)?/, '') // Remove malformed protocol like https//:
+    .replace(/^:+/, ''); // Remove any leading colons
+  
+  // Get just the domain part (before any path)
+  domain = domain.split('/')[0];
+  
+  // Final cleanup - remove any remaining protocol artifacts
+  domain = domain.replace(/^:+(www\.)?/, '');
+  
+  return domain;
 }
 
 /**
