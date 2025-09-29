@@ -236,27 +236,46 @@ function AppContent() {
   }, []);  // Only run once on mount
   
   useEffect(() => {
+    // CRITICAL FIX: Show landing page immediately, check auth in background
+    // This prevents the 17-second delay by not blocking render on auth check
+    
     // Check URL path for login route
     if (window.location.pathname === '/login') {
       setCurrentView('login');
       // Clear URL to prevent issues with navigation
       window.history.replaceState({}, document.title, window.location.pathname);
+      return; // Exit early for login page
     }
+    
+    // For all other routes, show landing page first, then check auth
+    if (currentView === 'landing') {
+      // Already on landing, just check auth in background
+      checkAuthInBackground();
+    } else {
+      // Set to landing immediately for fast render
+      setCurrentView('landing');
+      // Then check auth
+      checkAuthInBackground();
+    }
+  }, []);
 
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+  // Separate function to check auth without blocking render
+  const checkAuthInBackground = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
       if (session && session.user) {
         setSession(session);
         
-        
-        fetchUserTier(session.user.id, session.user.email);
+        // Fetch user tier in background (non-blocking)
+        fetchUserTier(session.user.id, session.user.email).catch(err => {
+          console.warn('Failed to fetch user tier:', err);
+          setUserTier('free'); // Fallback
+        });
         
         // Check if there's a pending analysis from landing page
         const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
         const pendingId = localStorage.getItem('pendingAnalysisId');
         const landingData = localStorage.getItem('landingAnalysisData');
-        
-        // Check for pending analysis from landing page
         
         if (pendingUrl && pendingId && landingData && !pendingAnalysisProcessed.current) {
           console.log('✅ Initial session: Found pending analysis, redirecting to results');
@@ -280,8 +299,15 @@ function AppContent() {
           setCurrentView('dashboard');
         }
       }
-    });
+      // If no session, landing page is already showing
+    } catch (error) {
+      console.warn('Background auth check failed:', error);
+      // Landing page is already showing, so no need to change view
+    }
+  };
 
+  // Separate useEffect for auth state listener to avoid blocking initial render
+  useEffect(() => {
     // Listen for auth state changes with debouncing
     const {
       data: { subscription },

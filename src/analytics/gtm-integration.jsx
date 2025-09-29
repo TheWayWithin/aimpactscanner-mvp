@@ -38,16 +38,33 @@ export const useGTMTracking = () => {
       gtmScript.defer = true; // Defer execution for better performance
       gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${gtmId}`;
       
-      // Use requestIdleCallback for non-critical loading if available
+      // CRITICAL FIX: Delay GTM loading until after LCP to prevent 17s delay
       const loadGTM = () => {
-        const firstScript = document.getElementsByTagName('script')[0];
-        firstScript.parentNode.insertBefore(gtmScript, firstScript);
+        // Don't load GTM immediately - wait for critical content first
+        if (window.requestIdleCallback) {
+          window.requestIdleCallback(() => {
+            const firstScript = document.getElementsByTagName('script')[0];
+            firstScript.parentNode.insertBefore(gtmScript, firstScript);
 
-        // GTM initialization with performance marks
-        window.dataLayer.push({
-          'gtm.start': new Date().getTime(),
-          event: 'gtm.js'
-        });
+            // GTM initialization with performance marks
+            window.dataLayer.push({
+              'gtm.start': new Date().getTime(),
+              event: 'gtm.js'
+            });
+          }, { timeout: 5000 });
+        } else {
+          // Fallback - delay GTM by 3 seconds minimum
+          setTimeout(() => {
+            const firstScript = document.getElementsByTagName('script')[0];
+            firstScript.parentNode.insertBefore(gtmScript, firstScript);
+
+            // GTM initialization with performance marks
+            window.dataLayer.push({
+              'gtm.start': new Date().getTime(),
+              event: 'gtm.js'
+            });
+          }, 3000);
+        }
         
         // Mark GTM as loaded for Core Web Vitals tracking
         if ('performance' in window) {

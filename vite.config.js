@@ -3,6 +3,26 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import { visualizer } from 'rollup-plugin-visualizer'
 
+// Custom plugin to prevent preloading of large vendor chunks
+function preventLargeChunkPreload() {
+  return {
+    name: 'prevent-large-chunk-preload',
+    transformIndexHtml(html) {
+      // Remove modulepreload for large chunks that block LCP
+      return html.replace(
+        /<link rel="modulepreload"[^>]*vendor-jspdf[^>]*>/g,
+        '<!-- jsPDF preload removed for LCP optimization -->'
+      ).replace(
+        /<link rel="modulepreload"[^>]*html2canvas[^>]*>/g,
+        '<!-- html2canvas preload removed for LCP optimization -->'
+      ).replace(
+        /<link rel="modulepreload"[^>]*vendor-misc[^>]*>/g,
+        '<!-- vendor-misc preload deferred for LCP optimization -->'
+      )
+    }
+  }
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -10,6 +30,7 @@ export default defineConfig({
       // Optimize React-specific performance
       fastRefresh: true
     }),
+    preventLargeChunkPreload(), // CRITICAL FIX: Remove large chunk preloads
     visualizer({
       filename: 'bundle-analysis.html',
       open: false,
@@ -39,7 +60,7 @@ export default defineConfig({
             return 'vendor-supabase'
           }
           
-          // PDF generation libraries (split for better loading)
+          // PDF generation libraries (split for better loading and lazy load only when needed)
           if (id.includes('jspdf')) {
             return 'vendor-jspdf'
           }
@@ -47,8 +68,8 @@ export default defineConfig({
             return 'vendor-html2canvas'
           }
           
-          // Large third-party libraries that should be separate
-          if (id.includes('dompurify')) {
+          // Additional performance optimization for large dependencies
+          if (id.includes('dompurify') || id.includes('purify')) {
             return 'vendor-dompurify'
           }
           
@@ -71,7 +92,7 @@ export default defineConfig({
           }
           return 'assets/[name]-[hash].js'
         }
-      }
+      },
     },
     // Terser configuration for better minification
     terserOptions: {
@@ -89,6 +110,13 @@ export default defineConfig({
   optimizeDeps: {
     include: ['react', 'react-dom', '@supabase/supabase-js'],
     exclude: ['jspdf', 'html2canvas'] // These are large and should be code-split
+  },
+  
+  // CRITICAL: Performance optimization for production builds
+  define: {
+    // Remove development code in production
+    __DEV__: JSON.stringify(false),
+    'process.env.NODE_ENV': JSON.stringify('production'),
   },
   // Additional performance optimizations
   server: {

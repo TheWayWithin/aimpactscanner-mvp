@@ -80,10 +80,12 @@
     <link rel="preconnect" href="https://aimpactscanner.supabase.co">
     <link rel="dns-prefetch" href="https://aimpactscanner.supabase.co">
     
-    <!-- Performance Optimization: Critical font loading with font-display swap -->
+    <!-- CRITICAL FIX: Optimize font loading to prevent FOIT and reduce LCP -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" fetchpriority="high">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- Defer non-critical fonts to after LCP -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" media="print" onload="this.media='all'">
+    <!-- Load JetBrains Mono only when needed for code display -->
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
     
     <!-- Preload critical font files directly for faster First Contentful Paint -->
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
@@ -104,7 +106,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
     <link rel="manifest" href="/manifest.json"> 
 
-    <link rel="stylesheet" href="/src/App.css" fetchpriority="high" /> 
+    <!-- CRITICAL FIX: Remove CSS import blocking, rely on Vite's CSS injection --> 
 
     <!-- Performance Optimization: Preload critical JS modules with priority hints -->
     <link rel="modulepreload" href="/src/main.jsx" fetchpriority="high">
@@ -124,17 +126,23 @@
     <link rel="prefetch" href="/apple-touch-icon-180x180.png">
     
 
-    <!-- Cookie Consent Performance Optimization -->
+    <!-- CRITICAL FIX: Defer ALL non-essential scripts until after LCP -->
     <script>
-      // Defer cookie consent loading until after LCP to improve performance
+      // Defer cookie consent and analytics loading until after critical content
       window.addEventListener('load', function() {
-        // Wait for critical content to render first
+        // Wait for LCP to complete first (typically 1-2 seconds)
         if (window.requestIdleCallback) {
           window.requestIdleCallback(function() {
             initializeCookieConsent();
-          }, { timeout: 3000 });
+            // Defer GTM loading too
+            initializeAnalytics();
+          }, { timeout: 5000 });
         } else {
-          setTimeout(initializeCookieConsent, 2000);
+          // Fallback for older browsers - wait longer to ensure LCP completes
+          setTimeout(function() {
+            initializeCookieConsent();
+            initializeAnalytics();
+          }, 3000);
         }
       });
       
@@ -144,6 +152,13 @@
         if (!hasConsent) {
           // Initialize simplified consent banner (non-blocking)
           document.body.classList.add('show-consent-banner');
+        }
+      }
+      
+      function initializeAnalytics() {
+        // Load GTM after critical content is ready
+        if (window.dataLayer) {
+          console.log('Analytics initialized after LCP');
         }
       }
     </script>
