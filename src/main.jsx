@@ -5,8 +5,29 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 // import App from './AppNew.jsx' // Testing new conversion flow
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+// Progressive enhancement - transition from static to React
+const initReactApp = () => {
+  // Check if there's a pending URL from static interaction
+  const pendingUrl = window.__pendingUrl;
+  
+  // Create React root
+  const root = createRoot(document.getElementById('root'));
+  
+  // Render React app
+  root.render(
+    <StrictMode>
+      <App initialUrl={pendingUrl} />
+    </StrictMode>
+  );
+  
+  // Transition from static to React
+  if (window.__showReactRoot) {
+    // Small delay to ensure React is ready
+    requestAnimationFrame(() => {
+      window.__showReactRoot();
+    });
+  }
+};
+
+// Initialize immediately
+initReactApp();

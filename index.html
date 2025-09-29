@@ -442,10 +442,103 @@
 
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Static Hero for Instant LCP (16.6s → <2.5s) -->
+    <div id="static-hero" class="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <div class="container mx-auto px-4 py-8">
+        <!-- Static Navigation -->
+        <nav class="flex items-center justify-between mb-12">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl font-bold text-blue-600">⚡</span>
+            <span class="text-xl font-semibold text-gray-800">AImpactScanner</span>
+          </div>
+        </nav>
+        
+        <!-- Hero Content - Immediate LCP -->
+        <div class="max-w-4xl mx-auto text-center pt-12">
+          <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+            Is AI Stealing Your Traffic?
+          </h1>
+          <p class="text-xl text-gray-600 mb-8">
+            Find out in seconds how AI search engines see your website
+          </p>
+          
+          <!-- Static Form -->
+          <div class="max-w-2xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-4">
+              <input 
+                type="url" 
+                placeholder="Enter your website URL (e.g., example.com)"
+                class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                id="static-url-input"
+              />
+              <button 
+                class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                id="static-analyze-btn"
+                onclick="window.__pendingUrl = document.getElementById('static-url-input').value; this.textContent = 'Loading...'; this.disabled = true;"
+              >
+                Analyze My Site →
+              </button>
+            </div>
+          </div>
+          
+          <!-- Trust Indicators -->
+          <div class="mt-12 flex flex-wrap items-center justify-center gap-8 text-gray-600">
+            <span class="flex items-center gap-2">
+              <span>✓</span> Free Analysis
+            </span>
+            <span class="flex items-center gap-2">
+              <span>✓</span> No Sign-up Required
+            </span>
+            <span class="flex items-center gap-2">
+              <span>✓</span> 15-Factor AI Framework
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
     
-    <!-- Optimized script loading for better TTI -->
-    <script type="module" src="/src/main.jsx"></script>
+    <!-- React Root (Hidden Initially) -->
+    <div id="root" style="display: none;"></div>
+    
+    <!-- Progressive Enhancement Script -->
+    <script>
+      // Capture any user interactions before React loads
+      window.__pendingUrl = null;
+      window.__reactReady = false;
+      
+      // Function to transition from static to React
+      window.__showReactRoot = function() {
+        const staticHero = document.getElementById('static-hero');
+        const reactRoot = document.getElementById('root');
+        
+        if (staticHero && reactRoot) {
+          // Immediate switch for performance
+          staticHero.style.display = 'none';
+          reactRoot.style.display = 'block';
+        }
+        
+        window.__reactReady = true;
+      };
+    </script>
+    
+    <!-- Progressive React Loading for Optimal Performance -->
+    <script type="module">
+      // Load React after critical content is rendered
+      if (window.requestIdleCallback) {
+        requestIdleCallback(() => {
+          import('/src/main.jsx').then(() => {
+            console.log('🚀 React application loaded');
+          });
+        }, { timeout: 2000 }); // Load within 2s max
+      } else {
+        // Immediate fallback for older browsers
+        setTimeout(() => {
+          import('/src/main.jsx').then(() => {
+            console.log('🚀 React application loaded');
+          });
+        }, 50);
+      }
+    </script>
     
     <!-- Critical path optimization script -->
     <script>

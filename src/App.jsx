@@ -58,7 +58,7 @@ const ComponentLoader = React.memo(({ message = "Loading..." }) => (
   </div>
 ));
 
-function AppContent() {
+function AppContent({ initialUrl }) {
   // Initialize performance monitoring
   usePerformanceMonitoring();
   
@@ -66,6 +66,16 @@ function AppContent() {
   useEffect(() => {
     initializeFallbackData();
   }, []);
+
+  // Handle initial URL from static hero
+  useEffect(() => {
+    if (initialUrl && !pendingAnalysisProcessed.current) {
+      // Set the URL in the state for analysis
+      setCurrentUrl(initialUrl);
+      // Mark that we have a pending analysis from the static hero
+      setPendingAnalysis({ url: initialUrl, fromStaticHero: true });
+    }
+  }, [initialUrl]);
 
   const [session, setSession] = useState(null);
   const [currentView, setCurrentViewInternal] = useState('landing'); // Start with landing page
@@ -1567,7 +1577,15 @@ function AppContent() {
 }
 
 // Main App component with GTM and Enzuzo integration
-function App() {
+function App({ initialUrl }) {
+  // Handle initial URL from static hero interaction
+  useEffect(() => {
+    if (initialUrl) {
+      // Store the initial URL for processing after React is ready
+      window.__initialUrlFromStatic = initialUrl;
+    }
+  }, [initialUrl]);
+
   return (
     <>
       {/* Performance Optimizer - Critical path optimization */}
@@ -1580,7 +1598,7 @@ function App() {
       {/* <EnzuzoIntegration /> */}
       
       {/* Main app content */}
-      <AppContent />
+      <AppContent initialUrl={initialUrl} />
     </>
   );
 }
