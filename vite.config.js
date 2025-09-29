@@ -3,22 +3,45 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import { visualizer } from 'rollup-plugin-visualizer'
 
-// Custom plugin to prevent preloading of large vendor chunks
+// Enhanced plugin to prevent ALL vendor preloads for maximum performance
 function preventLargeChunkPreload() {
   return {
     name: 'prevent-large-chunk-preload',
     transformIndexHtml(html) {
-      // Remove modulepreload for large chunks that block LCP
-      return html.replace(
-        /<link rel="modulepreload"[^>]*vendor-jspdf[^>]*>/g,
-        '<!-- jsPDF preload removed for LCP optimization -->'
-      ).replace(
-        /<link rel="modulepreload"[^>]*html2canvas[^>]*>/g,
-        '<!-- html2canvas preload removed for LCP optimization -->'
-      ).replace(
-        /<link rel="modulepreload"[^>]*vendor-misc[^>]*>/g,
-        '<!-- vendor-misc preload deferred for LCP optimization -->'
-      )
+      // Count how many preloads we're removing for logging
+      const vendorMatches = html.match(/<link rel="modulepreload"[^>]*vendor[^>]*>/g) || [];
+      const pdfMatches = html.match(/<link rel="modulepreload"[^>]*(pdf|PDF)[^>]*>/g) || [];
+      const lazyMatches = html.match(/<link rel="modulepreload"[^>]*(Lazy|lazy)[^>]*>/g) || [];
+      
+      console.log(`🚀 Removing ${vendorMatches.length} vendor preloads for performance`);
+      console.log(`📄 Removing ${pdfMatches.length} PDF-related preloads`);
+      console.log(`💤 Removing ${lazyMatches.length} lazy component preloads`);
+      
+      // Remove ALL vendor preloads - they'll be loaded on-demand
+      let optimizedHtml = html
+        // Remove all vendor-* preloads (jspdf, misc, react, supabase, etc.)
+        .replace(/<link rel="modulepreload"[^>]*vendor[^>]*>/g, 
+                '<!-- vendor preload removed for performance -->')
+        // Remove PDF-related preloads
+        .replace(/<link rel="modulepreload"[^>]*(pdf|PDF)[^>]*>/g,
+                '<!-- PDF preload removed - loads on-demand -->')
+        // Remove html2canvas preloads
+        .replace(/<link rel="modulepreload"[^>]*html2canvas[^>]*>/g,
+                '<!-- html2canvas preload removed -->')
+        // Remove lazy-loaded component preloads (defeats the purpose of lazy loading!)
+        .replace(/<link rel="modulepreload"[^>]*(Lazy|lazy)[^>]*>/g,
+                '<!-- lazy component preload removed -->')
+        // Remove any analysis/results component preloads (loaded after analysis)
+        .replace(/<link rel="modulepreload"[^>]*(Analysis|Results|Dashboard)[^>]*>/g,
+                '<!-- component preload deferred -->')
+        // Remove auth-related preloads (only needed on login)
+        .replace(/<link rel="modulepreload"[^>]*(Auth|Login|Registration)[^>]*>/g,
+                '<!-- auth component preload deferred -->');
+      
+      // Keep only critical app preloads: index.js, App.jsx, Landing.jsx
+      // These are essential for initial render
+      
+      return optimizedHtml;
     }
   }
 }

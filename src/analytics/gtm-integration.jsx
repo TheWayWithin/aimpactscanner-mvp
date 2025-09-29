@@ -10,24 +10,27 @@ export const useGTMTracking = () => {
   const initializeGTM = (gtmId) => {
     if (typeof window === 'undefined') return;
 
-    // Initialize dataLayer first
-    window.dataLayer = window.dataLayer || [];
+    // Check if consent stub already initialized (from index.html)
+    if (!window.__gtmConsentInitialized) {
+      console.warn('⚠️ GTM consent stub not found, initializing backup');
+      // Backup initialization if stub wasn't loaded
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function() { window.dataLayer.push(arguments); };
+      window.gtag('consent', 'default', {
+        'analytics_storage': 'denied',
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'functionality_storage': 'granted',
+        'security_storage': 'granted'
+      });
+    }
     
-    // Set default consent state (denied by default for GDPR compliance)
+    // DataLayer is already initialized from consent stub
+    window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'gtm.init_start',
       gtm_container_id: gtmId
-    });
-    
-    // Initialize Google Consent Mode (deny by default)
-    window.gtag = window.gtag || function() { window.dataLayer.push(arguments); };
-    window.gtag('consent', 'default', {
-      'analytics_storage': 'denied',
-      'ad_storage': 'denied',
-      'ad_user_data': 'denied',
-      'ad_personalization': 'denied',
-      'functionality_storage': 'granted', // Essential for site function
-      'security_storage': 'granted' // Essential for site function
     });
     
     // Only inject GTM script if not already present
@@ -38,50 +41,42 @@ export const useGTMTracking = () => {
       gtmScript.defer = true; // Defer execution for better performance
       gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${gtmId}`;
       
-      // CRITICAL FIX: Delay GTM loading until after LCP to prevent 17s delay
+      // ENHANCED PERFORMANCE: Progressive GTM loading strategy
       const loadGTM = () => {
-        // Don't load GTM immediately - wait for critical content first
-        if (window.requestIdleCallback) {
-          window.requestIdleCallback(() => {
-            const firstScript = document.getElementsByTagName('script')[0];
-            firstScript.parentNode.insertBefore(gtmScript, firstScript);
-
-            // GTM initialization with performance marks
-            window.dataLayer.push({
-              'gtm.start': new Date().getTime(),
-              event: 'gtm.js'
-            });
-          }, { timeout: 5000 });
-        } else {
-          // Fallback - delay GTM by 3 seconds minimum
-          setTimeout(() => {
-            const firstScript = document.getElementsByTagName('script')[0];
-            firstScript.parentNode.insertBefore(gtmScript, firstScript);
-
-            // GTM initialization with performance marks
-            window.dataLayer.push({
-              'gtm.start': new Date().getTime(),
-              event: 'gtm.js'
-            });
-          }, 3000);
+        // Only load if not already loaded
+        if (window.__gtmScriptLoaded) {
+          console.log('📡 GTM already loaded, skipping');
+          return;
         }
+        
+        const firstScript = document.getElementsByTagName('script')[0];
+        firstScript.parentNode.insertBefore(gtmScript, firstScript);
+        window.__gtmScriptLoaded = true;
+
+        // GTM initialization with performance marks
+        window.dataLayer.push({
+          'gtm.start': new Date().getTime(),
+          event: 'gtm.js'
+        });
         
         // Mark GTM as loaded for Core Web Vitals tracking
         if ('performance' in window) {
-          performance.mark('gtm-loaded');
+          performance.mark('gtm-full-loaded');
         }
 
-        console.log('🏷️ Google Tag Manager initialized with consent mode:', gtmId);
+        console.log('📡 Full GTM script loaded (107KB)');
       };
 
-      // PERFORMANCE OPTIMIZATION: Defer GTM loading until after critical content
-      // This prevents GTM (and any consent scripts) from blocking LCP
-      if (window.requestIdleCallback) {
-        window.requestIdleCallback(loadGTM, { timeout: 5000 }); // Increased timeout
-      } else {
-        // Use longer delay to ensure LCP content renders first
-        setTimeout(loadGTM, 3000); // 3 second delay for better LCP
-      }
+      // Stage 1: Initial delay of 2.5s for LCP optimization
+      setTimeout(() => {
+        // Stage 2: Load when browser is idle or after additional timeout
+        if (window.requestIdleCallback) {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          // Fallback without requestIdleCallback
+          setTimeout(loadGTM, 500);
+        }
+      }, 2500); // 2.5 second initial delay to match consent wait_for_update
     }
   };
 

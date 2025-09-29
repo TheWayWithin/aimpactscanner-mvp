@@ -1,7 +1,8 @@
 // New App with conversion-optimized flow
 import React, { useState, useEffect, useRef, useCallback, useMemo, Suspense } from 'react';
 import './App.css';
-import { supabase } from './lib/supabaseClient';
+// Use Supabase facade for initial auth, loads full SDK only when needed
+import { supabaseFacade as supabase } from './lib/supabaseFacade';
 import { initializeFallbackData } from './utils/userFallback';
 
 // Analytics and Privacy  
@@ -262,9 +263,11 @@ function AppContent() {
   // Separate function to check auth without blocking render
   const checkAuthInBackground = async () => {
     try {
+      // Use facade for lightweight auth check (5KB vs 29KB)
       const { data: { session } } = await supabase.auth.getSession();
       if (session && session.user) {
         setSession(session);
+        console.log('🚀 Using Supabase facade for auth check');
         
         // Fetch user tier in background (non-blocking)
         fetchUserTier(session.user.id, session.user.email).catch(err => {
