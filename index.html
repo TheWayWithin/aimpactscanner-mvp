@@ -87,9 +87,9 @@
     <!-- Load JetBrains Mono only when needed for code display -->
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
     
-    <!-- Preload critical font files directly for faster First Contentful Paint -->
+    <!-- Preload only critical Inter font for hero content -->
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
-    <link rel="preload" href="https://fonts.gstatic.com/s/sourcesanspro/v22/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7lujVj9w.woff2" as="font" type="font/woff2" crossorigin>
+    <!-- Source Sans Pro loaded on-demand to prevent unused preload warnings -->
     
     <!-- Fallback for no-JS -->
     <noscript>
@@ -170,12 +170,9 @@
       });
       
       function initializeCookieConsent() {
-        // Only load if consent not already given
-        const hasConsent = localStorage.getItem('gdpr-cookie-consent');
-        if (!hasConsent) {
-          // Initialize simplified consent banner (non-blocking)
-          document.body.classList.add('show-consent-banner');
-        }
+        // Skip - consent is handled by React SimpleConsentBanner component
+        // This prevents duplicate GDPR popups
+        console.log('Consent handling delegated to React component');
       }
       
       function initializeAnalytics() {

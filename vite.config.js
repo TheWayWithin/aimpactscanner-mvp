@@ -7,21 +7,27 @@ import { visualizer } from 'rollup-plugin-visualizer'
 function preventLargeChunkPreload() {
   return {
     name: 'prevent-large-chunk-preload',
+    enforce: 'post', // Run after all other plugins
     transformIndexHtml(html) {
       // Count how many preloads we're removing for logging
       const vendorMatches = html.match(/<link rel="modulepreload"[^>]*vendor[^>]*>/g) || [];
       const pdfMatches = html.match(/<link rel="modulepreload"[^>]*(pdf|PDF)[^>]*>/g) || [];
       const lazyMatches = html.match(/<link rel="modulepreload"[^>]*(Lazy|lazy)[^>]*>/g) || [];
+      const jsxMatches = html.match(/<link rel="(modulepreload|prefetch)"[^>]*\.jsx[^>]*>/g) || [];
       
       console.log(`🚀 Removing ${vendorMatches.length} vendor preloads for performance`);
       console.log(`📄 Removing ${pdfMatches.length} PDF-related preloads`);
       console.log(`💤 Removing ${lazyMatches.length} lazy component preloads`);
+      console.log(`⚡ Removing ${jsxMatches.length} .jsx references (MIME type fix)`);
       
       // Remove ALL vendor preloads - they'll be loaded on-demand
       let optimizedHtml = html
         // Remove all vendor-* preloads (jspdf, misc, react, supabase, etc.)
         .replace(/<link rel="modulepreload"[^>]*vendor[^>]*>/g, 
                 '<!-- vendor preload removed for performance -->')
+        // CRITICAL FIX: Remove base64-encoded modules that cause MIME type errors
+        .replace(/<link rel="modulepreload"[^>]*data:text\/[^>]*>/g,
+                '<!-- base64 module removed - MIME type error prevention -->')
         // Remove PDF-related preloads
         .replace(/<link rel="modulepreload"[^>]*(pdf|PDF)[^>]*>/g,
                 '<!-- PDF preload removed - loads on-demand -->')
@@ -31,6 +37,9 @@ function preventLargeChunkPreload() {
         // Remove lazy-loaded component preloads (defeats the purpose of lazy loading!)
         .replace(/<link rel="modulepreload"[^>]*(Lazy|lazy)[^>]*>/g,
                 '<!-- lazy component preload removed -->')
+        // CRITICAL FIX: Remove ALL .jsx references that cause MIME type errors in production
+        .replace(/<link rel="(modulepreload|prefetch)"[^>]*\.jsx[^>]*>/g,
+                '<!-- jsx reference removed - MIME type error prevention -->')
         // Remove any analysis/results component preloads (loaded after analysis)
         .replace(/<link rel="modulepreload"[^>]*(Analysis|Results|Dashboard)[^>]*>/g,
                 '<!-- component preload deferred -->')
