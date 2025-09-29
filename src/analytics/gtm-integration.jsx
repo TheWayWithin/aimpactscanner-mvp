@@ -32,21 +32,39 @@ export const useGTMTracking = () => {
     
     // Only inject GTM script if not already present
     if (!document.querySelector(`script[src*="gtm.js?id=${gtmId}"]`)) {
-      // GTM script injection
+      // GTM script injection with performance optimizations
       const gtmScript = document.createElement('script');
       gtmScript.async = true;
+      gtmScript.defer = true; // Defer execution for better performance
       gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${gtmId}`;
       
-      const firstScript = document.getElementsByTagName('script')[0];
-      firstScript.parentNode.insertBefore(gtmScript, firstScript);
+      // Use requestIdleCallback for non-critical loading if available
+      const loadGTM = () => {
+        const firstScript = document.getElementsByTagName('script')[0];
+        firstScript.parentNode.insertBefore(gtmScript, firstScript);
 
-      // GTM initialization
-      window.dataLayer.push({
-        'gtm.start': new Date().getTime(),
-        event: 'gtm.js'
-      });
+        // GTM initialization with performance marks
+        window.dataLayer.push({
+          'gtm.start': new Date().getTime(),
+          event: 'gtm.js'
+        });
+        
+        // Mark GTM as loaded for Core Web Vitals tracking
+        if ('performance' in window) {
+          performance.mark('gtm-loaded');
+        }
 
-      console.log('🏷️ Google Tag Manager initialized with consent mode:', gtmId);
+        console.log('🏷️ Google Tag Manager initialized with consent mode:', gtmId);
+      };
+
+      // PERFORMANCE OPTIMIZATION: Defer GTM loading until after critical content
+      // This prevents GTM (and any consent scripts) from blocking LCP
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(loadGTM, { timeout: 5000 }); // Increased timeout
+      } else {
+        // Use longer delay to ensure LCP content renders first
+        setTimeout(loadGTM, 3000); // 3 second delay for better LCP
+      }
     }
   };
 

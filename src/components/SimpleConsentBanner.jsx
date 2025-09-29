@@ -69,23 +69,45 @@ const SimpleConsentBanner = () => {
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
-    // Check if user has already made a choice
-    const consent = getConsentData();
-    if (!consent) {
-      setIsVisible(true);
-      
-      // Hide any existing Enzuzo banners to prevent conflicts
-      const hideEnzuzoBanners = () => {
-        const enzuzoBanners = document.querySelectorAll('#ez-cookie-notification, .enzuzo-cookiebanner-container, .ez-consent');
-        enzuzoBanners.forEach(banner => {
-          banner.style.display = 'none';
+    // PERFORMANCE OPTIMIZATION: Defer consent banner check to avoid blocking LCP
+    const initializeConsent = () => {
+      // Check if user has already made a choice
+      const consent = getConsentData();
+      if (!consent) {
+        // Use requestAnimationFrame to ensure DOM is ready
+        requestAnimationFrame(() => {
+          setIsVisible(true);
         });
-      };
-      
-      // Hide immediately and also after a small delay
-      hideEnzuzoBanners();
-      setTimeout(hideEnzuzoBanners, 100);
-      setTimeout(hideEnzuzoBanners, 500);
+        
+        // Hide any existing third-party banners to prevent conflicts
+        const hideThirdPartyBanners = () => {
+          const banners = document.querySelectorAll(
+            '#ez-cookie-notification, .enzuzo-cookiebanner-container, .ez-consent, ' +
+            '[id*="cookieyes"], [class*="cookieyes"], [id*="cookie"], [class*="cookie-banner"]'
+          );
+          banners.forEach(banner => {
+            if (banner !== document.querySelector('[data-testid="consent-banner"]')) {
+              banner.style.display = 'none';
+              banner.style.visibility = 'hidden';
+            }
+          });
+        };
+        
+        // Hide third-party banners without blocking
+        if (window.requestIdleCallback) {
+          window.requestIdleCallback(hideThirdPartyBanners, { timeout: 1000 });
+        } else {
+          setTimeout(hideThirdPartyBanners, 500);
+        }
+      }
+    };
+
+    // Wait for critical content to load first
+    if (document.readyState === 'complete') {
+      initializeConsent();
+    } else {
+      window.addEventListener('load', initializeConsent);
+      return () => window.removeEventListener('load', initializeConsent);
     }
   }, []);
 
@@ -190,7 +212,15 @@ const SimpleConsentBanner = () => {
   if (!isVisible) return null;
 
   return (
-    <div data-testid="consent-banner" className="fixed bottom-0 left-0 right-0 z-[9999] bg-white border-t border-gray-200 shadow-lg">
+    <div 
+      data-testid="consent-banner" 
+      className="fixed bottom-0 left-0 right-0 z-[9999] bg-white border-t border-gray-200 shadow-lg transform transition-transform duration-300 ease-in-out"
+      style={{
+        transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
+        willChange: 'transform',
+        contain: 'layout style paint' // CSS containment for better performance
+      }}
+    >
       <div className="max-w-6xl mx-auto p-6">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           

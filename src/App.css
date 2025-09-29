@@ -1,12 +1,10 @@
 /* src/App.css - AI Search Mastery Brand Styles (With AnalysisProgress custom classes) */
 
-/* Import Google Fonts - Inter, Source Sans Pro, JetBrains Mono */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+/* Google Fonts are now loaded optimally in index.html with preconnect and preload */
+/* This eliminates render-blocking CSS imports for better performance */
 
-/* Tailwind CSS v4 */
-@import "tailwindcss";
+/* Tailwind CSS v4 - Loaded with optimized layering */
+@import "tailwindcss" layer(utilities);
 
 /* Primary Brand Colors */
 :root {
@@ -29,7 +27,7 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 
-/* Basic Body Styles for Brand Fonts and Colors */
+/* Basic Body Styles for Brand Fonts and Colors with LCP Optimization */
 body {
   font-family: var(--font-secondary);
   color: var(--framework-black);
@@ -37,6 +35,61 @@ body {
   margin: 0;
   padding: 0;
   line-height: 1.6;
+  
+  /* LCP Performance Optimization */
+  contain: layout style paint; /* CSS containment for better performance */
+  will-change: scroll-position; /* Optimize for scrolling */
+  
+  /* Font rendering optimization */
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Prevent layout shift during font loading */
+  font-display: swap;
+}
+
+/* Critical above-the-fold content optimization */
+.hero-section {
+  min-height: 60vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Performance optimizations */
+  contain: layout style paint;
+  will-change: transform;
+  transform: translateZ(0); /* Force GPU acceleration */
+}
+
+.hero-content {
+  text-align: center;
+  color: white;
+  max-width: 800px;
+  padding: 2rem;
+  
+  /* Prevent font rendering delays */
+  font-display: swap;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+  
+  /* Optimize for critical rendering path */
+  contain: layout style;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  
+  /* Optimize for critical rendering path */
+  contain: layout style;
 }
 
 /* Container for the entire application */
@@ -48,6 +101,45 @@ body {
   justify-content: flex-start; /* Align content to top */
   padding-top: 40px; /* Some top padding */
   box-sizing: border-box;
+}
+
+/* Cookie Consent Banner Optimization - Prevent LCP blocking */
+.consent-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+  
+  /* Performance optimizations */
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
+  will-change: transform;
+  contain: layout style paint;
+  
+  /* Prevent layout shift */
+  pointer-events: none;
+}
+
+.consent-banner.visible {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Ensure consent banner doesn't affect main content layout */
+body.consent-banner-visible {
+  /* Don't add bottom padding - let banner overlay instead */
+  padding-bottom: 0;
+}
+
+/* Critical performance hint: Preload key LCP elements */
+.lcp-element {
+  /* Mark elements that should render first */
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1000px;
 }
 
 /* Phase 3: Value Communication Animations */
@@ -542,4 +634,107 @@ body {
 
 .error-close:hover {
   background-color: rgba(153, 27, 27, 0.1);
+}
+
+/* --- Performance Optimization Classes --- */
+
+/* Image lazy loading optimization */
+.lazy {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lazy.loaded {
+  opacity: 1;
+}
+
+/* Loading animation for lazy images */
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.lazy:not(.loaded) {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: loading 1.4s ease infinite;
+}
+
+/* Critical resource optimization */
+.critical-resource {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
+}
+
+/* Non-critical content deferral */
+.non-critical {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 200px;
+}
+
+/* Optimize for scrolling performance */
+.scroll-optimized {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Font loading states */
+body:not(.fonts-loaded) {
+  visibility: hidden;
+}
+
+body.fonts-loaded {
+  visibility: visible;
+}
+
+/* Optimize animations for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .lazy,
+  .loading,
+  .animate-spin,
+  .animate-pulse,
+  .animate-bounce,
+  .transition-all,
+  .transition-colors,
+  .transition-transform {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast optimizations */
+@media (prefers-contrast: high) {
+  .btn-primary,
+  .brand-header,
+  .hero-section {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Performance hints for GPU acceleration */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+/* Container query optimization (when supported) */
+@supports (container-type: inline-size) {
+  .responsive-container {
+    container-type: inline-size;
+  }
+  
+  @container (min-width: 768px) {
+    .responsive-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}
+
+/* Critical path completion marker */
+.critical-path-complete {
+  --critical-path-loaded: true;
 }

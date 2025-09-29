@@ -6,10 +6,23 @@
  * 
  * Phase 2: PDF Report Component Development
  * Target: 2-3 hours implementation with SimpleResultsDashboard integration
+ * 
+ * PERFORMANCE: Uses dynamic imports for PDF libraries to reduce initial bundle size
  */
 
 import React, { useRef, useState } from 'react';
-import jsPDF from 'jspdf';
+
+// Dynamic PDF library loading
+let jsPDF = null;
+const loadPDFLibrary = async () => {
+  if (!jsPDF) {
+    console.log('🔄 Loading jsPDF library...');
+    const module = await import('jspdf');
+    jsPDF = module.default;
+    console.log('✅ jsPDF library loaded');
+  }
+  return jsPDF;
+};
 
 const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, className }) => {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -211,8 +224,11 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
     setProgress(0);
 
     try {
-      // Progress: Data extraction
+      // Progress: Loading PDF library
+      setProgress(5);
+      const PDF = await loadPDFLibrary();
       setProgress(10);
+      
       // Extract and process data
       const reportData = extractReportData();
       setProgress(25);
@@ -225,7 +241,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
 
       // Create PDF document
       setProgress(55);
-      const pdf = new jsPDF('portrait', 'mm', 'a4');
+      const pdf = new PDF('portrait', 'mm', 'a4');
       const pageWidth = 210;
       const pageHeight = 297;
       const margin = 20;

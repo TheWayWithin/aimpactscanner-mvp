@@ -5,10 +5,34 @@
  * Uses jsPDF and html2canvas for HTML-to-PDF conversion
  * 
  * Compatible with Vite/ES6 modules and cross-browser support
+ * 
+ * PERFORMANCE: Lazy-loaded PDF libraries to reduce initial bundle size
+ * Libraries are dynamically imported only when PDF generation is needed
  */
 
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+// Dynamic imports for PDF libraries - lazy loaded for performance
+let jsPDF = null;
+let html2canvas = null;
+
+// Initialize PDF libraries on first use
+const initializePDFLibraries = async () => {
+  if (!jsPDF || !html2canvas) {
+    try {
+      console.log('🔄 Loading PDF libraries dynamically...');
+      const [jsPDFModule, html2canvasModule] = await Promise.all([
+        import('jspdf'),
+        import('html2canvas')
+      ]);
+      jsPDF = jsPDFModule.default;
+      html2canvas = html2canvasModule.default;
+      console.log('✅ PDF libraries loaded successfully');
+    } catch (error) {
+      console.error('❌ Failed to load PDF libraries:', error);
+      throw new Error(`Failed to load PDF libraries: ${error.message}`);
+    }
+  }
+  return { jsPDF, html2canvas };
+};
 
 /**
  * Test basic PDF generation capability
@@ -18,8 +42,11 @@ import html2canvas from 'html2canvas';
  */
 export const testPDFGeneration = async () => {
   try {
+    // Initialize PDF libraries if not already loaded
+    const { jsPDF: PDF } = await initializePDFLibraries();
+    
     // Create new PDF instance (A4 format)
-    const pdf = new jsPDF('portrait', 'mm', 'a4');
+    const pdf = new PDF('portrait', 'mm', 'a4');
     
     // Add basic test content
     pdf.setFontSize(20);
@@ -78,6 +105,9 @@ export const downloadPDF = (pdfBlob, filename = 'aimpactscanner-test.pdf') => {
  */
 export const testHTMLToCanvas = async (element) => {
   try {
+    // Initialize PDF libraries if not already loaded
+    const { html2canvas: html2canvasLib } = await initializePDFLibraries();
+    
     // Create a clone to avoid modifying the original
     const clone = element.cloneNode(true);
     
@@ -110,7 +140,7 @@ export const testHTMLToCanvas = async (element) => {
     clone.style.left = '-9999px';
     document.body.appendChild(clone);
     
-    const canvas = await html2canvas(clone, {
+    const canvas = await html2canvasLib(clone, {
       // Basic configuration for testing
       backgroundColor: '#ffffff',
       scale: 2, // Higher quality
@@ -154,6 +184,9 @@ export const testHTMLToCanvas = async (element) => {
  */
 export const testHTMLToPDF = async (element) => {
   try {
+    // Initialize PDF libraries if not already loaded
+    const { jsPDF: PDF } = await initializePDFLibraries();
+    
     // Convert HTML to canvas first
     const canvas = await testHTMLToCanvas(element);
     
@@ -164,7 +197,7 @@ export const testHTMLToPDF = async (element) => {
     let heightLeft = imgHeight;
     
     // Create PDF
-    const pdf = new jsPDF('portrait', 'mm', 'a4');
+    const pdf = new PDF('portrait', 'mm', 'a4');
     let position = 0;
     
     // Add canvas as image to PDF
@@ -192,9 +225,9 @@ export const testHTMLToPDF = async (element) => {
  * Validate PDF generation libraries are properly loaded
  * Returns status object with library availability
  * 
- * @returns {Object} Status object with library checks
+ * @returns {Promise<Object>} Status object with library checks
  */
-export const validatePDFLibraries = () => {
+export const validatePDFLibraries = async () => {
   const status = {
     jsPDF: false,
     html2canvas: false,
@@ -203,15 +236,18 @@ export const validatePDFLibraries = () => {
   };
   
   try {
+    // Try to initialize libraries to check availability
+    const { jsPDF: PDF, html2canvas: html2canvasLib } = await initializePDFLibraries();
+    
     // Check jsPDF availability
-    if (typeof jsPDF !== 'undefined') {
+    if (PDF) {
       status.jsPDF = true;
     } else {
       status.errors.push('jsPDF not loaded');
     }
     
     // Check html2canvas availability
-    if (typeof html2canvas !== 'undefined') {
+    if (html2canvasLib) {
       status.html2canvas = true;
     } else {
       status.errors.push('html2canvas not loaded');
@@ -229,6 +265,20 @@ export const validatePDFLibraries = () => {
   }
   
   return status;
+};
+
+/**
+ * Preload PDF libraries for better user experience
+ * Call this when user navigates to a page where PDF might be needed
+ */
+export const preloadPDFLibraries = async () => {
+  try {
+    await initializePDFLibraries();
+    return true;
+  } catch (error) {
+    console.warn('Failed to preload PDF libraries:', error);
+    return false;
+  }
 };
 
 // Default export for easy importing

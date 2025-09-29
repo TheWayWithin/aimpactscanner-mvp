@@ -11,7 +11,7 @@
 
 import React, { useState } from 'react';
 import { useUsageTracking } from '../hooks/useUsageTracking';
-import PDFReportGenerator from './PDFReportGenerator';
+import LazyPDFReportGenerator from './LazyPDFReportGenerator';
 import UpgradeToPDFModal from './UpgradeToPDFModal';
 
 const TierPDFButton = ({ analysisId, url, analysisData, onReportGenerated, userEmail, user }) => {
@@ -109,7 +109,7 @@ const TierPDFButton = ({ analysisId, url, analysisData, onReportGenerated, userE
   return (
     <div className="relative group">
       <div className="inline-flex items-center">
-        <PDFReportGenerator 
+        <LazyPDFReportGenerator 
           analysisId={analysisId}
           url={url}
           analysisData={analysisData}

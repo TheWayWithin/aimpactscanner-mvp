@@ -1,7 +1,7 @@
 // Simplified Results Dashboard - works without database
 import React, { useEffect, useState } from 'react';
-import { addToHistory } from './AnalysisHistory';
-import TierPDFButton from './TierPDFButton';
+import { addToHistory } from '../utils/analysisHistory';
+import LazyTierPDFButton from './LazyTierPDFButton';
 
 function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user }) {
   const [pdfStatus, setPdfStatus] = useState(null);
@@ -375,7 +375,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
             
             {/* Tier-Based PDF Export Button */}
             <div className="flex items-center gap-3">
-              <TierPDFButton 
+              <LazyTierPDFButton 
                 analysisId={analysisId}
                 url={results.url}
                 analysisData={results}

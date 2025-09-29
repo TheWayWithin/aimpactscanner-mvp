@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>AImpactScanner - AI Search Optimization Analysis | Check Your AI Visibility</title>
     <meta name="build-version" content="v2.0.2-production">
     
@@ -35,8 +35,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="format-detection" content="telephone=no">
     
-    <!-- Structured Data for SEO -->
-    <script type="application/ld+json">
+    <!-- Structured Data for SEO - Non-blocking -->
+    <script type="application/ld+json" defer>
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
@@ -65,6 +65,37 @@
     </script>
 
 
+    <!-- Performance Optimization: Preconnect hints for third-party domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://www.google-analytics.com">
+    
+    <!-- DNS prefetch for additional third-party domains -->
+    <link rel="dns-prefetch" href="https://cdn-cookieyes.com">
+    <link rel="dns-prefetch" href="https://app.enzuzo.com">
+    <link rel="dns-prefetch" href="https://js.stripe.com">
+    
+    <!-- Supabase preconnect (using common Supabase URL pattern) -->
+    <link rel="preconnect" href="https://aimpactscanner.supabase.co">
+    <link rel="dns-prefetch" href="https://aimpactscanner.supabase.co">
+    
+    <!-- Performance Optimization: Critical font loading with font-display swap -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" fetchpriority="high">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- Preload critical font files directly for faster First Contentful Paint -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
+    <link rel="preload" href="https://fonts.gstatic.com/s/sourcesanspro/v22/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7lujVj9w.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Fallback for no-JS -->
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+    </noscript>
+
     <!-- Favicon and App Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -73,13 +104,259 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
     <link rel="manifest" href="/manifest.json"> 
 
-    <link rel="stylesheet" href="/src/App.css" /> 
+    <link rel="stylesheet" href="/src/App.css" fetchpriority="high" /> 
 
-    <!-- Enzuzo GDPR Integration - Temporarily disabled to fix landing page takeover -->
+    <!-- Performance Optimization: Preload critical JS modules with priority hints -->
+    <link rel="modulepreload" href="/src/main.jsx" fetchpriority="high">
+    <link rel="modulepreload" href="/src/App.jsx" fetchpriority="high">
+    <link rel="modulepreload" href="/src/lib/supabaseClient.js">
+    <link rel="modulepreload" href="/src/components/Landing.jsx">
+    
+    <!-- Critical resource hints for better loading performance -->
+    <link rel="preload" href="/src/App.css" as="style">
+    
+    <!-- Additional critical component preloads -->
+    <link rel="prefetch" href="/src/components/URLInput.jsx">
+    <link rel="prefetch" href="/src/components/SimpleAnalysisProgress.jsx">
+    
+    <!-- Prefetch non-critical resources -->
+    <link rel="prefetch" href="/favicon-32x32.png">
+    <link rel="prefetch" href="/apple-touch-icon-180x180.png">
+    
+
+    <!-- Cookie Consent Performance Optimization -->
+    <script>
+      // Defer cookie consent loading until after LCP to improve performance
+      window.addEventListener('load', function() {
+        // Wait for critical content to render first
+        if (window.requestIdleCallback) {
+          window.requestIdleCallback(function() {
+            initializeCookieConsent();
+          }, { timeout: 3000 });
+        } else {
+          setTimeout(initializeCookieConsent, 2000);
+        }
+      });
+      
+      function initializeCookieConsent() {
+        // Only load if consent not already given
+        const hasConsent = localStorage.getItem('gdpr-cookie-consent');
+        if (!hasConsent) {
+          // Initialize simplified consent banner (non-blocking)
+          document.body.classList.add('show-consent-banner');
+        }
+      }
+    </script>
+    
+    <!-- Preload critical LCP elements -->
+    <link rel="preload" as="image" href="/hero-background.webp" fetchpriority="high">
+    
+    <!-- Critical CSS for optimal LCP and First Paint -->
+    <style>
+      /* Critical CSS Variables - Inline for immediate availability */
+      :root {
+        --mastery-blue: #1E3A8A;
+        --authority-white: #FFFFFF;
+        --framework-black: #0F172A;
+        --ai-silver: #64748B;
+        --innovation-teal: #0891B2;
+        --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        --font-secondary: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      
+      /* Critical base styles for immediate render */
+      * {
+        box-sizing: border-box;
+      }
+      
+      html {
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-text-size-adjust: 100%;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-secondary);
+        color: var(--framework-black);
+        background-color: var(--authority-white);
+        contain: layout style;
+        overscroll-behavior: none;
+      }
+      
+      #root {
+        min-height: 100vh;
+        contain: layout style;
+      }
+      
+      /* Critical loading state */
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        font-family: var(--font-secondary);
+      }
+      
+      /* Critical hero section for above-the-fold */
+      .hero-section {
+        min-height: 60vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        contain: layout style paint;
+        will-change: auto;
+      }
+      
+      .hero-content {
+        text-align: center;
+        color: white;
+        max-width: 800px;
+        padding: 2rem 1rem;
+        contain: layout style;
+      }
+      
+      .hero-title {
+        font-family: var(--font-primary);
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 700;
+        margin: 0 0 1.5rem 0;
+        line-height: 1.1;
+        font-display: swap;
+        contain: layout style;
+      }
+      
+      .hero-subtitle {
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        margin: 0 0 2rem 0;
+        opacity: 0.9;
+        font-display: swap;
+        contain: layout style;
+      }
+      
+      /* Critical button styles */
+      .btn-primary {
+        background-color: var(--mastery-blue);
+        color: var(--authority-white);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        contain: layout style;
+      }
+      
+      .btn-primary:hover {
+        background-color: #1e40af;
+      }
+      
+      /* Critical header styles */
+      .brand-header {
+        background-color: var(--mastery-blue);
+        color: var(--authority-white);
+        width: 100%;
+        padding: 1.25rem 0;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        contain: layout style;
+      }
+      
+      .brand-title {
+        font-family: var(--font-primary);
+        font-weight: 700;
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+        margin: 0;
+        color: var(--authority-white);
+        font-display: swap;
+      }
+      
+      /* Consent banner optimization - non-blocking */
+      .consent-banner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        transform: translateY(100%);
+        transition: transform 0.3s ease-in-out;
+        will-change: transform;
+        contain: layout style paint;
+      }
+      
+      .show-consent-banner .consent-banner {
+        transform: translateY(0);
+      }
+      
+      /* Prevent layout shift */
+      body.show-consent-banner {
+        padding-bottom: 0;
+      }
+      
+      /* Critical responsive optimizations */
+      @media (max-width: 768px) {
+        .hero-content {
+          padding: 1.5rem 1rem;
+        }
+        
+        .brand-header {
+          padding: 1rem 0;
+        }
+      }
+      
+      /* Font loading optimization */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
 
   </head>
   <body>
     <div id="root"></div>
+    
+    <!-- Optimized script loading for better TTI -->
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Critical path optimization script -->
+    <script>
+      // Optimize font loading and prevent FOIT
+      (function() {
+        if ('fonts' in document) {
+          // Load Inter font immediately for hero content
+          const interFont = new FontFace('Inter', 'url(https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2)');
+          interFont.display = 'swap';
+          document.fonts.add(interFont);
+          interFont.load();
+        }
+        
+        // Preload critical above-the-fold images
+        const heroImagePreload = new Image();
+        heroImagePreload.src = '/hero-background.webp';
+        
+        // Optimize critical resource loading
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(function() {
+            // Preload non-critical components after idle
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = '/src/components/AnalysisHistory.jsx';
+            document.head.appendChild(link);
+          });
+        }
+        
+        // Performance mark for Core Web Vitals
+        if ('PerformanceObserver' in window) {
+          performance.mark('critical-resources-loaded');
+        }
+      })();
+    </script>
   </body>
 </html>

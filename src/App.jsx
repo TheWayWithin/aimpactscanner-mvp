@@ -1,5 +1,5 @@
 // New App with conversion-optimized flow
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo, Suspense } from 'react';
 import './App.css';
 import { supabase } from './lib/supabaseClient';
 import { initializeFallbackData } from './utils/userFallback';
@@ -14,11 +14,15 @@ import AnalysisPreview from './components/AnalysisPreview';
 import PreviewAnalysis from './components/PreviewAnalysis';
 import PreviewResults from './components/PreviewResults';
 
-// Existing components
-import AuthWithPassword from './components/AuthWithPassword';
-import RegistrationFlow from './components/RegistrationFlow';
-import UnifiedRegistration from './components/UnifiedRegistration';
-import CoffeeTierSignup from './components/CoffeeTierSignup'; // New conversion-optimized signup
+// Lazy-loaded heavy components for bundle optimization
+const AnalysisHistory = React.lazy(() => import('./components/AnalysisHistory'));
+const AuthWithPassword = React.lazy(() => import('./components/AuthWithPassword'));
+const CoffeeTierSignup = React.lazy(() => import('./components/CoffeeTierSignup'));
+const UnifiedRegistration = React.lazy(() => import('./components/UnifiedRegistration'));
+const SimpleAccountDashboard = React.lazy(() => import('./components/SimpleAccountDashboard'));
+const RegistrationFlow = React.lazy(() => import('./components/RegistrationFlow'));
+
+// Keep frequently used components as regular imports
 import Login from './components/Login';
 import SimpleAnalysisProgress from './components/SimpleAnalysisProgress';
 import SimpleResultsDashboard from './components/SimpleResultsDashboard';
@@ -26,13 +30,12 @@ import URLInput from './components/URLInput';
 import TierIndicator from './components/TierIndicator';
 import TierSelection from './components/TierSelection';
 import AccountDashboard from './components/AccountDashboard';
-import SimpleAccountDashboard from './components/SimpleAccountDashboard';
 import EmailVerificationPending from './components/EmailVerificationPending';
 import UserInitializer from './components/UserInitializer';
-import AnalysisHistory from './components/AnalysisHistory';
 import { useUpgrade } from './components/UpgradeHandler';
 import { useUsageTracking } from './hooks/useUsageTracking';
 import { useTabVisibility } from './hooks/useTabVisibility';
+import { usePDFPreloader, usePDFPreloadTrigger } from './hooks/usePDFPreloader';
 import AuthenticatedHeader from './components/AuthenticatedHeader';
 import AILogo from './components/AILogo';
 import PrivacyPolicyPage from './components/PrivacyPolicyPage.jsx';
@@ -41,9 +44,23 @@ import ContactPage from './components/ContactPage.jsx';
 import AboutPage from './components/AboutPage.jsx';
 import Footer from './components/Footer.jsx';
 import NavigationButtons from './components/NavigationButtons.jsx';
-// import SimpleConsentBanner from './components/SimpleConsentBanner.jsx'; // Disabled - using Enzuzo via GTM
+import SimpleConsentBanner from './components/SimpleConsentBanner.jsx'; // Optimized for LCP performance
+import PerformanceOptimizer, { usePerformanceMonitoring } from './components/PerformanceOptimizer.jsx';
+
+// Loading component for Suspense boundaries - Memoized for performance
+const ComponentLoader = React.memo(({ message = "Loading..." }) => (
+  <div className="flex items-center justify-center p-8">
+    <div className="flex items-center space-x-3">
+      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+      <span className="text-gray-600">{message}</span>
+    </div>
+  </div>
+));
 
 function AppContent() {
+  // Initialize performance monitoring
+  usePerformanceMonitoring();
+  
   // Initialize fallback data for known users immediately
   useEffect(() => {
     initializeFallbackData();
@@ -95,6 +112,10 @@ function AppContent() {
   
   // Track if we've already processed the pending analysis to prevent duplicate processing
   const pendingAnalysisProcessed = useRef(false);
+
+  // PDF preloading optimization
+  const shouldPreloadPDF = usePDFPreloadTrigger(currentView, userTier);
+  const isPDFPreloaded = usePDFPreloader(shouldPreloadPDF, 3000); // 3 second delay
   
   // Performance optimization: User data caching and deduplication
   const userDataCache = useRef(new Map());
@@ -1058,7 +1079,7 @@ function AppContent() {
   if (currentView === 'preview-analysis') {
     return (
       <>
-        {/* <SimpleConsentBanner /> */}
+        <SimpleConsentBanner />
         <PreviewAnalysis
           url={currentUrl}
           analysisId={currentAnalysisId}
@@ -1071,7 +1092,7 @@ function AppContent() {
   if (currentView === 'preview-results') {
     return (
       <>
-        {/* <SimpleConsentBanner /> */}
+        <SimpleConsentBanner />
         <PreviewResults
           url={currentUrl}
           analysisId={currentAnalysisId}
@@ -1085,7 +1106,7 @@ function AppContent() {
   if (currentView === 'teaser-results') {
     return (
       <>
-        {/* <SimpleConsentBanner /> */}
+        <SimpleConsentBanner />
         <AnalysisPreview
           url={currentUrl}
           analysisId={currentAnalysisId}
@@ -1099,18 +1120,20 @@ function AppContent() {
   if (currentView === 'register') {
     return (
       <>
-        {/* <SimpleConsentBanner /> */}
-        <CoffeeTierSignup 
-          onRegistrationComplete={(user) => {
-            setSession({ user });
-            setCurrentView('dashboard');
-          }}
-          onNavigate={(view) => setCurrentView(view)}
-          onShowEmailVerification={(email) => {
-            setPendingVerificationEmail(email);
-            setCurrentView('email-verification');
-          }}
-        />
+        <SimpleConsentBanner />
+        <Suspense fallback={<ComponentLoader message="Loading registration..." />}>
+          <CoffeeTierSignup 
+            onRegistrationComplete={(user) => {
+              setSession({ user });
+              setCurrentView('dashboard');
+            }}
+            onNavigate={(view) => setCurrentView(view)}
+            onShowEmailVerification={(email) => {
+              setPendingVerificationEmail(email);
+              setCurrentView('email-verification');
+            }}
+          />
+        </Suspense>
       </>
     );
   }
@@ -1118,8 +1141,10 @@ function AppContent() {
   if (currentView === 'registration-flow') {
     return (
       <>
-        {/* <SimpleConsentBanner /> */}
-        <RegistrationFlow onRegistrationComplete={handleRegistrationComplete} />
+        <SimpleConsentBanner />
+        <Suspense fallback={<ComponentLoader message="Loading registration flow..." />}>
+          <RegistrationFlow onRegistrationComplete={handleRegistrationComplete} />
+        </Suspense>
       </>
     );
   }
@@ -1127,8 +1152,10 @@ function AppContent() {
   if (currentView === 'unified-registration') {
     return (
       <>
-        {/* <SimpleConsentBanner /> */}
-        <UnifiedRegistration onRegistrationComplete={handleRegistrationComplete} />
+        <SimpleConsentBanner />
+        <Suspense fallback={<ComponentLoader message="Loading registration..." />}>
+          <UnifiedRegistration onRegistrationComplete={handleRegistrationComplete} />
+        </Suspense>
       </>
     );
   }
@@ -1136,7 +1163,7 @@ function AppContent() {
   if (currentView === 'login') {
     return (
       <>
-        {/* <SimpleConsentBanner /> */}
+        <SimpleConsentBanner />
         <Login onLoginSuccess={handleLoginComplete} />
       </>
     );
@@ -1146,7 +1173,7 @@ function AppContent() {
   if (currentView === 'email-verification') {
     return (
       <>
-        {/* <SimpleConsentBanner /> */}
+        <SimpleConsentBanner />
         <EmailVerificationPending 
           email={pendingVerificationEmail || 'your email'}
           onNavigateToLogin={() => setCurrentView('login')}
@@ -1163,7 +1190,7 @@ function AppContent() {
   if (currentView === 'privacy') {
     return (
       <div className="min-h-screen flex flex-col bg-white">
-        {/* <SimpleConsentBanner /> */}
+        <SimpleConsentBanner />
         <PrivacyPolicyPage 
           onNavigate={setCurrentView} 
           isAuthenticated={!!session}
@@ -1176,7 +1203,7 @@ function AppContent() {
   if (currentView === 'terms') {
     return (
       <div className="min-h-screen flex flex-col bg-white">
-        {/* <SimpleConsentBanner /> */}
+        <SimpleConsentBanner />
         <TermsOfServicePage 
           onNavigate={setCurrentView} 
           isAuthenticated={!!session}
@@ -1189,7 +1216,7 @@ function AppContent() {
   if (currentView === 'contact') {
     return (
       <div className="min-h-screen flex flex-col bg-white">
-        {/* <SimpleConsentBanner /> */}
+        <SimpleConsentBanner />
         <ContactPage 
           onNavigate={setCurrentView} 
           isAuthenticated={!!session}
@@ -1202,7 +1229,7 @@ function AppContent() {
   if (currentView === 'about') {
     return (
       <div className="min-h-screen flex flex-col bg-white">
-        {/* <SimpleConsentBanner /> */}
+        <SimpleConsentBanner />
         <AboutPage 
           onNavigate={setCurrentView} 
           isAuthenticated={!!session}
@@ -1216,7 +1243,7 @@ function AppContent() {
   if (currentView === 'pricing' && !session) {
     return (
       <div className="min-h-screen flex flex-col bg-white">
-        {/* <SimpleConsentBanner /> */}
+        <SimpleConsentBanner />
         <div className="flex-grow">
           {/* Import NavigationButtons for non-authenticated pricing page */}
           <div className="bg-gradient-to-b from-blue-50 to-white pt-8">
@@ -1257,7 +1284,7 @@ function AppContent() {
     if (currentView === 'landing' || currentView === 'dashboard' || currentView === 'input') {
       return (
         <div className="min-h-screen flex flex-col">
-          {/* <SimpleConsentBanner /> */}
+          <SimpleConsentBanner />
           <div className="flex-grow">
             <Landing 
               onAnalysisComplete={handleLandingAnalysis}
@@ -1276,8 +1303,10 @@ function AppContent() {
       // For any other view without session, show auth
       return (
         <>
-          {/* <SimpleConsentBanner /> */}
-          <AuthWithPassword />
+          <SimpleConsentBanner />
+          <Suspense fallback={<ComponentLoader message="Loading authentication..." />}>
+            <AuthWithPassword />
+          </Suspense>
         </>
       );
     }
@@ -1286,8 +1315,11 @@ function AppContent() {
   // Authenticated views
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Simple GDPR Consent Banner - Removed duplicate from authenticated section */}
-      {/* <SimpleConsentBanner /> */}
+      {/* Performance Optimizer - Critical path and Core Web Vitals optimization */}
+      <PerformanceOptimizer />
+      
+      {/* Optimized GDPR Consent Banner - Non-blocking LCP performance */}
+      <SimpleConsentBanner />
       
       {/* Consistent header across all authenticated pages */}
       <AuthenticatedHeader 
@@ -1306,8 +1338,8 @@ function AppContent() {
           pendingAnalysisProcessed.current = false;
           authStateChangeInProgress.current = false;
           
-          // Clear all localStorage items related to the session
-          const keysToRemove = [
+          // Clear all localStorage items related to the session - Memoized for performance
+          const keysToRemove = useMemo(() => [
             'pendingAnalysisUrl',
             'pendingAnalysisId',
             'landingAnalysisData',
@@ -1321,7 +1353,7 @@ function AppContent() {
             ...Object.keys(localStorage).filter(key => key.startsWith('welcome_dismissed_')),
             // Clear usage tracking for the user
             ...Object.keys(localStorage).filter(key => key.startsWith('usage_'))
-          ];
+          ], []); // Empty dependency array since localStorage keys are static
           
           keysToRemove.forEach(key => {
             localStorage.removeItem(key);
@@ -1438,7 +1470,9 @@ function AppContent() {
                 </div>
               </div>
           </div>
-          <AnalysisHistory onViewAnalysis={handleViewHistoryAnalysis} />
+          <Suspense fallback={<ComponentLoader message="Loading analysis history..." />}>
+            <AnalysisHistory onViewAnalysis={handleViewHistoryAnalysis} />
+          </Suspense>
           </div>
         )}
 
@@ -1489,7 +1523,9 @@ function AppContent() {
         )}
 
         {currentView === 'account' && (
-          <SimpleAccountDashboard user={session?.user} userTier={userTier} />
+          <Suspense fallback={<ComponentLoader message="Loading account settings..." />}>
+            <SimpleAccountDashboard user={session?.user} userTier={userTier} />
+          </Suspense>
         )}
 
 
@@ -1505,6 +1541,9 @@ function AppContent() {
 function App() {
   return (
     <>
+      {/* Performance Optimizer - Critical path optimization */}
+      <PerformanceOptimizer />
+      
       {/* GTM Analytics Integration - Load on all pages */}
       <GTMIntegration />
       
