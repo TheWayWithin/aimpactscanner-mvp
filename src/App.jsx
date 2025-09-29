@@ -1377,8 +1377,8 @@ function AppContent({ initialUrl }) {
           pendingAnalysisProcessed.current = false;
           authStateChangeInProgress.current = false;
           
-          // Clear all localStorage items related to the session - Memoized for performance
-          const keysToRemove = useMemo(() => [
+          // Clear all localStorage items related to the session
+          const keysToRemove = [
             'pendingAnalysisUrl',
             'pendingAnalysisId',
             'landingAnalysisData',
@@ -1392,7 +1392,7 @@ function AppContent({ initialUrl }) {
             ...Object.keys(localStorage).filter(key => key.startsWith('welcome_dismissed_')),
             // Clear usage tracking for the user
             ...Object.keys(localStorage).filter(key => key.startsWith('usage_'))
-          ], []); // Empty dependency array since localStorage keys are static
+          ];
           
           keysToRemove.forEach(key => {
             localStorage.removeItem(key);
