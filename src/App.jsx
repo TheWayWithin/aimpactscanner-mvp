@@ -1158,7 +1158,7 @@ function AppContent({ initialUrl }) {
   }
 
   // Handle /signup route - show UnifiedRegistration with OAuth
-  if (currentView === 'signup') {
+  if (currentView === 'signup' || currentView === '/signup') {
     return (
       <>
         <SimpleConsentBanner />
