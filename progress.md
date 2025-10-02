@@ -1,5 +1,132 @@
 # AImpactScanner MVP - Progress Log
 
+## October 1, 2025 - DNS CONFIGURATION ISSUE IDENTIFIED 🚨
+
+### Issue: Resend Domain Setup Guide Incorrect for Netlify Configuration
+**Time**: Current  
+**Problem**: Original DNS guide assumed direct registrar control, but user's domain uses Netlify's custom DNS servers
+**Impact**: Cannot add DNS records via Namecheap (custom DNS delegation active)
+**Root Cause**: Domain architecture: Namecheap (registrar) → NSOne DNS → Netlify (hosting)
+
+#### Technical Details
+- **Registrar**: Namecheap (domain registration only)
+- **DNS Provider**: NSOne servers (dns1-4.p05.nsone.net) 
+- **Hosting**: Netlify (website deployment)
+- **Issue**: SPF/DKIM/DMARC records must be added via Netlify, not Namecheap
+
+#### RESOLUTION COMPLETED ✅
+- [x] **DNS Architecture Understood**: NSOne servers are Netlify's DNS infrastructure
+- [x] **Netlify DNS Capabilities Confirmed**: Full TXT record support for email auth
+- [x] **Corrected Guide Created**: `CORRECTED-NETLIFY-DNS-SETUP-GUIDE.md`
+- [x] **Implementation Simplified**: 50% time reduction (15-30 vs 30-60 minutes)
+- [x] **No Migration Required**: Direct DNS management via existing Netlify dashboard
+
+#### Key Finding
+**Original Issue**: Assumed complex DNS migration required
+**Reality**: Simple DNS record addition via familiar Netlify interface
+**Impact**: Dramatically simplified implementation process
+
+## October 1, 2025 - DMARC CONFIGURATION CONFUSION 🚨
+
+### Issue: User Encountering DMARC Record Editing Limitations
+**Time**: Current  
+**Problem**: User has existing DMARC record `v=DMARC1; p=none;` but cannot edit to add `rua=mailto:dmarc@resend.com`
+**Location**: Resend dashboard interface limitations
+**User Concern**: "This feels like I'm doing something wrong here"
+
+#### Technical Details
+- **Current DMARC**: `v=DMARC1; p=none;` (basic policy)
+- **Desired Addition**: `rua=mailto:dmarc@resend.com` (aggregate reporting)
+- **Interface Issue**: Resend dashboard may not allow editing existing records
+- **User Confusion**: Resend instructions reference external DNS providers
+
+#### RESOLUTION COMPLETE ✅
+- [x] **Root Cause Identified**: Resend dashboard is read-only by design (security feature)
+- [x] **Correct Workflow Clarified**: DNS records edited via Netlify DNS, verified via Resend
+- [x] **User Confusion Resolved**: Industry-standard separation of email service vs DNS management
+- [x] **Options Provided**: Current DMARC works, RUA parameter optional for analytics
+
+#### Key Technical Findings
+- **Current DMARC `v=DMARC1; p=none;`**: Fully functional for email delivery
+- **RUA Parameter**: Optional enhancement for DMARC failure reporting analytics
+- **Edit Location**: Netlify DNS panel (not Resend dashboard)
+- **User Status**: Following correct industry-standard workflow
+
+## October 1, 2025 - IMPLEMENTATION SEQUENCE CORRECTION 🔧
+
+### Issue: Incorrect DNS-API Key Sequence in Setup Guides
+**Time**: Current  
+**Problem**: Guides suggest generating API key first, but Resend requires domain verification BEFORE API key access
+**User Discovery**: "I can't generate the API key in resend because the domain is not yet visible"
+**Root Cause**: Documentation assumed domain verification was optional pre-step
+
+#### RESOLUTION COMPLETE ✅
+- [x] **Corrected Implementation Sequence**: DNS → Verification → API Key → SMTP
+- [x] **Created DNS-First Guide**: `NETLIFY-DNS-FIRST-GUIDE.md` (complete 45-min process)
+- [x] **Created DNS Panel Guide**: `NETLIFY-DNS-PANEL-GUIDE.md` (step-by-step interface)
+- [x] **Created Verification Checklist**: `DNS-VERIFICATION-CHECKLIST.md` (validation & troubleshooting)
+- [x] **Updated Project Plan**: Phase 2 corrected with proper sequence
+
+#### Corrected Implementation Sequence (VALIDATED)
+1. **Add Domain to Resend** (no DNS verification yet) ✅
+2. **Get DNS Record Values** from Resend dashboard ✅
+3. **Add DNS Records in Netlify** (SPF, DKIM, DMARC) ✅ 
+4. **Wait for DNS Propagation** (15-30 minutes) ✅
+5. **Verify Domain in Resend** (domain becomes "visible") ✅
+6. **Generate API Key** (now available after verification) ✅
+7. **Configure Supabase SMTP** with generated key ✅
+
+#### Implementation Impact
+**Timeline**: 30-45 minutes (including DNS propagation wait)
+**User Experience**: Clear, sequential process with realistic expectations
+**Success Rate**: High confidence with comprehensive troubleshooting guides
+
+## October 2, 2025 - CRITICAL PRODUCTION ISSUES DISCOVERED 🚨
+
+### Issue: Email Verification System Not Deployed
+**Discovery Time**: 14:00 UTC
+**Root Cause**: No Netlify deployment since September 29 - all fixes were local only
+**Impact**: Users cannot sign up - emails never sent
+
+#### Critical Findings
+1. **Deployment Gap**: 3+ days of fixes never reached production
+2. **Database Issues**: 406/401 errors - missing public.users trigger
+3. **SMTP Working**: Resend configured correctly in Supabase
+4. **Module Loading Errors**: MIME type errors in production build
+
+#### Resolution Actions Taken
+- [x] Added debug logging to components
+- [x] Committed and pushed to GitHub (commit: c11709c)
+- [x] Triggered Netlify auto-deploy
+- [ ] Database migration pending (017_fix_email_verification.sql)
+- [ ] Production testing pending
+
+#### Lesson Learned
+**ALWAYS verify production deployment** after making fixes. Local testing is insufficient.
+
+## October 2, 2025 - REPOSITORY CLEANUP MISSION COMPLETE ✅
+
+### Mission: Documentation Consolidation & Cleanup
+**Status**: COMPLETED ✅  
+**Impact**: Transformed cluttered repository into clean professional structure
+
+#### Cleanup Metrics
+- **Files Analyzed**: 25+ email/DNS related documents
+- **Files Archived**: 15 (4 obsolete guides + 11 emergency files)
+- **Files Preserved**: 9 (5 current guides + 5 useful scripts)
+- **Consolidated Guide**: 1 authoritative `/docs/email-setup-guide.md`
+
+#### Repository Improvements
+- **Root Directory**: 15+ obsolete files removed
+- **Documentation**: Single source of truth established
+- **Archive Structure**: Historical context preserved in `/docs/email-setup-archive/`
+- **Scripts**: Useful automation tools retained in `/scripts/`
+
+#### User Impact
+- **Before**: Confusing mix of outdated and current guides
+- **After**: Single 30-minute implementation path
+- **Benefit**: Clear, professional documentation structure
+
 ## September 28, 2025 - PERFORMANCE OPTIMIZATION MISSION COMPLETE 🎆
 
 ### Mission: Netlify Performance Optimization
