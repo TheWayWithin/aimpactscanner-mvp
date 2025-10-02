@@ -33,9 +33,12 @@ const EmailVerificationPending = ({ email, onResendEmail, onNavigateToLogin }) =
     setResending(true);
     setResendMessage('');
     
+    console.log('🔄 DEBUG: Attempting to resend verification email to:', email);
+    console.log('🔗 DEBUG: Resend redirect URL:', `${window.location.origin}/login?verified=true`);
+    
     try {
       // Resend verification email
-      const { error } = await supabase.auth.resend({
+      const { data, error } = await supabase.auth.resend({
         type: 'signup',
         email: email,
         options: {
@@ -43,13 +46,30 @@ const EmailVerificationPending = ({ email, onResendEmail, onNavigateToLogin }) =
         }
       });
 
-      if (error) throw error;
+      console.log('📨 DEBUG: Resend response:', {
+        data: data,
+        error: error?.message,
+        error_code: error?.code,
+        error_status: error?.status
+      });
 
+      if (error) {
+        console.error('❌ DEBUG: Resend failed with error:', error);
+        throw error;
+      }
+
+      console.log('✅ DEBUG: Resend successful, response data:', data);
       setResendMessage('✅ Verification email resent successfully!');
       setResendDisabled(true);
       setCountdown(60); // Disable for 60 seconds
     } catch (error) {
-      console.error('Error resending email:', error);
+      console.error('🚨 DEBUG: Error resending email:', error);
+      console.error('📝 DEBUG: Error details:', {
+        message: error.message,
+        code: error.code,
+        status: error.status,
+        name: error.name
+      });
       setResendMessage('❌ Failed to resend email. Please try again.');
     } finally {
       setResending(false);

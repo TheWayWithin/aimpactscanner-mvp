@@ -168,6 +168,15 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
       }
 
       // Sign up with email and password (creates unconfirmed user)
+      console.log('📧 DEBUG: Attempting signup with email:', email);
+      console.log('🔗 DEBUG: Email redirect URL:', loginUrl.toString());
+      console.log('📊 DEBUG: User metadata:', {
+        tier: selectedTier,
+        selected_tier: selectedTier,
+        signup_source: 'unified-registration',
+        full_name: email.split('@')[0]
+      });
+      
       const { data, error } = await supabase.auth.signUp({
         email: email,
         password: password,
@@ -180,6 +189,13 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
             full_name: email.split('@')[0] // Use email prefix as default name
           }
         }
+      });
+      
+      console.log('📬 DEBUG: SignUp response:', {
+        user: data?.user?.id,
+        email_confirmed: data?.user?.email_confirmed_at,
+        session: !!data?.session,
+        error: error?.message
       });
 
       if (error) throw error;
