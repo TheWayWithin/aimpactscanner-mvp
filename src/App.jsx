@@ -264,7 +264,12 @@ function AppContent({ initialUrl }) {
   useEffect(() => {
     // CRITICAL FIX: Show landing page immediately, check auth in background
     // This prevents the 17-second delay by not blocking render on auth check
-    
+
+    // DEBUG: Log everything about the URL on load
+    console.log('🔍 App mounted - Full URL:', window.location.href);
+    console.log('🔍 App mounted - Hash:', window.location.hash);
+    console.log('🔍 App mounted - Hash.slice(1):', window.location.hash.slice(1));
+
     // Check URL path for login route
     if (window.location.pathname === '/login') {
       setCurrentView('login');
