@@ -1,0 +1,278 @@
+// authRouting.js - Post-authentication routing logic
+import { supabase } from '../lib/supabaseClient';
+
+/**
+ * Retrieves and validates stored auth context from localStorage
+ * @returns {Object|null} Auth context or null if expired/invalid
+ */
+export const getAuthContext = () => {
+  try {
+    const context = localStorage.getItem('authContext');
+    const expiry = localStorage.getItem('authContextExpiry');
+
+    if (!context || !expiry) {
+      console.log('📭 No auth context found');
+      return null;
+    }
+
+    // Check if expired (24-hour TTL)
+    if (Date.now() > parseInt(expiry)) {
+      console.log('⏰ Auth context expired, clearing');
+      clearAuthContext();
+      return null;
+    }
+
+    const parsed = JSON.parse(context);
+    console.log('📦 Retrieved auth context:', parsed);
+    return parsed;
+  } catch (error) {
+    console.error('❌ Error retrieving auth context:', error);
+    return null;
+  }
+};
+
+/**
+ * Clears auth context from localStorage
+ */
+export const clearAuthContext = () => {
+  localStorage.removeItem('authContext');
+  localStorage.removeItem('authContextExpiry');
+  console.log('🧹 Cleared auth context');
+};
+
+/**
+ * Stores pending analysis URL for post-signup retrieval
+ * @param {string} url - The URL to analyze
+ * @param {string} id - Optional analysis ID
+ */
+export const storePendingAnalysis = (url, id = null) => {
+  if (url) {
+    localStorage.setItem('pendingAnalysisUrl', url);
+    if (id) {
+      localStorage.setItem('pendingAnalysisId', id);
+    }
+    const ttl = 24 * 60 * 60 * 1000; // 24 hours
+    localStorage.setItem('pendingAnalysisExpiry', (Date.now() + ttl).toString());
+    console.log('📍 Stored pending analysis:', { url, id });
+  }
+};
+
+/**
+ * Retrieves pending analysis context and clears it
+ * @returns {Object|null} { url, id } or null if expired/invalid
+ */
+export const getPendingAnalysis = () => {
+  try {
+    const url = localStorage.getItem('pendingAnalysisUrl');
+    const id = localStorage.getItem('pendingAnalysisId');
+    const expiry = localStorage.getItem('pendingAnalysisExpiry');
+
+    if (!url) {
+      return null;
+    }
+
+    // Check if expired
+    if (expiry && Date.now() > parseInt(expiry)) {
+      console.log('⏰ Pending analysis expired, clearing');
+      clearPendingAnalysis();
+      return null;
+    }
+
+    const result = { url, id };
+    console.log('🎯 Retrieved pending analysis:', result);
+
+    // Clear after retrieval (one-time use)
+    clearPendingAnalysis();
+
+    return result;
+  } catch (error) {
+    console.error('❌ Error retrieving pending analysis:', error);
+    return null;
+  }
+};
+
+/**
+ * Clears pending analysis from localStorage
+ */
+export const clearPendingAnalysis = () => {
+  localStorage.removeItem('pendingAnalysisUrl');
+  localStorage.removeItem('pendingAnalysisId');
+  localStorage.removeItem('pendingAnalysisExpiry');
+  console.log('🧹 Cleared pending analysis');
+};
+
+/**
+ * Determines post-signup destination based on context
+ * @param {Object} user - Supabase user object
+ * @param {Object} authContext - Retrieved auth context
+ * @returns {Object} { path, state } for routing
+ */
+export const getPostSignupDestination = (user, authContext = null) => {
+  console.log('🧭 Determining post-signup destination for user:', user?.id);
+
+  // Check for pending analysis from landing page
+  const pendingAnalysis = getPendingAnalysis();
+
+  if (pendingAnalysis?.url) {
+    console.log('✅ Has pending analysis, routing to /analyze with pre-filled URL');
+    return {
+      path: '/analyze',
+      state: {
+        prefilledUrl: pendingAnalysis.url,
+        analysisId: pendingAnalysis.id,
+        source: 'landing_page'
+      }
+    };
+  }
+
+  // Check if tier requires payment (Coffee/Growth/Scale)
+  const tier = authContext?.selectedTier || user?.user_metadata?.selected_tier || 'free';
+
+  if (tier === 'coffee') {
+    console.log('💳 Coffee tier selected, routing to Stripe checkout');
+    return {
+      path: '/checkout',
+      state: {
+        tier: 'coffee',
+        userId: user?.id,
+        email: user?.email
+      }
+    };
+  }
+
+  // Default: Go to analysis page without pre-filled URL
+  console.log('📊 No pending analysis, routing to empty /analyze');
+  return {
+    path: '/analyze',
+    state: {
+      prefilledUrl: null,
+      source: 'direct_signup'
+    }
+  };
+};
+
+/**
+ * Determines post-login destination based on user state
+ * @param {Object} user - User data from database
+ * @param {Object} session - Supabase session object
+ * @returns {Object} { path, state } for routing
+ */
+export const getPostLoginDestination = async (user, session) => {
+  console.log('🧭 Determining post-login destination for user:', user?.id);
+
+  try {
+    // Check if this is the first login (skip upsell)
+    if (user?.is_first_login === true) {
+      console.log('👋 First login detected, routing to post-signup destination');
+
+      // Mark first login as complete
+      await markFirstLoginComplete(user.id);
+
+      // Route to post-signup destination
+      const authContext = getAuthContext();
+      const destination = getPostSignupDestination(session?.user, authContext);
+      clearAuthContext(); // Clear after use
+      return destination;
+    }
+
+    // Returning users: Show tier-based upsell
+    console.log('🔄 Returning user, routing to upsell');
+    return getUpsellPage(user);
+
+  } catch (error) {
+    console.error('❌ Error determining post-login destination:', error);
+    // Fallback to dashboard
+    return { path: '/dashboard', state: {} };
+  }
+};
+
+/**
+ * Marks user's first login as complete
+ * @param {string} userId - User ID
+ */
+export const markFirstLoginComplete = async (userId) => {
+  try {
+    const { error } = await supabase
+      .from('users')
+      .update({ is_first_login: false })
+      .eq('id', userId);
+
+    if (error) {
+      console.error('❌ Error marking first login complete:', error);
+    } else {
+      console.log('✅ Marked first login complete for user:', userId);
+    }
+  } catch (error) {
+    console.error('❌ Exception marking first login complete:', error);
+  }
+};
+
+/**
+ * Determines tier-based upsell page
+ * @param {Object} user - User data from database
+ * @returns {Object} { path, state } for routing
+ */
+export const getUpsellPage = (user) => {
+  const tier = user?.tier || 'free';
+
+  console.log('🎯 Determining upsell page for tier:', tier);
+
+  switch (tier) {
+    case 'free':
+      return {
+        path: '/upsell/coffee',
+        state: { currentTier: 'free' }
+      };
+
+    case 'coffee':
+      return {
+        path: '/upsell/growth',
+        state: { currentTier: 'coffee' }
+      };
+
+    case 'growth':
+      return {
+        path: '/upsell/scale',
+        state: { currentTier: 'growth' }
+      };
+
+    case 'scale':
+      return {
+        path: '/welcome/scale',
+        state: { currentTier: 'scale' }
+      };
+
+    default:
+      console.warn('⚠️ Unknown tier, routing to dashboard:', tier);
+      return {
+        path: '/dashboard',
+        state: {}
+      };
+  }
+};
+
+/**
+ * Retrieves user data from database including first_login flag
+ * @param {string} userId - User ID
+ * @returns {Object|null} User data or null
+ */
+export const getUserData = async (userId) => {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('id, email, tier, is_first_login, subscription_status, monthly_analyses_used')
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      console.error('❌ Error fetching user data:', error);
+      return null;
+    }
+
+    console.log('✅ Retrieved user data:', data);
+    return data;
+  } catch (error) {
+    console.error('❌ Exception fetching user data:', error);
+    return null;
+  }
+};

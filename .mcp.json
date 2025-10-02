@@ -1,29 +1,66 @@
 {
   "mcpServers": {
-    "supabase": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@supabase/mcp-server-supabase@latest",
-        "--read-only",
-        "--project-ref=pdmtvkcxnqysujnpcnyh"
-      ],
-      "env": {
-        "SUPABASE_ACCESS_TOKEN": "sbp_c53e26663a7f13e0a43d3072c2703f3f594b37af"
-      }
-    },
     "context7": {
       "command": "npx",
-      "args": ["-y", "context7-mcp"],
+      "args": ["@context7/mcp-server"],
       "env": {
-        "CONTEXT7_API_KEY": "6627946d-e2c5-4dbe-a63e-33ca82cdf6f7"
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}",
+        "CONTEXT7_PROJECT_ID": "${CONTEXT7_PROJECT_ID:-}"
+      }
+    },
+    "github": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
       }
     },
     "firecrawl": {
       "command": "npx",
-      "args": ["-y", "firecrawl-mcp"],
+      "args": ["@mendable/firecrawl-mcp"],
       "env": {
-        "FIRECRAWL_API_KEY": "219dfadf849a46dd9a05a4bd0c2e65f9"
+        "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}"
+      }
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["@supabase/mcp-server", "--access-token", "${SUPABASE_ACCESS_TOKEN}", "--project-ref", "${SUPABASE_PROJECT_REF}"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-playwright"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-filesystem", "${HOME}/DevProjects"]
+    },
+    "stripe": {
+      "command": "npx",
+      "args": ["@stripe/mcp-server"],
+      "env": {
+        "STRIPE_API_KEY": "${STRIPE_API_KEY:-}"
+      }
+    },
+    "railway": {
+      "command": "npx",
+      "args": ["@railway/mcp-server"],
+      "env": {
+        "RAILWAY_API_TOKEN": "${RAILWAY_API_TOKEN}"
+      }
+    },
+    "netlify": {
+      "command": "npx",
+      "args": ["@netlify/mcp-server"],
+      "env": {
+        "NETLIFY_ACCESS_TOKEN": "${NETLIFY_ACCESS_TOKEN:-}"
+      }
+    },
+    "figma": {
+      "command": "npx",
+      "args": ["@figma/mcp-server"],
+      "env": {
+        "FIGMA_ACCESS_TOKEN": "${FIGMA_ACCESS_TOKEN}",
+        "FIGMA_FILE_KEY": "${FIGMA_FILE_KEY:-}"
       }
     }
   }

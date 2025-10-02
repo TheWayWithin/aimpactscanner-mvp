@@ -1157,12 +1157,24 @@ function AppContent({ initialUrl }) {
     );
   }
 
+  // Handle /signup route - show UnifiedRegistration with OAuth
+  if (currentView === 'signup') {
+    return (
+      <>
+        <SimpleConsentBanner />
+        <Suspense fallback={<ComponentLoader message="Loading registration..." />}>
+          <UnifiedRegistration onRegistrationComplete={handleRegistrationComplete} />
+        </Suspense>
+      </>
+    );
+  }
+
   if (currentView === 'register') {
     return (
       <>
         <SimpleConsentBanner />
         <Suspense fallback={<ComponentLoader message="Loading registration..." />}>
-          <CoffeeTierSignup 
+          <CoffeeTierSignup
             onRegistrationComplete={(user) => {
               setSession({ user });
               setCurrentView('dashboard');
@@ -1205,6 +1217,94 @@ function AppContent({ initialUrl }) {
       <>
         <SimpleConsentBanner />
         <Login onLoginSuccess={handleLoginComplete} />
+      </>
+    );
+  }
+
+  // OAuth callback view - handles OAuth and Magic Link redirects
+  if (currentView === 'oauth-callback') {
+    const OAuthCallback = React.lazy(() => import('./components/OAuthCallback'));
+    return (
+      <>
+        <SimpleConsentBanner />
+        <Suspense fallback={<ComponentLoader message="Processing authentication..." />}>
+          <OAuthCallback onNavigate={setCurrentView} />
+        </Suspense>
+      </>
+    );
+  }
+
+  // Upsell pages - require authentication
+  if (currentView === 'upsell-coffee') {
+    const UpsellCoffee = React.lazy(() => import('./pages/UpsellCoffee'));
+    return (
+      <>
+        <SimpleConsentBanner />
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <UpsellCoffee />
+        </Suspense>
+      </>
+    );
+  }
+
+  if (currentView === 'upsell-growth') {
+    const UpsellGrowth = React.lazy(() => import('./pages/UpsellGrowth'));
+    return (
+      <>
+        <SimpleConsentBanner />
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <UpsellGrowth />
+        </Suspense>
+      </>
+    );
+  }
+
+  if (currentView === 'upsell-scale') {
+    const UpsellScale = React.lazy(() => import('./pages/UpsellScale'));
+    return (
+      <>
+        <SimpleConsentBanner />
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <UpsellScale />
+        </Suspense>
+      </>
+    );
+  }
+
+  if (currentView === 'welcome-scale') {
+    const WelcomeScale = React.lazy(() => import('./pages/WelcomeScale'));
+    return (
+      <>
+        <SimpleConsentBanner />
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <WelcomeScale />
+        </Suspense>
+      </>
+    );
+  }
+
+  // Stripe Checkout Success - Payment confirmation page
+  if (currentView === 'checkout-success') {
+    const CheckoutSuccess = React.lazy(() => import('./pages/CheckoutSuccess'));
+    return (
+      <>
+        <SimpleConsentBanner />
+        <Suspense fallback={<ComponentLoader message="Processing payment..." />}>
+          <CheckoutSuccess />
+        </Suspense>
+      </>
+    );
+  }
+
+  // Stripe Checkout Cancel - Payment cancelled page
+  if (currentView === 'checkout-cancel') {
+    const CheckoutCancel = React.lazy(() => import('./pages/CheckoutCancel'));
+    return (
+      <>
+        <SimpleConsentBanner />
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <CheckoutCancel />
+        </Suspense>
       </>
     );
   }

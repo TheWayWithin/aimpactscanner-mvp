@@ -34,7 +34,8 @@
 - **Backend**: Supabase with Edge Functions (Deno/TypeScript)
 - **Database**: PostgreSQL with Row Level Security
 - **Real-time**: Supabase subscriptions for live progress
-- **Authentication**: Supabase Auth with tier management
+- **Authentication**: OAuth-first (Google, GitHub) + Magic Link (passwordless)
+- **Payments**: Stripe Checkout with webhook integration
 
 ### **Analysis Engine**
 - **Framework**: MASTERY-AI Framework v3.1.1
@@ -66,29 +67,54 @@
    ```bash
    # Copy environment template
    cp .env.example .env.local
-   
+
    # Add your Supabase credentials
    VITE_SUPABASE_URL=your_supabase_url
    VITE_SUPABASE_ANON_KEY=your_anon_key
    SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+   # Add Stripe credentials (for monetization)
+   VITE_STRIPE_PUBLIC_KEY=pk_test_...
+   VITE_STRIPE_COFFEE_PRICE_ID=price_...
+   STRIPE_SECRET_KEY=sk_test_...
+   STRIPE_WEBHOOK_SECRET=whsec_...
    ```
 
 4. **Database Setup**
    ```bash
    # Initialize Supabase locally (optional)
    npx supabase start
-   
-   # Or run database setup
-   npm run setup:db
+
+   # Run database migrations
+   supabase db push
+
+   # Verify migrations applied
+   supabase migrations list
    ```
 
-5. **Start Development**
+5. **Configure OAuth Providers** (required for authentication)
+   ```bash
+   # Set up Google OAuth:
+   # 1. Create OAuth app in Google Cloud Console
+   # 2. Add redirect URI: https://<supabase-project>.supabase.co/auth/v1/callback
+   # 3. Configure in Supabase Dashboard → Authentication → Providers
+
+   # Set up GitHub OAuth:
+   # 1. Create OAuth app in GitHub Settings
+   # 2. Add callback URL: https://<supabase-project>.supabase.co/auth/v1/callback
+   # 3. Configure in Supabase Dashboard
+
+   # For detailed setup, see: docs/operator-guide.md#oauth-provider-configuration
+   ```
+
+6. **Start Development**
    ```bash
    # Start frontend
    npm run dev
-   
+
    # Deploy Edge Functions (if needed)
-   npx supabase functions deploy analyze-page
+   supabase functions deploy analyze-page
+   supabase functions deploy stripe-webhook
    ```
 
 ### **Development Server**

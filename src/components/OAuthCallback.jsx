@@ -1,0 +1,214 @@
+// OAuthCallback.jsx - Handles OAuth and Magic Link redirects
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { supabase } from '../lib/supabaseClient';
+import {
+  getAuthContext,
+  clearAuthContext,
+  getPostSignupDestination,
+  getPostLoginDestination,
+  getUserData
+} from '../utils/authRouting';
+
+const OAuthCallback = ({ onNavigate }) => {
+  const [status, setStatus] = useState('processing');
+  const [message, setMessage] = useState('Completing authentication...');
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    handleOAuthCallback();
+  }, [onNavigate]);
+
+  const handleOAuthCallback = async () => {
+    try {
+      console.log('🔄 Processing OAuth callback...');
+
+      // Get the session from the URL (Supabase automatically handles this)
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+      if (sessionError) {
+        throw sessionError;
+      }
+
+      if (!session) {
+        throw new Error('No session found. Please try signing in again.');
+      }
+
+      console.log('✅ Session retrieved:', session.user.id);
+
+      // Retrieve auth context (tier selection, pending analysis)
+      const authContext = getAuthContext();
+      console.log('📦 Auth context:', authContext);
+
+      // Check if user exists in database
+      const userData = await getUserData(session.user.id);
+
+      if (!userData) {
+        // New user - needs to be created
+        console.log('🆕 New user detected, creating database record...');
+        setMessage('Setting up your account...');
+
+        const selectedTier = authContext?.selectedTier || session.user.user_metadata?.selected_tier || 'free';
+        const authProvider = session.user.app_metadata?.provider || 'unknown';
+
+        // Create user record in database
+        const { data: newUser, error: createError } = await supabase
+          .from('users')
+          .insert({
+            id: session.user.id,
+            email: session.user.email,
+            tier: selectedTier === 'free' ? 'free' : 'free', // Start everyone as free, upgrade via Stripe
+            selected_tier: selectedTier,
+            auth_provider: authProvider,
+            is_first_login: true,
+            signup_source: authContext?.mode === 'signup' ? 'oauth' : 'login',
+            monthly_analyses_used: 0,
+            subscription_status: selectedTier === 'free' ? 'active' : 'pending_payment'
+          })
+          .select()
+          .single();
+
+        if (createError) {
+          console.error('❌ Error creating user:', createError);
+          // Try to continue anyway - user might already exist
+          const retryUserData = await getUserData(session.user.id);
+          if (retryUserData) {
+            console.log('✅ User exists after retry, continuing...');
+            await routeUser(retryUserData, session, authContext);
+            return;
+          }
+          throw createError;
+        }
+
+        console.log('✅ User created:', newUser);
+        await routeUser(newUser, session, authContext);
+
+      } else {
+        // Existing user - login
+        console.log('👋 Existing user, routing to destination...');
+        await routeUser(userData, session, authContext);
+      }
+
+    } catch (error) {
+      console.error('❌ OAuth callback error:', error);
+      setStatus('error');
+      setError(error.message || 'Authentication failed. Please try again.');
+
+      // Redirect to signup after 3 seconds
+      setTimeout(() => {
+        if (onNavigate) {
+          onNavigate('unified-registration');
+        } else {
+          window.location.hash = 'unified-registration';
+        }
+      }, 3000);
+    }
+  };
+
+  const routeUser = async (userData, session, authContext) => {
+    try {
+      setMessage('Redirecting...');
+
+      // Determine destination based on user state
+      let destination;
+
+      if (userData.is_first_login) {
+        // First login after signup
+        console.log('👋 First login, routing to post-signup destination');
+        destination = getPostSignupDestination(session.user, authContext);
+      } else {
+        // Returning user
+        console.log('🔄 Returning user, routing to post-login destination');
+        destination = await getPostLoginDestination(userData, session);
+      }
+
+      // Clear auth context after use
+      clearAuthContext();
+
+      console.log('🚀 Routing to:', destination);
+
+      // Map paths to view names
+      const pathToView = {
+        '/analyze': 'input',
+        '/checkout': 'pricing', // For Stripe checkout
+        '/dashboard': 'dashboard',
+        '/upsell/coffee': 'upsell-coffee',
+        '/upsell/growth': 'upsell-growth',
+        '/upsell/scale': 'upsell-scale',
+        '/welcome/scale': 'welcome-scale'
+      };
+
+      const viewName = pathToView[destination.path] || 'dashboard';
+
+      // Store destination state in sessionStorage for retrieval by next component
+      if (destination.state) {
+        sessionStorage.setItem('routeState', JSON.stringify(destination.state));
+      }
+
+      // Navigate using the callback or hash navigation
+      if (onNavigate) {
+        onNavigate(viewName);
+      } else {
+        window.location.hash = viewName;
+        window.location.reload(); // Force reload to trigger auth state update
+      }
+
+    } catch (error) {
+      console.error('❌ Routing error:', error);
+      throw error;
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
+      <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-lg text-center">
+        {status === 'processing' && (
+          <>
+            <div className="flex justify-center mb-6">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"></div>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+              {message}
+            </h2>
+            <p className="text-gray-600">
+              Please wait while we complete your authentication...
+            </p>
+          </>
+        )}
+
+        {status === 'error' && (
+          <>
+            <div className="text-6xl mb-4">❌</div>
+            <h2 className="text-2xl font-bold text-red-600 mb-3">
+              Authentication Failed
+            </h2>
+            <p className="text-gray-700 mb-6">
+              {error}
+            </p>
+            <p className="text-sm text-gray-500">
+              Redirecting to signup page...
+            </p>
+            <button
+              onClick={() => {
+                if (onNavigate) {
+                  onNavigate('unified-registration');
+                } else {
+                  window.location.hash = 'unified-registration';
+                }
+              }}
+              className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+            >
+              Return to Signup
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+OAuthCallback.propTypes = {
+  onNavigate: PropTypes.func
+};
+
+export default OAuthCallback;

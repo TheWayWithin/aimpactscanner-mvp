@@ -1,0 +1,84 @@
+# COORDINATOR COMMAND - Copy and Paste This
+
+Use this command to start the authentication & monetization system build:
+
+```
+/coord build AUTH_MONETIZATION_SPEC.md AUTH_MONETIZATION_PLAN.md
+```
+
+## What This Will Do
+
+The coordinator will:
+1. Read the complete specification (AUTH_MONETIZATION_SPEC.md)
+2. Read the execution plan (AUTH_MONETIZATION_PLAN.md)
+3. Delegate to specialists in sequence:
+   - Strategist → user stories
+   - Architect → technical design
+   - Operator → OAuth setup
+   - Developer → migrations, components, upsell pages, Stripe, routing
+   - Designer → upsell page UI/UX
+   - Tester → comprehensive testing
+   - Documenter → user/admin/dev guides
+4. Track progress in project-plan.md and progress.md
+5. Report completion with summary
+
+## Expected Duration
+
+8-12 hours of autonomous work (can run while you're at work)
+
+## What You'll Get Back
+
+After completion:
+- ✅ OAuth authentication (Google + GitHub) fully working
+- ✅ Magic link authentication fully working
+- ✅ Password authentication completely removed
+- ✅ 4 tier upsell pages built and functional
+- ✅ Stripe payment integration with graceful degradation
+- ✅ Context-aware routing (landing page URL preserved)
+- ✅ Waitlist capture for Growth/Scale tiers
+- ✅ Complete test coverage
+- ✅ User/admin/developer documentation
+
+## Verification Checklist (When You Return)
+
+Check that coordinator completed:
+- [ ] All 10 phases marked complete in project-plan.md
+- [ ] OAuth providers configured in Supabase
+- [ ] Database migration applied
+- [ ] All components created/modified
+- [ ] Full testing checklist passed
+- [ ] Documentation created
+- [ ] No critical bugs in progress.md
+
+## If Something Goes Wrong
+
+Coordinator will:
+- Log issues in progress.md
+- Attempt alternative approaches
+- Report blocking issues for your review
+- Provide rollback instructions if needed
+
+## After Successful Build
+
+Test these flows manually:
+1. Sign up with Google → select Coffee → pay → land on analysis page
+2. Sign up with GitHub → select Free → land on analysis page
+3. Enter URL on landing page → sign up → URL pre-populated in analysis
+4. Log in as Free user → see Coffee upsell → upgrade or dismiss
+5. Log in as Coffee user → see Growth upsell (waitlist)
+
+## Emergency Rollback
+
+If the build breaks something:
+```bash
+git log --oneline  # Find commit before build started
+git revert <commit-hash>  # Revert the changes
+git push origin main
+```
+
+---
+
+**READY TO GO!**
+
+Just paste the command at the top and let it run while you're at work.
+The coordinator will handle everything autonomously.
