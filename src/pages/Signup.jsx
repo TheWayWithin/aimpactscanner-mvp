@@ -1,10 +1,17 @@
 // Signup.jsx - OAuth-first signup page (NO tier selection upfront, NO passwords)
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AuthMethodSelector from '../components/AuthMethodSelector';
 
 const Signup = () => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+
+  // DEBUG: Log immediately when component mounts
+  useEffect(() => {
+    console.log('🚀 Signup component mounted');
+    console.log('🔍 Current URL:', window.location.href);
+    console.log('🔍 Current hash:', window.location.hash);
+  }, []);
 
   const handleAuthSuccess = (successMessage) => {
     setMessage(successMessage);

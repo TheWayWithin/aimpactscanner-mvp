@@ -1,5 +1,5 @@
 // AuthMethodSelector.jsx - OAuth-first authentication with Google, GitHub, and Magic Link
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { supabase } from '../lib/supabaseClient';
 
@@ -9,6 +9,12 @@ const AuthMethodSelector = ({ selectedTier, mode = 'signup', onSuccess, onError 
   const [showMagicLink, setShowMagicLink] = useState(false);
   const [email, setEmail] = useState('');
   const [magicLinkSent, setMagicLinkSent] = useState(false);
+
+  // DEBUG: Log immediately when component mounts
+  useEffect(() => {
+    console.log('🎯 AuthMethodSelector mounted');
+    console.log('🎯 Props:', { selectedTier, mode });
+  }, []);
 
   // Store context before OAuth redirect
   const storeAuthContext = () => {
@@ -346,7 +352,7 @@ const AuthMethodSelector = ({ selectedTier, mode = 'signup', onSuccess, onError 
 };
 
 AuthMethodSelector.propTypes = {
-  selectedTier: PropTypes.oneOf(['free', 'coffee', 'growth', 'scale']).isRequired,
+  selectedTier: PropTypes.oneOf(['free', 'coffee', 'growth', 'scale', null]), // Allow null for OAuth-first signup
   mode: PropTypes.oneOf(['signup', 'login']),
   onSuccess: PropTypes.func,
   onError: PropTypes.func
