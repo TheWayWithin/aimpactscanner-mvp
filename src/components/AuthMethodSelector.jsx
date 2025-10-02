@@ -44,6 +44,9 @@ const AuthMethodSelector = ({ selectedTier, mode = 'signup', onSuccess, onError 
 
       console.log('🔵 Starting Google OAuth flow...');
 
+      console.log('🔵 Calling Supabase signInWithOAuth for Google...');
+      console.log('🔵 Redirect URL:', getRedirectUrl());
+
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -61,10 +64,20 @@ const AuthMethodSelector = ({ selectedTier, mode = 'signup', onSuccess, onError 
         }
       });
 
-      if (error) throw error;
+      console.log('🔵 Supabase OAuth response:', { data, error });
+
+      if (error) {
+        console.error('❌ Supabase returned error:', error);
+        console.error('Error code:', error.code);
+        console.error('Error message:', error.message);
+        console.error('Error status:', error.status);
+        throw error;
+      }
 
       // OAuth redirect will happen automatically
-      console.log('✅ Google OAuth initiated, redirecting...');
+      console.log('✅ Google OAuth initiated successfully!');
+      console.log('✅ OAuth URL:', data?.url);
+      console.log('✅ Redirecting to Google...');
 
     } catch (error) {
       console.error('❌ Google OAuth error:', error);
