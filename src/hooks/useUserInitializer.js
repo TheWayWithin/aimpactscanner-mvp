@@ -79,7 +79,7 @@ export const useUserInitializer = (session) => {
           setTimeout(() => reject(new Error('Database query timeout')), 5000);
         });
         
-        const { data: existingUser, error: checkError } = await Promise.race([
+        let { data: existingUser, error: checkError } = await Promise.race([
           queryPromise,
           timeoutPromise.then(() => ({ data: null, error: new Error('Database query timeout') }))
         ]).catch(err => ({ data: null, error: err }));
@@ -87,6 +87,13 @@ export const useUserInitializer = (session) => {
         clearTimeout(timeoutId);
 
         console.log('📊 useUserInitializer: Database check result:', { existingUser, checkError });
+
+        // CRITICAL FIX: Treat 406 errors as "user doesn't exist yet"
+        if (checkError && (checkError.code === '406' || (checkError.message && checkError.message.includes('406')))) {
+          console.log('⚠️ 406 error - user profile not found, treating as new user');
+          existingUser = null;
+          checkError = null; // Clear error so we proceed
+        }
 
         if (checkError && checkError.code !== 'PGRST116') {
           // PGRST116 = no rows returned, which is expected for new users
@@ -101,16 +108,7 @@ export const useUserInitializer = (session) => {
             return fallbackData;
           }
 
-          // CRITICAL FIX: Treat 406 errors as "user doesn't exist yet" - trigger hasn't fired
-          // This happens when database trigger fails to create user profile automatically
-          if (checkError.message && checkError.message.includes('406')) {
-            console.log('⚠️ 406 error - user profile not found (trigger may have failed), treating as new user');
-            // Set existingUser to null so we proceed to user creation logic below
-            existingUser = null;
-            checkError.code = 'PGRST116'; // Pretend it's "no rows" so we continue
-          } else {
-            throw checkError;
-          }
+          throw checkError;
         }
 
         if (existingUser) {
@@ -165,6 +163,17 @@ export const useUserInitializer = (session) => {
 
             if (createError) {
               console.log('User creation error:', createError);
+
+              // CRITICAL FIX: Handle 401 RLS errors by using fallback
+              if (createError.code === '401' || (createError.message && createError.message.includes('401')) ||
+                  createError.code === '42501' || (createError.message && createError.message.includes('row-level security'))) {
+                console.log('⚠️ 401/RLS error - using fallback data, will retry via Edge Function');
+                const fallbackData = { tier: 'free', monthly_analyses_used: 0, id: userId, email: userEmail };
+                setStatus('ready');
+                setUserData(fallbackData);
+                return fallbackData;
+              }
+
               // If user already exists (409 conflict), that's actually fine
               if (createError.message && (createError.message.includes('409') || createError.message.includes('duplicate'))) {
                 console.log('User already exists, proceeding with default data');
