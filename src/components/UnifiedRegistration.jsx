@@ -68,7 +68,7 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
       };
     } else {
       return {
-        title: `${selectedTier.toUpperCase()} Plan`,
+        title: selectedTier ? `${selectedTier.toUpperCase()} Plan` : 'Choose Your Plan',
         benefits: [
           { icon: '🔧', text: 'Coming Soon - Advanced features in development', highlight: true }
         ],
