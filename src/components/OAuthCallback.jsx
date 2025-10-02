@@ -44,11 +44,31 @@ const OAuthCallback = ({ onNavigate }) => {
       const userData = await getUserData(session.user.id);
 
       if (!userData) {
-        // New user - needs to be created
-        console.log('🆕 New user detected, creating database record...');
-        setMessage('Setting up your account...');
+        // New user - check if they selected a tier
+        console.log('🆕 New user detected...');
 
-        const selectedTier = authContext?.selectedTier || session.user.user_metadata?.selected_tier || 'free';
+        const selectedTier = authContext?.selectedTier || session.user.user_metadata?.selected_tier || null;
+
+        // If NO tier selected, redirect to tier selection page
+        if (!selectedTier) {
+          console.log('⚠️ No tier selected, redirecting to tier selection...');
+          setMessage('Choose your plan...');
+
+          // Store user session for tier selection page
+          sessionStorage.setItem('newUserEmail', session.user.email);
+          sessionStorage.setItem('newUserId', session.user.id);
+
+          // Redirect to Coffee upsell page for tier selection
+          if (onNavigate) {
+            onNavigate('upsell-coffee');
+          } else {
+            window.location.hash = 'upsell-coffee';
+          }
+          return;
+        }
+
+        // Tier selected - create user record
+        setMessage('Setting up your account...');
         const authProvider = session.user.app_metadata?.provider || 'unknown';
 
         // Create user record in database
