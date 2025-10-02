@@ -1157,13 +1157,14 @@ function AppContent({ initialUrl }) {
     );
   }
 
-  // Handle /signup route - show UnifiedRegistration with OAuth
+  // Handle /signup route - OAuth-first signup (NO tier selection upfront)
   if (currentView === 'signup' || currentView === '/signup') {
+    const Signup = React.lazy(() => import('./pages/Signup'));
     return (
       <>
         <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading registration..." />}>
-          <UnifiedRegistration onRegistrationComplete={handleRegistrationComplete} />
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <Signup />
         </Suspense>
       </>
     );

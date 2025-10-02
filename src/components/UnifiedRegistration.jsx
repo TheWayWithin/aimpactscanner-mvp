@@ -7,7 +7,8 @@ import AuthMethodSelector from './AuthMethodSelector';
 import { storePendingAnalysis } from '../utils/authRouting';
 
 const UnifiedRegistration = ({ onRegistrationComplete }) => {
-  const [selectedTier, setSelectedTier] = useState('coffee'); // Default to paid tier
+  const [selectedTier, setSelectedTier] = useState(null); // No tier selected initially
+  const [showTierSelector, setShowTierSelector] = useState(false); // Don't show tier selector initially
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -83,7 +84,7 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-8 items-start">
-          
+
           {/* Left side - Registration Form */}
           <div className="bg-white rounded-lg shadow-lg p-8">
             <h1 className="text-3xl font-bold mb-2">Create Your Account</h1>
@@ -91,11 +92,12 @@ const UnifiedRegistration = ({ onRegistrationComplete }) => {
               Join early adopters making their businesses AI-discoverable
             </p>
 
-            {/* Tier Selection Component */}
-            <TierSelector
-              selectedTier={selectedTier}
-              onTierChange={setSelectedTier}
-            />
+            {/* OAuth-First: Show auth buttons immediately, NO tier selection upfront */}
+            <div className="mb-6">
+              <p className="text-sm text-gray-600 mb-4">
+                Sign up with your preferred method. You'll choose your plan after authentication.
+              </p>
+            </div>
 
             {/* Message Display */}
             {message && (
