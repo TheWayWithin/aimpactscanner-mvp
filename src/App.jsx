@@ -217,7 +217,13 @@ function AppContent({ initialUrl }) {
       } else {
         // Handle direct URL navigation or initial load
         const hash = window.location.hash.slice(1);
-        if (hash) {
+
+        // Check if hash contains OAuth tokens from Supabase
+        if (hash && (hash.includes('access_token=') || hash.includes('refresh_token='))) {
+          console.log('🔐 OAuth tokens detected in popstate, routing to oauth-callback');
+          setCurrentViewInternal('oauth-callback');
+          window.scrollTo(0, 0);
+        } else if (hash) {
           setCurrentViewInternal(hash);
           window.scrollTo(0, 0);
         }
@@ -228,7 +234,13 @@ function AppContent({ initialUrl }) {
     
     // Check initial URL
     const hash = window.location.hash.slice(1);
-    if (hash) {
+
+    // CRITICAL: Check if hash contains OAuth tokens from Supabase
+    // OAuth tokens look like: access_token=xxx&expires_in=3600&refresh_token=xxx
+    if (hash && (hash.includes('access_token=') || hash.includes('refresh_token='))) {
+      console.log('🔐 OAuth tokens detected in URL, routing to oauth-callback');
+      setCurrentViewInternal('oauth-callback');
+    } else if (hash) {
       setCurrentViewInternal(hash);
     } else if (window.location.pathname === '/login') {
       setCurrentView('login');
