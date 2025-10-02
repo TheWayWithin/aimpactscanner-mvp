@@ -1,5 +1,6 @@
 // Signup.jsx - OAuth-first signup page (NO tier selection upfront, NO passwords)
 import React, { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabaseClient';
 import AuthMethodSelector from '../components/AuthMethodSelector';
 
 const Signup = () => {
@@ -11,6 +12,26 @@ const Signup = () => {
     console.log('🚀 Signup component mounted');
     console.log('🔍 Current URL:', window.location.href);
     console.log('🔍 Current hash:', window.location.hash);
+
+    // CRITICAL: Check if user arrived here from magic link or OAuth with existing session
+    const checkExistingSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        if (session && !error) {
+          console.log('✅ Active session detected on signup page, redirecting to oauth-callback...');
+          console.log('Session user:', session.user.email);
+          // Redirect to oauth-callback to process the session
+          window.location.hash = 'oauth-callback';
+        } else {
+          console.log('ℹ️ No active session, showing signup form');
+        }
+      } catch (err) {
+        console.error('Error checking session:', err);
+      }
+    };
+
+    checkExistingSession();
   }, []);
 
   const handleAuthSuccess = (successMessage) => {

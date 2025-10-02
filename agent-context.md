@@ -1,86 +1,45 @@
-# Mission Context: Authentication & Monetization System Build
+# Agent Context - OAuth Flow Debugging Mission
 
-## Mission Objectives
-**PRIMARY**: Build OAuth-first authentication system with tier-based monetization
-**TIMELINE**: 8-12 hours autonomous execution
-**PRIORITY**: CRITICAL - User acquisition and revenue system
+## Mission Objective
+Fix the Google OAuth signup flow at https://aimpactscanner.com/#/signup using systematic Playwright testing. Break the linear debugging pattern and approach from multiple angles.
 
-## Business Requirements
-1. ✅ Minimize signup friction (OAuth-first, no passwords)
-2. ✅ Capture valid email addresses (OAuth/Magic Link inherent verification)
-3. ✅ Strategic upsell to Coffee plan ($4.95/month)
-4. ✅ Seamless Stripe payment integration with graceful degradation
-5. ✅ Future-proof tier system (Growth $29, Scale $99 with waitlist)
+## Critical Problem Statement
+- **Duration**: Debugging has taken 2x longer than original development
+- **Pattern**: Stuck in linear thinking - same approaches repeatedly
+- **User Feedback**: "Step back and think from different angles"
+- **Symptom**: Console logs not appearing, OAuth not completing successfully
 
-## Technical Requirements
-1. ✅ Remove password-based authentication entirely
-2. ✅ Implement Google + GitHub OAuth
-3. ✅ Implement passwordless magic link (fix SMTP)
-4. ✅ Context-aware post-signup routing (preserve landing page URL)
-5. ✅ 4 tier-specific upsell pages with waitlist capture
+## Expected Flow
+1. User visits https://aimpactscanner.com/#/signup
+2. Clicks "Continue with Google"
+3. Completes Google authentication
+4. Returns to app with OAuth tokens in URL hash
+5. New users → Tier selection page
+6. Existing users → Dashboard
 
-## Critical Constraints
-⚠️ **DO NOT modify tier benefit messaging** - User-approved, conversion-optimized (Doug Hall framework)
-⚠️ **MUST preserve localStorage context** through signup redirects
-⚠️ **MUST implement graceful degradation** for Stripe payment failures
-⚠️ **MUST skip upsell on first login** - Only show for returning users
+## Known Issues
+1. Console debug messages not appearing at all
+2. OAuth redirects not working correctly
+3. Users seeing wrong pages after OAuth (landing, unified-registration)
+4. PropTypes validation errors (FIXED)
 
-## User Journeys
+## Recent Changes
+- Created OAuth-first Signup.jsx component
+- Fixed PropTypes to allow null selectedTier
+- Added extensive debug logging (not appearing)
+- Fixed OAuth token detection in App.jsx URL hash parsing
 
-### Journey A: Landing Page → URL Entry → Signup
-1. User enters URL on landing page → Store in `localStorage.pendingAnalysisUrl`
-2. Clicks "Analyze" → Redirect to signup
-3. Select tier + auth method → Complete authentication
-4. If Coffee tier → Stripe checkout
-5. After payment/signup → Analysis page with URL **PRE-POPULATED**
+## Critical Files
+- `/src/pages/Signup.jsx` - OAuth-first signup page
+- `/src/components/AuthMethodSelector.jsx` - OAuth button handlers
+- `/src/components/OAuthCallback.jsx` - OAuth callback processor
+- `/src/App.jsx` - Main routing and OAuth token detection
 
-### Journey B: Direct Signup
-1. User clicks "Sign Up" (no URL context)
-2. Select tier + auth method → Complete authentication
-3. If Coffee tier → Stripe checkout
-4. After payment/signup → Analysis page **WITHOUT** pre-populated URL
-
-### Journey C: Returning User Login
-1. Authenticate via OAuth/Magic Link
-2. If first login → Skip upsell, go to analysis page
-3. If returning user → Show tier-appropriate upsell → Dashboard
-
-## Authentication Methods (Priority Order)
-- 🔵 **PRIMARY**: Google OAuth (most prominent)
-- ⚫ **SECONDARY**: GitHub OAuth
-- ✉️ **FALLBACK**: Magic Link (passwordless)
-- ❌ **REMOVED**: Email/Password
-
-## Tier System
-- 🆓 **FREE**: 3 analyses/month, limited features
-- ☕ **COFFEE**: $4.95/month, unlimited analyses (PRIMARY MONETIZATION)
-- 🚀 **GROWTH**: $29/month (Coming Soon + Waitlist)
-- 🏢 **SCALE**: $99/month (Coming Soon + Waitlist)
-
-## Upsell Pages Required
-1. `/upsell/coffee` - Free → Coffee upgrade
-2. `/upsell/growth` - Coffee → Growth (waitlist)
-3. `/upsell/scale` - Growth → Scale (waitlist)
-4. `/welcome/scale` - Scale tier welcome
-
-## Stripe Integration
-- Create checkout session for Coffee tier
-- Payment SUCCESS → Upgrade tier via webhook
-- Payment FAILURE → Stay Free tier, show retry banner
-- Graceful degradation (no blocked users)
-
-## Database Schema Updates
-Add to users table:
-- auth_provider, selected_tier, subscription_status
-- stripe_customer_id, stripe_subscription_id
-- is_first_login, signup_source
-- growth_waitlist, scale_waitlist, waitlist_joined_at
-
-Create waitlist table for Growth/Scale interest tracking
-
-## Reference Documents
-- **AUTH_MONETIZATION_SPEC.md** - Complete specification (messaging, flows, requirements)
-- **AUTH_MONETIZATION_PLAN.md** - 10-phase execution plan with delegation instructions
+## Testing Requirements
+- Use Playwright for systematic browser testing
+- Test from fresh perspective each failure
+- Document what ACTUALLY happens vs what SHOULD happen
+- Identify root cause, not symptoms
 
 ## Accumulated Findings
-[To be updated by specialists as work progresses]
+(Will be updated by each agent)
