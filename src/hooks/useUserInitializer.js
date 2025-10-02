@@ -91,7 +91,7 @@ export const useUserInitializer = (session) => {
         if (checkError && checkError.code !== 'PGRST116') {
           // PGRST116 = no rows returned, which is expected for new users
           console.log('Database check error:', checkError);
-          
+
           // Handle timeout specifically
           if (checkError.message && checkError.message.includes('timeout')) {
             console.log('⏱️ Database query timed out - using fallback');
@@ -100,13 +100,17 @@ export const useUserInitializer = (session) => {
             setUserData(fallbackData);
             return fallbackData;
           }
-          
-          // Handle specific error cases
+
+          // CRITICAL FIX: Treat 406 errors as "user doesn't exist yet" - trigger hasn't fired
+          // This happens when database trigger fails to create user profile automatically
           if (checkError.message && checkError.message.includes('406')) {
-            throw new Error('Database connection issue (406). Please try again.');
+            console.log('⚠️ 406 error - user profile not found (trigger may have failed), treating as new user');
+            // Set existingUser to null so we proceed to user creation logic below
+            existingUser = null;
+            checkError.code = 'PGRST116'; // Pretend it's "no rows" so we continue
+          } else {
+            throw checkError;
           }
-          
-          throw checkError;
         }
 
         if (existingUser) {
