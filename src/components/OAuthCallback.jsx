@@ -21,7 +21,9 @@ const OAuthCallback = ({ onNavigate }) => {
 
   const handleOAuthCallback = async () => {
     try {
-      console.log('🔄 Processing OAuth callback...');
+      console.log('🔄 OAuthCallback component mounted - Processing OAuth callback...');
+      console.log('🔍 Current URL:', window.location.href);
+      console.log('🔍 Current hash:', window.location.hash);
 
       // Get the session from the URL (Supabase automatically handles this)
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();

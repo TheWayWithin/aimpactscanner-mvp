@@ -237,10 +237,12 @@ function AppContent({ initialUrl }) {
 
     // CRITICAL: Check if hash contains OAuth tokens from Supabase
     // OAuth tokens look like: access_token=xxx&expires_in=3600&refresh_token=xxx
-    if (hash && (hash.includes('access_token=') || hash.includes('refresh_token='))) {
-      console.log('🔐 OAuth tokens detected in URL, routing to oauth-callback');
+    console.log('🔍 Initial URL hash:', hash);
+    if (hash && (hash.includes('access_token=') || hash.includes('refresh_token=') || hash.includes('type=recovery'))) {
+      console.log('🔐 OAuth/auth tokens detected in URL, routing to oauth-callback');
       setCurrentViewInternal('oauth-callback');
     } else if (hash) {
+      console.log('📍 Setting view to:', hash);
       setCurrentViewInternal(hash);
     } else if (window.location.pathname === '/login') {
       setCurrentView('login');
