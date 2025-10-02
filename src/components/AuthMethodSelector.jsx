@@ -30,7 +30,7 @@ const AuthMethodSelector = ({ selectedTier, mode = 'signup', onSuccess, onError 
 
   // Get redirect URL for OAuth
   const getRedirectUrl = () => {
-    return `${window.location.origin}/oauth-callback`;
+    return `${window.location.origin}/#/oauth-callback`;
   };
 
   // Handle Google OAuth

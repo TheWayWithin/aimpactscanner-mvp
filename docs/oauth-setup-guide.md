@@ -399,6 +399,8 @@ http://localhost:54321/auth/v1/callback
    - Local: `http://localhost:5173/#/signup`
    - Production: `https://aimpactscanner.com/#/signup`
 
+   Note: You should see TierSelector and AuthMethodSelector components with Google/GitHub OAuth buttons.
+
 2. **Click "Sign in with Google"**:
    - Should redirect to Google login page
    - Google consent screen appears (if first time)
