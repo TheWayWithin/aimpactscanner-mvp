@@ -22,6 +22,7 @@ const CoffeeTierSignup = React.lazy(() => import('./components/CoffeeTierSignup'
 const UnifiedRegistration = React.lazy(() => import('./components/UnifiedRegistration'));
 const SimpleAccountDashboard = React.lazy(() => import('./components/SimpleAccountDashboard'));
 const RegistrationFlow = React.lazy(() => import('./components/RegistrationFlow'));
+const DiagnosticSignup = React.lazy(() => import('./pages/DiagnosticSignup'));
 
 // Keep frequently used components as regular imports
 import Login from './components/Login';
@@ -1220,6 +1221,40 @@ function AppContent({ initialUrl }) {
             console.log('Resending verification email...');
           }}
         />
+      </>
+    );
+  }
+
+  // Diagnostic page (accessible in dev mode or with special param)
+  if (currentView === 'diagnostic-signup') {
+    // Only allow in development or with special URL param
+    const isDev = import.meta.env.DEV;
+    const urlParams = new URLSearchParams(window.location.search);
+    const allowDiagnostic = isDev || urlParams.get('diagnostic') === 'true';
+
+    if (!allowDiagnostic) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Diagnostic Mode Disabled</h1>
+            <p className="text-gray-600">This page is only available in development mode.</p>
+            <button
+              onClick={() => setCurrentView('landing')}
+              className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Return to Home
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <SimpleConsentBanner />
+        <Suspense fallback={<ComponentLoader message="Loading diagnostics..." />}>
+          <DiagnosticSignup />
+        </Suspense>
       </>
     );
   }
