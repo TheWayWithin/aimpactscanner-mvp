@@ -235,14 +235,21 @@ function AppContent({ initialUrl }) {
     // Check initial URL
     const hash = window.location.hash.slice(1);
 
-    // CRITICAL: Check if hash contains OAuth tokens from Supabase
+    // CRITICAL: Check if hash contains OAuth tokens from Supabase OR is oauth-callback route
     // OAuth tokens look like: access_token=xxx&expires_in=3600&refresh_token=xxx
-    console.log('🔍 Initial URL hash:', hash);
+    // Magic links redirect to: /#/oauth-callback (no tokens in URL, session in browser)
+    console.log('🔍 APP INIT - Full URL:', window.location.href);
+    console.log('🔍 APP INIT - Hash:', hash);
+    console.log('🔍 APP INIT - Hash starts with /oauth-callback?', hash.startsWith('/oauth-callback'));
+
     if (hash && (hash.includes('access_token=') || hash.includes('refresh_token=') || hash.includes('type=recovery'))) {
-      console.log('🔐 OAuth/auth tokens detected in URL, routing to oauth-callback');
+      console.log('🔐 ROUTING TO oauth-callback (OAuth tokens detected)');
+      setCurrentViewInternal('oauth-callback');
+    } else if (hash && hash.startsWith('/oauth-callback')) {
+      console.log('🔐 ROUTING TO oauth-callback (Magic link redirect detected)');
       setCurrentViewInternal('oauth-callback');
     } else if (hash) {
-      console.log('📍 Setting view to:', hash);
+      console.log('📍 ROUTING TO:', hash);
       setCurrentViewInternal(hash);
     } else if (window.location.pathname === '/login') {
       setCurrentView('login');
