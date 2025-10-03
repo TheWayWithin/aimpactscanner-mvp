@@ -16,18 +16,21 @@ const Signup = () => {
     // CRITICAL: Check if user arrived here from magic link or OAuth with existing session
     const checkExistingSession = async () => {
       try {
+        console.log('[SIGNUP] Checking for existing session...');
         const { data: { session }, error } = await supabase.auth.getSession();
+        console.log('[SIGNUP] Session check result:', { hasSession: !!session, error });
 
         if (session && !error) {
-          console.log('✅ Active session detected on signup page, redirecting to oauth-callback...');
-          console.log('Session user:', session.user.email);
-          // Redirect to oauth-callback to process the session
+          console.log('[SIGNUP] ✅ Active session detected, redirecting to oauth-callback...');
+          console.log('[SIGNUP] Session user:', session.user.email);
+          // Force immediate redirect
           window.location.hash = 'oauth-callback';
+          window.location.reload(); // Force reload to ensure oauth-callback loads
         } else {
-          console.log('ℹ️ No active session, showing signup form');
+          console.log('[SIGNUP] ℹ️ No active session, showing signup form');
         }
       } catch (err) {
-        console.error('Error checking session:', err);
+        console.error('[SIGNUP] Error checking session:', err);
       }
     };
 

@@ -113,17 +113,22 @@ const OAuthCallback = ({ onNavigate }) => {
 
     } catch (error) {
       console.error('❌ OAuth callback error:', error);
+      console.error('❌ Error message:', error.message);
+      console.error('❌ Error stack:', error.stack);
+      console.error('❌ Full error object:', JSON.stringify(error, null, 2));
+
       setStatus('error');
       setError(error.message || 'Authentication failed. Please try again.');
 
-      // Redirect to signup after 3 seconds
-      setTimeout(() => {
-        if (onNavigate) {
-          onNavigate('unified-registration');
-        } else {
-          window.location.hash = 'unified-registration';
-        }
-      }, 3000);
+      // DON'T auto-redirect - let user see the error
+      console.log('⏸️ Auto-redirect DISABLED - error will stay visible for debugging');
+      // setTimeout(() => {
+      //   if (onNavigate) {
+      //     onNavigate('unified-registration');
+      //   } else {
+      //     window.location.hash = 'unified-registration';
+      //   }
+      // }, 3000);
     }
   };
 
