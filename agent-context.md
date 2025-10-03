@@ -42,4 +42,51 @@ Fix the Google OAuth signup flow at https://aimpactscanner.com/#/signup using sy
 - Identify root cause, not symptoms
 
 ## Accumulated Findings
-(Will be updated by each agent)
+
+### Root Cause Identified ✅
+**Agent**: Coordinator (with user testing feedback)
+**Date**: 2025-10-02
+
+**The Problem**:
+We were stuck in linear debugging thinking we had an OAuth code problem. The actual issue was architectural:
+
+1. **Supabase Site URL** was initially set to `https://aimpactscanner.com/#/oauth-callback`
+2. **Magic links** redirect to the Site URL, which became `/#/oauth-callback`
+3. User changed Site URL to `https://aimpactscanner.com` (correct)
+4. **NEW ISSUE**: Magic links now redirect to `https://aimpactscanner.com`
+5. Browser routing adds hash: `https://aimpactscanner.com/#/signup`
+6. **Signup component loads** but doesn't check for existing session
+7. Session exists in Supabase but isn't processed
+8. User sees "Authentication failed - No session found"
+
+**Key Insight from User**:
+"I tried the email with magic link and it sent me a link I clicked the link and it failed in exactly the same way 'Authentication failed No session found'"
+
+This broke our linear thinking - we were debugging OAuth when the issue was **session detection on the landing page**.
+
+### Solution Implemented ✅
+**File**: `/src/pages/Signup.jsx`
+**Change**: Added session detection in useEffect hook
+
+```javascript
+// Check if user arrived here from magic link or OAuth with existing session
+const checkExistingSession = async () => {
+  const { data: { session }, error } = await supabase.auth.getSession();
+
+  if (session && !error) {
+    console.log('✅ Active session detected, redirecting to oauth-callback...');
+    window.location.hash = 'oauth-callback';
+  }
+};
+```
+
+**Why This Works**:
+- Magic link creates session → redirects to Site URL
+- Signup page detects existing session
+- Redirects to oauth-callback component
+- OAuthCallback processes session and routes user correctly
+
+### Configuration Fix ✅
+**Supabase Dashboard Changes**:
+- Site URL: `https://aimpactscanner.com` ✅ (was `/#/oauth-callback`)
+- Redirect URLs: Includes all necessary paths ✅
