@@ -80,7 +80,7 @@ function AppContent({ initialUrl }) {
 
   const [session, setSession] = useState(null);
   const [currentView, setCurrentViewInternal] = useState('landing'); // Start with landing page
-  
+
   // Wrapper for setCurrentView that manages browser history
   const setCurrentView = (view) => {
     if (view !== currentView) {
@@ -99,6 +99,35 @@ function AppContent({ initialUrl }) {
       }, 100);
     }
   };
+
+  // CRITICAL FIX: Use Supabase's onAuthStateChange instead of manual hash parsing
+  // This properly handles OAuth callbacks and magic links
+  useEffect(() => {
+    console.log('🔐 Setting up onAuthStateChange listener...');
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('🔐 Auth state changed:', event, session?.user?.email);
+
+      if (event === 'SIGNED_IN' && session) {
+        console.log('✅ User signed in, routing to oauth-callback');
+        // Route to OAuth callback to complete registration/login flow
+        setSession(session);
+        setCurrentViewInternal('oauth-callback');
+      } else if (event === 'SIGNED_OUT') {
+        console.log('👋 User signed out');
+        setSession(null);
+        setCurrentViewInternal('landing');
+      } else if (event === 'TOKEN_REFRESHED') {
+        console.log('🔄 Token refreshed');
+        setSession(session);
+      }
+    });
+
+    return () => {
+      console.log('🔐 Cleaning up onAuthStateChange listener');
+      subscription.unsubscribe();
+    };
+  }, []);
   const [currentAnalysisId, setCurrentAnalysisId] = useState(null);
   const [currentUrl, setCurrentUrl] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -232,23 +261,15 @@ function AppContent({ initialUrl }) {
     
     window.addEventListener('popstate', handlePopState);
     
-    // Check initial URL
+    // Check initial URL (skip OAuth tokens - handled by onAuthStateChange)
     const hash = window.location.hash.slice(1);
 
-    // CRITICAL: Check if hash contains OAuth tokens from Supabase OR is oauth-callback route
-    // OAuth tokens look like: access_token=xxx&expires_in=3600&refresh_token=xxx
-    // Magic links redirect to: /#/oauth-callback (no tokens in URL, session in browser)
     console.log('🔍 APP INIT - Full URL:', window.location.href);
     console.log('🔍 APP INIT - Hash:', hash);
-    console.log('🔍 APP INIT - Hash starts with /oauth-callback?', hash.startsWith('/oauth-callback'));
 
-    if (hash && (hash.includes('access_token=') || hash.includes('refresh_token=') || hash.includes('type=recovery'))) {
-      console.log('🔐 ROUTING TO oauth-callback (OAuth tokens detected)');
-      setCurrentViewInternal('oauth-callback');
-    } else if (hash && hash.startsWith('/oauth-callback')) {
-      console.log('🔐 ROUTING TO oauth-callback (Magic link redirect detected)');
-      setCurrentViewInternal('oauth-callback');
-    } else if (hash) {
+    // Note: OAuth tokens and auth callbacks are now handled by onAuthStateChange listener above
+    // This just handles normal navigation
+    if (hash && !hash.includes('access_token=') && !hash.includes('refresh_token=')) {
       console.log('📍 ROUTING TO:', hash);
       setCurrentViewInternal(hash);
     } else if (window.location.pathname === '/login') {
