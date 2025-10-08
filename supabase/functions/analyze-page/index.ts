@@ -911,8 +911,98 @@ function analyzeEvidenceChunking(content: string): FactorResult {
   };
 }
 
+// Helper: Detect links to transparency pages
+function detectTransparencyLinks(content: string, baseUrl: string): {
+  links: string[];
+  aboutLink: string | null;
+  privacyLink: string | null;
+  disclosureLink: string | null;
+  count: number;
+} {
+  // Extract all links using same pattern as existing code (line 1214)
+  const allLinks = content.match(/<a[^>]*href=["']([^"']+)["'][^>]*>/gi) || [];
+  const transparencyLinks: string[] = [];
+  let aboutLink: string | null = null;
+  let privacyLink: string | null = null;
+  let disclosureLink: string | null = null;
+
+  // Transparency path patterns (case-insensitive)
+  const aboutPattern = /^\/(about|about-us|about_us|who-we-are|team|company)(\/|$|\?|#)/i;
+  const privacyPattern = /^\/(privacy|privacy-policy|privacy_policy|data-protection)(\/|$|\?|#)/i;
+  const disclosurePattern = /^\/(disclosure|disclosures|transparency|conflicts)(\/|$|\?|#)/i;
+  const termsPattern = /^\/(terms|legal|terms-of-service)(\/|$|\?|#)/i;
+
+  for (const link of allLinks) {
+    const hrefMatch = link.match(/href=["']([^"']+)["']/i);
+    if (hrefMatch && hrefMatch[1]) {
+      const href = hrefMatch[1];
+
+      // Check if it's an internal link
+      let isInternal = false;
+      if (href.startsWith('/')) {
+        // Relative link - definitely internal
+        isInternal = true;
+      } else if (href.startsWith('http://') || href.startsWith('https://')) {
+        // Absolute link - check if same domain
+        try {
+          const linkUrl = new URL(href);
+          const pageUrl = new URL(baseUrl);
+          isInternal = (linkUrl.hostname === pageUrl.hostname);
+        } catch (e) {
+          // Invalid URL, skip
+          continue;
+        }
+      }
+
+      if (isInternal) {
+        // Extract path from absolute or relative URL
+        let path = href;
+        if (href.startsWith('http')) {
+          try {
+            const linkUrl = new URL(href);
+            path = linkUrl.pathname;
+          } catch (e) {
+            continue;
+          }
+        }
+
+        // Check against transparency patterns
+        if (aboutPattern.test(path)) {
+          if (!aboutLink) {
+            aboutLink = path;
+            transparencyLinks.push(path);
+          }
+        } else if (privacyPattern.test(path)) {
+          if (!privacyLink) {
+            privacyLink = path;
+            transparencyLinks.push(path);
+          }
+        } else if (disclosurePattern.test(path)) {
+          if (!disclosureLink) {
+            disclosureLink = path;
+            transparencyLinks.push(path);
+          }
+        } else if (termsPattern.test(path)) {
+          // Count terms but don't track separately
+          if (!transparencyLinks.includes(path)) {
+            transparencyLinks.push(path);
+          }
+        }
+      }
+    }
+  }
+
+  return {
+    links: transparencyLinks,
+    aboutLink,
+    privacyLink,
+    disclosureLink,
+    count: transparencyLinks.length
+  };
+}
+
 // Factor 14: Transparency & Disclosure (A.3.1)
-function analyzeTransparencyDisclosure(content: string): FactorResult {
+function analyzeTransparencyDisclosure(content: string, url: string): FactorResult {
   const startTime = Date.now();
   let score = 0;
   const evidence = [];
@@ -955,19 +1045,55 @@ function analyzeTransparencyDisclosure(content: string): FactorResult {
   // Check for update info
   const updatedTerms = /updated|revised|last\s+modified|published/i;
   const hasUpdated = updatedTerms.test(content);
-  
+
   if (hasUpdated) {
     score += 20;
     evidence.push('Update information provided');
   } else {
     recommendations.push('Include publication and update dates');
   }
-  
+
+  // Check for links to transparency pages (new feature)
+  const transparencyLinksData = detectTransparencyLinks(content, url);
+  const hasTransparencyLinks = transparencyLinksData.count > 0;
+
+  if (hasTransparencyLinks) {
+    // Award bonus points for linking to transparency pages
+    if (transparencyLinksData.count >= 2) {
+      score += 25;
+      evidence.push(`Links to transparency pages found: ${transparencyLinksData.links.join(', ')}`);
+    } else if (transparencyLinksData.count === 1) {
+      score += 15;
+      evidence.push(`Link to transparency page found: ${transparencyLinksData.links[0]}`);
+    }
+
+    // Add recommendation to scan linked pages if no direct transparency content
+    if (!hasDisclosure || !hasFunding) {
+      const linkedPages = transparencyLinksData.links.map(link => link).join(', ');
+      if (transparencyLinksData.count >= 2) {
+        recommendations.push(
+          `Transparency information appears to be on linked pages. Scan these pages for complete assessment: ${linkedPages}`
+        );
+      } else {
+        recommendations.push(
+          `Limited transparency links found. Scan ${linkedPages} for detailed transparency information.`
+        );
+      }
+
+      // Add suggestion to improve homepage too
+      if (score < 100) {
+        recommendations.push(
+          'To improve this page\'s score, consider adding a transparency summary or key disclosures directly on this page.'
+        );
+      }
+    }
+  }
+
   // Base transparency score
   if (score === 0) {
     score = 15;
     recommendations.push('Implement basic transparency standards');
-  } else if (score < 30) {
+  } else if (score < 30 && !hasTransparencyLinks) {
     score += 10;
   }
   
@@ -1547,7 +1673,7 @@ async function analyzeAllFactors(url: string, pageContent: string, title: string
     
     // Factor 14: Transparency & Disclosure
     await updateProgress(14, 'Transparency Standards', 'Checking for transparency and disclosure standards that build trust with AI systems.');
-    factors.push(analyzeTransparencyDisclosure(pageContent));
+    factors.push(analyzeTransparencyDisclosure(pageContent, url));
     
     // Factor 15: Page Load Speed
     await updateProgress(15, 'Page Load Speed', 'Evaluating page load speed optimization for better user experience and AI crawler efficiency.');
