@@ -167,51 +167,36 @@ export class SupabaseFacade {
 
   /**
    * Proxy database methods - always load real Supabase
+   * Returns a deferred query builder that loads Supabase when executed
    */
   from(table) {
-    // Create a proxy that loads real Supabase when actually used
     const facade = this;
-    return {
-      select: (...args) => {
-        return {
-          then: async (resolve, reject) => {
-            try {
+
+    // Create a query builder that defers to real Supabase
+    const createDeferredBuilder = (buildChain) => {
+      return new Proxy({}, {
+        get(target, prop) {
+          // Handle promise methods (.then, .catch, .finally)
+          if (prop === 'then' || prop === 'catch' || prop === 'finally') {
+            return async function(...args) {
               const real = await facade.loadRealSupabase();
-              const result = await real.from(table).select(...args);
-              resolve(result);
-            } catch (error) {
-              reject(error);
-            }
+              const query = buildChain(real.from(table));
+              return query[prop](...args);
+            };
           }
-        };
-      },
-      insert: (...args) => {
-        return {
-          then: async (resolve, reject) => {
-            try {
-              const real = await facade.loadRealSupabase();
-              const result = await real.from(table).insert(...args);
-              resolve(result);
-            } catch (error) {
-              reject(error);
-            }
-          }
-        };
-      },
-      update: (...args) => {
-        return {
-          then: async (resolve, reject) => {
-            try {
-              const real = await facade.loadRealSupabase();
-              const result = await real.from(table).update(...args);
-              resolve(result);
-            } catch (error) {
-              reject(error);
-            }
-          }
-        };
-      }
+
+          // Handle query builder methods (.select, .eq, .single, etc.)
+          return (...methodArgs) => {
+            return createDeferredBuilder((builder) => {
+              const previousQuery = buildChain(builder);
+              return previousQuery[prop](...methodArgs);
+            });
+          };
+        }
+      });
     };
+
+    return createDeferredBuilder((builder) => builder);
   }
 
   /**
