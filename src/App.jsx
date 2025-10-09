@@ -100,34 +100,8 @@ function AppContent({ initialUrl }) {
     }
   };
 
-  // CRITICAL FIX: Use Supabase's onAuthStateChange instead of manual hash parsing
-  // This properly handles OAuth callbacks and magic links
-  useEffect(() => {
-    console.log('🔐 Setting up onAuthStateChange listener...');
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('🔐 Auth state changed:', event, session?.user?.email);
-
-      if (event === 'SIGNED_IN' && session) {
-        console.log('✅ User signed in, routing to oauth-callback');
-        // Route to OAuth callback to complete registration/login flow
-        setSession(session);
-        setCurrentViewInternal('oauth-callback');
-      } else if (event === 'SIGNED_OUT') {
-        console.log('👋 User signed out');
-        setSession(null);
-        setCurrentViewInternal('landing');
-      } else if (event === 'TOKEN_REFRESHED') {
-        console.log('🔄 Token refreshed');
-        setSession(session);
-      }
-    });
-
-    return () => {
-      console.log('🔐 Cleaning up onAuthStateChange listener');
-      subscription.unsubscribe();
-    };
-  }, []);
+  // Note: onAuthStateChange is set up later in the file (line ~375)
+  // It handles OAuth callbacks, magic links, and pending analyses
   const [currentAnalysisId, setCurrentAnalysisId] = useState(null);
   const [currentUrl, setCurrentUrl] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -369,12 +343,34 @@ function AppContent({ initialUrl }) {
 
   // Separate useEffect for auth state listener to avoid blocking initial render
   useEffect(() => {
+    console.log('🔧 Setting up onAuthStateChange listener...');
+
     // Listen for auth state changes with debouncing
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('🔐 Auth state changed:', event, session?.user?.email);
+
+      // CRITICAL: Route to oauth-callback for OAuth sign-ins
+      if (event === 'SIGNED_IN' && session) {
+        console.log('✅ SIGNED_IN event - routing to oauth-callback');
+        console.log('📍 Current view before routing:', currentView);
+        setSession(session);
+        setCurrentViewInternal('oauth-callback');
+        console.log('📍 Set view to oauth-callback, forcing hash update...');
+        window.location.hash = 'oauth-callback';
+        return; // Exit early - let OAuthCallback handle the rest
+      }
+
+      if (event === 'SIGNED_OUT') {
+        console.log('👋 User signed out');
+        setSession(null);
+        setCurrentViewInternal('landing');
+        return;
+      }
+
       const currentTime = Date.now();
-      
+
       // CRITICAL FIX: Only skip processing if tab was recently hidden AND we're processing rapid changes
       // Don't block initial auth flows or legitimate login processes
       if (isTabVisible === false && wasRecentlyHidden && wasRecentlyHidden() && authStateChangeInProgress.current) {
@@ -698,8 +694,8 @@ function AppContent({ initialUrl }) {
           // Store flag to indicate they need tier selection
           localStorage.setItem('needs_tier_selection', 'true');
           // Don't redirect if already on register page
-          if (currentView !== 'register' && currentView !== 'coffee-signup') {
-            setCurrentView('coffee-signup'); // Send to coffee-signup by default
+          if (currentView !== 'register' && currentView !== 'signup') {
+            setCurrentView('signup'); // Send to OAuth signup by default
           }
         } else {
           // Only create as free tier if they're clearly an old user (>10 minutes)
@@ -707,8 +703,8 @@ function AppContent({ initialUrl }) {
           console.log('🔄 Legacy user (>10 min old) without tier selection - needs to choose tier');
           setUserTier('pending_registration');
           localStorage.setItem('needs_tier_selection', 'true');
-          if (currentView !== 'register' && currentView !== 'coffee-signup') {
-            setCurrentView('coffee-signup');
+          if (currentView !== 'register' && currentView !== 'signup') {
+            setCurrentView('signup'); // Send to OAuth signup by default
           }
         }
       }
@@ -1217,37 +1213,30 @@ function AppContent({ initialUrl }) {
     );
   }
 
+  // DEPRECATED: 'register' now routes to OAuth signup
   if (currentView === 'register') {
+    const Signup = React.lazy(() => import('./pages/Signup'));
     return (
       <>
         <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading registration..." />}>
-          <CoffeeTierSignup
-            onRegistrationComplete={(user) => {
-              setSession({ user });
-              setCurrentView('dashboard');
-            }}
-            onNavigate={(view) => setCurrentView(view)}
-            onShowEmailVerification={(email) => {
-              setPendingVerificationEmail(email);
-              setCurrentView('email-verification');
-            }}
-          />
+        <Suspense fallback={<ComponentLoader message="Loading signup..." />}>
+          <Signup />
         </Suspense>
       </>
     );
   }
 
-  if (currentView === 'registration-flow') {
-    return (
-      <>
-        <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading registration flow..." />}>
-          <RegistrationFlow onRegistrationComplete={handleRegistrationComplete} />
-        </Suspense>
-      </>
-    );
-  }
+  // DEPRECATED: Password-based registration flow (commented out for OAuth-first migration)
+  // if (currentView === 'registration-flow') {
+  //   return (
+  //     <>
+  //       <SimpleConsentBanner />
+  //       <Suspense fallback={<ComponentLoader message="Loading registration flow..." />}>
+  //         <RegistrationFlow onRegistrationComplete={handleRegistrationComplete} />
+  //       </Suspense>
+  //     </>
+  //   );
+  // }
 
   if (currentView === 'unified-registration') {
     return (
@@ -1260,11 +1249,15 @@ function AppContent({ initialUrl }) {
     );
   }
 
+  // OAuth-first login (reuses Signup page with different heading)
   if (currentView === 'login') {
+    const Signup = React.lazy(() => import('./pages/Signup'));
     return (
       <>
         <SimpleConsentBanner />
-        <Login onLoginSuccess={handleLoginComplete} />
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <Signup />
+        </Suspense>
       </>
     );
   }

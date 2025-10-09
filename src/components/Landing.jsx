@@ -134,13 +134,13 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
             {!isAuthenticated ? (
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => onNavigate ? onNavigate('login') : window.location.href = '/login'}
+                  onClick={() => onNavigate ? onNavigate('login') : window.location.href = '/#/login'}
                   className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors"
                 >
                   Sign In
                 </button>
                 <button
-                  onClick={() => onNavigate ? onNavigate('register') : window.location.href = '/register'}
+                  onClick={() => onNavigate ? onNavigate('signup') : window.location.href = '/#/signup'}
                   className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Sign Up
