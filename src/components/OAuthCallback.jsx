@@ -26,17 +26,51 @@ const OAuthCallback = ({ onNavigate }) => {
       console.log('🔍 Current hash:', window.location.hash);
 
       // Get the session from the URL (Supabase automatically handles this)
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
-      if (sessionError) {
-        throw sessionError;
+      // Add retry logic for OAuth session establishment
+      let session = null;
+      let sessionError = null;
+      let attempts = 0;
+      const maxAttempts = 3;
+      
+      while (!session && attempts < maxAttempts) {
+        attempts++;
+        console.log(`🔄 Attempt ${attempts} to retrieve OAuth session...`);
+        
+        const result = await supabase.auth.getSession();
+        session = result.data?.session;
+        sessionError = result.error;
+        
+        if (sessionError) {
+          console.error(`❌ Session error on attempt ${attempts}:`, sessionError);
+          throw sessionError;
+        }
+        
+        if (!session && attempts < maxAttempts) {
+          console.log(`⏳ No session on attempt ${attempts}, waiting 500ms before retry...`);
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
       }
 
       if (!session) {
-        throw new Error('No session found. Please try signing in again.');
+        console.error('❌ No session found after', maxAttempts, 'attempts');
+        console.error('🔍 Current URL:', window.location.href);
+        console.error('🔍 Current hash:', window.location.hash);
+        throw new Error('OAuth session establishment failed. Please try signing in again.');
       }
 
       console.log('✅ Session retrieved:', session.user.id);
+
+      // Clean up authentication tokens from URL for security
+      const hasOAuthTokens = window.location.hash.includes('access_token=') || window.location.hash.includes('refresh_token=');
+      const hasQueryTokens = window.location.search.includes('access_token=') || 
+                            window.location.search.includes('token=') ||
+                            window.location.search.includes('confirmation_url=');
+      
+      if (hasOAuthTokens || hasQueryTokens) {
+        console.log('🧹 Cleaning authentication tokens from URL...');
+        const cleanUrl = `${window.location.origin}${window.location.pathname}#oauth-callback`;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
 
       // Retrieve auth context (tier selection, pending analysis)
       const authContext = getAuthContext();
@@ -62,9 +96,11 @@ const OAuthCallback = ({ onNavigate }) => {
 
           // Redirect to Coffee upsell page for tier selection
           if (onNavigate) {
+            console.log('🔒 SECURITY: Using onNavigate callback for tier selection');
             onNavigate('upsell-coffee');
           } else {
-            window.location.hash = 'upsell-coffee';
+            console.error('❌ SECURITY: No onNavigate callback - falling back to landing');
+            window.location.hash = 'landing';
           }
           return;
         }
@@ -172,12 +208,16 @@ const OAuthCallback = ({ onNavigate }) => {
         sessionStorage.setItem('routeState', JSON.stringify(destination.state));
       }
 
-      // Navigate using the callback or hash navigation
+      // SECURITY: Always use onNavigate callback to ensure route protection is applied
+      // NEVER directly manipulate window.location.hash as it bypasses security checks
       if (onNavigate) {
+        console.log('🔒 SECURITY: Using onNavigate callback for protected route navigation');
         onNavigate(viewName);
       } else {
-        window.location.hash = viewName;
-        window.location.reload(); // Force reload to trigger auth state update
+        console.error('❌ SECURITY: No onNavigate callback provided - cannot safely navigate to protected route');
+        console.error('🚨 FALLBACK: Redirecting to landing page for security');
+        // Fallback to landing page if no callback provided - this ensures security
+        window.location.hash = 'landing';
       }
 
     } catch (error) {
@@ -220,6 +260,7 @@ const OAuthCallback = ({ onNavigate }) => {
                 if (onNavigate) {
                   onNavigate('unified-registration');
                 } else {
+                  // Public route - safe to use hash navigation
                   window.location.hash = 'unified-registration';
                 }
               }}

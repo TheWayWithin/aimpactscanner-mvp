@@ -15,24 +15,133 @@ export class SupabaseFacade {
   }
 
   /**
-   * Check if user is authenticated using localStorage
-   * This avoids loading the full SDK for initial check
+   * Parse OAuth parameters from URL hash
+   * Returns object with access_token, refresh_token, etc.
+   */
+  _parseHashParams() {
+    const hash = window.location.hash.substring(1);
+    const params = {};
+    
+    if (!hash) return params;
+    
+    hash.split('&').forEach(param => {
+      const [key, value] = param.split('=');
+      if (key && value) {
+        params[key] = decodeURIComponent(value);
+      }
+    });
+    
+    return params;
+  }
+
+  /**
+   * Parse Magic Link parameters from URL query string
+   * Returns object with access_token, refresh_token, type, etc.
+   */
+  _parseQueryParams() {
+    const search = window.location.search.substring(1);
+    const params = {};
+    
+    if (!search) return params;
+    
+    search.split('&').forEach(param => {
+      const [key, value] = param.split('=');
+      if (key && value) {
+        params[key] = decodeURIComponent(value);
+      }
+    });
+    
+    return params;
+  }
+
+  /**
+   * Check if user is authenticated using localStorage or OAuth tokens in URL
+   * Enhanced with better session validation and persistence handling
    */
   async getSession() {
-    // First check localStorage for existing session
+    // First check for OAuth tokens in URL hash (takes priority)
+    try {
+      const hashParams = this._parseHashParams();
+      if (hashParams.access_token) {
+        console.log('🔐 OAuth tokens detected in URL hash, loading full Supabase...');
+        // OAuth tokens found - must use real Supabase to establish session
+        const real = await this.loadRealSupabase();
+        return real.auth.getSession();
+      }
+    } catch (e) {
+      console.warn('OAuth token check failed:', e);
+    }
+
+    // Second check for Magic Link tokens in URL query parameters
+    try {
+      const queryParams = this._parseQueryParams();
+      if (queryParams.access_token || (queryParams.token && queryParams.type === 'magiclink')) {
+        console.log('🔐 Magic Link tokens detected in URL query, loading full Supabase...');
+        // Magic Link tokens found - must use real Supabase to establish session
+        const real = await this.loadRealSupabase();
+        return real.auth.getSession();
+      }
+    } catch (e) {
+      console.warn('Magic Link token check failed:', e);
+    }
+
+    // Check for existing session in localStorage first
     try {
       const stored = localStorage.getItem(this.sessionKey);
       if (stored) {
         const data = JSON.parse(stored);
-        // Check if session is expired
-        if (data.expires_at && new Date(data.expires_at * 1000) > new Date()) {
+        
+        // Enhanced session validation
+        const now = Math.floor(Date.now() / 1000);
+        if (data.expires_at && data.expires_at > now && data.user) {
+          console.log('✅ Valid session found in localStorage');
           this._session = data;
           this._user = data.user;
           return { data: { session: data }, error: null };
+        } else if (data.expires_at && data.expires_at <= now) {
+          console.log('⏰ Session expired in localStorage, checking for refresh token...');
+          // Session expired, try to use real Supabase to refresh
+          const real = await this.loadRealSupabase();
+          const result = await real.auth.getSession();
+          
+          if (result.data?.session) {
+            console.log('✅ Session refreshed successfully');
+            this._session = result.data.session;
+            this._user = result.data.session.user;
+          }
+          
+          return result;
+        } else {
+          console.log('❌ Invalid session data in localStorage');
+          localStorage.removeItem(this.sessionKey);
         }
       }
     } catch (e) {
       console.warn('Session check failed:', e);
+      // Clear corrupted session data
+      try {
+        localStorage.removeItem(this.sessionKey);
+      } catch (clearError) {
+        console.warn('Failed to clear corrupted session:', clearError);
+      }
+    }
+    
+    // If no valid session found in localStorage, check with real Supabase
+    // This handles cases where Supabase manages session storage differently
+    try {
+      console.log('🔍 No valid localStorage session, checking with Supabase...');
+      const real = await this.loadRealSupabase();
+      const result = await real.auth.getSession();
+      
+      if (result.data?.session) {
+        console.log('✅ Session restored from Supabase storage');
+        this._session = result.data.session;
+        this._user = result.data.session.user;
+      }
+      
+      return result;
+    } catch (e) {
+      console.warn('Supabase session check failed:', e);
     }
     
     return { data: { session: null }, error: null };
@@ -103,11 +212,38 @@ export class SupabaseFacade {
   get auth() {
     return {
       getSession: async () => {
-        // Try facade first
+        // Check for OAuth tokens first
+        const hashParams = this._parseHashParams();
+        if (hashParams.access_token) {
+          console.log('🔐 OAuth tokens detected, using real Supabase for session retrieval...');
+          // OAuth tokens found - must use real Supabase for session establishment
+          const real = await this.loadRealSupabase();
+          
+          // Give Supabase time to process OAuth tokens from URL
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
+          return real.auth.getSession();
+        }
+        
+        // Check for Magic Link tokens second
+        const queryParams = this._parseQueryParams();
+        if (queryParams.access_token || (queryParams.token && queryParams.type === 'magiclink')) {
+          console.log('🔐 Magic Link tokens detected, using real Supabase for session retrieval...');
+          // Magic Link tokens found - must use real Supabase for session establishment
+          const real = await this.loadRealSupabase();
+          
+          // Give Supabase time to process Magic Link tokens from URL
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
+          return real.auth.getSession();
+        }
+        
+        // Try facade first for regular sessions
         const facadeSession = await this.getSession();
         if (facadeSession.data?.session) {
           return facadeSession;
         }
+        
         // Fall back to real Supabase if needed
         const real = await this.loadRealSupabase();
         return real.auth.getSession();
@@ -151,16 +287,10 @@ export class SupabaseFacade {
         return { error: null };
       },
       
-      onAuthStateChange: (callback) => {
+      onAuthStateChange: async (callback) => {
         // Auth state changes need real Supabase
-        this.loadRealSupabase().then(real => {
-          real.auth.onAuthStateChange(callback);
-        });
-        
-        // Return dummy unsubscribe for compatibility
-        return {
-          data: { subscription: { unsubscribe: () => {} } }
-        };
+        const real = await this.loadRealSupabase();
+        return real.auth.onAuthStateChange(callback);
       }
     };
   }

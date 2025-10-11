@@ -49,6 +49,10 @@ import NavigationButtons from './components/NavigationButtons.jsx';
 import SimpleConsentBanner from './components/SimpleConsentBanner.jsx'; // Optimized for LCP performance
 import PerformanceOptimizer, { usePerformanceMonitoring } from './components/PerformanceOptimizer.jsx';
 
+// Route Protection
+import ProtectedRoute from './components/ProtectedRoute';
+import { isProtectedRoute, getUnauthenticatedRedirect, shouldPreserveIntent } from './utils/routeConfig';
+
 // Loading component for Suspense boundaries - Memoized for performance
 const ComponentLoader = React.memo(({ message = "Loading..." }) => (
   <div className="flex items-center justify-center p-8">
@@ -80,10 +84,37 @@ function AppContent({ initialUrl }) {
 
   const [session, setSession] = useState(null);
   const [currentView, setCurrentViewInternal] = useState('landing'); // Start with landing page
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true); // Track auth loading state
+  const [sessionChecked, setSessionChecked] = useState(false); // Track if session has been checked
 
-  // Wrapper for setCurrentView that manages browser history
+  // Wrapper for setCurrentView that manages browser history and route protection
   const setCurrentView = (view) => {
     if (view !== currentView) {
+      // SECURITY: Check if route requires authentication
+      if (isProtectedRoute(view)) {
+        const isAuthenticated = !!(session?.user?.id);
+        
+        if (!isAuthenticated) {
+          console.log('🔒 SECURITY: Unauthorized access attempt to protected route:', view);
+          console.log('🔄 SECURITY: Redirecting unauthenticated user to appropriate page');
+          
+          // Store intended route for post-auth redirect if applicable
+          if (shouldPreserveIntent(view)) {
+            localStorage.setItem('intended_route', view);
+            console.log('💾 SECURITY: Stored intended route for post-auth redirect:', view);
+          }
+          
+          // Redirect to appropriate page for unauthenticated users
+          const redirectRoute = getUnauthenticatedRedirect(view);
+          console.log('📍 SECURITY: Redirecting to:', redirectRoute);
+          
+          // Update view to redirect destination
+          view = redirectRoute;
+        } else {
+          console.log('✅ SECURITY: Authenticated user accessing protected route:', view);
+        }
+      }
+      
       // Push to browser history for navigation tracking
       window.history.pushState({ view }, '', `#${view}`);
       setCurrentViewInternal(view);
@@ -113,6 +144,14 @@ function AppContent({ initialUrl }) {
   const [analysisResults, setAnalysisResults] = useState(null);
   const [pendingVerificationEmail, setPendingVerificationEmail] = useState(null);
   const [analysisError, setAnalysisError] = useState(null);
+
+  // Helper function to check for magic link tokens in URL query parameters
+  const hasMagicLinkTokens = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.has('access_token') || 
+           (urlParams.has('token') && urlParams.get('type') === 'magiclink') ||
+           urlParams.has('confirmation_url');
+  };
 
   // GTM tracking hooks
   const {
@@ -212,11 +251,11 @@ function AppContent({ initialUrl }) {
   );
 
   useEffect(() => {
-    // Handle browser back/forward buttons
+    // Handle browser back/forward buttons with route protection
     const handlePopState = (event) => {
       if (event.state && event.state.view) {
-        setCurrentViewInternal(event.state.view);
-        window.scrollTo(0, 0);
+        // Use setCurrentView to apply route protection to browser navigation
+        setCurrentView(event.state.view);
       } else {
         // Handle direct URL navigation or initial load
         const hash = window.location.hash.slice(1);
@@ -226,26 +265,44 @@ function AppContent({ initialUrl }) {
           console.log('🔐 OAuth tokens detected in popstate, routing to oauth-callback');
           setCurrentViewInternal('oauth-callback');
           window.scrollTo(0, 0);
-        } else if (hash) {
-          setCurrentViewInternal(hash);
+        } 
+        // Check if query parameters contain Magic Link tokens
+        else if (hasMagicLinkTokens()) {
+          console.log('🔐 Magic Link tokens detected in popstate, routing to oauth-callback');
+          setCurrentViewInternal('oauth-callback');
           window.scrollTo(0, 0);
+        } 
+        else if (hash) {
+          // Use setCurrentView to apply route protection to direct hash navigation
+          setCurrentView(hash);
         }
       }
     };
     
     window.addEventListener('popstate', handlePopState);
     
-    // Check initial URL (skip OAuth tokens - handled by onAuthStateChange)
+    // Check initial URL (skip OAuth and Magic Link tokens - handled by onAuthStateChange)
     const hash = window.location.hash.slice(1);
 
     console.log('🔍 APP INIT - Full URL:', window.location.href);
     console.log('🔍 APP INIT - Hash:', hash);
+    console.log('🔍 APP INIT - Query params:', window.location.search);
 
+    // Check for authentication tokens (OAuth or Magic Link)
+    const hasOAuthTokens = hash && (hash.includes('access_token=') || hash.includes('refresh_token='));
+    const hasMagicLink = hasMagicLinkTokens();
+
+    if (hasOAuthTokens || hasMagicLink) {
+      console.log('🔐 Authentication tokens detected, routing to oauth-callback');
+      setCurrentViewInternal('oauth-callback');
+    }
     // Note: OAuth tokens and auth callbacks are now handled by onAuthStateChange listener above
-    // This just handles normal navigation
-    if (hash && !hash.includes('access_token=') && !hash.includes('refresh_token=')) {
-      console.log('📍 ROUTING TO:', hash);
-      setCurrentViewInternal(hash);
+    // This just handles normal navigation with route protection
+    else if (hash && !hasOAuthTokens) {
+      console.log('📍 INITIAL HASH DETECTED:', hash);
+      // SECURITY FIX: Store intended route but don't navigate yet - wait for session check
+      localStorage.setItem('initial_route_pending', hash);
+      console.log('🔒 SECURITY: Deferring route navigation until session check completes');
     } else if (window.location.pathname === '/login') {
       setCurrentView('login');
       // Clear URL to prevent issues with navigation
@@ -264,98 +321,214 @@ function AppContent({ initialUrl }) {
   }, []);  // Only run once on mount
   
   useEffect(() => {
-    // CRITICAL FIX: Show landing page immediately, check auth in background
-    // This prevents the 17-second delay by not blocking render on auth check
-
-    // DEBUG: Log everything about the URL on load
+    // Enhanced app initialization with proper session persistence
+    console.log('🚀 App initializing with session persistence...');
     console.log('🔍 App mounted - Full URL:', window.location.href);
     console.log('🔍 App mounted - Hash:', window.location.hash);
-    console.log('🔍 App mounted - Hash.slice(1):', window.location.hash.slice(1));
+    console.log('🔍 App mounted - Query params:', window.location.search);
 
     // Check URL path for login route
     if (window.location.pathname === '/login') {
       setCurrentView('login');
+      setSessionChecked(true);
+      setIsLoadingAuth(false);
       // Clear URL to prevent issues with navigation
       window.history.replaceState({}, document.title, window.location.pathname);
       return; // Exit early for login page
     }
     
-    // For all other routes, show landing page first, then check auth
-    if (currentView === 'landing') {
-      // Already on landing, just check auth in background
-      checkAuthInBackground();
-    } else {
-      // Set to landing immediately for fast render
-      setCurrentView('landing');
-      // Then check auth
-      checkAuthInBackground();
+    // Check for authentication tokens (OAuth or Magic Link)
+    const hash = window.location.hash.slice(1);
+    const hasOAuthTokens = hash && (hash.includes('access_token=') || hash.includes('refresh_token='));
+    const hasMagicLink = hasMagicLinkTokens();
+    
+    if (hasOAuthTokens || hasMagicLink) {
+      console.log('🔐 Authentication tokens detected, routing to oauth-callback');
+      setCurrentViewInternal('oauth-callback');
+      setSessionChecked(true);
+      setIsLoadingAuth(false);
+      return;
     }
+    
+    // For all other routes, check for existing session first
+    console.log('⏳ Checking for existing session before rendering...');
+    checkAuthInBackground();
   }, []);
 
-  // Separate function to check auth without blocking render
+  // Enhanced session restoration that works with Supabase's built-in persistence
   const checkAuthInBackground = async () => {
     try {
-      // Use facade for lightweight auth check (5KB vs 29KB)
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session && session.user) {
-        setSession(session);
-        console.log('🚀 Using Supabase facade for auth check');
-        
-        // Fetch user tier in background (non-blocking)
-        fetchUserTier(session.user.id, session.user.email).catch(err => {
-          console.warn('Failed to fetch user tier:', err);
-          setUserTier('free'); // Fallback
-        });
-        
-        // Check if there's a pending analysis from landing page
-        const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
-        const pendingId = localStorage.getItem('pendingAnalysisId');
-        const landingData = localStorage.getItem('landingAnalysisData');
-        
-        if (pendingUrl && pendingId && landingData && !pendingAnalysisProcessed.current) {
-          console.log('✅ Initial session: Found pending analysis, redirecting to results');
-          pendingAnalysisProcessed.current = true; // Mark as processed
-          
-          try {
-            const data = JSON.parse(landingData);
-            setAnalysisResults(data.results);
-            setCurrentUrl(pendingUrl);
-            setCurrentAnalysisId(pendingId);
-            setCurrentView('results');
-            // Clear the pending data
-            localStorage.removeItem('pendingAnalysisUrl');
-            localStorage.removeItem('pendingAnalysisId');
-            localStorage.removeItem('landingAnalysisData');
-          } catch (error) {
-            console.error('Error parsing pending analysis data:', error);
-            setCurrentView('dashboard');
-          }
-        } else if (!pendingAnalysisProcessed.current) {
-          setCurrentView('dashboard');
-        }
+      console.log('🔄 Starting session restoration check...');
+      setIsLoadingAuth(true);
+      
+      // CRITICAL: Give Supabase more time to restore session from storage
+      // Supabase's built-in session restoration can take longer than 100ms
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Use the real Supabase client for proper session restoration
+      const real = await supabase.loadRealSupabase ? await supabase.loadRealSupabase() : supabase;
+      const { data: { session }, error } = await real.auth.getSession();
+      
+      console.log('🔍 Session restoration result:', {
+        hasSession: !!session,
+        hasUser: !!session?.user,
+        userEmail: session?.user?.email,
+        expiresAt: session?.expires_at,
+        error: error?.message
+      });
+      
+      if (error) {
+        console.warn('⚠️ Session restoration error:', error);
+        setSession(null);
+        setSessionChecked(true);
+        setIsLoadingAuth(false);
+        return;
       }
-      // If no session, landing page is already showing
+      
+      if (session && session.user) {
+        // Validate session is not expired
+        const now = Math.floor(Date.now() / 1000);
+        if (session.expires_at && session.expires_at > now) {
+          console.log('✅ Valid session restored, setting auth state');
+          setSession(session);
+          
+          // Fetch user tier in background (non-blocking)
+          fetchUserTier(session.user.id, session.user.email).catch(err => {
+            console.warn('Failed to fetch user tier:', err);
+            setUserTier('free'); // Fallback
+          });
+          
+          // Check if there's a pending analysis from landing page
+          const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
+          const pendingId = localStorage.getItem('pendingAnalysisId');
+          const landingData = localStorage.getItem('landingAnalysisData');
+          
+          if (pendingUrl && pendingId && landingData && !pendingAnalysisProcessed.current) {
+            console.log('✅ Initial session: Found pending analysis, redirecting to results');
+            pendingAnalysisProcessed.current = true; // Mark as processed
+            
+            try {
+              const data = JSON.parse(landingData);
+              setAnalysisResults(data.results);
+              setCurrentUrl(pendingUrl);
+              setCurrentAnalysisId(pendingId);
+              setCurrentView('results');
+              // Clear the pending data
+              localStorage.removeItem('pendingAnalysisUrl');
+              localStorage.removeItem('pendingAnalysisId');
+              localStorage.removeItem('landingAnalysisData');
+            } catch (error) {
+              console.error('Error parsing pending analysis data:', error);
+              setCurrentView('dashboard');
+            }
+          } else if (!pendingAnalysisProcessed.current) {
+            // Check for intended route and redirect if authenticated
+            const intendedRoute = localStorage.getItem('intended_route');
+            if (intendedRoute && shouldPreserveIntent(intendedRoute)) {
+              console.log('🎯 Restoring intended route after session restoration:', intendedRoute);
+              localStorage.removeItem('intended_route');
+              setCurrentView(intendedRoute);
+            } else {
+              setCurrentView('dashboard');
+            }
+          }
+        } else {
+          console.warn('⚠️ Session expired, clearing auth state');
+          setSession(null);
+          // Clear expired session from storage
+          await real.auth.signOut();
+        }
+      } else {
+        console.log('📝 No session found, user needs to authenticate');
+        setSession(null);
+      }
+      
+      setSessionChecked(true);
+      
+      // SECURITY FIX: Process any deferred initial route now that session check is complete
+      const pendingRoute = localStorage.getItem('initial_route_pending');
+      if (pendingRoute) {
+        console.log('🔒 SECURITY: Processing deferred route with session check complete:', pendingRoute);
+        localStorage.removeItem('initial_route_pending');
+        // Now apply route protection with proper session state
+        setCurrentView(pendingRoute);
+      }
     } catch (error) {
-      console.warn('Background auth check failed:', error);
-      // Landing page is already showing, so no need to change view
+      console.warn('⚠️ Session restoration failed:', error);
+      setSession(null);
+      setSessionChecked(true);
+      
+      // SECURITY FIX: Process any deferred initial route even if session restoration failed
+      const pendingRoute = localStorage.getItem('initial_route_pending');
+      if (pendingRoute) {
+        console.log('🔒 SECURITY: Processing deferred route after session error:', pendingRoute);
+        localStorage.removeItem('initial_route_pending');
+        // Apply route protection - will redirect unauthenticated users appropriately
+        setCurrentView(pendingRoute);
+      }
+    } finally {
+      setIsLoadingAuth(false);
     }
   };
 
-  // Separate useEffect for auth state listener to avoid blocking initial render
+  // Enhanced auth state listener with session persistence handling
   useEffect(() => {
-    console.log('🔧 Setting up onAuthStateChange listener...');
+    console.log('🔧 Setting up enhanced onAuthStateChange listener...');
 
-    // Listen for auth state changes with debouncing
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('🔐 Auth state changed:', event, session?.user?.email);
+    let subscription;
 
+    // Setup auth state listener with session persistence handling
+    const setupAuthListener = async () => {
+      const {
+        data: { subscription: sub },
+      } = await supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('🔐 Auth state changed:', event, session?.user?.email, 'sessionChecked:', sessionChecked);
+
+      // Handle initial session restoration - this is crucial for persistence
+      if (event === 'INITIAL_SESSION') {
+        console.log('🔄 INITIAL_SESSION detected:', {
+          hasSession: !!session,
+          sessionChecked,
+          userEmail: session?.user?.email
+        });
+        
+        if (session && !sessionChecked) {
+          console.log('✅ Session restored from storage on app load');
+          setSession(session);
+          setSessionChecked(true);
+          setIsLoadingAuth(false);
+          
+          // Fetch user tier for restored session
+          fetchUserTier(session.user.id, session.user.email).catch(err => {
+            console.warn('Failed to fetch user tier for restored session:', err);
+            setUserTier('free');
+          });
+          
+          // Navigate to intended route or dashboard
+          const intendedRoute = localStorage.getItem('intended_route');
+          if (intendedRoute && shouldPreserveIntent(intendedRoute)) {
+            console.log('🎯 Restoring intended route after session restoration:', intendedRoute);
+            localStorage.removeItem('intended_route');
+            setCurrentView(intendedRoute);
+          } else {
+            setCurrentView('dashboard');
+          }
+        } else if (!session && !sessionChecked) {
+          console.log('📝 No session available on initial load');
+          setSession(null);
+          setSessionChecked(true);
+          setIsLoadingAuth(false);
+        }
+        return;
+      }
+      
       // CRITICAL: Route to oauth-callback for OAuth sign-ins
       if (event === 'SIGNED_IN' && session) {
         console.log('✅ SIGNED_IN event - routing to oauth-callback');
         console.log('📍 Current view before routing:', currentView);
         setSession(session);
+        setSessionChecked(true);
+        setIsLoadingAuth(false);
         setCurrentViewInternal('oauth-callback');
         console.log('📍 Set view to oauth-callback, forcing hash update...');
         window.location.hash = 'oauth-callback';
@@ -365,7 +538,16 @@ function AppContent({ initialUrl }) {
       if (event === 'SIGNED_OUT') {
         console.log('👋 User signed out');
         setSession(null);
+        setSessionChecked(true);
+        setIsLoadingAuth(false);
         setCurrentViewInternal('landing');
+        return;
+      }
+      
+      // Handle token refresh events
+      if (event === 'TOKEN_REFRESHED' && session) {
+        console.log('🔄 Token refreshed, updating session');
+        setSession(session);
         return;
       }
 
@@ -531,9 +713,18 @@ function AppContent({ initialUrl }) {
         // Reset auth state change flag
         authStateChangeInProgress.current = false;
       }
-    });
+      });
+      
+      subscription = sub;
+    };
 
-    return () => subscription.unsubscribe();
+    setupAuthListener().catch(console.error);
+
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
   }, []);
 
   const fetchUserTier = async (userId, userEmail = null, userSession = null) => {
@@ -858,6 +1049,15 @@ function AppContent({ initialUrl }) {
     console.log('Login completed with routing data:', routingData);
     
     const { user, isNewUser, hasAnalysisData, tier } = routingData || {};
+    
+    // SECURITY: Check for intended route and redirect if valid
+    const intendedRoute = localStorage.getItem('intended_route');
+    if (intendedRoute && shouldPreserveIntent(intendedRoute)) {
+      console.log('🎯 Redirecting to intended route after auth:', intendedRoute);
+      localStorage.removeItem('intended_route');
+      setCurrentView(intendedRoute);
+      return;
+    }
     
     // If no routing data provided, just go to dashboard
     if (!routingData) {
@@ -1281,9 +1481,11 @@ function AppContent({ initialUrl }) {
     return (
       <>
         <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading..." />}>
-          <UpsellCoffee />
-        </Suspense>
+        <ProtectedRoute session={session} onRedirect={setCurrentView}>
+          <Suspense fallback={<ComponentLoader message="Loading..." />}>
+            <UpsellCoffee />
+          </Suspense>
+        </ProtectedRoute>
       </>
     );
   }
@@ -1293,9 +1495,11 @@ function AppContent({ initialUrl }) {
     return (
       <>
         <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading..." />}>
-          <UpsellGrowth />
-        </Suspense>
+        <ProtectedRoute session={session} onRedirect={setCurrentView}>
+          <Suspense fallback={<ComponentLoader message="Loading..." />}>
+            <UpsellGrowth />
+          </Suspense>
+        </ProtectedRoute>
       </>
     );
   }
@@ -1305,9 +1509,11 @@ function AppContent({ initialUrl }) {
     return (
       <>
         <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading..." />}>
-          <UpsellScale />
-        </Suspense>
+        <ProtectedRoute session={session} onRedirect={setCurrentView}>
+          <Suspense fallback={<ComponentLoader message="Loading..." />}>
+            <UpsellScale />
+          </Suspense>
+        </ProtectedRoute>
       </>
     );
   }
@@ -1317,9 +1523,11 @@ function AppContent({ initialUrl }) {
     return (
       <>
         <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading..." />}>
-          <WelcomeScale />
-        </Suspense>
+        <ProtectedRoute session={session} onRedirect={setCurrentView}>
+          <Suspense fallback={<ComponentLoader message="Loading..." />}>
+            <WelcomeScale />
+          </Suspense>
+        </ProtectedRoute>
       </>
     );
   }
@@ -1330,9 +1538,11 @@ function AppContent({ initialUrl }) {
     return (
       <>
         <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Processing payment..." />}>
-          <CheckoutSuccess />
-        </Suspense>
+        <ProtectedRoute session={session} onRedirect={setCurrentView}>
+          <Suspense fallback={<ComponentLoader message="Processing payment..." />}>
+            <CheckoutSuccess />
+          </Suspense>
+        </ProtectedRoute>
       </>
     );
   }
@@ -1343,9 +1553,11 @@ function AppContent({ initialUrl }) {
     return (
       <>
         <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading..." />}>
-          <CheckoutCancel />
-        </Suspense>
+        <ProtectedRoute session={session} onRedirect={setCurrentView}>
+          <Suspense fallback={<ComponentLoader message="Loading..." />}>
+            <CheckoutCancel />
+          </Suspense>
+        </ProtectedRoute>
       </>
     );
   }
@@ -1490,6 +1702,24 @@ function AppContent({ initialUrl }) {
           />
         </div>
         <Footer onNavigate={setCurrentView} />
+      </div>
+    );
+  }
+
+  // Show loading state while checking session
+  if (isLoadingAuth && !sessionChecked) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white">
+        <SimpleConsentBanner />
+        <div className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <span className="text-lg text-gray-700">Restoring your session...</span>
+            </div>
+            <p className="text-sm text-gray-500">Please wait while we check your authentication status</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -1654,12 +1884,13 @@ function AppContent({ initialUrl }) {
 
         {/* Content based on view */}
         {currentView === 'dashboard' && (
-          <div>
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
-              <p className="text-gray-600 mb-8">
-                You have {userTier === 'free' ? usageData.remaining : 'unlimited'} analyses remaining this month.
-              </p>
+          <ProtectedRoute session={session} onRedirect={setCurrentView}>
+            <div>
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
+                <p className="text-gray-600 mb-8">
+                  You have {userTier === 'free' ? usageData.remaining : 'unlimited'} analyses remaining this month.
+                </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-start">
                 <button
                   onClick={() => setCurrentView('input')}
@@ -1688,59 +1919,70 @@ function AppContent({ initialUrl }) {
           <Suspense fallback={<ComponentLoader message="Loading analysis history..." />}>
             <AnalysisHistory onViewAnalysis={handleViewHistoryAnalysis} />
           </Suspense>
-          </div>
+            </div>
+          </ProtectedRoute>
         )}
 
         {currentView === 'input' && (
-          <>
-            {analysisError && (
-              <div className="error-banner">
-                <div className="error-icon">⚠️</div>
-                <div className="error-content">
-                  <h3>{analysisError.title}</h3>
-                  <p>{analysisError.message}</p>
+          <ProtectedRoute session={session} onRedirect={setCurrentView}>
+            <>
+              {analysisError && (
+                <div className="error-banner">
+                  <div className="error-icon">⚠️</div>
+                  <div className="error-content">
+                    <h3>{analysisError.title}</h3>
+                    <p>{analysisError.message}</p>
+                  </div>
+                  <button 
+                    className="error-close"
+                    onClick={() => setAnalysisError(null)}
+                    aria-label="Dismiss error"
+                  >
+                    ✕
+                  </button>
                 </div>
-                <button 
-                  className="error-close"
-                  onClick={() => setAnalysisError(null)}
-                  aria-label="Dismiss error"
-                >
-                  ✕
-                </button>
-              </div>
-            )}
-            <URLInput onAnalyze={startAnalysis} isAnalyzing={isAnalyzing} />
-          </>
+              )}
+              <URLInput onAnalyze={startAnalysis} isAnalyzing={isAnalyzing} />
+            </>
+          </ProtectedRoute>
         )}
 
         {currentView === 'analysis' && currentAnalysisId && (
-          <SimpleAnalysisProgress 
-            analysisId={currentAnalysisId}
-            url={currentUrl}
-            onAnalysisComplete={handleAnalysisComplete}
-          />
+          <ProtectedRoute session={session} onRedirect={setCurrentView}>
+            <SimpleAnalysisProgress 
+              analysisId={currentAnalysisId}
+              url={currentUrl}
+              onAnalysisComplete={handleAnalysisComplete}
+            />
+          </ProtectedRoute>
         )}
 
         {currentView === 'results' && currentAnalysisId && (
-          <SimpleResultsDashboard 
-            analysisId={currentAnalysisId} 
-            url={currentUrl}
-            analysisData={analysisResults}
-            userEmail={session?.user?.email}
-          />
+          <ProtectedRoute session={session} onRedirect={setCurrentView}>
+            <SimpleResultsDashboard 
+              analysisId={currentAnalysisId} 
+              url={currentUrl}
+              analysisData={analysisResults}
+              userEmail={session?.user?.email}
+            />
+          </ProtectedRoute>
         )}
 
         {currentView === 'pricing' && (
-          <TierSelection 
-            currentTier={userTier} 
-            onUpgrade={handleUpgrade} 
-          />
+          <ProtectedRoute session={session} onRedirect={setCurrentView}>
+            <TierSelection 
+              currentTier={userTier} 
+              onUpgrade={handleUpgrade} 
+            />
+          </ProtectedRoute>
         )}
 
         {currentView === 'account' && (
-          <Suspense fallback={<ComponentLoader message="Loading account settings..." />}>
-            <SimpleAccountDashboard user={session?.user} userTier={userTier} />
-          </Suspense>
+          <ProtectedRoute session={session} onRedirect={setCurrentView}>
+            <Suspense fallback={<ComponentLoader message="Loading account settings..." />}>
+              <SimpleAccountDashboard user={session?.user} userTier={userTier} />
+            </Suspense>
+          </ProtectedRoute>
         )}
 
 
