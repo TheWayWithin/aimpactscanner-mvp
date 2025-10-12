@@ -22,7 +22,11 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
+    detectSessionInUrl: true,
+    // CRITICAL: Ensure OAuth tokens are properly parsed from URL
+    flowType: 'pkce', // Use PKCE flow for better security
+    storage: window.localStorage,
+    storageKey: `sb-${supabaseUrl.split('//')[1].split('.')[0]}-auth-token`
   },
   realtime: {
     params: {

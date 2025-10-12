@@ -35,8 +35,12 @@ const AuthMethodSelector = ({ selectedTier, mode = 'signup', onSuccess, onError 
   };
 
   // Get redirect URL for OAuth
+  // CRITICAL FIX: Remove hash (#/) from redirect URL to avoid conflict with OAuth tokens
+  // OAuth tokens come in URL fragment (#access_token=xxx) which conflicts with hash routing (#/route)
   const getRedirectUrl = () => {
-    return `${window.location.origin}/#/oauth-callback`;
+    // Use the base URL without hash routing
+    // Supabase will append tokens as #access_token=xxx which we'll detect in App.jsx
+    return `${window.location.origin}/`;
   };
 
   // Handle Google OAuth

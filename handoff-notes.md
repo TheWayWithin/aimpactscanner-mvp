@@ -1,3 +1,80 @@
+# GitHub OAuth Authentication Fix - Handoff Notes
+
+## Current Task: OAuth Fix Implementation
+**For**: Developer/Operator
+**Updated**: 2025-10-12
+**Priority**: CRITICAL - PRODUCTION FIX
+**Status**: FIX IMPLEMENTED - NEEDS TESTING & DEPLOYMENT
+
+### ROOT CAUSE IDENTIFIED ✅
+**Primary Issue**: Hash routing conflict with OAuth URL fragments
+- OAuth providers return: `https://aimpactscanner.com/#access_token=xxx&refresh_token=yyy`
+- React Router expects: `https://aimpactscanner.com/#/route-name`
+- Result: Tokens in URL fragment conflict with hash routing, causing redirect failure
+
+### FIX IMPLEMENTED ✅
+1. **Changed OAuth redirect URL** from `/#/oauth-callback` to `/` (base URL)
+   - File: `/src/components/AuthMethodSelector.jsx` (line 40-43)
+   - Removes hash routing conflict
+
+2. **Enhanced Supabase client configuration**
+   - File: `/src/lib/supabaseClient.js` (lines 22-30)
+   - Added PKCE flow and proper storage key configuration
+
+3. **Improved OAuth token detection in App.jsx**
+   - File: `/src/App.jsx` (lines 291-305, 347-361)
+   - Better detection of OAuth tokens in URL fragment
+   - Handles case where tokens come without route path
+
+### TESTING REQUIRED 🔧
+1. **Local Testing**:
+   ```bash
+   npm run dev
+   npx playwright test test-oauth-fix.spec.js --headed
+   # Or manually test GitHub OAuth login
+   ```
+
+2. **Production Testing**:
+   - Deploy changes to production
+   - Test with real GitHub account
+   - Verify redirect works correctly
+
+### CRITICAL CONFIGURATION NEEDED ⚠️
+**Supabase Dashboard**:
+1. Go to Authentication > URL Configuration
+2. Update "Site URL" to: `https://aimpactscanner.com` (NO hash)
+3. Update "Redirect URLs" to include: `https://aimpactscanner.com/`
+
+**GitHub OAuth App**:
+1. Go to GitHub Settings > Developer settings > OAuth Apps
+2. Find the AImpactScanner app
+3. Update "Authorization callback URL" to: `https://aimpactscanner.com/`
+
+### FILES CHANGED
+- `/src/components/AuthMethodSelector.jsx` - Fixed redirect URL
+- `/src/lib/supabaseClient.js` - Enhanced OAuth configuration
+- `/src/App.jsx` - Improved OAuth token detection
+
+### Context Files to Read
+- `agent-context.md` - Mission overview and objectives
+- `oauth-fix-plan.md` - Investigation phases and success criteria
+- Previous auth fixes documented in `progress.md` (Lines 32-98, Step 1-5 remediation)
+
+### Critical Reminders
+- **SECURITY FIRST**: Follow Critical Software Development Principles from CLAUDE.md
+- **ROOT CAUSE ANALYSIS**: Don't just fix symptoms, understand why it broke
+- **NO SECURITY COMPROMISES**: Don't remove security features to "make it work"
+- **DOCUMENT FINDINGS**: Update handoff-notes.md with investigation results
+
+### What We Know From Previous UAT
+- OAuth was working in Phase 3 testing (90.9% success rate)
+- OAuth session establishment was fixed in Step 2 remediation
+- Route protection is working correctly
+- This may be a regression or configuration change
+
+---
+
+# PREVIOUS MISSION COMPLETE ✅
 # ✅ UAT PHASE 7 COMPLETED - DOCUMENTATION & SIGN-OFF EXCELLENCE
 
 ## MISSION STATUS: ✅ ALL UAT PHASES COMPLETE - PRODUCTION DEPLOYMENT AUTHORIZED

@@ -288,12 +288,19 @@ function AppContent({ initialUrl }) {
     console.log('🔍 APP INIT - Hash:', hash);
     console.log('🔍 APP INIT - Query params:', window.location.search);
 
-    // Check for authentication tokens (OAuth or Magic Link)
+    // CRITICAL FIX: Check for OAuth tokens that come directly from provider redirect
+    // GitHub/Google OAuth returns tokens in fragment like: #access_token=xxx&refresh_token=yyy
+    // We need to detect this and route to oauth-callback for processing
     const hasOAuthTokens = hash && (hash.includes('access_token=') || hash.includes('refresh_token='));
     const hasMagicLink = hasMagicLinkTokens();
+    
+    // Also check if we're coming back from an OAuth redirect (no /route in hash)
+    // OAuth providers redirect to base URL with tokens in fragment
+    const isOAuthReturn = hasOAuthTokens && !hash.includes('/');
 
-    if (hasOAuthTokens || hasMagicLink) {
+    if (hasOAuthTokens || hasMagicLink || isOAuthReturn) {
       console.log('🔐 Authentication tokens detected, routing to oauth-callback');
+      console.log('🔐 Token type:', { hasOAuthTokens, hasMagicLink, isOAuthReturn });
       setCurrentViewInternal('oauth-callback');
     }
     // Note: OAuth tokens and auth callbacks are now handled by onAuthStateChange listener above
@@ -337,13 +344,16 @@ function AppContent({ initialUrl }) {
       return; // Exit early for login page
     }
     
-    // Check for authentication tokens (OAuth or Magic Link)
+    // CRITICAL FIX: Check for OAuth tokens that come directly from provider redirect
     const hash = window.location.hash.slice(1);
     const hasOAuthTokens = hash && (hash.includes('access_token=') || hash.includes('refresh_token='));
     const hasMagicLink = hasMagicLinkTokens();
+    // OAuth providers redirect to base URL with tokens in fragment
+    const isOAuthReturn = hasOAuthTokens && !hash.includes('/');
     
-    if (hasOAuthTokens || hasMagicLink) {
+    if (hasOAuthTokens || hasMagicLink || isOAuthReturn) {
       console.log('🔐 Authentication tokens detected, routing to oauth-callback');
+      console.log('🔐 Early detection - Token type:', { hasOAuthTokens, hasMagicLink, isOAuthReturn });
       setCurrentViewInternal('oauth-callback');
       setSessionChecked(true);
       setIsLoadingAuth(false);
