@@ -83,11 +83,11 @@ const Footer = ({ onNavigate }) => {
           </div>
 
           {/* Resources Section */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8 pt-8 border-t border-gray-800">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-8 pt-8 border-t border-gray-800">
             <div>
-              <a 
-                href="https://www.aisearchmastery.com" 
-                target="_blank" 
+              <a
+                href="https://www.aisearchmastery.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors text-sm flex items-center gap-1"
               >
@@ -98,9 +98,9 @@ const Footer = ({ onNavigate }) => {
               </a>
             </div>
             <div>
-              <a 
-                href="https://www.llmtxtmastery.com" 
-                target="_blank" 
+              <a
+                href="https://www.llmtxtmastery.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors text-sm flex items-center gap-1"
               >
@@ -111,13 +111,26 @@ const Footer = ({ onNavigate }) => {
               </a>
             </div>
             <div>
-              <a 
-                href="https://aisearchmastery.com/mastery-ai-framework" 
-                target="_blank" 
+              <a
+                href="https://aisearchmastery.com/mastery-ai-framework"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors text-sm flex items-center gap-1"
               >
                 MASTERY-AI Framework
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+            <div>
+              <a
+                href="https://jamiewatters.work"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors text-sm flex items-center gap-1"
+              >
+                Building in Public
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>

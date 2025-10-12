@@ -20,9 +20,9 @@ const AboutPage = ({ onNavigate, isAuthenticated }) => {
       {/* Header */}
       <div className="bg-gradient-to-br from-blue-600 to-blue-800 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl font-bold mb-4">About AI Search Mastery</h1>
+          <h1 className="text-4xl font-bold mb-4">About AImpactScanner</h1>
           <p className="text-xl text-blue-100">
-            Pioneering the future of AI search optimization
+            Built by a solopreneur solving a real problem
           </p>
         </div>
       </div>
@@ -30,13 +30,44 @@ const AboutPage = ({ onNavigate, isAuthenticated }) => {
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="prose prose-lg max-w-none">
+          {/* Founder Story */}
+          <section className="mb-12 bg-gradient-to-br from-blue-50 to-white p-8 rounded-lg border border-blue-100">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">The Problem That Started It All</h2>
+            <p className="text-gray-700 mb-4">
+              I'm Jamie Watters, a solopreneur building apps and websites to solve my own real problems.
+              When I started creating digital products, I faced a challenge: <strong>how do you get AI search
+              engines to drive qualified, ready-to-buy traffic to your sites and apps?</strong>
+            </p>
+            <p className="text-gray-700 mb-4">
+              Traditional SEO tactics weren't working. ChatGPT, Claude, Perplexity, and other AI assistants
+              were becoming primary information sources for millions of users, but my sites were invisible to them.
+              I needed a way to understand how AI systems see content and what makes them cite certain sources.
+            </p>
+            <p className="text-gray-700 mb-4">
+              So I built AImpactScanner. What started as a tool for my own needs became something bigger—a platform
+              that helps anyone optimize their content for the new era of AI-powered search.
+            </p>
+            <div className="mt-6 flex flex-col sm:flex-row gap-4">
+              <a
+                href="https://jamiewatters.work"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center"
+              >
+                Follow My Journey
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+          </section>
+
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h2>
             <p className="text-gray-700 mb-4">
-              AI Search Mastery is dedicated to helping businesses and content creators optimize their 
-              online presence for the new era of AI-powered search engines. As ChatGPT, Claude, Perplexity, 
-              and other AI assistants become primary information sources for millions of users, we ensure 
-              your content is discoverable, citable, and authoritative in AI responses.
+              AImpactScanner helps businesses and content creators optimize their online presence for AI-powered
+              search engines. As ChatGPT, Claude, Perplexity, and other AI assistants become primary information
+              sources, we ensure your content is discoverable, citable, and authoritative in AI responses.
             </p>
           </section>
 
