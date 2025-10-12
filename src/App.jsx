@@ -1901,29 +1901,13 @@ function AppContent({ initialUrl }) {
                 <p className="text-gray-600 mb-8">
                   You have {userTier === 'free' ? usageData.remaining : 'unlimited'} analyses remaining this month.
                 </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-start">
+              <div className="flex justify-center">
                 <button
                   onClick={() => setCurrentView('input')}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 min-w-[200px]"
+                  className="px-8 py-4 bg-blue-600 text-white rounded-lg font-bold text-lg hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all"
                 >
-                  Start New Analysis →
+                  🔍 Start New Analysis
                 </button>
-                <div className="flex flex-col items-center">
-                  <button
-                    onClick={() => {
-                      setCurrentAnalysisId('demo-' + Date.now());
-                      setCurrentUrl('example.com');
-                      setAnalysisResults(null); // Ensure demo mode
-                      setCurrentView('results');
-                    }}
-                    className="px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 min-w-[200px]"
-                  >
-                    📋 See Sample Report
-                  </button>
-                  <p className="text-xs text-gray-500 mt-1 max-w-48 text-center">
-                    View a sample analysis to understand our framework and report format
-                  </p>
-                </div>
               </div>
           </div>
           <Suspense fallback={<ComponentLoader message="Loading analysis history..." />}>
