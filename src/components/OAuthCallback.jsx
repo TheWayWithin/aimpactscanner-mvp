@@ -215,9 +215,9 @@ const OAuthCallback = ({ onNavigate }) => {
         onNavigate(viewName);
       } else {
         console.error('❌ SECURITY: No onNavigate callback provided - cannot safely navigate to protected route');
-        console.error('🚨 FALLBACK: Redirecting to landing page for security');
-        // Fallback to landing page if no callback provided - this ensures security
-        window.location.hash = 'landing';
+        console.error('🚨 FALLBACK: Redirecting to dashboard');
+        // Fallback to dashboard if no callback provided
+        window.location.hash = 'dashboard';
       }
 
     } catch (error) {
