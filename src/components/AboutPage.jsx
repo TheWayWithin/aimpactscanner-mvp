@@ -35,13 +35,24 @@ const AboutPage = ({ onNavigate, isAuthenticated }) => {
             <h2 className="text-2xl font-bold text-gray-900 mb-4">The Problem That Started It All</h2>
             <p className="text-gray-700 mb-4">
               I'm Jamie Watters, a solopreneur building apps and websites to solve my own real problems.
-              When I started creating digital products, I faced a challenge: <strong>how do you get AI search
-              engines to drive qualified, ready-to-buy traffic to your sites and apps?</strong>
+              When I started creating digital products, I faced a massive challenge that wasn't just about
+              getting traffic—it was about <strong>surviving the AI search revolution</strong>.
             </p>
             <p className="text-gray-700 mb-4">
-              Traditional SEO tactics weren't working. ChatGPT, Claude, Perplexity, and other AI assistants
-              were becoming primary information sources for millions of users, but my sites were invisible to them.
-              I needed a way to understand how AI systems see content and what makes them cite certain sources.
+              Publishers across the internet were reporting catastrophic traffic drops. <a
+                href="https://www.npr.org/2025/07/31/nx-s1-5484118/google-ai-overview-online-publishers"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 underline"
+              >CNN saw 30% drops, Business Insider 40%, and some travel sites lost up to 90% of their traffic</a>—all
+              due to Google's AI Overviews and other AI-powered search features. A Pew Research study found that
+              users were <strong>half as likely to click</strong> when AI summaries appeared.
+            </p>
+            <p className="text-gray-700 mb-4">
+              Traditional SEO tactics weren't just underperforming—they were becoming obsolete. ChatGPT, Claude,
+              Perplexity, and other AI assistants were becoming primary information sources for millions of users,
+              but my sites were invisible to them. I needed a way to understand how AI systems see content and
+              what makes them cite certain sources.
             </p>
             <p className="text-gray-700 mb-4">
               So I built AImpactScanner. What started as a tool for my own needs became something bigger—a platform
@@ -74,26 +85,47 @@ const AboutPage = ({ onNavigate, isAuthenticated }) => {
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">The MASTERY-AI Framework</h2>
             <p className="text-gray-700 mb-4">
-              Our proprietary MASTERY-AI Framework v3.1.1 analyzes 148 critical factors across 8 optimization 
-              pillars. This comprehensive approach ensures your website meets the requirements of modern AI 
+              Our proprietary <a
+                href="https://aisearchmastery.com/mastery-ai-framework/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 underline font-semibold"
+              >MASTERY-AI Framework v3.1.1</a> analyzes 148 critical factors across 8 optimization
+              pillars. This comprehensive approach ensures your website meets the requirements of modern AI
               systems while maintaining excellence in traditional search engines.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-gray-900 mb-2">🤖 AI Response Optimization</h3>
-                <p className="text-gray-600 text-sm">Citation-worthy content structure</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-gray-900 mb-2">🔐 Authority & Trust Signals</h3>
-                <p className="text-gray-600 text-sm">Credibility markers for AI systems</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-gray-900 mb-2">⚙️ Machine Readability</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">M - ⚙️ Machine Readability</h3>
                 <p className="text-gray-600 text-sm">Technical infrastructure optimization</p>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-gray-900 mb-2">📝 Semantic Content Quality</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">A - 🔐 Authority & Trust</h3>
+                <p className="text-gray-600 text-sm">Credibility markers for AI systems</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="font-semibold text-gray-900 mb-2">S - 📝 Semantic Content</h3>
                 <p className="text-gray-600 text-sm">Context and meaning optimization</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="font-semibold text-gray-900 mb-2">T - 🎯 Topical Expertise</h3>
+                <p className="text-gray-600 text-sm">Domain authority and specialization</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="font-semibold text-gray-900 mb-2">E - 🎨 Engagement & UX</h3>
+                <p className="text-gray-600 text-sm">User experience signals</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="font-semibold text-gray-900 mb-2">R - 🔗 Reference Networks</h3>
+                <p className="text-gray-600 text-sm">Citation patterns and linking</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="font-semibold text-gray-900 mb-2">Y - 📈 Yield Optimization</h3>
+                <p className="text-gray-600 text-sm">Conversion and performance</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="font-semibold text-gray-900 mb-2">AI - 🤖 AI Response Optimization</h3>
+                <p className="text-gray-600 text-sm">Citation-worthy content structure</p>
               </div>
             </div>
           </section>
