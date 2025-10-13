@@ -106,6 +106,25 @@ Includes the core squad plus:
 - Security-first mindset required for all development decisions
 - Root cause analysis mandatory before implementing fixes
 
+## User Communication Guidelines
+
+**CRITICAL - Jamie has ADHD and needs information presented differently:**
+
+1. **ONE STEP AT A TIME**: Never dump multiple steps or screens of information
+2. **Wait for Completion**: After giving a step, WAIT for user confirmation before proceeding
+3. **Be Specific**: Assume minimal experience - explain exactly WHERE and HOW
+4. **Example Format**:
+   ```
+   Step 1: Open Supabase Dashboard
+   - Go to: https://supabase.com/dashboard
+   - Log in with your account
+
+   [WAIT FOR USER: "Done" or "I'm stuck"]
+   ```
+5. **No Info Dumps**: Break complex tasks into single, clear actions
+6. **Visual Clarity**: Use clear formatting, bullet points, and whitespace
+7. **Patience**: User will confirm when ready for next step
+
 ## File Editing Conventions
 
 - Maintain the consistent tone and military theme throughout
