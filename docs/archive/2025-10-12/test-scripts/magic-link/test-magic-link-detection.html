@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Magic Link Detection Test</title>
+</head>
+<body>
+    <h1>Magic Link Detection Test</h1>
+    <div id="results"></div>
+    
+    <script type="module">
+        // Import our facade
+        import { supabaseFacade } from './src/lib/supabaseFacade.js';
+        
+        const results = document.getElementById('results');
+        
+        // Test different magic link URL scenarios
+        const testUrls = [
+            'http://localhost:5177/?access_token=test123&refresh_token=refresh123&type=recovery',
+            'http://localhost:5177/?token=test456&type=magiclink&redirect_to=dashboard',
+            'http://localhost:5177/?confirmation_url=true&access_token=test789',
+            'http://localhost:5177/#access_token=oauth123&refresh_token=oauthrefresh'
+        ];
+        
+        function testUrlParsing(url) {
+            // Mock window.location for testing
+            const urlObj = new URL(url);
+            const originalLocation = window.location;
+            
+            // Mock location object
+            window.location = {
+                ...originalLocation,
+                search: urlObj.search,
+                hash: urlObj.hash
+            };
+            
+            try {
+                // Test hash params (OAuth)
+                const hashParams = supabaseFacade._parseHashParams();
+                const queryParams = supabaseFacade._parseQueryParams();
+                
+                results.innerHTML += `<h3>Testing: ${url}</h3>`;
+                results.innerHTML += `<p><strong>Hash params:</strong> ${JSON.stringify(hashParams)}</p>`;
+                results.innerHTML += `<p><strong>Query params:</strong> ${JSON.stringify(queryParams)}</p>`;
+                
+                // Test token detection
+                const hasOAuthTokens = hashParams.access_token;
+                const hasMagicLinkTokens = queryParams.access_token || 
+                                         (queryParams.token && queryParams.type === 'magiclink') ||
+                                         queryParams.confirmation_url;
+                
+                results.innerHTML += `<p><strong>OAuth detected:</strong> ${hasOAuthTokens ? '✅' : '❌'}</p>`;
+                results.innerHTML += `<p><strong>Magic Link detected:</strong> ${hasMagicLinkTokens ? '✅' : '❌'}</p>`;
+                results.innerHTML += '<hr>';
+                
+            } catch (error) {
+                results.innerHTML += `<p><strong>Error:</strong> ${error.message}</p><hr>`;
+            } finally {
+                // Restore original location
+                window.location = originalLocation;
+            }
+        }
+        
+        // Run tests
+        testUrls.forEach(testUrlParsing);
+        
+        results.innerHTML += '<h3>Current URL Test</h3>';
+        results.innerHTML += `<p><strong>Current URL:</strong> ${window.location.href}</p>`;
+        results.innerHTML += `<p><strong>Current search:</strong> ${window.location.search}</p>`;
+        results.innerHTML += `<p><strong>Current hash:</strong> ${window.location.hash}</p>`;
+        
+        // Test current URL parsing
+        try {
+            const currentHashParams = supabaseFacade._parseHashParams();
+            const currentQueryParams = supabaseFacade._parseQueryParams();
+            
+            results.innerHTML += `<p><strong>Current hash params:</strong> ${JSON.stringify(currentHashParams)}</p>`;
+            results.innerHTML += `<p><strong>Current query params:</strong> ${JSON.stringify(currentQueryParams)}</p>`;
+        } catch (error) {
+            results.innerHTML += `<p><strong>Current parsing error:</strong> ${error.message}</p>`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - img: AI
+  - text: AImpactScanner AI Search Optimization Platform
+  - button "Sign In"
+  - button "Sign Up"
+- button "🏠 Dashboard"
+- button "🔍 New Analysis"
+- button "💎 Upgrade"
+- button "👤 Account"
+- text: "🔴 Warning: AI is reshaping search - protect your traffic now"
+- heading "Is AI Stealing Your Traffic?" [level=1]
+- paragraph: ChatGPT, Claude, and Perplexity are answering questions about your business without sending visitors to your site. See exactly what you're losing and how to fix it.
+- text: Trusted by 7 pioneering sites Real clients using our AI optimization analysis FreeCalcHub Evolve-7 Agent-11 AgentMarket LLMtxt Mastery AI Search Mastery MCP-7
+- textbox "Enter a page URL to analyze..."
+- button "Analyze My Site Free" [disabled]
+- paragraph: Analyze one page at a time - start with your homepage or most important page
+- paragraph: No email required • See results in 15 seconds • 100% free analysis
+- img
+- text: 148 AI Factors
+- img
+- text: 15s Analysis
+- img
+- text: 100% Privacy Safe
+- img
+- text: No Credit Card
+- heading "What You'll Discover" [level=2]
+- img
+- heading "Traffic Loss Analysis" [level=3]
+- paragraph: See exactly how much traffic AI is stealing and which queries you're losing
+- img
+- heading "Competitor Comparison" [level=3]
+- paragraph: Know where you rank vs competitors in AI search results
+- img
+- heading "Recovery Roadmap" [level=3]
+- paragraph: Get specific actions to reclaim your traffic and protect your business
+- heading "Join Our Growing Community" [level=2]
+- paragraph: Thousands of businesses are already using AI analysis to optimize their websites and protect their traffic.
+- text: 10+ Businesses Analyzed 2.4x Average Improvement 15s Analysis Time Built by a solopreneur, for solopreneurs
+- paragraph: No team, no overhead, just automated excellence. I built this tool because I needed it myself.
+- paragraph: When AI started changing search, I couldn't afford expensive consultants or enterprise tools. So I created the analysis I wished existed - comprehensive, affordable, and actually actionable.
+- heading "Don't Let AI Steal Another Visitor" [level=2]
+- paragraph: Every day you wait, competitors get stronger in AI search results. See what you're losing right now - completely free.
+- button "Analyze My Site Now →"
+- contentinfo:
+  - heading "AImpactScanner" [level=3]
+  - paragraph: AI Search Optimization Platform powered by the MASTERY-AI Framework v3.1.1
+  - paragraph: Analyze how AI search engines see your website and optimize for better visibility.
+  - heading "Product" [level=4]
+  - list:
+    - listitem:
+      - button "Home"
+    - listitem:
+      - button "Pricing"
+    - listitem:
+      - button "About Us"
+  - heading "Legal" [level=4]
+  - list:
+    - listitem:
+      - button "Privacy Policy"
+    - listitem:
+      - button "Terms of Service"
+    - listitem:
+      - button "Contact Us"
+  - link "AI Search Mastery":
+    - /url: https://www.aisearchmastery.com
+    - text: AI Search Mastery
+    - img
+  - link "LLMs.TXT Mastery":
+    - /url: https://www.llmtxtmastery.com
+    - text: LLMs.TXT Mastery
+    - img
+  - link "MASTERY-AI Framework":
+    - /url: https://aisearchmastery.com/mastery-ai-framework
+    - text: MASTERY-AI Framework
+    - img
+  - paragraph: © 2025 AI Search Mastery. All rights reserved.
+  - paragraph: Built with AI optimization insights • Powered by the MASTERY-AI Framework v3.1.1
+- img "Cookie Icon"
+- text: "We and our 0 partners may use, with your consent, cookies or similar technologies to store and process your personal data, such as unique identifiers and your visits to this website. Your consent applies to this website. Some vendors may collect your data based on legitimate interest without your consent. You may withdraw your consent or object to any legitimate interests at any time by clicking on Manage Preferences. To withdraw your consent or manage your preferences after this banner closes, you can re-open your preferences by clicking on the floating cookie icon. Our partners collect your information for the following purposes: None. They also use the following special features: Use precise geolocation data, Actively scan device characteristics for identification."
+- link "Privacy Policy ↗":
+  - /url: /privacy-policy
+- button "Manage preferences"
+- button "Decline"
+- button "Allow All"
+```
