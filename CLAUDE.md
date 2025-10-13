@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-AGENT-11 is a framework for deploying specialized AI agents in Claude Code to form an elite development squad. The project provides templates, documentation, and deployment guides for 11 specialized agents that collaborate to help solo founders build and ship products rapidly.
+This is the **AImpactScanner MVP** project - a freemium SaaS application that analyzes websites against the MASTERY-AI Framework, built using AGENT-11 methodology.
+
+### Application Details
+- **Production URL**: https://aimpactscanner.com
+- **Staging URL**: https://develop--aimpactscanner.netlify.app
+- **Technology Stack**: React 19.1.0, Vite 7.0.0, Supabase 2.51.0, Netlify hosting
+- **Business Model**: 2-tier freemium (Free + Coffee at $4.95/month)
 
 ## Critical Software Development Principles
 
@@ -488,9 +494,45 @@ All agent profiles should explicitly list their available tools:
 - `/report [since_date]` - Generate progress reports for stakeholders
 - `/pmd [issue]` - Post Mortem Dump for root cause analysis
 
+## Deployment Workflow
+
+### Environment Setup
+**Production Environment:**
+- **Branch**: `main`
+- **Supabase Project**: pdmtvkcxnqysujnpcnyh
+- **Supabase URL**: https://pdmtvkcxnqysujnpcnyh.supabase.co
+- **Netlify URL**: https://aimpactscanner.com
+- **Database Tables**: 7 production tables
+
+**Staging Environment:**
+- **Branch**: `develop`
+- **Supabase Project**: isgzvwpjokcmtizstwru
+- **Supabase URL**: https://isgzvwpjokcmtizstwru.supabase.co
+- **Netlify URL**: https://develop--aimpactscanner.netlify.app
+- **Database Tables**: 8 tables (7 production + waitlist feature)
+
+### Development Workflow
+1. **Work on Feature**: Make changes on `develop` branch
+2. **Push to GitHub**: `git push origin develop`
+3. **Auto-Deploy to Staging**: Netlify automatically deploys to staging URL
+4. **Test on Staging**: Verify everything works at staging URL
+5. **Create PR**: When ready, create Pull Request from `develop` to `main`
+6. **Merge to Production**: Merge PR → auto-deploys to production
+
+### Environment Variables (Netlify)
+Variables are scoped by deploy context:
+- **Production context**: Uses production Supabase credentials
+- **Branch deploys (develop)**: Uses staging Supabase credentials
+- **Deploy previews**: Uses staging credentials for PR previews
+
+### Key Files
+- **`.env.staging`**: Local staging environment (gitignored)
+- **`staging-credentials.md`**: All staging credentials (gitignored)
+- **`PHASE-0-PRODUCTION-VERIFICATION.md`**: Production environment documentation
+
 ## Development Notes
 
-- **No Build System**: Pure documentation project - verify changes through Markdown review and deployment testing
+- **Build System**: Vite 7.0.0 with React 19.1.0
 - **Mission System**: Use `/coord [mission] [files]` for systematic workflows
 - **Templates**: Available in `/templates/` for reusable patterns
-- **Updates**: Changes automatically deployed via GitHub integration
+- **Auto-Deploy**: Both `main` and `develop` branches auto-deploy via Netlify

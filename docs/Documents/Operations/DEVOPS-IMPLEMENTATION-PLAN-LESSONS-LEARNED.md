@@ -26,6 +26,12 @@
    - ❌ **WRONG**: Just enabling OAuth providers in Supabase
    - ✅ **RIGHT**: OAuth + Callback URLs + Auth Triggers + Profile Creation
 
+5. **GitHub Branch Setup Comes FIRST** [NEW - Oct 2025]
+   - ❌ **WRONG**: Setting up Netlify before creating the `develop` branch
+   - ✅ **RIGHT**: Create `develop` branch → Push to GitHub → THEN configure Netlify
+   - **Why**: Netlify can't deploy a branch that doesn't exist yet
+   - **Correct Sequence**: GitHub branches → Netlify branch configuration → Environment variables
+
 ---
 
 ## 📋 THE CORRECT ORDER OF OPERATIONS
@@ -216,19 +222,31 @@ CREATE TRIGGER on_auth_user_created
 
 ---
 
-## Phase 3: Frontend Deployment (30 minutes)
+## Phase 2.5: GitHub Branch Setup (5 minutes) [CRITICAL - DO THIS FIRST]
 
-### Step 3.1: Set Up Branch Strategy
+### Step 2.5.1: Create and Push Develop Branch
+
+**DO THIS BEFORE NETLIFY CONFIGURATION**
 
 ```bash
-# Create develop branch
+# Ensure you're on main and up to date
 git checkout main
 git pull
+
+# Create develop branch
 git checkout -b develop
+
+# Push to GitHub (Netlify needs this to exist!)
 git push -u origin develop
 ```
 
-### Step 3.2: Configure Netlify Branch Deployments
+**Verification**: Go to GitHub → Your Repo → Branches → Confirm `develop` exists
+
+---
+
+## Phase 3: Frontend Deployment (30 minutes)
+
+### Step 3.1: Configure Netlify Branch Deployments
 
 **USER ACTION REQUIRED:**
 1. Go to: Netlify → Site Settings → Build & deploy
