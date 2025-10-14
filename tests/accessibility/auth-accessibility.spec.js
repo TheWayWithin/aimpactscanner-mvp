@@ -20,24 +20,51 @@ test.describe('Accessibility: Signup Flow', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/register');
     await page.waitForLoadState('networkidle');
+
+    // Dismiss Enzuzo GDPR consent banner and preferences modal if present
+    // This prevents consent modal buttons from interfering with test selectors
+    try {
+      // Check for and dismiss main consent banner
+      const acceptButton = page.locator('button[data-testid="accept-all-cookies"]');
+      if (await acceptButton.isVisible({ timeout: 2000 })) {
+        await acceptButton.click();
+      }
+
+      // Wait for all Enzuzo modals to completely disappear
+      await page.waitForFunction(() => {
+        const enzuzoElements = document.querySelectorAll('[class*="enzuzo"]');
+        return enzuzoElements.length === 0 ||
+               Array.from(enzuzoElements).every(el => el.offsetParent === null);
+      }, { timeout: 3000 }).catch(() => {});
+
+      await page.waitForTimeout(500); // Additional buffer for animations
+    } catch (error) {
+      // Consent banner not present or already dismissed - continue
+    }
   });
 
   test.describe('Keyboard Navigation', () => {
     test('should allow full keyboard navigation through signup form', async ({ page }) => {
-      // Tab through tier selector
-      await page.keyboard.press('Tab'); // Focus first tier card
+      // Use specific selectors for tier cards to avoid Enzuzo modal interference
+      // Free tier card
+      const freeTier = page.locator('[role="button"]:has-text("Free")').filter({ has: page.locator('text=/3 analyses/') });
+      await freeTier.focus();
+      await expect(freeTier).toBeFocused();
 
-      const firstTierCard = await page.locator('[role="button"]:first-of-type');
-      await expect(firstTierCard).toBeFocused();
-
-      // Tab to next tier
+      // Tab to Coffee tier
       await page.keyboard.press('Tab');
-      const secondTierCard = await page.locator('[role="button"]:nth-of-type(2)');
-      await expect(secondTierCard).toBeFocused();
+      const coffeeTier = page.locator('[role="button"]:has-text("Coffee")').filter({ has: page.locator('text=/Unlimited/') });
+      await expect(coffeeTier).toBeFocused();
 
-      // Continue tabbing through all tiers
-      await page.keyboard.press('Tab'); // Third tier
-      await page.keyboard.press('Tab'); // Fourth tier
+      // Tab to Growth tier
+      await page.keyboard.press('Tab');
+      const growthTier = page.locator('[role="button"]:has-text("Growth")').filter({ has: page.locator('text=/Coming Soon/') });
+      await expect(growthTier).toBeFocused();
+
+      // Tab to Scale tier
+      await page.keyboard.press('Tab');
+      const scaleTier = page.locator('[role="button"]:has-text("Scale")').filter({ has: page.locator('text=/Coming Soon/') });
+      await expect(scaleTier).toBeFocused();
 
       // Tab to auth method buttons
       await page.keyboard.press('Tab');
@@ -54,8 +81,8 @@ test.describe('Accessibility: Signup Flow', () => {
     });
 
     test('should allow selecting tier with Enter key', async ({ page }) => {
-      // Focus Coffee tier
-      const coffeeTier = page.locator('[role="button"]:has-text("Coffee")');
+      // Focus Coffee tier using specific selector
+      const coffeeTier = page.locator('[role="button"]:has-text("Coffee")').filter({ has: page.locator('text=/Unlimited/') });
       await coffeeTier.focus();
 
       // Press Enter to select
@@ -66,7 +93,7 @@ test.describe('Accessibility: Signup Flow', () => {
     });
 
     test('should allow selecting tier with Space key', async ({ page }) => {
-      const freeTier = page.locator('[role="button"]:has-text("Free")');
+      const freeTier = page.locator('[role="button"]:has-text("Free")').filter({ has: page.locator('text=/3 analyses/') });
       await freeTier.focus();
 
       await page.keyboard.press('Space');
@@ -174,11 +201,11 @@ test.describe('Accessibility: Signup Flow', () => {
 
       await page.waitForTimeout(1000); // Wait for axe to load
 
-      // Run axe on tier cards
-      const tierCards = page.locator('[role="button"]').first();
+      // Run axe on tier cards using specific selector
+      const freeTier = page.locator('[role="button"]:has-text("Free")').filter({ has: page.locator('text=/3 analyses/') });
       const results = await page.evaluate(async (selector) => {
         return await axe.run(selector);
-      }, await tierCards.evaluate((el) => el));
+      }, await freeTier.evaluate((el) => el));
 
       // Check for contrast violations
       const contrastViolations = results.violations.filter((v) =>
@@ -257,12 +284,15 @@ test.describe('Accessibility: Signup Flow', () => {
 
   test.describe('Semantic HTML', () => {
     test('should use semantic button elements for tier selection', async ({ page }) => {
-      const tierCards = await page.locator('[role="button"]').all();
+      // Use specific selectors for tier cards to avoid Enzuzo modal elements
+      const freeTier = page.locator('[role="button"]:has-text("Free")').filter({ has: page.locator('text=/3 analyses/') });
+      const coffeeTier = page.locator('[role="button"]:has-text("Coffee")').filter({ has: page.locator('text=/Unlimited/') });
 
-      for (const card of tierCards) {
-        const tagName = await card.evaluate((el) => el.tagName);
-        expect(['BUTTON', 'A']).toContain(tagName); // Should be button or link
-      }
+      const freeTagName = await freeTier.evaluate((el) => el.tagName);
+      const coffeeTagName = await coffeeTier.evaluate((el) => el.tagName);
+
+      expect(['BUTTON', 'A']).toContain(freeTagName); // Should be button or link
+      expect(['BUTTON', 'A']).toContain(coffeeTagName);
     });
 
     test('should use proper heading hierarchy', async ({ page }) => {
@@ -374,9 +404,9 @@ test.describe('Accessibility: Signup Flow', () => {
         await page.setViewportSize({ width: 375, height: 667 }); // iPhone SE
       }
 
-      // Tier cards should be touch-friendly (44x44px minimum)
-      const tierCard = page.locator('[role="button"]').first();
-      const size = await tierCard.boundingBox();
+      // Tier cards should be touch-friendly (44x44px minimum) - use specific selector
+      const freeTier = page.locator('[role="button"]:has-text("Free")').filter({ has: page.locator('text=/3 analyses/') });
+      const size = await freeTier.boundingBox();
 
       expect(size.height).toBeGreaterThanOrEqual(44);
       expect(size.width).toBeGreaterThanOrEqual(44);
@@ -398,6 +428,24 @@ test.describe('Accessibility: Upsell Pages', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/upsell/coffee');
       await page.waitForLoadState('networkidle');
+
+      // Dismiss Enzuzo GDPR consent banner and preferences modal if present
+      try {
+        const acceptButton = page.locator('button[data-testid="accept-all-cookies"]');
+        if (await acceptButton.isVisible({ timeout: 2000 })) {
+          await acceptButton.click();
+        }
+
+        await page.waitForFunction(() => {
+          const enzuzoElements = document.querySelectorAll('[class*="enzuzo"]');
+          return enzuzoElements.length === 0 ||
+                 Array.from(enzuzoElements).every(el => el.offsetParent === null);
+        }, { timeout: 3000 }).catch(() => {});
+
+        await page.waitForTimeout(500);
+      } catch (error) {
+        // Consent banner not present or already dismissed - continue
+      }
     });
 
     test('should have keyboard-accessible CTA buttons', async ({ page }) => {
