@@ -1371,42 +1371,33 @@ function AppContent({ initialUrl }) {
   // Render based on current view
   if (currentView === 'preview-analysis') {
     return (
-      <>
-        <SimpleConsentBanner />
-        <PreviewAnalysis
-          url={currentUrl}
-          analysisId={currentAnalysisId}
-          onAnalysisComplete={handlePreviewAnalysisComplete}
-        />
-      </>
+      <PreviewAnalysis
+        url={currentUrl}
+        analysisId={currentAnalysisId}
+        onAnalysisComplete={handlePreviewAnalysisComplete}
+      />
     );
   }
 
   if (currentView === 'preview-results') {
     return (
-      <>
-        <SimpleConsentBanner />
-        <PreviewResults
-          url={currentUrl}
-          analysisId={currentAnalysisId}
-          onUpgradeClick={handleUpgradeFromTeaser}
-          onFreeTrialClick={handleFreeTrialFromTeaser}
-        />
-      </>
+      <PreviewResults
+        url={currentUrl}
+        analysisId={currentAnalysisId}
+        onUpgradeClick={handleUpgradeFromTeaser}
+        onFreeTrialClick={handleFreeTrialFromTeaser}
+      />
     );
   }
 
   if (currentView === 'teaser-results') {
     return (
-      <>
-        <SimpleConsentBanner />
-        <AnalysisPreview
-          url={currentUrl}
-          analysisId={currentAnalysisId}
-          onUpgradeClick={handleUpgradeFromTeaser}
-          onFreeTrialClick={handleFreeTrialFromTeaser}
-        />
-      </>
+      <AnalysisPreview
+        url={currentUrl}
+        analysisId={currentAnalysisId}
+        onUpgradeClick={handleUpgradeFromTeaser}
+        onFreeTrialClick={handleFreeTrialFromTeaser}
+      />
     );
   }
 
@@ -1414,12 +1405,9 @@ function AppContent({ initialUrl }) {
   if (currentView === 'signup' || currentView === '/signup') {
     const Signup = React.lazy(() => import('./pages/Signup'));
     return (
-      <>
-        <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading..." />}>
-          <Signup />
-        </Suspense>
-      </>
+      <Suspense fallback={<ComponentLoader message="Loading..." />}>
+        <Signup />
+      </Suspense>
     );
   }
 
@@ -1427,12 +1415,9 @@ function AppContent({ initialUrl }) {
   if (currentView === 'register') {
     const Signup = React.lazy(() => import('./pages/Signup'));
     return (
-      <>
-        <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading signup..." />}>
-          <Signup />
-        </Suspense>
-      </>
+      <Suspense fallback={<ComponentLoader message="Loading signup..." />}>
+        <Signup />
+      </Suspense>
     );
   }
 
@@ -1450,12 +1435,9 @@ function AppContent({ initialUrl }) {
 
   if (currentView === 'unified-registration') {
     return (
-      <>
-        <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading registration..." />}>
-          <UnifiedRegistration onRegistrationComplete={handleRegistrationComplete} />
-        </Suspense>
-      </>
+      <Suspense fallback={<ComponentLoader message="Loading registration..." />}>
+        <UnifiedRegistration onRegistrationComplete={handleRegistrationComplete} />
+      </Suspense>
     );
   }
 
@@ -1463,12 +1445,9 @@ function AppContent({ initialUrl }) {
   if (currentView === 'login') {
     const Signup = React.lazy(() => import('./pages/Signup'));
     return (
-      <>
-        <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading..." />}>
-          <Signup />
-        </Suspense>
-      </>
+      <Suspense fallback={<ComponentLoader message="Loading..." />}>
+        <Signup />
+      </Suspense>
     );
   }
 
@@ -1476,12 +1455,9 @@ function AppContent({ initialUrl }) {
   if (currentView === 'oauth-callback') {
     const OAuthCallback = React.lazy(() => import('./components/OAuthCallback'));
     return (
-      <>
-        <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Processing authentication..." />}>
-          <OAuthCallback onNavigate={setCurrentView} />
-        </Suspense>
-      </>
+      <Suspense fallback={<ComponentLoader message="Processing authentication..." />}>
+        <OAuthCallback onNavigate={setCurrentView} />
+      </Suspense>
     );
   }
 
@@ -1489,56 +1465,44 @@ function AppContent({ initialUrl }) {
   if (currentView === 'upsell-coffee') {
     const UpsellCoffee = React.lazy(() => import('./pages/UpsellCoffee'));
     return (
-      <>
-        <SimpleConsentBanner />
-        <ProtectedRoute session={session} onRedirect={setCurrentView}>
-          <Suspense fallback={<ComponentLoader message="Loading..." />}>
-            <UpsellCoffee />
-          </Suspense>
-        </ProtectedRoute>
-      </>
+      <ProtectedRoute session={session} onRedirect={setCurrentView}>
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <UpsellCoffee />
+        </Suspense>
+      </ProtectedRoute>
     );
   }
 
   if (currentView === 'upsell-growth') {
     const UpsellGrowth = React.lazy(() => import('./pages/UpsellGrowth'));
     return (
-      <>
-        <SimpleConsentBanner />
-        <ProtectedRoute session={session} onRedirect={setCurrentView}>
-          <Suspense fallback={<ComponentLoader message="Loading..." />}>
-            <UpsellGrowth />
-          </Suspense>
-        </ProtectedRoute>
-      </>
+      <ProtectedRoute session={session} onRedirect={setCurrentView}>
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <UpsellGrowth />
+        </Suspense>
+      </ProtectedRoute>
     );
   }
 
   if (currentView === 'upsell-scale') {
     const UpsellScale = React.lazy(() => import('./pages/UpsellScale'));
     return (
-      <>
-        <SimpleConsentBanner />
-        <ProtectedRoute session={session} onRedirect={setCurrentView}>
-          <Suspense fallback={<ComponentLoader message="Loading..." />}>
-            <UpsellScale />
-          </Suspense>
-        </ProtectedRoute>
-      </>
+      <ProtectedRoute session={session} onRedirect={setCurrentView}>
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <UpsellScale />
+        </Suspense>
+      </ProtectedRoute>
     );
   }
 
   if (currentView === 'welcome-scale') {
     const WelcomeScale = React.lazy(() => import('./pages/WelcomeScale'));
     return (
-      <>
-        <SimpleConsentBanner />
-        <ProtectedRoute session={session} onRedirect={setCurrentView}>
-          <Suspense fallback={<ComponentLoader message="Loading..." />}>
-            <WelcomeScale />
-          </Suspense>
-        </ProtectedRoute>
-      </>
+      <ProtectedRoute session={session} onRedirect={setCurrentView}>
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <WelcomeScale />
+        </Suspense>
+      </ProtectedRoute>
     );
   }
 
@@ -1546,14 +1510,11 @@ function AppContent({ initialUrl }) {
   if (currentView === 'checkout-success') {
     const CheckoutSuccess = React.lazy(() => import('./pages/CheckoutSuccess'));
     return (
-      <>
-        <SimpleConsentBanner />
-        <ProtectedRoute session={session} onRedirect={setCurrentView}>
-          <Suspense fallback={<ComponentLoader message="Processing payment..." />}>
-            <CheckoutSuccess />
-          </Suspense>
-        </ProtectedRoute>
-      </>
+      <ProtectedRoute session={session} onRedirect={setCurrentView}>
+        <Suspense fallback={<ComponentLoader message="Processing payment..." />}>
+          <CheckoutSuccess />
+        </Suspense>
+      </ProtectedRoute>
     );
   }
 
@@ -1561,30 +1522,24 @@ function AppContent({ initialUrl }) {
   if (currentView === 'checkout-cancel') {
     const CheckoutCancel = React.lazy(() => import('./pages/CheckoutCancel'));
     return (
-      <>
-        <SimpleConsentBanner />
-        <ProtectedRoute session={session} onRedirect={setCurrentView}>
-          <Suspense fallback={<ComponentLoader message="Loading..." />}>
-            <CheckoutCancel />
-          </Suspense>
-        </ProtectedRoute>
-      </>
+      <ProtectedRoute session={session} onRedirect={setCurrentView}>
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <CheckoutCancel />
+        </Suspense>
+      </ProtectedRoute>
     );
   }
 
   // Email verification pending view
   if (currentView === 'email-verification') {
     return (
-      <>
-        <SimpleConsentBanner />
-        <EmailVerificationPending 
-          email={pendingVerificationEmail || 'your email'}
-          onNavigateToLogin={() => setCurrentView('login')}
-          onResendEmail={() => {
-            console.log('Resending verification email...');
-          }}
-        />
-      </>
+      <EmailVerificationPending
+        email={pendingVerificationEmail || 'your email'}
+        onNavigateToLogin={() => setCurrentView('login')}
+        onResendEmail={() => {
+          console.log('Resending verification email...');
+        }}
+      />
     );
   }
 
@@ -1613,12 +1568,9 @@ function AppContent({ initialUrl }) {
     }
 
     return (
-      <>
-        <SimpleConsentBanner />
-        <Suspense fallback={<ComponentLoader message="Loading diagnostics..." />}>
-          <DiagnosticSignup />
-        </Suspense>
-      </>
+      <Suspense fallback={<ComponentLoader message="Loading diagnostics..." />}>
+        <DiagnosticSignup />
+      </Suspense>
     );
   }
 
@@ -1627,48 +1579,44 @@ function AppContent({ initialUrl }) {
   if (currentView === 'privacy') {
     return (
       <div className="min-h-screen flex flex-col bg-white">
-        <SimpleConsentBanner />
-        <PrivacyPolicyPage 
-          onNavigate={setCurrentView} 
+        <PrivacyPolicyPage
+          onNavigate={setCurrentView}
           isAuthenticated={!!session}
         />
         <Footer onNavigate={setCurrentView} />
       </div>
     );
   }
-  
+
   if (currentView === 'terms') {
     return (
       <div className="min-h-screen flex flex-col bg-white">
-        <SimpleConsentBanner />
-        <TermsOfServicePage 
-          onNavigate={setCurrentView} 
+        <TermsOfServicePage
+          onNavigate={setCurrentView}
           isAuthenticated={!!session}
         />
         <Footer onNavigate={setCurrentView} />
       </div>
     );
   }
-  
+
   if (currentView === 'contact') {
     return (
       <div className="min-h-screen flex flex-col bg-white">
-        <SimpleConsentBanner />
-        <ContactPage 
-          onNavigate={setCurrentView} 
+        <ContactPage
+          onNavigate={setCurrentView}
           isAuthenticated={!!session}
         />
         <Footer onNavigate={setCurrentView} />
       </div>
     );
   }
-  
+
   if (currentView === 'about') {
     return (
       <div className="min-h-screen flex flex-col bg-white">
-        <SimpleConsentBanner />
-        <AboutPage 
-          onNavigate={setCurrentView} 
+        <AboutPage
+          onNavigate={setCurrentView}
           isAuthenticated={!!session}
         />
         <Footer onNavigate={setCurrentView} />
@@ -1680,27 +1628,26 @@ function AppContent({ initialUrl }) {
   if (currentView === 'pricing' && !session) {
     return (
       <div className="min-h-screen flex flex-col bg-white">
-        <SimpleConsentBanner />
         <div className="flex-grow">
           {/* Import NavigationButtons for non-authenticated pricing page */}
           <div className="bg-gradient-to-b from-blue-50 to-white pt-8">
-            <NavigationButtons 
-              currentView="pricing" 
-              onNavigate={setCurrentView} 
+            <NavigationButtons
+              currentView="pricing"
+              onNavigate={setCurrentView}
               isAuthenticated={false}
             />
           </div>
-          <TierSelection 
+          <TierSelection
             currentTier="free"
             onUpgrade={(tier) => {
               // User selected tier from pricing page
-              
+
               // Block Coming Soon tiers
               if (tier === 'growth' || tier === 'scale') {
                 alert('This tier is coming soon! Please check back later or contact us for early access.');
                 return;
               }
-              
+
               localStorage.setItem('selectedTier', tier);
               if (tier === 'coffee') {
                 setCurrentView('register');
@@ -1720,7 +1667,6 @@ function AppContent({ initialUrl }) {
   if (isLoadingAuth && !sessionChecked) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white">
-        <SimpleConsentBanner />
         <div className="flex-grow flex items-center justify-center">
           <div className="text-center">
             <div className="flex items-center justify-center space-x-3 mb-4">
@@ -1739,9 +1685,8 @@ function AppContent({ initialUrl }) {
     if (currentView === 'landing' || currentView === 'dashboard' || currentView === 'input') {
       return (
         <div className="min-h-screen flex flex-col">
-          <SimpleConsentBanner />
           <div className="flex-grow">
-            <Landing 
+            <Landing
               onAnalysisComplete={handleLandingAnalysis}
               onNavigate={setCurrentView}
               isAuthenticated={!!session}
@@ -1757,12 +1702,9 @@ function AppContent({ initialUrl }) {
     } else {
       // For any other view without session, show auth
       return (
-        <>
-          <SimpleConsentBanner />
-          <Suspense fallback={<ComponentLoader message="Loading authentication..." />}>
-            <AuthWithPassword />
-          </Suspense>
-        </>
+        <Suspense fallback={<ComponentLoader message="Loading authentication..." />}>
+          <AuthWithPassword />
+        </Suspense>
       );
     }
   }
@@ -1772,9 +1714,6 @@ function AppContent({ initialUrl }) {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Performance Optimizer - Critical path and Core Web Vitals optimization */}
       <PerformanceOptimizer />
-      
-      {/* Optimized GDPR Consent Banner - Non-blocking LCP performance */}
-      <SimpleConsentBanner />
       
       {/* Consistent header across all authenticated pages */}
       <AuthenticatedHeader 
@@ -1988,7 +1927,7 @@ function AppContent({ initialUrl }) {
   );
 }
 
-// Main App component with GTM and Enzuzo integration
+// Main App component with GTM and consent integration
 function App({ initialUrl }) {
   // Handle initial URL from static hero interaction
   useEffect(() => {
@@ -2002,13 +1941,13 @@ function App({ initialUrl }) {
     <>
       {/* Performance Optimizer - Critical path optimization */}
       <PerformanceOptimizer />
-      
+
       {/* GTM Analytics Integration - Load on all pages */}
       <GTMIntegration />
-      
-      {/* Enzuzo GDPR Integration - Disabled during SimpleConsentBanner testing */}
-      {/* <EnzuzoIntegration /> */}
-      
+
+      {/* GDPR Consent Banner - SINGLE GLOBAL INSTANCE for all views */}
+      <SimpleConsentBanner />
+
       {/* Main app content */}
       <AppContent initialUrl={initialUrl} />
     </>
