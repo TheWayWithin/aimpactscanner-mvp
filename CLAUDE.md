@@ -511,6 +511,22 @@ All agent profiles should explicitly list their available tools:
 - **Netlify URL**: https://develop--aimpactscanner.netlify.app
 - **Database Tables**: 8 tables (7 production + waitlist feature)
 
+### CRITICAL: Deployment Checklist
+
+**BEFORE ANY DEPLOYMENT:**
+1. ✅ **Verify current git branch**: Run `git branch --show-current`
+2. ✅ **Confirm target environment**:
+   - `develop` branch = staging only
+   - `main` branch = production
+3. ✅ **Check user's intent**: Did they say "production" or "staging"?
+4. ✅ **Double-check branch matches intent**: If user wants prod, MUST be on `main`
+
+**NEVER:**
+- ❌ Deploy to production from `develop` branch
+- ❌ Assume which environment user wants - ASK if unclear
+- ❌ Skip branch verification before deployment
+- ❌ Merge to main without explicit user approval
+
 ### Development Workflow
 1. **Work on Feature**: Make changes on `develop` branch
 2. **Push to GitHub**: `git push origin develop`
@@ -518,6 +534,19 @@ All agent profiles should explicitly list their available tools:
 4. **Test on Staging**: Verify everything works at staging URL
 5. **Create PR**: When ready, create Pull Request from `develop` to `main`
 6. **Merge to Production**: Merge PR → auto-deploys to production
+
+### Production Deployment Process
+When user requests production deployment:
+1. **Verify current branch**: `git branch --show-current`
+2. **If on develop**:
+   - Switch to main: `git checkout main`
+   - Merge develop: `git merge develop`
+   - Push to GitHub: `git push origin main`
+3. **If on main**:
+   - Ensure it's up to date: `git pull origin main`
+   - Push changes: `git push origin main`
+4. **Manual deploy (if needed)**: `netlify deploy --prod`
+5. **Verify deployment URL**: Confirm it's https://aimpactscanner.com NOT staging URL
 
 ### Environment Variables (Netlify)
 Variables are scoped by deploy context:
