@@ -99,8 +99,8 @@ const OAuthCallback = ({ onNavigate }) => {
             console.log('🔒 SECURITY: Using onNavigate callback for tier selection');
             onNavigate('upsell-coffee');
           } else {
-            console.error('❌ SECURITY: No onNavigate callback - falling back to landing');
-            window.location.hash = 'landing';
+            console.error('❌ SECURITY: No onNavigate callback - falling back to dashboard');
+            window.location.hash = 'dashboard';
           }
           return;
         }
