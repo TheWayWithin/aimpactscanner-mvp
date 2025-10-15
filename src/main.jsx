@@ -9,17 +9,26 @@ import App from './App.jsx'
 const initReactApp = () => {
   // Check if there's a pending URL from static interaction
   const pendingUrl = window.__pendingUrl;
-  
+
   // Create React root
   const root = createRoot(document.getElementById('root'));
-  
+
   // Render React app
+  // CRITICAL FIX: Remove StrictMode in production to prevent duplicate component mounting
+  // StrictMode intentionally double-renders components to detect side effects in development
+  // This was causing TWO consent banners to appear in production
+  const isDevelopment = import.meta.env.MODE === 'development';
+
   root.render(
-    <StrictMode>
+    isDevelopment ? (
+      <StrictMode>
+        <App initialUrl={pendingUrl} />
+      </StrictMode>
+    ) : (
       <App initialUrl={pendingUrl} />
-    </StrictMode>
+    )
   );
-  
+
   // Transition from static to React
   if (window.__showReactRoot) {
     // Small delay to ensure React is ready
