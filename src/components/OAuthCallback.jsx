@@ -60,12 +60,19 @@ const OAuthCallback = ({ onNavigate }) => {
 
       console.log('✅ Session retrieved:', session.user.id);
 
+      // PHASE 2 FIX: Check if user is truly new vs existing with timing issue
+      const authUser = session.user;
+      const accountAge = Date.now() - new Date(authUser.created_at).getTime();
+      const isNewUser = accountAge < 60000; // Less than 1 minute old = new user
+
+      console.log('🔍 User account age:', accountAge + 'ms', isNewUser ? '(NEW USER)' : '(EXISTING USER)');
+
       // Clean up authentication tokens from URL for security
       const hasOAuthTokens = window.location.hash.includes('access_token=') || window.location.hash.includes('refresh_token=');
-      const hasQueryTokens = window.location.search.includes('access_token=') || 
+      const hasQueryTokens = window.location.search.includes('access_token=') ||
                             window.location.search.includes('token=') ||
                             window.location.search.includes('confirmation_url=');
-      
+
       if (hasOAuthTokens || hasQueryTokens) {
         console.log('🧹 Cleaning authentication tokens from URL...');
         const cleanUrl = `${window.location.origin}${window.location.pathname}#oauth-callback`;
@@ -76,16 +83,40 @@ const OAuthCallback = ({ onNavigate }) => {
       const authContext = getAuthContext();
       console.log('📦 Auth context:', authContext);
 
-      // Check if user exists in database
-      const userData = await getUserData(session.user.id);
+      // PHASE 2 FIX: Check if user exists in database with retry logic for existing users
+      let userData = await getUserData(session.user.id);
 
-      if (!userData) {
-        // New user - check if they selected a tier
-        console.log('🆕 New user detected...');
+      // If no userData found but user is NOT new, retry up to 3 times
+      if (!userData && !isNewUser) {
+        console.log('⚠️ Existing user but no userData found - retrying...');
 
+        for (let retryAttempt = 1; retryAttempt <= 3; retryAttempt++) {
+          console.log(`🔄 getUserData retry attempt ${retryAttempt}/3...`);
+          await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms
+
+          userData = await getUserData(session.user.id);
+
+          if (userData) {
+            console.log(`✅ getUserData succeeded on retry ${retryAttempt}`);
+            break;
+          }
+        }
+
+        if (!userData) {
+          console.error('❌ getUserData failed after 3 retries - database trigger may have failed');
+          console.error('🔍 This should not happen for existing users. Possible database issue.');
+        }
+      }
+
+      // PHASE 2 FIX: Differentiate truly new users from existing users with timing issues
+      if (!userData && isNewUser) {
+        // Truly NEW user - proceed with signup flow
+        console.log('🆕 NEW USER detected (account age < 1 min)');
+
+        // Get tier from authContext (Phase 1 implementation)
         const selectedTier = authContext?.selectedTier || session.user.user_metadata?.selected_tier || null;
 
-        // If NO tier selected, redirect to tier selection page
+        // PHASE 3 FIX: Require explicit tier selection
         if (!selectedTier) {
           console.log('⚠️ No tier selected, redirecting to tier selection...');
           setMessage('Choose your plan...');
@@ -94,7 +125,7 @@ const OAuthCallback = ({ onNavigate }) => {
           sessionStorage.setItem('newUserEmail', session.user.email);
           sessionStorage.setItem('newUserId', session.user.id);
 
-          // Redirect to Coffee upsell page for tier selection
+          // Redirect to tier selection (upsell-coffee page)
           if (onNavigate) {
             console.log('🔒 SECURITY: Using onNavigate callback for tier selection');
             onNavigate('upsell-coffee');
@@ -105,17 +136,17 @@ const OAuthCallback = ({ onNavigate }) => {
           return;
         }
 
-        // Tier selected - create user record
+        // PHASE 3 FIX: Create account with selected tier (NO AUTO-FREE!)
         setMessage('Setting up your account...');
         const authProvider = session.user.app_metadata?.provider || 'unknown';
 
-        // Create user record in database
+        // Create user record with SELECTED tier (not auto-free)
         const { data: newUser, error: createError } = await supabase
           .from('users')
           .insert({
             id: session.user.id,
             email: session.user.email,
-            tier: selectedTier === 'free' ? 'free' : 'free', // Start everyone as free, upgrade via Stripe
+            tier: selectedTier, // PHASE 3 FIX: Use actual selected tier
             selected_tier: selectedTier,
             auth_provider: authProvider,
             is_first_login: true,
@@ -138,12 +169,21 @@ const OAuthCallback = ({ onNavigate }) => {
           throw createError;
         }
 
-        console.log('✅ User created:', newUser);
+        console.log('✅ User created with tier:', selectedTier);
         await routeUser(newUser, session, authContext);
 
+      } else if (!userData && !isNewUser) {
+        // PHASE 2 FIX: Existing user but getUserData failed even after retries
+        console.error('🚨 CRITICAL: Existing user (age > 1 min) but no database record found');
+        console.error('🔍 Account created:', authUser.created_at);
+        console.error('🔍 This indicates a database trigger failure or RLS issue');
+
+        // Don't create duplicate - show error
+        throw new Error('Account verification failed. Please contact support if this persists.');
+
       } else {
-        // Existing user - login
-        console.log('👋 Existing user, routing to destination...');
+        // Existing user with userData found - proceed with login flow
+        console.log('👋 Existing user login, userData found');
         await routeUser(userData, session, authContext);
       }
 

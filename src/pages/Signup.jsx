@@ -1,11 +1,14 @@
-// Signup.jsx - OAuth-first signup page (NO tier selection upfront, NO passwords)
+// Signup.jsx - Tier selection BEFORE OAuth authentication
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import AuthMethodSelector from '../components/AuthMethodSelector';
+import TierSelector from '../components/TierSelector';
 
 const Signup = () => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [selectedTier, setSelectedTier] = useState(null);
+  const [showOAuthButtons, setShowOAuthButtons] = useState(false);
 
   // DEBUG: Log when component mounts
   useEffect(() => {
@@ -40,14 +43,6 @@ const Signup = () => {
             </p>
           </div>
 
-          {/* OAuth-First Message */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <p className="text-sm text-blue-800">
-              <strong>Quick & Secure:</strong> Sign up with Google or GitHub. No passwords to remember.
-              You'll choose your plan after authentication.
-            </p>
-          </div>
-
           {/* Message Display */}
           {message && (
             <div className={`mb-6 p-4 rounded-lg text-sm ${
@@ -59,15 +54,74 @@ const Signup = () => {
             </div>
           )}
 
-          {/* OAuth Buttons */}
-          <div className="mb-8">
-            <AuthMethodSelector
-              selectedTier={null} // No tier selected yet - OAuth first!
-              mode="signup"
-              onSuccess={handleAuthSuccess}
-              onError={handleAuthError}
-            />
-          </div>
+          {/* STEP 1: Tier Selection (shown first) */}
+          {!showOAuthButtons && (
+            <div className="mb-8">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-blue-800">
+                  <strong>Step 1 of 2:</strong> Choose your plan first, then we'll securely connect your account.
+                </p>
+              </div>
+
+              <TierSelector
+                selectedTier={selectedTier}
+                onTierChange={(tier) => {
+                  setSelectedTier(tier);
+                  setShowOAuthButtons(true);
+
+                  // Store in authContext for OAuth callback
+                  const authContext = {
+                    selectedTier: tier,
+                    mode: 'signup',
+                    timestamp: Date.now()
+                  };
+                  localStorage.setItem('authContext', JSON.stringify(authContext));
+
+                  // Set 24-hour expiry
+                  const ttl = 24 * 60 * 60 * 1000;
+                  localStorage.setItem('authContextExpiry', (Date.now() + ttl).toString());
+
+                  console.log('✅ Tier selected:', tier, 'stored in authContext');
+                }}
+              />
+            </div>
+          )}
+
+          {/* STEP 2: OAuth Buttons (shown after tier selection) */}
+          {showOAuthButtons && (
+            <div className="mb-8">
+              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded">
+                <p className="text-sm text-green-800">
+                  ✅ <strong>Plan Selected:</strong> {selectedTier === 'free' ? 'Free' : selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1)} Tier
+                  <button
+                    onClick={() => {
+                      setSelectedTier(null);
+                      setShowOAuthButtons(false);
+                      localStorage.removeItem('authContext');
+                      localStorage.removeItem('authContextExpiry');
+                      console.log('🔄 Tier selection reset');
+                    }}
+                    className="ml-2 text-green-700 hover:text-green-900 underline font-semibold"
+                  >
+                    Change Plan
+                  </button>
+                </p>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-blue-800">
+                  <strong>Step 2 of 2:</strong> Sign up with Google or GitHub. No passwords to remember.
+                </p>
+              </div>
+
+              <AuthMethodSelector
+                selectedTier={selectedTier}
+                mode="signup"
+                onSuccess={handleAuthSuccess}
+                onError={handleAuthError}
+              />
+            </div>
+          )}
 
           {/* Sign In Link */}
           <div className="text-center border-t pt-6">

@@ -41,6 +41,48 @@ export const clearAuthContext = () => {
 };
 
 /**
+ * Validates that authContext exists and contains required tier selection
+ * @returns {boolean} True if valid, false otherwise
+ */
+export const validateAuthContext = () => {
+  const context = getAuthContext();
+
+  if (!context) {
+    console.warn('⚠️ No authContext found - tier selection required before OAuth');
+    return false;
+  }
+
+  if (!context.selectedTier) {
+    console.error('❌ authContext missing selectedTier - invalid signup flow');
+    return false;
+  }
+
+  // Check if context is expired (older than 24 hours)
+  const expiry = localStorage.getItem('authContextExpiry');
+  if (expiry && Date.now() > parseInt(expiry)) {
+    console.warn('⚠️ authContext expired, clearing');
+    clearAuthContext();
+    return false;
+  }
+
+  // Check if context timestamp is reasonable (within last 30 minutes for active flow)
+  const age = Date.now() - (context.timestamp || 0);
+  const thirtyMinutes = 30 * 60 * 1000;
+  if (age > thirtyMinutes) {
+    console.warn(`⚠️ authContext is ${Math.round(age / 60000)} minutes old (max 30 min for active flow)`);
+    // Don't clear - still valid within 24hr TTL, just warn
+  }
+
+  console.log('✅ authContext validation passed:', {
+    tier: context.selectedTier,
+    mode: context.mode,
+    age: `${Math.round(age / 1000)}s`
+  });
+
+  return true;
+};
+
+/**
  * Stores pending analysis URL for post-signup retrieval
  * @param {string} url - The URL to analyze
  * @param {string} id - Optional analysis ID
