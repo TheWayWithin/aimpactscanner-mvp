@@ -1,5 +1,9 @@
 // playwright.config.js - Playwright Configuration for Phase 2 Testing
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+
+// Load test environment variables for OAuth authentication
+dotenv.config({ path: '.env.test' });
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -29,7 +33,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://localhost:5173',
+    baseURL: process.env.BASE_URL || 'http://localhost:5173',
     
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -49,22 +53,58 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    // Setup projects - authenticate and save state (run once manually in headed mode)
+    {
+      name: 'setup-google-auth',
+      testMatch: /auth\.setup\.js/,
+      testDir: './tests/setup',
+    },
+    {
+      name: 'setup-github-auth',
+      testMatch: /auth\.setup\.js/,
+      testDir: './tests/setup',
+    },
+
+    // Test projects with OAuth authentication - use saved auth state
+    {
+      name: 'chromium-google-auth',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'tests/setup/.auth/google-user1.json',
+      },
+      dependencies: ['setup-google-auth'],
+      testMatch: ['**/oauth-authentication.spec.js'],
+    },
+    {
+      name: 'chromium-github-auth',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'tests/setup/.auth/github-user1.json',
+      },
+      dependencies: ['setup-github-auth'],
+      testMatch: ['**/oauth-authentication.spec.js'],
+    },
+
+    // Standard test projects (no auth required)
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
       testMatch: ['**/*.spec.js'],
+      testIgnore: ['**/oauth-authentication.spec.js', '**/auth.setup.js'],
     },
 
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
       testMatch: ['**/*.spec.js'],
+      testIgnore: ['**/oauth-authentication.spec.js', '**/auth.setup.js'],
     },
 
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
       testMatch: ['**/*.spec.js'],
+      testIgnore: ['**/oauth-authentication.spec.js', '**/auth.setup.js'],
     },
 
     /* Test against mobile viewports. */
@@ -85,12 +125,14 @@ export default defineConfig({
       name: 'Microsoft Edge',
       use: { ...devices['Desktop Edge'], channel: 'msedge' },
       testMatch: ['**/*.spec.js'],
+      testIgnore: ['**/oauth-authentication.spec.js', '**/auth.setup.js'],
     },
     
     {
       name: 'Google Chrome',
       use: { ...devices['Desktop Chrome'], channel: 'chrome' },
       testMatch: ['**/*.spec.js'],
+      testIgnore: ['**/oauth-authentication.spec.js', '**/auth.setup.js'],
     },
 
     /* Tier Testing Configuration */

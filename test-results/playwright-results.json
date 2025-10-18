@@ -1,0 +1,2111 @@
+{
+  "config": {
+    "configFile": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/playwright.config.js",
+    "rootDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/global-setup.js",
+    "globalTeardown": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/global-teardown.js",
+    "globalTimeout": 3600000,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "test-results/playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/playwright-results.json"
+        }
+      ],
+      [
+        "line",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "setup-google-auth",
+        "name": "setup-google-auth",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup",
+        "testIgnore": [],
+        "testMatch": [
+          "/auth\\.setup\\.js/"
+        ],
+        "timeout": 300000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "setup-github-auth",
+        "name": "setup-github-auth",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup",
+        "testIgnore": [],
+        "testMatch": [
+          "/auth\\.setup\\.js/"
+        ],
+        "timeout": 300000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium-google-auth",
+        "name": "chromium-google-auth",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/oauth-authentication.spec.js"
+        ],
+        "timeout": 300000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium-github-auth",
+        "name": "chromium-github-auth",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/oauth-authentication.spec.js"
+        ],
+        "timeout": 300000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [
+          "**/oauth-authentication.spec.js",
+          "**/auth.setup.js"
+        ],
+        "testMatch": [
+          "**/*.spec.js"
+        ],
+        "timeout": 300000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [
+          "**/oauth-authentication.spec.js",
+          "**/auth.setup.js"
+        ],
+        "testMatch": [
+          "**/*.spec.js"
+        ],
+        "timeout": 300000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [
+          "**/oauth-authentication.spec.js",
+          "**/auth.setup.js"
+        ],
+        "testMatch": [
+          "**/*.spec.js"
+        ],
+        "timeout": 300000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/phase2-auth-pricing.spec.js"
+        ],
+        "timeout": 300000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Mobile Safari",
+        "name": "Mobile Safari",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/phase2-auth-pricing.spec.js"
+        ],
+        "timeout": 300000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Microsoft Edge",
+        "name": "Microsoft Edge",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [
+          "**/oauth-authentication.spec.js",
+          "**/auth.setup.js"
+        ],
+        "testMatch": [
+          "**/*.spec.js"
+        ],
+        "timeout": 300000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Google Chrome",
+        "name": "Google Chrome",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [
+          "**/oauth-authentication.spec.js",
+          "**/auth.setup.js"
+        ],
+        "testMatch": [
+          "**/*.spec.js"
+        ],
+        "timeout": 300000
+      },
+      {
+        "outputDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "tier-testing",
+        "name": "tier-testing",
+        "testDir": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/tier-signup-flows.spec.js"
+        ],
+        "timeout": 300000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.54.2",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:5173",
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "env": {
+        "NODE_ENV": "test"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "setup/auth.setup.js",
+      "file": "setup/auth.setup.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "authenticate with Google OAuth",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "setup-google-auth",
+              "projectName": "setup-google-auth",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 31407,
+                  "error": {
+                    "message": "TimeoutError: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================",
+                    "stack": "TimeoutError: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================\n    at /Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js:95:16",
+                    "location": {
+                      "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js",
+                      "column": 16,
+                      "line": 95
+                    },
+                    "snippet": "  93 |\n  94 |     // Verify authentication succeeded by checking we're on dashboard\n> 95 |     await page.waitForURL(/dashboard/, { timeout: 10000 });\n     |                ^\n  96 |     console.log('✅ Google authentication successful - redirected to dashboard');\n  97 |\n  98 |     // Verify authenticated user elements are visible"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js",
+                        "column": 16,
+                        "line": 95
+                      },
+                      "message": "TimeoutError: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================\n\n  93 |\n  94 |     // Verify authentication succeeded by checking we're on dashboard\n> 95 |     await page.waitForURL(/dashboard/, { timeout: 10000 });\n     |                ^\n  96 |     console.log('✅ Google authentication successful - redirected to dashboard');\n  97 |\n  98 |     // Verify authenticated user elements are visible\n    at /Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js:95:16"
+                    }
+                  ],
+                  "stdout": [
+                    {
+                      "text": "⚠️ Auth state not found: google-user1.json\n"
+                    },
+                    {
+                      "text": "🔄 Google auth state expired or missing, re-authenticating...\n"
+                    },
+                    {
+                      "text": "⏳ This requires MANUAL authentication in headed browser mode\n"
+                    },
+                    {
+                      "text": "📧 Email: aimpactscannertest@gmail.com\n"
+                    },
+                    {
+                      "text": "⏳ Please complete Google login in the browser window...\n"
+                    },
+                    {
+                      "text": "   1. Enter email: aimpactscannertest@gmail.com\n"
+                    },
+                    {
+                      "text": "   2. Enter password\n"
+                    },
+                    {
+                      "text": "   3. Approve OAuth consent if prompted\n"
+                    },
+                    {
+                      "text": "   4. Wait for redirect to dashboard...\n"
+                    }
+                  ],
+                  "stderr": [
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+578ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+3ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+27ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+184ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5173/\", waiting until \"networkidle\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+49ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+9ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+182ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+25ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+263ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+550ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+5ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Sign In\"), a:has-text(\"Sign In\")').first() \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button class=\"px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors\">Sign In</button> \u001b[38;5;45m+15ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting click action \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and stable \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  element is visible, enabled and stable \u001b[38;5;45m+24ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  scrolling into view if needed \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  done scrolling \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  performing click action \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#login\" \u001b[38;5;45m+37ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  click action done \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for scheduled navigations to finish \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigations have finished \u001b[38;5;45m+10ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForURL started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForURL succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  not waiting, \"load\" event already fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 10000ms \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Continue with Google\"), button:has-text(\"Google\")').first() \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button aria-label=\"Continue with Google\" class=\"w-full flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-blue-500 hover:bg-blue-50 rounded-lg font-semibold text-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg\">…</button> \u001b[38;5;45m+365ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toBeVisible succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Continue with Google\"), button:has-text(\"Google\")').first() \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button aria-label=\"Continue with Google\" class=\"w-full flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-blue-500 hover:bg-blue-50 rounded-lg font-semibold text-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg\">…</button> \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting click action \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and stable \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  element is visible, enabled and stable \u001b[38;5;45m+22ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  scrolling into view if needed \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  done scrolling \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  performing click action \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  click action done \u001b[38;5;45m+4ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for scheduled navigations to finish \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigations have finished \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForURL started \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for navigation until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+1s\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/v3/signin/identifier?opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A5173%25252F&dsh=S438821202%3A1760578838603310&access_type=offline&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&o2v=2&prompt=consent&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email+profile&service=lso&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxMzgsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6Imdvb2dsZSIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiJlNDY4YTk5OC1mNGY0LTQ2YTEtODMxYy0xYTE2YWUyYzJiMjYifQ.ivLA6YEE5t0ONksCPuiIkPXyNJ4bOEEBI2jWO15eVJ8&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hANWIiE0Dr7RJ9TX7JWNxsABZ47DX6J9Nq1CcLAqUQJ_QZXfaisTql5jHvpxJlY9eA_BT1kfI5piab89ypRdJkPMszvMt3UDx5uhyGiRnr2jyunXqWlryN0OTtDCI0wNPt4KrnzhzhJSTm1jZVUBetOpLXB36OQM6z5SkjMQzo9LkOEXkxo5M5hZtiDhNh5SofTEpCcqqA4PoRL2wKlOGQ62VXbXFodsYNjNvOXUU0Zke1iMj82h-s2IOxSyrB2spW-i_iTjW3VE3uhdwiiePjTGHIUdjPQZyYpgxlB2gZkGMC26sU8xIM2zyQma2xBCsgBtl8PenQEGXB7oGdCnv2Perr-g09uHEPQodxNERDLV3XknSzwdg6y1VJp1oQZqJvT2YvpPaGR2URAMvTd-YQPcWJZcjxm-MwOFOWSNp7kDBhqsYG_2tJJS52rKFBJEnTgZWuFIP-TdMCKaPLIKeXLh7TiWWDanV0t11pGKyYeRWBcLg88%26flowName%3DGeneralOAuthFlow%26as%3DS438821202%253A1760578838603310%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co&rart=ANgoxceXsd-IjFNwqUWuyvjObSni7F_Db0QUXZDtcKNmbGlD04OzzXrqkIcx9EJFj4jeUvJFLU7vH9XAppxek8T1VgBDZHHJhtCslphnXW5cYB-uaI30vWc\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/v3/signin/identifier?opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A5173%25252F&dsh=S438821202%3A1760578838603310&access_type=offline&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&o2v=2&prompt=consent&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email+profile&service=lso&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxMzgsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6Imdvb2dsZSIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiJlNDY4YTk5OC1mNGY0LTQ2YTEtODMxYy0xYTE2YWUyYzJiMjYifQ.ivLA6YEE5t0ONksCPuiIkPXyNJ4bOEEBI2jWO15eVJ8&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hANWIiE0Dr7RJ9TX7JWNxsABZ47DX6J9Nq1CcLAqUQJ_QZXfaisTql5jHvpxJlY9eA_BT1kfI5piab89ypRdJkPMszvMt3UDx5uhyGiRnr2jyunXqWlryN0OTtDCI0wNPt4KrnzhzhJSTm1jZVUBetOpLXB36OQM6z5SkjMQzo9LkOEXkxo5M5hZtiDhNh5SofTEpCcqqA4PoRL2wKlOGQ62VXbXFodsYNjNvOXUU0Zke1iMj82h-s2IOxSyrB2spW-i_iTjW3VE3uhdwiiePjTGHIUdjPQZyYpgxlB2gZkGMC26sU8xIM2zyQma2xBCsgBtl8PenQEGXB7oGdCnv2Perr-g09uHEPQodxNERDLV3XknSzwdg6y1VJp1oQZqJvT2YvpPaGR2URAMvTd-YQPcWJZcjxm-MwOFOWSNp7kDBhqsYG_2tJJS52rKFBJEnTgZWuFIP-TdMCKaPLIKeXLh7TiWWDanV0t11pGKyYeRWBcLg88%26flowName%3DGeneralOAuthFlow%26as%3DS438821202%253A1760578838603310%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co&rart=ANgoxceXsd-IjFNwqUWuyvjObSni7F_Db0QUXZDtcKNmbGlD04OzzXrqkIcx9EJFj4jeUvJFLU7vH9XAppxek8T1VgBDZHHJhtCslphnXW5cYB-uaI30vWc\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+1s\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/v3/signin/identifier?opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A5173%25252F&dsh=S438821202%3A1760578838603310&access_type=offline&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&o2v=2&prompt=consent&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email+profile&service=lso&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxMzgsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6Imdvb2dsZSIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiJlNDY4YTk5OC1mNGY0LTQ2YTEtODMxYy0xYTE2YWUyYzJiMjYifQ.ivLA6YEE5t0ONksCPuiIkPXyNJ4bOEEBI2jWO15eVJ8&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hANWIiE0Dr7RJ9TX7JWNxsABZ47DX6J9Nq1CcLAqUQJ_QZXfaisTql5jHvpxJlY9eA_BT1kfI5piab89ypRdJkPMszvMt3UDx5uhyGiRnr2jyunXqWlryN0OTtDCI0wNPt4KrnzhzhJSTm1jZVUBetOpLXB36OQM6z5SkjMQzo9LkOEXkxo5M5hZtiDhNh5SofTEpCcqqA4PoRL2wKlOGQ62VXbXFodsYNjNvOXUU0Zke1iMj82h-s2IOxSyrB2spW-i_iTjW3VE3uhdwiiePjTGHIUdjPQZyYpgxlB2gZkGMC26sU8xIM2zyQma2xBCsgBtl8PenQEGXB7oGdCnv2Perr-g09uHEPQodxNERDLV3XknSzwdg6y1VJp1oQZqJvT2YvpPaGR2URAMvTd-YQPcWJZcjxm-MwOFOWSNp7kDBhqsYG_2tJJS52rKFBJEnTgZWuFIP-TdMCKaPLIKeXLh7TiWWDanV0t11pGKyYeRWBcLg88%26flowName%3DGeneralOAuthFlow%26as%3DS438821202%253A1760578838603310%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co&rart=ANgoxceXsd-IjFNwqUWuyvjObSni7F_Db0QUXZDtcKNmbGlD04OzzXrqkIcx9EJFj4jeUvJFLU7vH9XAppxek8T1VgBDZHHJhtCslphnXW5cYB-uaI30vWc\" \u001b[38;5;45m+322ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/v3/signin/identifier?opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A5173%25252F&dsh=S438821202%3A1760578838603310&access_type=offline&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&o2v=2&prompt=consent&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email+profile&service=lso&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxMzgsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6Imdvb2dsZSIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiJlNDY4YTk5OC1mNGY0LTQ2YTEtODMxYy0xYTE2YWUyYzJiMjYifQ.ivLA6YEE5t0ONksCPuiIkPXyNJ4bOEEBI2jWO15eVJ8&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hANWIiE0Dr7RJ9TX7JWNxsABZ47DX6J9Nq1CcLAqUQJ_QZXfaisTql5jHvpxJlY9eA_BT1kfI5piab89ypRdJkPMszvMt3UDx5uhyGiRnr2jyunXqWlryN0OTtDCI0wNPt4KrnzhzhJSTm1jZVUBetOpLXB36OQM6z5SkjMQzo9LkOEXkxo5M5hZtiDhNh5SofTEpCcqqA4PoRL2wKlOGQ62VXbXFodsYNjNvOXUU0Zke1iMj82h-s2IOxSyrB2spW-i_iTjW3VE3uhdwiiePjTGHIUdjPQZyYpgxlB2gZkGMC26sU8xIM2zyQma2xBCsgBtl8PenQEGXB7oGdCnv2Perr-g09uHEPQodxNERDLV3XknSzwdg6y1VJp1oQZqJvT2YvpPaGR2URAMvTd-YQPcWJZcjxm-MwOFOWSNp7kDBhqsYG_2tJJS52rKFBJEnTgZWuFIP-TdMCKaPLIKeXLh7TiWWDanV0t11pGKyYeRWBcLg88%26flowName%3DGeneralOAuthFlow%26as%3DS438821202%253A1760578838603310%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co&rart=ANgoxceXsd-IjFNwqUWuyvjObSni7F_Db0QUXZDtcKNmbGlD04OzzXrqkIcx9EJFj4jeUvJFLU7vH9XAppxek8T1VgBDZHHJhtCslphnXW5cYB-uaI30vWc\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/_/bscframe\" \u001b[38;5;45m+222ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"about:blank\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"about:blank\" \u001b[38;5;45m+37ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.youtube.com/accounts/CheckConnection?pmpo=https%3A%2F%2Faccounts.google.com&v=71778291&timestamp=1760578840702\" \u001b[38;5;45m+199ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+131ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+543ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/v3/signin/challenge/pwd?TL=AMbiOOSqcG-GvGoYszR62BRrIRZmoyEmVPD6oU3lJ1AaFZNW0LGsm-o2CCpS1YFz&access_type=offline&app_domain=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co&checkConnection=youtube%3A523&checkedDomains=youtube&cid=3&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hANWIiE0Dr7RJ9TX7JWNxsABZ47DX6J9Nq1CcLAqUQJ_QZXfaisTql5jHvpxJlY9eA_BT1kfI5piab89ypRdJkPMszvMt3UDx5uhyGiRnr2jyunXqWlryN0OTtDCI0wNPt4KrnzhzhJSTm1jZVUBetOpLXB36OQM6z5SkjMQzo9LkOEXkxo5M5hZtiDhNh5SofTEpCcqqA4PoRL2wKlOGQ62VXbXFodsYNjNvOXUU0Zke1iMj82h-s2IOxSyrB2spW-i_iTjW3VE3uhdwiiePjTGHIUdjPQZyYpgxlB2gZkGMC26sU8xIM2zyQma2xBCsgBtl8PenQEGXB7oGdCnv2Perr-g09uHEPQodxNERDLV3XknSzwdg6y1VJp1oQZqJvT2YvpPaGR2URAMvTd-YQPcWJZcjxm-MwOFOWSNp7kDBhqsYG_2tJJS52rKFBJEnTgZWuFIP-TdMCKaPLIKeXLh7TiWWDanV0t11pGKyYeRWBcLg88%26flowName%3DGeneralOAuthFlow%26as%3DS438821202%253A1760578838603310%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%23&dsh=S438821202%3A1760578838603310&flowName=GeneralOAuthFlow&o2v=2&opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A5173%25252F&prompt=consent&pstMsg=1&rart=ANgoxceXsd-IjFNwqUWuyvjObSni7F_Db0QUXZDtcKNmbGlD04OzzXrqkIcx9EJFj4jeUvJFLU7vH9XAppxek8T1VgBDZHHJhtCslphnXW5cYB-uaI30vWc&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email%20profile&service=lso&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxMzgsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6Imdvb2dsZSIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiJlNDY4YTk5OC1mNGY0LTQ2YTEtODMxYy0xYTE2YWUyYzJiMjYifQ.ivLA6YEE5t0ONksCPuiIkPXyNJ4bOEEBI2jWO15eVJ8\" \u001b[38;5;45m+3s\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/v3/signin/challenge/pwd?TL=AMbiOOSqcG-GvGoYszR62BRrIRZmoyEmVPD6oU3lJ1AaFZNW0LGsm-o2CCpS1YFz&access_type=offline&app_domain=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co&checkConnection=youtube%3A523&checkedDomains=youtube&cid=3&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hANWIiE0Dr7RJ9TX7JWNxsABZ47DX6J9Nq1CcLAqUQJ_QZXfaisTql5jHvpxJlY9eA_BT1kfI5piab89ypRdJkPMszvMt3UDx5uhyGiRnr2jyunXqWlryN0OTtDCI0wNPt4KrnzhzhJSTm1jZVUBetOpLXB36OQM6z5SkjMQzo9LkOEXkxo5M5hZtiDhNh5SofTEpCcqqA4PoRL2wKlOGQ62VXbXFodsYNjNvOXUU0Zke1iMj82h-s2IOxSyrB2spW-i_iTjW3VE3uhdwiiePjTGHIUdjPQZyYpgxlB2gZkGMC26sU8xIM2zyQma2xBCsgBtl8PenQEGXB7oGdCnv2Perr-g09uHEPQodxNERDLV3XknSzwdg6y1VJp1oQZqJvT2YvpPaGR2URAMvTd-YQPcWJZcjxm-MwOFOWSNp7kDBhqsYG_2tJJS52rKFBJEnTgZWuFIP-TdMCKaPLIKeXLh7TiWWDanV0t11pGKyYeRWBcLg88%26flowName%3DGeneralOAuthFlow%26as%3DS438821202%253A1760578838603310%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%23&dsh=S438821202%3A1760578838603310&flowName=GeneralOAuthFlow&o2v=2&opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A5173%25252F&prompt=consent&pstMsg=1&rart=ANgoxceXsd-IjFNwqUWuyvjObSni7F_Db0QUXZDtcKNmbGlD04OzzXrqkIcx9EJFj4jeUvJFLU7vH9XAppxek8T1VgBDZHHJhtCslphnXW5cYB-uaI30vWc&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email%20profile&service=lso&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxMzgsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6Imdvb2dsZSIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiJlNDY4YTk5OC1mNGY0LTQ2YTEtODMxYy0xYTE2YWUyYzJiMjYifQ.ivLA6YEE5t0ONksCPuiIkPXyNJ4bOEEBI2jWO15eVJ8\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"about:blank\" \u001b[38;5;45m+623ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+628ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+7s\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.youtube.com/accounts/SetSID?ssdc=1&sidt=ALWU2cvXPlYJojs/KkhbfPHtYZkwvINOVxUmY0zcwZdeatnUtGCZ%2BwAtzQ6g5mV/poPKfk/kvE68XcfEWjy92hXGV6glbNXKupu8D7iPpsYbIUI9Mew3xixqMRjcRrmIbyUz/STQY5oVtN4VFAb974brS%2Bq109B9k05gSpMMTYusg4gR5t9ioujUR7PbSdgGTimmsOMKETlXOXnxUhQmPyMLNZje1AcLUE539tAx1iUFXAOukkxMIuhaAbS%2BglgexQjOHGQbGHMOoGCGa3koQCdawOcRtaTJOlv5V5Ti9FrvhMTsVGX16CxUrEyTVCCoPvOaxb8v8YNQtpioARRv32xT51krqjlndj3Ty9hLqM6Ys4v3OBawT75My1YaXxuGC8wmvMRLsNw/24/JfBsdfPxTb4J9bgBWu/UVQOzTGOG3XSD9XOieboIKPdJuPbRIhARjw8lqE/zgPjIifxMTDHee4Hk8%2BX0qShswqM1cFeKnUw5KP770zb0s7Kk2zgU0hC9nj/n7Sbsq0LwMfcd70hbov3zFEGBaLl5AUAHzfkNrNP4vbPXvWLSVwmRZCw5maGbxr%2BkXczSP1kRc9KgDOmAaLQ8hAm1CNBsK5J0qJPKSQ8CNPAuAA8b0GtJv1XvRZHv363SUujGcVDq7scsSMP/z5SCZTOhJTm8YeZcwKiPk/qVSutKWWJYg0J6d83n82zqVlBmfAq7LPPB2AXkzth5QYFnqIU907IBi7IRO2GedeSJ2wv5mggrDqQvP6lOveiJxGTUi41AbWHbCKjKip2/jRh5ja5bCbSob/x7p5GavuyhKvvOU7cy%2BqO3E8I55EIQpqqm4nVDtTlF0iY0xbyd4EmllFAM%2BOvKI3YP4h0nejLf3LZ/hTkZ8zshu0ktx1KKc6WfmZBDxNT60Uejyc5%2BA30h091/gWH8LSL8lGq%2Bb6pqVAQ2eBaykQYHKD/fDxCx9hU0qfBSlEcy/Ik4gH0n5TW1Yvhay/BL0u9DDqK8z8EnJqm0D/jD2A5jZIaGrkw2xs44OoQatsPW/fmIFvbm0VeFNLok6W4nDn2O5Qy9Mil6mjD76/ZiVIsZwShe8G4DgRhGDb4h%2BpHCA97gEdMTj9ycBOpPTJkj8ZUWuOECFBD6ef4nKWxhjmTf8lPRn0wpF5vbWs/MtIvT4X0eYxYnIoEgJ5SgNzEcVqBdByg4mbasW9kM4GwG4EvhHXvUmidXHx8vwfDiMU7Jbq4KZopSfWgUMReeNVpR4gBT8LWwOWDbxEzX8fCX3WzkGznt/ncUahKbUm8Zq0FzC3KhfFw04ocOMoDSmjF8XKb7P4sr2B1zTA%2BqbutSujZLaCbGXwo1SwHFBAx3%2BA%2B/1ZFegO0/4rAYD6BPsV3x7fke0FTbkLBUNuRjpS1YeVuExd7H%2Bsf1fzz1XpjRY1CZmaM6BKnGoO3MasrbsSwkKUizZJg5N0QlyKlmhE851SPR5qNLbLoc%2Bfc7acGVgOmiCKfXum%2BHt1oodNw15QgPgwU4NyAorQ8OJwMy54r/jv0P%2B8zJr8XfTno7UTs4C2Q7wnDdQgDgB1%2BbL8Es3oEL6Pv/pKi6hNAmASw12MH/5WQJP2xbIUQg%2BmvCa/sSdFOHWWdMiozw%2BZ8iQ2WJAoPl3l47RiSIEvaDlD3KHnbDnvsBKljok2f9Hrbfw3usHxCLahpzZDVcXhmFRNmABYz/S8EUlJGgHaIFHG0VrlXdQeK1ufWYiDwLGcaDWMNNOepcV1kPpDIqqxd30cqAA0Qcp83MNTVEuJv3MvOivN7QTeempVOG1rCwfTq29EcQOdu9ss122pJi3XADlpzILB8pq9QMfskNCQfNcT1qiEPOcCi61zz6s/36%2BHxkvMxooonGVWD/uidFIrD4bSv8wjUXXcIo0CHJsdXTieGzuyiUiC/faFcZsKEY9kuqgis0HZ627tEQ3fBSJwj/WfMiKbdj9jWSkcBPVWm0QLrwZSGepMvUUCU9g73CE5GOjkhTPuu/AIAnwKJ3W6S5vREfige12Xr2608mUERAjWdEXVviOu0vUKj6F%2BpqUPCkqjIW3DLvBxvoTHcLNPSOmdiAQft0kYIddTHTZgAcc0EvPoo3V7j8KtVk/6JNys74vD/URO%2B5PVqf8TFr6NfT7zM3L9UlJFBmVvh3mGW1vitFRCKote0BwX8SWLx60S1f0rpYa8lVVoGEd%2BDyKVPJuuToyR6O/mVDlPZWMwICnClOasFeL7zS6lixC1JWU0Ec3/A7rnHL7nX80NjAr1Gab4f%2B5vh0CTN/M4SE0ZTNFcKicIwZcA0n/KqNS2MtLT5fO9dgMq%2BI9gP4xSpnuB0J1gHE/7VcbkVwQV%2BNqu9HADcP5cYTFPqz0Kv34y41fBUBaBztkq4wBarWHvulythXph/L41FWIucPMf3CloSnPZ4Q/3n6YIkcfH0ryAhItHVGg3u78I/ZSl1J5iPezxgGWtYsPPvmPUpSV8WbK7kYhQWfIlWbm01S6RdKCP0yPeGI2TnZX7/JUKy6w%2B7EB/42RQBaQ/y9ROGNW6rbXw6owbVobdZuW8apT2N6J8OCBZL6wbf8o4qBd/Ak1UO4M6h68H0/oXsqdxC8DvykFeTCxdNc0gTBB4bWmj%2BFiBdQx2sAq%2BMGzg6Y9UieWtR6Sw8jBOlkOY6bTzYvoNJSdSTzM%2BH5yVAkgvhjDlX0F8sS3nIl9lK2g&continue=https://accounts.google.com/signin/oauth/consent?authuser%3D0%26part%3DAJi8hANWIiE0Dr7RJ9TX7JWNxsABZ47DX6J9Nq1CcLAqUQJ_QZXfaisTql5jHvpxJlY9eA_BT1kfI5piab89ypRdJkPMszvMt3UDx5uhyGiRnr2jyunXqWlryN0OTtDCI0wNPt4KrnzhzhJSTm1jZVUBetOpLXB36OQM6z5SkjMQzo9LkOEXkxo5M5hZtiDhNh5SofTEpCcqqA4PoRL2wKlOGQ62VXbXFodsYNjNvOXUU0Zke1iMj82h-s2IOxSyrB2spW-i_iTjW3VE3uhdwiiePjTGHIUdjPQZyYpgxlB2gZkGMC26sU8xIM2zyQma2xBCsgBtl8PenQEGXB7oGdCnv2Perr-g09uHEPQodxNERDLV3XknSzwdg6y1VJp1oQZqJvT2YvpPaGR2URAMvTd-YQPcWJZcjxm-MwOFOWSNp7kDBhqsYG_2tJJS52rKFBJEnTgZWuFIP-TdMCKaPLIKeXLh7TiWWDanV0t11pGKyYeRWBcLg88%26flowName%3DGeneralOAuthFlow%26as%3DS438821202:1760578838603310%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%26rapt%3DAEjHL4P3QOEaIFttY84puAKvosJ6P5VhfztP-0ohIvo1_lrnZ1Friueu1XScDklrv3OdsfklLRM8DQ98qr9IG217IY0CYyT5cppSBwLZ-QvjNcx26dNcghg%23&tcc=1\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.youtube.com/accounts/SetSID?ssdc=1&sidt=ALWU2cvXPlYJojs/KkhbfPHtYZkwvINOVxUmY0zcwZdeatnUtGCZ%2BwAtzQ6g5mV/poPKfk/kvE68XcfEWjy92hXGV6glbNXKupu8D7iPpsYbIUI9Mew3xixqMRjcRrmIbyUz/STQY5oVtN4VFAb974brS%2Bq109B9k05gSpMMTYusg4gR5t9ioujUR7PbSdgGTimmsOMKETlXOXnxUhQmPyMLNZje1AcLUE539tAx1iUFXAOukkxMIuhaAbS%2BglgexQjOHGQbGHMOoGCGa3koQCdawOcRtaTJOlv5V5Ti9FrvhMTsVGX16CxUrEyTVCCoPvOaxb8v8YNQtpioARRv32xT51krqjlndj3Ty9hLqM6Ys4v3OBawT75My1YaXxuGC8wmvMRLsNw/24/JfBsdfPxTb4J9bgBWu/UVQOzTGOG3XSD9XOieboIKPdJuPbRIhARjw8lqE/zgPjIifxMTDHee4Hk8%2BX0qShswqM1cFeKnUw5KP770zb0s7Kk2zgU0hC9nj/n7Sbsq0LwMfcd70hbov3zFEGBaLl5AUAHzfkNrNP4vbPXvWLSVwmRZCw5maGbxr%2BkXczSP1kRc9KgDOmAaLQ8hAm1CNBsK5J0qJPKSQ8CNPAuAA8b0GtJv1XvRZHv363SUujGcVDq7scsSMP/z5SCZTOhJTm8YeZcwKiPk/qVSutKWWJYg0J6d83n82zqVlBmfAq7LPPB2AXkzth5QYFnqIU907IBi7IRO2GedeSJ2wv5mggrDqQvP6lOveiJxGTUi41AbWHbCKjKip2/jRh5ja5bCbSob/x7p5GavuyhKvvOU7cy%2BqO3E8I55EIQpqqm4nVDtTlF0iY0xbyd4EmllFAM%2BOvKI3YP4h0nejLf3LZ/hTkZ8zshu0ktx1KKc6WfmZBDxNT60Uejyc5%2BA30h091/gWH8LSL8lGq%2Bb6pqVAQ2eBaykQYHKD/fDxCx9hU0qfBSlEcy/Ik4gH0n5TW1Yvhay/BL0u9DDqK8z8EnJqm0D/jD2A5jZIaGrkw2xs44OoQatsPW/fmIFvbm0VeFNLok6W4nDn2O5Qy9Mil6mjD76/ZiVIsZwShe8G4DgRhGDb4h%2BpHCA97gEdMTj9ycBOpPTJkj8ZUWuOECFBD6ef4nKWxhjmTf8lPRn0wpF5vbWs/MtIvT4X0eYxYnIoEgJ5SgNzEcVqBdByg4mbasW9kM4GwG4EvhHXvUmidXHx8vwfDiMU7Jbq4KZopSfWgUMReeNVpR4gBT8LWwOWDbxEzX8fCX3WzkGznt/ncUahKbUm8Zq0FzC3KhfFw04ocOMoDSmjF8XKb7P4sr2B1zTA%2BqbutSujZLaCbGXwo1SwHFBAx3%2BA%2B/1ZFegO0/4rAYD6BPsV3x7fke0FTbkLBUNuRjpS1YeVuExd7H%2Bsf1fzz1XpjRY1CZmaM6BKnGoO3MasrbsSwkKUizZJg5N0QlyKlmhE851SPR5qNLbLoc%2Bfc7acGVgOmiCKfXum%2BHt1oodNw15QgPgwU4NyAorQ8OJwMy54r/jv0P%2B8zJr8XfTno7UTs4C2Q7wnDdQgDgB1%2BbL8Es3oEL6Pv/pKi6hNAmASw12MH/5WQJP2xbIUQg%2BmvCa/sSdFOHWWdMiozw%2BZ8iQ2WJAoPl3l47RiSIEvaDlD3KHnbDnvsBKljok2f9Hrbfw3usHxCLahpzZDVcXhmFRNmABYz/S8EUlJGgHaIFHG0VrlXdQeK1ufWYiDwLGcaDWMNNOepcV1kPpDIqqxd30cqAA0Qcp83MNTVEuJv3MvOivN7QTeempVOG1rCwfTq29EcQOdu9ss122pJi3XADlpzILB8pq9QMfskNCQfNcT1qiEPOcCi61zz6s/36%2BHxkvMxooonGVWD/uidFIrD4bSv8wjUXXcIo0CHJsdXTieGzuyiUiC/faFcZsKEY9kuqgis0HZ627tEQ3fBSJwj/WfMiKbdj9jWSkcBPVWm0QLrwZSGepMvUUCU9g73CE5GOjkhTPuu/AIAnwKJ3W6S5vREfige12Xr2608mUERAjWdEXVviOu0vUKj6F%2BpqUPCkqjIW3DLvBxvoTHcLNPSOmdiAQft0kYIddTHTZgAcc0EvPoo3V7j8KtVk/6JNys74vD/URO%2B5PVqf8TFr6NfT7zM3L9UlJFBmVvh3mGW1vitFRCKote0BwX8SWLx60S1f0rpYa8lVVoGEd%2BDyKVPJuuToyR6O/mVDlPZWMwICnClOasFeL7zS6lixC1JWU0Ec3/A7rnHL7nX80NjAr1Gab4f%2B5vh0CTN/M4SE0ZTNFcKicIwZcA0n/KqNS2MtLT5fO9dgMq%2BI9gP4xSpnuB0J1gHE/7VcbkVwQV%2BNqu9HADcP5cYTFPqz0Kv34y41fBUBaBztkq4wBarWHvulythXph/L41FWIucPMf3CloSnPZ4Q/3n6YIkcfH0ryAhItHVGg3u78I/ZSl1J5iPezxgGWtYsPPvmPUpSV8WbK7kYhQWfIlWbm01S6RdKCP0yPeGI2TnZX7/JUKy6w%2B7EB/42RQBaQ/y9ROGNW6rbXw6owbVobdZuW8apT2N6J8OCBZL6wbf8o4qBd/Ak1UO4M6h68H0/oXsqdxC8DvykFeTCxdNc0gTBB4bWmj%2BFiBdQx2sAq%2BMGzg6Y9UieWtR6Sw8jBOlkOY6bTzYvoNJSdSTzM%2BH5yVAkgvhjDlX0F8sS3nIl9lK2g&continue=https://accounts.google.com/signin/oauth/consent?authuser%3D0%26part%3DAJi8hANWIiE0Dr7RJ9TX7JWNxsABZ47DX6J9Nq1CcLAqUQJ_QZXfaisTql5jHvpxJlY9eA_BT1kfI5piab89ypRdJkPMszvMt3UDx5uhyGiRnr2jyunXqWlryN0OTtDCI0wNPt4KrnzhzhJSTm1jZVUBetOpLXB36OQM6z5SkjMQzo9LkOEXkxo5M5hZtiDhNh5SofTEpCcqqA4PoRL2wKlOGQ62VXbXFodsYNjNvOXUU0Zke1iMj82h-s2IOxSyrB2spW-i_iTjW3VE3uhdwiiePjTGHIUdjPQZyYpgxlB2gZkGMC26sU8xIM2zyQma2xBCsgBtl8PenQEGXB7oGdCnv2Perr-g09uHEPQodxNERDLV3XknSzwdg6y1VJp1oQZqJvT2YvpPaGR2URAMvTd-YQPcWJZcjxm-MwOFOWSNp7kDBhqsYG_2tJJS52rKFBJEnTgZWuFIP-TdMCKaPLIKeXLh7TiWWDanV0t11pGKyYeRWBcLg88%26flowName%3DGeneralOAuthFlow%26as%3DS438821202:1760578838603310%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%26rapt%3DAEjHL4P3QOEaIFttY84puAKvosJ6P5VhfztP-0ohIvo1_lrnZ1Friueu1XScDklrv3OdsfklLRM8DQ98qr9IG217IY0CYyT5cppSBwLZ-QvjNcx26dNcghg%23&tcc=1\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.youtube.com/accounts/SetSID\" \u001b[38;5;45m+39ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.youtube.com/accounts/SetSID\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+377ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/signin/oauth/id?authuser=0&part=AJi8hAPDr5gCsRhs23coi1LYdHfwto3uWsRk88lggSTQtqWuijjTorvPPZaCxmDvhFTBR0dxXWZP2r_Ik6mCG0UKew2pCWNNrlUh4c4Ai_CSB3pBbv26S71cfYMh81s3jTlUpqVV1gi1-LwkwAdDaqAl3emLaK5_yWyGJ4yhnPLWs83pHipliAEpzcTCth0ziwky0EHOWGIqZmPcyFVS68LxCv2n_UqRMwYDelMW5kFDBdg3xWvuAzz1UEdkZFZXY4E09HdrQAiAMhJPzZR8VYO7soQMc8u2d3dG33bFOeb1ZAEz4OgX9CDXX_blE8_Z8yRqcL4luUzsiyoRpQruYUhmEQBEReUxCpuh-_SnsN4oW5jYcRrh8DMOzGLDmtBrqrgbkI9L2uMqx6hdTqfcsQkZl1a6z6ON-NgxegItnkpRWiXbV2V-XUsQOJa1r5gxjw520RiyFzcy9ZuX8ccuFGCEhbPp35sDMe1lUNNso2NVPWj-U8ZOmN85V7uQUgkXRgLxD_CjNe9BTS8d0lP26oAh8EV076bEbYNjO2d_KeDU-_-uer6KMHGguFKytNytSHGwNWMCa0WE6m8HWl2zX2edbVuwS_bbgOJbOE567G0aN4bLwnuMclI-gCsxMrDQT2_P3R9Cx-yRwqlHSf9zmcdMF4JEzvdJ2Xwt_VIhOiS58E6bRWA8aV9CBIgUb--6VrYfnZcnJM0oN3PlBf380TE8x6kUxFf8d6P3U2JDBxw2K93DGZc7xO2CR4BAfjyXCG3jokoScWnUVmc5O1WboHZVws3HQCOJC7gWGollwlvovAc55G_noJeS118gt3_HvR6QZQboQ4w76ODvlRwm8-dG96XicQA1q62ArDkqEK_GCSb4S2N1T3E&flowName=GeneralOAuthFlow&as=S438821202%3A1760578838603310&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&rapt=AEjHL4P3QOEaIFttY84puAKvosJ6P5VhfztP-0ohIvo1_lrnZ1Friueu1XScDklrv3OdsfklLRM8DQ98qr9IG217IY0CYyT5cppSBwLZ-QvjNcx26dNcghg#\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/signin/oauth/id?authuser=0&part=AJi8hAPDr5gCsRhs23coi1LYdHfwto3uWsRk88lggSTQtqWuijjTorvPPZaCxmDvhFTBR0dxXWZP2r_Ik6mCG0UKew2pCWNNrlUh4c4Ai_CSB3pBbv26S71cfYMh81s3jTlUpqVV1gi1-LwkwAdDaqAl3emLaK5_yWyGJ4yhnPLWs83pHipliAEpzcTCth0ziwky0EHOWGIqZmPcyFVS68LxCv2n_UqRMwYDelMW5kFDBdg3xWvuAzz1UEdkZFZXY4E09HdrQAiAMhJPzZR8VYO7soQMc8u2d3dG33bFOeb1ZAEz4OgX9CDXX_blE8_Z8yRqcL4luUzsiyoRpQruYUhmEQBEReUxCpuh-_SnsN4oW5jYcRrh8DMOzGLDmtBrqrgbkI9L2uMqx6hdTqfcsQkZl1a6z6ON-NgxegItnkpRWiXbV2V-XUsQOJa1r5gxjw520RiyFzcy9ZuX8ccuFGCEhbPp35sDMe1lUNNso2NVPWj-U8ZOmN85V7uQUgkXRgLxD_CjNe9BTS8d0lP26oAh8EV076bEbYNjO2d_KeDU-_-uer6KMHGguFKytNytSHGwNWMCa0WE6m8HWl2zX2edbVuwS_bbgOJbOE567G0aN4bLwnuMclI-gCsxMrDQT2_P3R9Cx-yRwqlHSf9zmcdMF4JEzvdJ2Xwt_VIhOiS58E6bRWA8aV9CBIgUb--6VrYfnZcnJM0oN3PlBf380TE8x6kUxFf8d6P3U2JDBxw2K93DGZc7xO2CR4BAfjyXCG3jokoScWnUVmc5O1WboHZVws3HQCOJC7gWGollwlvovAc55G_noJeS118gt3_HvR6QZQboQ4w76ODvlRwm8-dG96XicQA1q62ArDkqEK_GCSb4S2N1T3E&flowName=GeneralOAuthFlow&as=S438821202%3A1760578838603310&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&rapt=AEjHL4P3QOEaIFttY84puAKvosJ6P5VhfztP-0ohIvo1_lrnZ1Friueu1XScDklrv3OdsfklLRM8DQ98qr9IG217IY0CYyT5cppSBwLZ-QvjNcx26dNcghg#\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+218ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/signin/oauth/id?authuser=0&part=AJi8hAPDr5gCsRhs23coi1LYdHfwto3uWsRk88lggSTQtqWuijjTorvPPZaCxmDvhFTBR0dxXWZP2r_Ik6mCG0UKew2pCWNNrlUh4c4Ai_CSB3pBbv26S71cfYMh81s3jTlUpqVV1gi1-LwkwAdDaqAl3emLaK5_yWyGJ4yhnPLWs83pHipliAEpzcTCth0ziwky0EHOWGIqZmPcyFVS68LxCv2n_UqRMwYDelMW5kFDBdg3xWvuAzz1UEdkZFZXY4E09HdrQAiAMhJPzZR8VYO7soQMc8u2d3dG33bFOeb1ZAEz4OgX9CDXX_blE8_Z8yRqcL4luUzsiyoRpQruYUhmEQBEReUxCpuh-_SnsN4oW5jYcRrh8DMOzGLDmtBrqrgbkI9L2uMqx6hdTqfcsQkZl1a6z6ON-NgxegItnkpRWiXbV2V-XUsQOJa1r5gxjw520RiyFzcy9ZuX8ccuFGCEhbPp35sDMe1lUNNso2NVPWj-U8ZOmN85V7uQUgkXRgLxD_CjNe9BTS8d0lP26oAh8EV076bEbYNjO2d_KeDU-_-uer6KMHGguFKytNytSHGwNWMCa0WE6m8HWl2zX2edbVuwS_bbgOJbOE567G0aN4bLwnuMclI-gCsxMrDQT2_P3R9Cx-yRwqlHSf9zmcdMF4JEzvdJ2Xwt_VIhOiS58E6bRWA8aV9CBIgUb--6VrYfnZcnJM0oN3PlBf380TE8x6kUxFf8d6P3U2JDBxw2K93DGZc7xO2CR4BAfjyXCG3jokoScWnUVmc5O1WboHZVws3HQCOJC7gWGollwlvovAc55G_noJeS118gt3_HvR6QZQboQ4w76ODvlRwm8-dG96XicQA1q62ArDkqEK_GCSb4S2N1T3E&flowName=GeneralOAuthFlow&as=S438821202%3A1760578838603310&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&rapt=AEjHL4P3QOEaIFttY84puAKvosJ6P5VhfztP-0ohIvo1_lrnZ1Friueu1XScDklrv3OdsfklLRM8DQ98qr9IG217IY0CYyT5cppSBwLZ-QvjNcx26dNcghg#\" \u001b[38;5;45m+234ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/signin/oauth/id?authuser=0&part=AJi8hAPDr5gCsRhs23coi1LYdHfwto3uWsRk88lggSTQtqWuijjTorvPPZaCxmDvhFTBR0dxXWZP2r_Ik6mCG0UKew2pCWNNrlUh4c4Ai_CSB3pBbv26S71cfYMh81s3jTlUpqVV1gi1-LwkwAdDaqAl3emLaK5_yWyGJ4yhnPLWs83pHipliAEpzcTCth0ziwky0EHOWGIqZmPcyFVS68LxCv2n_UqRMwYDelMW5kFDBdg3xWvuAzz1UEdkZFZXY4E09HdrQAiAMhJPzZR8VYO7soQMc8u2d3dG33bFOeb1ZAEz4OgX9CDXX_blE8_Z8yRqcL4luUzsiyoRpQruYUhmEQBEReUxCpuh-_SnsN4oW5jYcRrh8DMOzGLDmtBrqrgbkI9L2uMqx6hdTqfcsQkZl1a6z6ON-NgxegItnkpRWiXbV2V-XUsQOJa1r5gxjw520RiyFzcy9ZuX8ccuFGCEhbPp35sDMe1lUNNso2NVPWj-U8ZOmN85V7uQUgkXRgLxD_CjNe9BTS8d0lP26oAh8EV076bEbYNjO2d_KeDU-_-uer6KMHGguFKytNytSHGwNWMCa0WE6m8HWl2zX2edbVuwS_bbgOJbOE567G0aN4bLwnuMclI-gCsxMrDQT2_P3R9Cx-yRwqlHSf9zmcdMF4JEzvdJ2Xwt_VIhOiS58E6bRWA8aV9CBIgUb--6VrYfnZcnJM0oN3PlBf380TE8x6kUxFf8d6P3U2JDBxw2K93DGZc7xO2CR4BAfjyXCG3jokoScWnUVmc5O1WboHZVws3HQCOJC7gWGollwlvovAc55G_noJeS118gt3_HvR6QZQboQ4w76ODvlRwm8-dG96XicQA1q62ArDkqEK_GCSb4S2N1T3E&flowName=GeneralOAuthFlow&as=S438821202%3A1760578838603310&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&rapt=AEjHL4P3QOEaIFttY84puAKvosJ6P5VhfztP-0ohIvo1_lrnZ1Friueu1XScDklrv3OdsfklLRM8DQ98qr9IG217IY0CYyT5cppSBwLZ-QvjNcx26dNcghg#\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+26ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+551ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+2s\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+48ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e#landing\" \u001b[38;5;45m+110ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e#landing\" \u001b[38;5;45m+24ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e#oauth-callback\" \u001b[38;5;45m+342ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForURL succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForURL started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e#oauth-callback\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for navigation until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e#oauth-callback\" \u001b[38;5;45m+30ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e#oauth-callback\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#oauth-callback\" \u001b[38;5;45m+29ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#oauth-callback\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+36ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+27ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+197ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+25ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+830ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForURL failed \u001b[38;5;45m+9s\u001b[0m\n"
+                    },
+                    {
+                      "text": "❌ Google OAuth authentication failed: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=991e12aa-90a7-4c5b-b675-00b0b5edc91e#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================\n"
+                    },
+                    {
+                      "text": "\n"
+                    },
+                    {
+                      "text": "Troubleshooting:\n"
+                    },
+                    {
+                      "text": "1. Verify GOOGLE_TEST_EMAIL_1 is set in .env.test\n"
+                    },
+                    {
+                      "text": "2. Add test account to Google Cloud Console > OAuth Consent Screen > Test Users\n"
+                    },
+                    {
+                      "text": "3. Run with --headed flag to see browser: npx playwright test auth.setup --headed\n"
+                    },
+                    {
+                      "text": "4. Check network tab for OAuth errors\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.screenshot started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+4ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.screenshot succeeded \u001b[38;5;45m+39ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('body') \u001b[38;5;45m+3ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <body class=\"fonts-loaded\">…</body> \u001b[38;5;45m+8ms\u001b[0m\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2025-10-16T01:40:35.208Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/auth.setup.js-authenticate-with-Google-OAuth-setup-google-auth/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/auth.setup.js-authenticate-with-Google-OAuth-setup-google-auth/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/auth.setup.js-authenticate-with-Google-OAuth-setup-google-auth/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js",
+                    "column": 16,
+                    "line": 95
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f376efe52c54b1a876fd-4eb842e396ffaa405b6a",
+          "file": "setup/auth.setup.js",
+          "line": 54,
+          "column": 1
+        },
+        {
+          "title": "authenticate with GitHub OAuth",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "setup-google-auth",
+              "projectName": "setup-google-auth",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 33205,
+                  "error": {
+                    "message": "TimeoutError: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================",
+                    "stack": "TimeoutError: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================\n    at /Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js:163:16",
+                    "location": {
+                      "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js",
+                      "column": 16,
+                      "line": 163
+                    },
+                    "snippet": "  161 |\n  162 |     // Verify authentication succeeded by checking we're on dashboard\n> 163 |     await page.waitForURL(/dashboard/, { timeout: 10000 });\n      |                ^\n  164 |     console.log('✅ GitHub authentication successful - redirected to dashboard');\n  165 |\n  166 |     // Verify authenticated user elements are visible"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js",
+                        "column": 16,
+                        "line": 163
+                      },
+                      "message": "TimeoutError: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================\n\n  161 |\n  162 |     // Verify authentication succeeded by checking we're on dashboard\n> 163 |     await page.waitForURL(/dashboard/, { timeout: 10000 });\n      |                ^\n  164 |     console.log('✅ GitHub authentication successful - redirected to dashboard');\n  165 |\n  166 |     // Verify authenticated user elements are visible\n    at /Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js:163:16"
+                    }
+                  ],
+                  "stdout": [
+                    {
+                      "text": "⚠️ Auth state not found: github-user1.json\n"
+                    },
+                    {
+                      "text": "🔄 GitHub auth state expired or missing, re-authenticating...\n"
+                    },
+                    {
+                      "text": "⏳ This requires MANUAL authentication in headed browser mode\n"
+                    },
+                    {
+                      "text": "📧 Email: aimpactscannertest@gmail.com\n"
+                    },
+                    {
+                      "text": "⏳ Please complete GitHub login in the browser window...\n"
+                    },
+                    {
+                      "text": "   1. Enter username or email: aimpactscannertest@gmail.com\n"
+                    },
+                    {
+                      "text": "   2. Enter password\n"
+                    },
+                    {
+                      "text": "   3. Authorize OAuth app if prompted\n"
+                    },
+                    {
+                      "text": "   4. Wait for redirect to dashboard...\n"
+                    }
+                  ],
+                  "stderr": [
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+436ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+4ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+7ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+356ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5173/\", waiting until \"networkidle\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+43ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+12ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+202ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+26ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+149ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+551ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+4ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Sign In\"), a:has-text(\"Sign In\")').first() \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button class=\"px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors\">Sign In</button> \u001b[38;5;45m+15ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting click action \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and stable \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  element is visible, enabled and stable \u001b[38;5;45m+29ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  scrolling into view if needed \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  done scrolling \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  performing click action \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#login\" \u001b[38;5;45m+37ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  click action done \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for scheduled navigations to finish \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigations have finished \u001b[38;5;45m+8ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForURL started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForURL succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  not waiting, \"load\" event already fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 10000ms \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Continue with GitHub\"), button:has-text(\"GitHub\")').first() \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button aria-label=\"Continue with GitHub\" class=\"w-full mt-3 flex items-center justify-center gap-3 px-6 py-3 bg-gray-800 hover:bg-gray-900 border-2 border-gray-800 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed\">…</button> \u001b[38;5;45m+361ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toBeVisible succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Continue with GitHub\"), button:has-text(\"GitHub\")').first() \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button aria-label=\"Continue with GitHub\" class=\"w-full mt-3 flex items-center justify-center gap-3 px-6 py-3 bg-gray-800 hover:bg-gray-900 border-2 border-gray-800 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed\">…</button> \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting click action \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and stable \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  element is visible, enabled and stable \u001b[38;5;45m+11ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  scrolling into view if needed \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  done scrolling \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  performing click action \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  click action done \u001b[38;5;45m+4ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for scheduled navigations to finish \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigations have finished \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForURL started \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for navigation until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+909ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login?client_id=Ov23lirOaGuA7CxQqT0T&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23lirOaGuA7CxQqT0T%26redirect_to%3Dhttp%253A%252F%252Flocalhost%253A5173%252F%26redirect_uri%3Dhttps%253A%252F%252Fpdmtvkcxnqysujnpcnyh.supabase.co%252Fauth%252Fv1%252Fcallback%26response_type%3Dcode%26scope%3Duser%253Aemail%26state%3DeyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxNzAsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiIzYmM2MGI4ZS0zMTBlLTQwNDQtYmQ3Zi03NzQ4YTI5NTUxNDUifQ.It0ZG5EiTiAhxDmis4Dvlnd_FiXrUPvoDVmt1vuTE4c\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login?client_id=Ov23lirOaGuA7CxQqT0T&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23lirOaGuA7CxQqT0T%26redirect_to%3Dhttp%253A%252F%252Flocalhost%253A5173%252F%26redirect_uri%3Dhttps%253A%252F%252Fpdmtvkcxnqysujnpcnyh.supabase.co%252Fauth%252Fv1%252Fcallback%26response_type%3Dcode%26scope%3Duser%253Aemail%26state%3DeyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxNzAsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiIzYmM2MGI4ZS0zMTBlLTQwNDQtYmQ3Zi03NzQ4YTI5NTUxNDUifQ.It0ZG5EiTiAhxDmis4Dvlnd_FiXrUPvoDVmt1vuTE4c\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login?client_id=Ov23lirOaGuA7CxQqT0T&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23lirOaGuA7CxQqT0T%26redirect_to%3Dhttp%253A%252F%252Flocalhost%253A5173%252F%26redirect_uri%3Dhttps%253A%252F%252Fpdmtvkcxnqysujnpcnyh.supabase.co%252Fauth%252Fv1%252Fcallback%26response_type%3Dcode%26scope%3Duser%253Aemail%26state%3DeyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxNzAsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiIzYmM2MGI4ZS0zMTBlLTQwNDQtYmQ3Zi03NzQ4YTI5NTUxNDUifQ.It0ZG5EiTiAhxDmis4Dvlnd_FiXrUPvoDVmt1vuTE4c\" \u001b[38;5;45m+547ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login?client_id=Ov23lirOaGuA7CxQqT0T&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23lirOaGuA7CxQqT0T%26redirect_to%3Dhttp%253A%252F%252Flocalhost%253A5173%252F%26redirect_uri%3Dhttps%253A%252F%252Fpdmtvkcxnqysujnpcnyh.supabase.co%252Fauth%252Fv1%252Fcallback%26response_type%3Dcode%26scope%3Duser%253Aemail%26state%3DeyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxNzAsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiIzYmM2MGI4ZS0zMTBlLTQwNDQtYmQ3Zi03NzQ4YTI5NTUxNDUifQ.It0ZG5EiTiAhxDmis4Dvlnd_FiXrUPvoDVmt1vuTE4c\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login?client_id=Ov23lirOaGuA7CxQqT0T&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23lirOaGuA7CxQqT0T%26redirect_to%3Dhttp%253A%252F%252Flocalhost%253A5173%252F%26redirect_uri%3Dhttps%253A%252F%252Fpdmtvkcxnqysujnpcnyh.supabase.co%252Fauth%252Fv1%252Fcallback%26response_type%3Dcode%26scope%3Duser%253Aemail%26state%3DeyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxNzAsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiIzYmM2MGI4ZS0zMTBlLTQwNDQtYmQ3Zi03NzQ4YTI5NTUxNDUifQ.It0ZG5EiTiAhxDmis4Dvlnd_FiXrUPvoDVmt1vuTE4c\" \u001b[38;5;45m+213ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login?client_id=Ov23lirOaGuA7CxQqT0T&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23lirOaGuA7CxQqT0T%26redirect_to%3Dhttp%253A%252F%252Flocalhost%253A5173%252F%26redirect_uri%3Dhttps%253A%252F%252Fpdmtvkcxnqysujnpcnyh.supabase.co%252Fauth%252Fv1%252Fcallback%26response_type%3Dcode%26scope%3Duser%253Aemail%26state%3DeyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxNzAsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiIzYmM2MGI4ZS0zMTBlLTQwNDQtYmQ3Zi03NzQ4YTI5NTUxNDUifQ.It0ZG5EiTiAhxDmis4Dvlnd_FiXrUPvoDVmt1vuTE4c\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+686ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+18s\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login/oauth/authorize?client_id=Ov23lirOaGuA7CxQqT0T&redirect_to=http%3A%2F%2Flocalhost%3A5173%2F&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=user%3Aemail&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxNzAsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiIzYmM2MGI4ZS0zMTBlLTQwNDQtYmQ3Zi03NzQ4YTI5NTUxNDUifQ.It0ZG5EiTiAhxDmis4Dvlnd_FiXrUPvoDVmt1vuTE4c\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login/oauth/authorize?client_id=Ov23lirOaGuA7CxQqT0T&redirect_to=http%3A%2F%2Flocalhost%3A5173%2F&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=user%3Aemail&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxNzAsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiIzYmM2MGI4ZS0zMTBlLTQwNDQtYmQ3Zi03NzQ4YTI5NTUxNDUifQ.It0ZG5EiTiAhxDmis4Dvlnd_FiXrUPvoDVmt1vuTE4c\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login/oauth/authorize?client_id=Ov23lirOaGuA7CxQqT0T&redirect_to=http%3A%2F%2Flocalhost%3A5173%2F&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=user%3Aemail&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxNzAsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiIzYmM2MGI4ZS0zMTBlLTQwNDQtYmQ3Zi03NzQ4YTI5NTUxNDUifQ.It0ZG5EiTiAhxDmis4Dvlnd_FiXrUPvoDVmt1vuTE4c\" \u001b[38;5;45m+55ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login/oauth/authorize?client_id=Ov23lirOaGuA7CxQqT0T&redirect_to=http%3A%2F%2Flocalhost%3A5173%2F&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=user%3Aemail&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkxNzAsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiIzYmM2MGI4ZS0zMTBlLTQwNDQtYmQ3Zi03NzQ4YTI5NTUxNDUifQ.It0ZG5EiTiAhxDmis4Dvlnd_FiXrUPvoDVmt1vuTE4c\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+6ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+681ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+51ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e#landing\" \u001b[38;5;45m+108ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e#landing\" \u001b[38;5;45m+27ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e#oauth-callback\" \u001b[38;5;45m+376ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForURL succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForURL started \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e#oauth-callback\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for navigation until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e#oauth-callback\" \u001b[38;5;45m+26ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e#oauth-callback\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#oauth-callback\" \u001b[38;5;45m+29ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#oauth-callback\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+34ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+28ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+248ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+24ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+863ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForURL failed \u001b[38;5;45m+9s\u001b[0m\n"
+                    },
+                    {
+                      "text": "❌ GitHub OAuth authentication failed: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=0eb18c0a-72d2-402e-ad6e-1ca377427a3e#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================\n"
+                    },
+                    {
+                      "text": "\n"
+                    },
+                    {
+                      "text": "Troubleshooting:\n"
+                    },
+                    {
+                      "text": "1. Verify GITHUB_TEST_EMAIL_1 is set in .env.test\n"
+                    },
+                    {
+                      "text": "2. Check GitHub OAuth app configuration in Supabase dashboard\n"
+                    },
+                    {
+                      "text": "3. Run with --headed flag to see browser: npx playwright test auth.setup --headed\n"
+                    },
+                    {
+                      "text": "4. Verify redirect URL is correct in GitHub OAuth app settings\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.screenshot started \u001b[38;5;45m+5ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+5ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.screenshot succeeded \u001b[38;5;45m+37ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('body') \u001b[38;5;45m+3ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <body class=\"fonts-loaded\">…</body> \u001b[38;5;45m+10ms\u001b[0m\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2025-10-16T01:41:07.619Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/auth.setup.js-authenticate-with-GitHub-OAuth-setup-google-auth/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/auth.setup.js-authenticate-with-GitHub-OAuth-setup-google-auth/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/auth.setup.js-authenticate-with-GitHub-OAuth-setup-google-auth/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js",
+                    "column": 16,
+                    "line": 163
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f376efe52c54b1a876fd-5927d9623768496c5543",
+          "file": "setup/auth.setup.js",
+          "line": 123,
+          "column": 1
+        },
+        {
+          "title": "authenticate with Google OAuth",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "setup-github-auth",
+              "projectName": "setup-github-auth",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 31245,
+                  "error": {
+                    "message": "TimeoutError: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================",
+                    "stack": "TimeoutError: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================\n    at /Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js:95:16",
+                    "location": {
+                      "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js",
+                      "column": 16,
+                      "line": 95
+                    },
+                    "snippet": "  93 |\n  94 |     // Verify authentication succeeded by checking we're on dashboard\n> 95 |     await page.waitForURL(/dashboard/, { timeout: 10000 });\n     |                ^\n  96 |     console.log('✅ Google authentication successful - redirected to dashboard');\n  97 |\n  98 |     // Verify authenticated user elements are visible"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js",
+                        "column": 16,
+                        "line": 95
+                      },
+                      "message": "TimeoutError: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================\n\n  93 |\n  94 |     // Verify authentication succeeded by checking we're on dashboard\n> 95 |     await page.waitForURL(/dashboard/, { timeout: 10000 });\n     |                ^\n  96 |     console.log('✅ Google authentication successful - redirected to dashboard');\n  97 |\n  98 |     // Verify authenticated user elements are visible\n    at /Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js:95:16"
+                    }
+                  ],
+                  "stdout": [
+                    {
+                      "text": "⚠️ Auth state not found: google-user1.json\n"
+                    },
+                    {
+                      "text": "🔄 Google auth state expired or missing, re-authenticating...\n"
+                    },
+                    {
+                      "text": "⏳ This requires MANUAL authentication in headed browser mode\n"
+                    },
+                    {
+                      "text": "📧 Email: aimpactscannertest@gmail.com\n"
+                    },
+                    {
+                      "text": "⏳ Please complete Google login in the browser window...\n"
+                    },
+                    {
+                      "text": "   1. Enter email: aimpactscannertest@gmail.com\n"
+                    },
+                    {
+                      "text": "   2. Enter password\n"
+                    },
+                    {
+                      "text": "   3. Approve OAuth consent if prompted\n"
+                    },
+                    {
+                      "text": "   4. Wait for redirect to dashboard...\n"
+                    }
+                  ],
+                  "stderr": [
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+448ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+4ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+5ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+204ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5173/\", waiting until \"networkidle\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+64ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+9ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+211ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+27ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+33ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+545ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+4ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Sign In\"), a:has-text(\"Sign In\")').first() \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button class=\"px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors\">Sign In</button> \u001b[38;5;45m+15ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting click action \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and stable \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  element is visible, enabled and stable \u001b[38;5;45m+32ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  scrolling into view if needed \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  done scrolling \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  performing click action \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#login\" \u001b[38;5;45m+36ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  click action done \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for scheduled navigations to finish \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigations have finished \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForURL started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForURL succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+3ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  not waiting, \"load\" event already fired \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 10000ms \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Continue with Google\"), button:has-text(\"Google\")').first() \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button aria-label=\"Continue with Google\" class=\"w-full flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-blue-500 hover:bg-blue-50 rounded-lg font-semibold text-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg\">…</button> \u001b[38;5;45m+367ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toBeVisible succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Continue with Google\"), button:has-text(\"Google\")').first() \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button aria-label=\"Continue with Google\" class=\"w-full flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-blue-500 hover:bg-blue-50 rounded-lg font-semibold text-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg\">…</button> \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting click action \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and stable \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  element is visible, enabled and stable \u001b[38;5;45m+15ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  scrolling into view if needed \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  done scrolling \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  performing click action \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  click action done \u001b[38;5;45m+5ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for scheduled navigations to finish \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigations have finished \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForURL started \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for navigation until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+825ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/v3/signin/identifier?opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A5173%25252F&dsh=S872805195%3A1760578904366490&access_type=offline&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&o2v=2&prompt=consent&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email+profile&service=lso&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMDQsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6Imdvb2dsZSIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI4MzQ4YTM5Mi1kYjNlLTQzY2ItYTAyMS02NzM5ZTVmNzNjNTcifQ.paF2DxW23az8c78qB2zKZCIoISlpKTn9wnObD7OgBWM&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAPru5D26f6XC9NXXElgRbSPp8piBXwMjBaCRF2iVXDBmAzpPbXPnoJ-yVewJB04LBEr4ABrbOWYF30V3cYzzm5CqlZpWW_kvj8JXVzlnjrDVRG2-wp1smFc0UpXR5yJHThU0mg8pwOCOj3kV2wlyWL1jTJuOqKX-fpm0As_ZtYOInTEp42YOoYL68u0YscQsvTYil_2ZUIdXl5cl2_8luszWm1eH5xLwwlqeaxIUDnyHD3MErCNXMofMinn2KNzwGS_R4-sBbrbHrLT-2c_gu1jZk8Ju3-onWVpUFqdXAztCcv5PUkH2gxbT3jGQdtFv6_TFHUtbzSIh8LEHpdlO9SjENsp_98jXoCbDLk9__cx0WYGx52hKJOEYp1ttFMOFhWOawN8DAiiHKjvjZ0BWFX3ScCfbDaEoHLP0ttZ15I9SJ7YTfzxGecyoWHh5ZncY5yBifJdW9ncLDtAhbJMCUcbZt9PgJzb2uH8_fuSXQzh7EPINBI%26flowName%3DGeneralOAuthFlow%26as%3DS872805195%253A1760578904366490%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co&rart=ANgoxce7SJzkOxpDsDYzocoqD4fXXBxGnBkpPWIC5UcR7vTXL3FqBKI6eHliGHueLG4FJq-Vf3UIbnmO9EcmqiQVJFv9W2Yy7w2SHlEEgq3euy79QM_4klo\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/v3/signin/identifier?opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A5173%25252F&dsh=S872805195%3A1760578904366490&access_type=offline&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&o2v=2&prompt=consent&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email+profile&service=lso&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMDQsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6Imdvb2dsZSIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI4MzQ4YTM5Mi1kYjNlLTQzY2ItYTAyMS02NzM5ZTVmNzNjNTcifQ.paF2DxW23az8c78qB2zKZCIoISlpKTn9wnObD7OgBWM&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAPru5D26f6XC9NXXElgRbSPp8piBXwMjBaCRF2iVXDBmAzpPbXPnoJ-yVewJB04LBEr4ABrbOWYF30V3cYzzm5CqlZpWW_kvj8JXVzlnjrDVRG2-wp1smFc0UpXR5yJHThU0mg8pwOCOj3kV2wlyWL1jTJuOqKX-fpm0As_ZtYOInTEp42YOoYL68u0YscQsvTYil_2ZUIdXl5cl2_8luszWm1eH5xLwwlqeaxIUDnyHD3MErCNXMofMinn2KNzwGS_R4-sBbrbHrLT-2c_gu1jZk8Ju3-onWVpUFqdXAztCcv5PUkH2gxbT3jGQdtFv6_TFHUtbzSIh8LEHpdlO9SjENsp_98jXoCbDLk9__cx0WYGx52hKJOEYp1ttFMOFhWOawN8DAiiHKjvjZ0BWFX3ScCfbDaEoHLP0ttZ15I9SJ7YTfzxGecyoWHh5ZncY5yBifJdW9ncLDtAhbJMCUcbZt9PgJzb2uH8_fuSXQzh7EPINBI%26flowName%3DGeneralOAuthFlow%26as%3DS872805195%253A1760578904366490%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co&rart=ANgoxce7SJzkOxpDsDYzocoqD4fXXBxGnBkpPWIC5UcR7vTXL3FqBKI6eHliGHueLG4FJq-Vf3UIbnmO9EcmqiQVJFv9W2Yy7w2SHlEEgq3euy79QM_4klo\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+696ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/v3/signin/identifier?opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A5173%25252F&dsh=S872805195%3A1760578904366490&access_type=offline&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&o2v=2&prompt=consent&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email+profile&service=lso&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMDQsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6Imdvb2dsZSIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI4MzQ4YTM5Mi1kYjNlLTQzY2ItYTAyMS02NzM5ZTVmNzNjNTcifQ.paF2DxW23az8c78qB2zKZCIoISlpKTn9wnObD7OgBWM&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAPru5D26f6XC9NXXElgRbSPp8piBXwMjBaCRF2iVXDBmAzpPbXPnoJ-yVewJB04LBEr4ABrbOWYF30V3cYzzm5CqlZpWW_kvj8JXVzlnjrDVRG2-wp1smFc0UpXR5yJHThU0mg8pwOCOj3kV2wlyWL1jTJuOqKX-fpm0As_ZtYOInTEp42YOoYL68u0YscQsvTYil_2ZUIdXl5cl2_8luszWm1eH5xLwwlqeaxIUDnyHD3MErCNXMofMinn2KNzwGS_R4-sBbrbHrLT-2c_gu1jZk8Ju3-onWVpUFqdXAztCcv5PUkH2gxbT3jGQdtFv6_TFHUtbzSIh8LEHpdlO9SjENsp_98jXoCbDLk9__cx0WYGx52hKJOEYp1ttFMOFhWOawN8DAiiHKjvjZ0BWFX3ScCfbDaEoHLP0ttZ15I9SJ7YTfzxGecyoWHh5ZncY5yBifJdW9ncLDtAhbJMCUcbZt9PgJzb2uH8_fuSXQzh7EPINBI%26flowName%3DGeneralOAuthFlow%26as%3DS872805195%253A1760578904366490%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co&rart=ANgoxce7SJzkOxpDsDYzocoqD4fXXBxGnBkpPWIC5UcR7vTXL3FqBKI6eHliGHueLG4FJq-Vf3UIbnmO9EcmqiQVJFv9W2Yy7w2SHlEEgq3euy79QM_4klo\" \u001b[38;5;45m+558ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/v3/signin/identifier?opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A5173%25252F&dsh=S872805195%3A1760578904366490&access_type=offline&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&o2v=2&prompt=consent&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email+profile&service=lso&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMDQsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6Imdvb2dsZSIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI4MzQ4YTM5Mi1kYjNlLTQzY2ItYTAyMS02NzM5ZTVmNzNjNTcifQ.paF2DxW23az8c78qB2zKZCIoISlpKTn9wnObD7OgBWM&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAPru5D26f6XC9NXXElgRbSPp8piBXwMjBaCRF2iVXDBmAzpPbXPnoJ-yVewJB04LBEr4ABrbOWYF30V3cYzzm5CqlZpWW_kvj8JXVzlnjrDVRG2-wp1smFc0UpXR5yJHThU0mg8pwOCOj3kV2wlyWL1jTJuOqKX-fpm0As_ZtYOInTEp42YOoYL68u0YscQsvTYil_2ZUIdXl5cl2_8luszWm1eH5xLwwlqeaxIUDnyHD3MErCNXMofMinn2KNzwGS_R4-sBbrbHrLT-2c_gu1jZk8Ju3-onWVpUFqdXAztCcv5PUkH2gxbT3jGQdtFv6_TFHUtbzSIh8LEHpdlO9SjENsp_98jXoCbDLk9__cx0WYGx52hKJOEYp1ttFMOFhWOawN8DAiiHKjvjZ0BWFX3ScCfbDaEoHLP0ttZ15I9SJ7YTfzxGecyoWHh5ZncY5yBifJdW9ncLDtAhbJMCUcbZt9PgJzb2uH8_fuSXQzh7EPINBI%26flowName%3DGeneralOAuthFlow%26as%3DS872805195%253A1760578904366490%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co&rart=ANgoxce7SJzkOxpDsDYzocoqD4fXXBxGnBkpPWIC5UcR7vTXL3FqBKI6eHliGHueLG4FJq-Vf3UIbnmO9EcmqiQVJFv9W2Yy7w2SHlEEgq3euy79QM_4klo\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/_/bscframe\" \u001b[38;5;45m+181ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"about:blank\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"about:blank\" \u001b[38;5;45m+38ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.youtube.com/accounts/CheckConnection?pmpo=https%3A%2F%2Faccounts.google.com&v=88432976&timestamp=1760578905811\" \u001b[38;5;45m+216ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+8ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+859ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/v3/signin/challenge/pwd?TL=AMbiOOTYX825ISmB70zPKzk_4PA6jFXlKonXRnc7WHBG3woldNYr8XRFZ1EKG45Z&access_type=offline&app_domain=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co&checkConnection=youtube%3A421&checkedDomains=youtube&cid=3&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAPru5D26f6XC9NXXElgRbSPp8piBXwMjBaCRF2iVXDBmAzpPbXPnoJ-yVewJB04LBEr4ABrbOWYF30V3cYzzm5CqlZpWW_kvj8JXVzlnjrDVRG2-wp1smFc0UpXR5yJHThU0mg8pwOCOj3kV2wlyWL1jTJuOqKX-fpm0As_ZtYOInTEp42YOoYL68u0YscQsvTYil_2ZUIdXl5cl2_8luszWm1eH5xLwwlqeaxIUDnyHD3MErCNXMofMinn2KNzwGS_R4-sBbrbHrLT-2c_gu1jZk8Ju3-onWVpUFqdXAztCcv5PUkH2gxbT3jGQdtFv6_TFHUtbzSIh8LEHpdlO9SjENsp_98jXoCbDLk9__cx0WYGx52hKJOEYp1ttFMOFhWOawN8DAiiHKjvjZ0BWFX3ScCfbDaEoHLP0ttZ15I9SJ7YTfzxGecyoWHh5ZncY5yBifJdW9ncLDtAhbJMCUcbZt9PgJzb2uH8_fuSXQzh7EPINBI%26flowName%3DGeneralOAuthFlow%26as%3DS872805195%253A1760578904366490%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%23&dsh=S872805195%3A1760578904366490&flowName=GeneralOAuthFlow&o2v=2&opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A5173%25252F&prompt=consent&pstMsg=1&rart=ANgoxce7SJzkOxpDsDYzocoqD4fXXBxGnBkpPWIC5UcR7vTXL3FqBKI6eHliGHueLG4FJq-Vf3UIbnmO9EcmqiQVJFv9W2Yy7w2SHlEEgq3euy79QM_4klo&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email%20profile&service=lso&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMDQsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6Imdvb2dsZSIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI4MzQ4YTM5Mi1kYjNlLTQzY2ItYTAyMS02NzM5ZTVmNzNjNTcifQ.paF2DxW23az8c78qB2zKZCIoISlpKTn9wnObD7OgBWM\" \u001b[38;5;45m+6s\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/v3/signin/challenge/pwd?TL=AMbiOOTYX825ISmB70zPKzk_4PA6jFXlKonXRnc7WHBG3woldNYr8XRFZ1EKG45Z&access_type=offline&app_domain=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co&checkConnection=youtube%3A421&checkedDomains=youtube&cid=3&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAPru5D26f6XC9NXXElgRbSPp8piBXwMjBaCRF2iVXDBmAzpPbXPnoJ-yVewJB04LBEr4ABrbOWYF30V3cYzzm5CqlZpWW_kvj8JXVzlnjrDVRG2-wp1smFc0UpXR5yJHThU0mg8pwOCOj3kV2wlyWL1jTJuOqKX-fpm0As_ZtYOInTEp42YOoYL68u0YscQsvTYil_2ZUIdXl5cl2_8luszWm1eH5xLwwlqeaxIUDnyHD3MErCNXMofMinn2KNzwGS_R4-sBbrbHrLT-2c_gu1jZk8Ju3-onWVpUFqdXAztCcv5PUkH2gxbT3jGQdtFv6_TFHUtbzSIh8LEHpdlO9SjENsp_98jXoCbDLk9__cx0WYGx52hKJOEYp1ttFMOFhWOawN8DAiiHKjvjZ0BWFX3ScCfbDaEoHLP0ttZ15I9SJ7YTfzxGecyoWHh5ZncY5yBifJdW9ncLDtAhbJMCUcbZt9PgJzb2uH8_fuSXQzh7EPINBI%26flowName%3DGeneralOAuthFlow%26as%3DS872805195%253A1760578904366490%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%23&dsh=S872805195%3A1760578904366490&flowName=GeneralOAuthFlow&o2v=2&opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A5173%25252F&prompt=consent&pstMsg=1&rart=ANgoxce7SJzkOxpDsDYzocoqD4fXXBxGnBkpPWIC5UcR7vTXL3FqBKI6eHliGHueLG4FJq-Vf3UIbnmO9EcmqiQVJFv9W2Yy7w2SHlEEgq3euy79QM_4klo&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email%20profile&service=lso&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMDQsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6Imdvb2dsZSIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI4MzQ4YTM5Mi1kYjNlLTQzY2ItYTAyMS02NzM5ZTVmNzNjNTcifQ.paF2DxW23az8c78qB2zKZCIoISlpKTn9wnObD7OgBWM\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"about:blank\" \u001b[38;5;45m+525ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+654ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+6s\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.youtube.com/accounts/SetSID?ssdc=1&sidt=ALWU2cveg7VpUZI7GZVdPD71/MkRglIZ%2B6L8xyN1mjeB87TNaBGqPuArbqGLlsyR3WqJwALoN6OrywsEZE7eSGcn6CSw6X/PORZZMb2Kiov1ve/aW30lzBhTr2LTKzDrSU9CEr8Z3GHI8YY9L3IQRxSCxdLGKK2/jjb8AGZ3usbHkmbSmlGZX0aPZnEaS2KyW%2BL3CLHDR3oWWnzFpAdV65rrb1iXHg9sb5Wd93UCfhhTQKh19vK2wpQM3BLYrp9tWeO34QQAc0BbJrcefcSLMVmBUTSyCqLabJwewMtpUxStzTUHPquotKsTn3ja8iwtVHEr/sX0qgl/dn5heihkAnTTYGJp/9QJlttxahFGABfbWrhNiFEv6kmH3R8wdNWP/vntexDbNlQ7CTdnAJ%2B1yicu9FtITc%2BCEz4XirtI93Ew%2BX2waYmzcQq0Io3DkIZOQgLvuTx18tjn6JkTMrMwdzQQQSoj%2Ber8ZUgEOdOpFAtzaIfYQCCoouGkX0%2B%2BhPCKYRVU29uCraF6QKJr7UxicCwJyJHLFBymkYjnECTX2DAWW8FTWeYf7eGsArflPPErgr2ZGtmmlmZPpHXBu7YP1RFLiViKMnfqr87j2QcwOPGjmg17zTfm0qYatqq9HUVdxaLhravjV/epWqsW5IEoCUNKWt8xcL3N2p0jQ0pAxbyjoasZ5Xbu8YOqJxO785pMc7mvny6YhUGdBGBuE5FzR%2BUFUeB6sthXzOhfB58Nj5UhYJ91xSr4vAeG20rE2%2BjRyDlCB8ViDUjOxwh1U8KhgnPr5esVCHMujyWjcK3bGq8xgscnJv8eKfK2oYmL3TAfaLP5Nul8g6iQnJdtxiMFhgTa0jqUkrxdmk2cvY0ob1GvtFyh7Lz%2BPlJ0ZvXP4YEIJ49J7QEnv6WzSTi%2BSPoFwbeevCnWo9N9zVBeOS0hR1JzzbKLh40j6whjvstHpLuyPEquTOJV/sIFL8UOpAwUVA5y/gClrciY%2BtgDtDn816Ep6XrwdXOo6etEwE5kZZyNaesShTLgWgtvgMnU%2BIaiR4BMfCTtGDQ5dHcSdRjpaEQkSolkKxDMvBaibdMrq9mCh5f/a6AlRl/IOT8J1W%2BfrvGOYwpiUqz0wOCB772E0fGQRqBIDUcB8BRE6lZvRnVsR%2Bt2JMSNLc%2BrOoOlqxeJkH8dIW8h3JQtCQmeoYbQgLFjOI9gq3feJ/kkMkArq85S%2BtN9Vc2dQXLr0r2RCRKtWBBizuUf69eZMbmtFLMJmYlc/VqYY4WzrZCCRSleE9wiYbNlp2cmbwCq8X0TBoDNwmtZ1USx543FMa%2BUyrFis/JAgY6fAdxexYLwr3Tu8eAMhwQyIyKTL//75Fx8AWD8pU%2Bub/C4xVqXYrYBtDFY/mGTSWsTuuE/k8vqWrh%2BBEI/XoCd506UzdhKKIj3S60cfJfRBxNE6MuArKhGO6KiwCu2TVm2%2BlZ7RZ2uNOQ7Vo0MfEKNgx6XYIQ0iOtCH0AP8fobGNtCcA9dTqtBh/e9Q9VN65Eg5EcjNcVNOznnSG1NId/M036rjZV5JQLFQ%2BkFFsnmnEoLozmJ3roUIJ0hyevaIiFjH1%2B%2Bjf38C/ZGaV1lIT%2Beo1CkH2Zcs2FPIpLCTb/%2BSznHmYoIUfQBj0HZG8f1fq7bHgCoxb%2ByU%2BqNT7Fzy5BF3cUe8WQJ2%2BVDuznXTBwwrJujSdFv1kwiJqGQbZ8McFVC%2By7aS8urSsxK5cgV/TpjH54FI4ntBpXL76u6NjMZX9Srk8neuak221t9vflQXaGL7bdg4c7HoouVKIFdMlt825tEpNewtsMVG%2BuLiSR0JNJmk5oFDRlvdsIAM4T8v7V2eOK4vA/TKSMZUwCg42SFv0QWD6ucwpT6sReTMgZm0G%2B4t3Ci76g58Vz3DqDu6QHfKrKr34Ng/g%2B41n0rZWTMrbGsk4EWc10EXhVJ2ijXQyxTQI0QH1kIkhvClSrRlR%2BGLbWXWcQ6K/iJ8lzwHcqrZBUrMrtASt9EYe/wB9lqe5nNG%2BEkN9jOlq5LfQoY8c4aLlkmqnjV62HPgDIGJvFASPV912ZL6qVOxjehJhvxDPs%2BLI1icO7Fv4XrUDXangg2Bq9uhSytxlJTXVpgosXApaxvzE8Raj%2Bvu6laT/fAXjaYkI9yTtMTFggkarGxsLVlEah3L7iobiDDlOtrvDg8kWfTOmrZN%2BQPCU2Tb2hn6aFxz2BCa8/OO1coFosH2QWHFpqO2Ex2fU2E0GVE7wrrIn7H9F30mjI5LJfC7aNVW2sn1qC9gbcxSveF2EssK/5Ap8iZD6pxN1crQM/FIHDXdMoNP6JKfO%2BSpE4n8pAcSTA5jZQLNoBiy3OmOsswAPsGUCoG91TkDpnUn/kHPgInurn0etHsLqrEFIXD3hOA03F4Rj0A7GPqpm5wQLck49XeQZcbX1Vp8Se1TPtsU2Syl01wOJs/e8fUGPbVkaI8znwyzrYZbPYYdxpuN/GfY%2BSgRScEvnFHobjYmbT0%2BQvjiALZsdAMlpA8mbAl/JF6o9eXTnAVVJI7jniAPBrg0T9hECPrrcqi9FSpIKAVx3urbqLXAuFeKtTp9LPpAPNo94ThBRdE6wjzISMyUg9PYDsYHW4d5jaqjb2/pkimqlC1cCo2ULat7wZ6U9fP9HCWT0HpCCA5Dugmw/6tSYBtWYTXQ6rJCBCvrWzLWt4zXCC5BAF4MnuS&continue=https://accounts.google.com/signin/oauth/consent?authuser%3D0%26part%3DAJi8hAPru5D26f6XC9NXXElgRbSPp8piBXwMjBaCRF2iVXDBmAzpPbXPnoJ-yVewJB04LBEr4ABrbOWYF30V3cYzzm5CqlZpWW_kvj8JXVzlnjrDVRG2-wp1smFc0UpXR5yJHThU0mg8pwOCOj3kV2wlyWL1jTJuOqKX-fpm0As_ZtYOInTEp42YOoYL68u0YscQsvTYil_2ZUIdXl5cl2_8luszWm1eH5xLwwlqeaxIUDnyHD3MErCNXMofMinn2KNzwGS_R4-sBbrbHrLT-2c_gu1jZk8Ju3-onWVpUFqdXAztCcv5PUkH2gxbT3jGQdtFv6_TFHUtbzSIh8LEHpdlO9SjENsp_98jXoCbDLk9__cx0WYGx52hKJOEYp1ttFMOFhWOawN8DAiiHKjvjZ0BWFX3ScCfbDaEoHLP0ttZ15I9SJ7YTfzxGecyoWHh5ZncY5yBifJdW9ncLDtAhbJMCUcbZt9PgJzb2uH8_fuSXQzh7EPINBI%26flowName%3DGeneralOAuthFlow%26as%3DS872805195:1760578904366490%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%26rapt%3DAEjHL4OxwCQo4Yj3hC21IZS5X6FRgK7I1vTD3x-pJ2us8dvpZAN8hsErgKxt97JS_t-BsoTgdUp6G_OnJJXELBQLYfO1E3NwTqNhC8hYuijRpAV_jbyGkoc%23&tcc=1\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.youtube.com/accounts/SetSID?ssdc=1&sidt=ALWU2cveg7VpUZI7GZVdPD71/MkRglIZ%2B6L8xyN1mjeB87TNaBGqPuArbqGLlsyR3WqJwALoN6OrywsEZE7eSGcn6CSw6X/PORZZMb2Kiov1ve/aW30lzBhTr2LTKzDrSU9CEr8Z3GHI8YY9L3IQRxSCxdLGKK2/jjb8AGZ3usbHkmbSmlGZX0aPZnEaS2KyW%2BL3CLHDR3oWWnzFpAdV65rrb1iXHg9sb5Wd93UCfhhTQKh19vK2wpQM3BLYrp9tWeO34QQAc0BbJrcefcSLMVmBUTSyCqLabJwewMtpUxStzTUHPquotKsTn3ja8iwtVHEr/sX0qgl/dn5heihkAnTTYGJp/9QJlttxahFGABfbWrhNiFEv6kmH3R8wdNWP/vntexDbNlQ7CTdnAJ%2B1yicu9FtITc%2BCEz4XirtI93Ew%2BX2waYmzcQq0Io3DkIZOQgLvuTx18tjn6JkTMrMwdzQQQSoj%2Ber8ZUgEOdOpFAtzaIfYQCCoouGkX0%2B%2BhPCKYRVU29uCraF6QKJr7UxicCwJyJHLFBymkYjnECTX2DAWW8FTWeYf7eGsArflPPErgr2ZGtmmlmZPpHXBu7YP1RFLiViKMnfqr87j2QcwOPGjmg17zTfm0qYatqq9HUVdxaLhravjV/epWqsW5IEoCUNKWt8xcL3N2p0jQ0pAxbyjoasZ5Xbu8YOqJxO785pMc7mvny6YhUGdBGBuE5FzR%2BUFUeB6sthXzOhfB58Nj5UhYJ91xSr4vAeG20rE2%2BjRyDlCB8ViDUjOxwh1U8KhgnPr5esVCHMujyWjcK3bGq8xgscnJv8eKfK2oYmL3TAfaLP5Nul8g6iQnJdtxiMFhgTa0jqUkrxdmk2cvY0ob1GvtFyh7Lz%2BPlJ0ZvXP4YEIJ49J7QEnv6WzSTi%2BSPoFwbeevCnWo9N9zVBeOS0hR1JzzbKLh40j6whjvstHpLuyPEquTOJV/sIFL8UOpAwUVA5y/gClrciY%2BtgDtDn816Ep6XrwdXOo6etEwE5kZZyNaesShTLgWgtvgMnU%2BIaiR4BMfCTtGDQ5dHcSdRjpaEQkSolkKxDMvBaibdMrq9mCh5f/a6AlRl/IOT8J1W%2BfrvGOYwpiUqz0wOCB772E0fGQRqBIDUcB8BRE6lZvRnVsR%2Bt2JMSNLc%2BrOoOlqxeJkH8dIW8h3JQtCQmeoYbQgLFjOI9gq3feJ/kkMkArq85S%2BtN9Vc2dQXLr0r2RCRKtWBBizuUf69eZMbmtFLMJmYlc/VqYY4WzrZCCRSleE9wiYbNlp2cmbwCq8X0TBoDNwmtZ1USx543FMa%2BUyrFis/JAgY6fAdxexYLwr3Tu8eAMhwQyIyKTL//75Fx8AWD8pU%2Bub/C4xVqXYrYBtDFY/mGTSWsTuuE/k8vqWrh%2BBEI/XoCd506UzdhKKIj3S60cfJfRBxNE6MuArKhGO6KiwCu2TVm2%2BlZ7RZ2uNOQ7Vo0MfEKNgx6XYIQ0iOtCH0AP8fobGNtCcA9dTqtBh/e9Q9VN65Eg5EcjNcVNOznnSG1NId/M036rjZV5JQLFQ%2BkFFsnmnEoLozmJ3roUIJ0hyevaIiFjH1%2B%2Bjf38C/ZGaV1lIT%2Beo1CkH2Zcs2FPIpLCTb/%2BSznHmYoIUfQBj0HZG8f1fq7bHgCoxb%2ByU%2BqNT7Fzy5BF3cUe8WQJ2%2BVDuznXTBwwrJujSdFv1kwiJqGQbZ8McFVC%2By7aS8urSsxK5cgV/TpjH54FI4ntBpXL76u6NjMZX9Srk8neuak221t9vflQXaGL7bdg4c7HoouVKIFdMlt825tEpNewtsMVG%2BuLiSR0JNJmk5oFDRlvdsIAM4T8v7V2eOK4vA/TKSMZUwCg42SFv0QWD6ucwpT6sReTMgZm0G%2B4t3Ci76g58Vz3DqDu6QHfKrKr34Ng/g%2B41n0rZWTMrbGsk4EWc10EXhVJ2ijXQyxTQI0QH1kIkhvClSrRlR%2BGLbWXWcQ6K/iJ8lzwHcqrZBUrMrtASt9EYe/wB9lqe5nNG%2BEkN9jOlq5LfQoY8c4aLlkmqnjV62HPgDIGJvFASPV912ZL6qVOxjehJhvxDPs%2BLI1icO7Fv4XrUDXangg2Bq9uhSytxlJTXVpgosXApaxvzE8Raj%2Bvu6laT/fAXjaYkI9yTtMTFggkarGxsLVlEah3L7iobiDDlOtrvDg8kWfTOmrZN%2BQPCU2Tb2hn6aFxz2BCa8/OO1coFosH2QWHFpqO2Ex2fU2E0GVE7wrrIn7H9F30mjI5LJfC7aNVW2sn1qC9gbcxSveF2EssK/5Ap8iZD6pxN1crQM/FIHDXdMoNP6JKfO%2BSpE4n8pAcSTA5jZQLNoBiy3OmOsswAPsGUCoG91TkDpnUn/kHPgInurn0etHsLqrEFIXD3hOA03F4Rj0A7GPqpm5wQLck49XeQZcbX1Vp8Se1TPtsU2Syl01wOJs/e8fUGPbVkaI8znwyzrYZbPYYdxpuN/GfY%2BSgRScEvnFHobjYmbT0%2BQvjiALZsdAMlpA8mbAl/JF6o9eXTnAVVJI7jniAPBrg0T9hECPrrcqi9FSpIKAVx3urbqLXAuFeKtTp9LPpAPNo94ThBRdE6wjzISMyUg9PYDsYHW4d5jaqjb2/pkimqlC1cCo2ULat7wZ6U9fP9HCWT0HpCCA5Dugmw/6tSYBtWYTXQ6rJCBCvrWzLWt4zXCC5BAF4MnuS&continue=https://accounts.google.com/signin/oauth/consent?authuser%3D0%26part%3DAJi8hAPru5D26f6XC9NXXElgRbSPp8piBXwMjBaCRF2iVXDBmAzpPbXPnoJ-yVewJB04LBEr4ABrbOWYF30V3cYzzm5CqlZpWW_kvj8JXVzlnjrDVRG2-wp1smFc0UpXR5yJHThU0mg8pwOCOj3kV2wlyWL1jTJuOqKX-fpm0As_ZtYOInTEp42YOoYL68u0YscQsvTYil_2ZUIdXl5cl2_8luszWm1eH5xLwwlqeaxIUDnyHD3MErCNXMofMinn2KNzwGS_R4-sBbrbHrLT-2c_gu1jZk8Ju3-onWVpUFqdXAztCcv5PUkH2gxbT3jGQdtFv6_TFHUtbzSIh8LEHpdlO9SjENsp_98jXoCbDLk9__cx0WYGx52hKJOEYp1ttFMOFhWOawN8DAiiHKjvjZ0BWFX3ScCfbDaEoHLP0ttZ15I9SJ7YTfzxGecyoWHh5ZncY5yBifJdW9ncLDtAhbJMCUcbZt9PgJzb2uH8_fuSXQzh7EPINBI%26flowName%3DGeneralOAuthFlow%26as%3DS872805195:1760578904366490%26client_id%3D913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com%26rapt%3DAEjHL4OxwCQo4Yj3hC21IZS5X6FRgK7I1vTD3x-pJ2us8dvpZAN8hsErgKxt97JS_t-BsoTgdUp6G_OnJJXELBQLYfO1E3NwTqNhC8hYuijRpAV_jbyGkoc%23&tcc=1\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.youtube.com/accounts/SetSID\" \u001b[38;5;45m+39ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.youtube.com/accounts/SetSID\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+411ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/signin/oauth/id?authuser=0&part=AJi8hAPG2HqgSD8vy9x37KVudVX--JxsfR6fDx-iqlKP9fPVm31KoF2nrtkUgyuoMueU1SWPaahavGUvnbPY9cYNiWTCMPxiox-7LzAg66y8N9pkNBchCZlHeB-pPGjCBxRLb7GW29YDJOKCfIVMT6xLYZgbs3Wg1MzSJPFeHCH_SN7Ssl3URMPhtMgNALei8PFIX1jF0rAFR1AQrKzc7n6lpZ7jxL4j69NasoQRZux8ZM_4ZQhtUZz85kyht1MGS1z28TpQVKWPnV8GWOmmCRclaHS5IuKPxs2iPpaEZSTgESNc-zYix6B6r0VVMdKVtjYrby5wOmMsr5I8q70rx-BTUFRhjfKE_YmLQZSv1a149vawP4ZtAll5SaeqxBcZo-w9gyN4zeGVmPJynSsoQAica25BqjSPRQl3Po5Nv-V9ypc5zhnPGwEHYwhlKjfvYZ_twuTvR6WOJc_ENfv4VEvLzYMKWf-aPKUPUtWer1L6kPCxuvx9dB_idkZQvFxjusQ01ObhdOkxGZV6Or1XzMDd_VeoErql9v754l_i5UbhKoUna2qEm-HhvP3OIB9g1dZKWxV4jKa_x8U75uymLGMmosg_Y6OpaYNN6Q7aIYOrQi9p_rHdIXODxbiOA4vTx8QU02pQ59Fl7chV7x5LBeNmy91iHxWrt9ik3wVUO3DOjmnnpKCXAYZ_bk6PdUEEmw4cuWuHaAyzxkHdKLmhDGF_wtswp_pcuGrmDgRCjdZiUjqFa6mOl9v14pQOGEbld-53tilNX5HcOhrCr7anJsZHM0dwzsw754UX5W8q_7FAG15oaqeDdoBmKY0n5ZkXSxLXTZy5STNn1c4UTcRojaj3QEmHEncUwN5VzZAWxLXPVpLlNLgLgPNaWghW0d-C55mp4aKNDGYCMKKlbXvFEwBeT1gSzXk_0sQz5YZIzfglGKhrJFdZTNNsSyDSPVpi_6NtZWFcHiJkUbydv3OoR3vEkaqCXsmgLFYmsjC_7Js1KtqjuovyhjAkz3w1Xxv1jsM8RNlWyh6h&flowName=GeneralOAuthFlow&as=S872805195%3A1760578904366490&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&rapt=AEjHL4OxwCQo4Yj3hC21IZS5X6FRgK7I1vTD3x-pJ2us8dvpZAN8hsErgKxt97JS_t-BsoTgdUp6G_OnJJXELBQLYfO1E3NwTqNhC8hYuijRpAV_jbyGkoc#\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/signin/oauth/id?authuser=0&part=AJi8hAPG2HqgSD8vy9x37KVudVX--JxsfR6fDx-iqlKP9fPVm31KoF2nrtkUgyuoMueU1SWPaahavGUvnbPY9cYNiWTCMPxiox-7LzAg66y8N9pkNBchCZlHeB-pPGjCBxRLb7GW29YDJOKCfIVMT6xLYZgbs3Wg1MzSJPFeHCH_SN7Ssl3URMPhtMgNALei8PFIX1jF0rAFR1AQrKzc7n6lpZ7jxL4j69NasoQRZux8ZM_4ZQhtUZz85kyht1MGS1z28TpQVKWPnV8GWOmmCRclaHS5IuKPxs2iPpaEZSTgESNc-zYix6B6r0VVMdKVtjYrby5wOmMsr5I8q70rx-BTUFRhjfKE_YmLQZSv1a149vawP4ZtAll5SaeqxBcZo-w9gyN4zeGVmPJynSsoQAica25BqjSPRQl3Po5Nv-V9ypc5zhnPGwEHYwhlKjfvYZ_twuTvR6WOJc_ENfv4VEvLzYMKWf-aPKUPUtWer1L6kPCxuvx9dB_idkZQvFxjusQ01ObhdOkxGZV6Or1XzMDd_VeoErql9v754l_i5UbhKoUna2qEm-HhvP3OIB9g1dZKWxV4jKa_x8U75uymLGMmosg_Y6OpaYNN6Q7aIYOrQi9p_rHdIXODxbiOA4vTx8QU02pQ59Fl7chV7x5LBeNmy91iHxWrt9ik3wVUO3DOjmnnpKCXAYZ_bk6PdUEEmw4cuWuHaAyzxkHdKLmhDGF_wtswp_pcuGrmDgRCjdZiUjqFa6mOl9v14pQOGEbld-53tilNX5HcOhrCr7anJsZHM0dwzsw754UX5W8q_7FAG15oaqeDdoBmKY0n5ZkXSxLXTZy5STNn1c4UTcRojaj3QEmHEncUwN5VzZAWxLXPVpLlNLgLgPNaWghW0d-C55mp4aKNDGYCMKKlbXvFEwBeT1gSzXk_0sQz5YZIzfglGKhrJFdZTNNsSyDSPVpi_6NtZWFcHiJkUbydv3OoR3vEkaqCXsmgLFYmsjC_7Js1KtqjuovyhjAkz3w1Xxv1jsM8RNlWyh6h&flowName=GeneralOAuthFlow&as=S872805195%3A1760578904366490&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&rapt=AEjHL4OxwCQo4Yj3hC21IZS5X6FRgK7I1vTD3x-pJ2us8dvpZAN8hsErgKxt97JS_t-BsoTgdUp6G_OnJJXELBQLYfO1E3NwTqNhC8hYuijRpAV_jbyGkoc#\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+226ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/signin/oauth/id?authuser=0&part=AJi8hAPG2HqgSD8vy9x37KVudVX--JxsfR6fDx-iqlKP9fPVm31KoF2nrtkUgyuoMueU1SWPaahavGUvnbPY9cYNiWTCMPxiox-7LzAg66y8N9pkNBchCZlHeB-pPGjCBxRLb7GW29YDJOKCfIVMT6xLYZgbs3Wg1MzSJPFeHCH_SN7Ssl3URMPhtMgNALei8PFIX1jF0rAFR1AQrKzc7n6lpZ7jxL4j69NasoQRZux8ZM_4ZQhtUZz85kyht1MGS1z28TpQVKWPnV8GWOmmCRclaHS5IuKPxs2iPpaEZSTgESNc-zYix6B6r0VVMdKVtjYrby5wOmMsr5I8q70rx-BTUFRhjfKE_YmLQZSv1a149vawP4ZtAll5SaeqxBcZo-w9gyN4zeGVmPJynSsoQAica25BqjSPRQl3Po5Nv-V9ypc5zhnPGwEHYwhlKjfvYZ_twuTvR6WOJc_ENfv4VEvLzYMKWf-aPKUPUtWer1L6kPCxuvx9dB_idkZQvFxjusQ01ObhdOkxGZV6Or1XzMDd_VeoErql9v754l_i5UbhKoUna2qEm-HhvP3OIB9g1dZKWxV4jKa_x8U75uymLGMmosg_Y6OpaYNN6Q7aIYOrQi9p_rHdIXODxbiOA4vTx8QU02pQ59Fl7chV7x5LBeNmy91iHxWrt9ik3wVUO3DOjmnnpKCXAYZ_bk6PdUEEmw4cuWuHaAyzxkHdKLmhDGF_wtswp_pcuGrmDgRCjdZiUjqFa6mOl9v14pQOGEbld-53tilNX5HcOhrCr7anJsZHM0dwzsw754UX5W8q_7FAG15oaqeDdoBmKY0n5ZkXSxLXTZy5STNn1c4UTcRojaj3QEmHEncUwN5VzZAWxLXPVpLlNLgLgPNaWghW0d-C55mp4aKNDGYCMKKlbXvFEwBeT1gSzXk_0sQz5YZIzfglGKhrJFdZTNNsSyDSPVpi_6NtZWFcHiJkUbydv3OoR3vEkaqCXsmgLFYmsjC_7Js1KtqjuovyhjAkz3w1Xxv1jsM8RNlWyh6h&flowName=GeneralOAuthFlow&as=S872805195%3A1760578904366490&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&rapt=AEjHL4OxwCQo4Yj3hC21IZS5X6FRgK7I1vTD3x-pJ2us8dvpZAN8hsErgKxt97JS_t-BsoTgdUp6G_OnJJXELBQLYfO1E3NwTqNhC8hYuijRpAV_jbyGkoc#\" \u001b[38;5;45m+291ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://accounts.google.com/signin/oauth/id?authuser=0&part=AJi8hAPG2HqgSD8vy9x37KVudVX--JxsfR6fDx-iqlKP9fPVm31KoF2nrtkUgyuoMueU1SWPaahavGUvnbPY9cYNiWTCMPxiox-7LzAg66y8N9pkNBchCZlHeB-pPGjCBxRLb7GW29YDJOKCfIVMT6xLYZgbs3Wg1MzSJPFeHCH_SN7Ssl3URMPhtMgNALei8PFIX1jF0rAFR1AQrKzc7n6lpZ7jxL4j69NasoQRZux8ZM_4ZQhtUZz85kyht1MGS1z28TpQVKWPnV8GWOmmCRclaHS5IuKPxs2iPpaEZSTgESNc-zYix6B6r0VVMdKVtjYrby5wOmMsr5I8q70rx-BTUFRhjfKE_YmLQZSv1a149vawP4ZtAll5SaeqxBcZo-w9gyN4zeGVmPJynSsoQAica25BqjSPRQl3Po5Nv-V9ypc5zhnPGwEHYwhlKjfvYZ_twuTvR6WOJc_ENfv4VEvLzYMKWf-aPKUPUtWer1L6kPCxuvx9dB_idkZQvFxjusQ01ObhdOkxGZV6Or1XzMDd_VeoErql9v754l_i5UbhKoUna2qEm-HhvP3OIB9g1dZKWxV4jKa_x8U75uymLGMmosg_Y6OpaYNN6Q7aIYOrQi9p_rHdIXODxbiOA4vTx8QU02pQ59Fl7chV7x5LBeNmy91iHxWrt9ik3wVUO3DOjmnnpKCXAYZ_bk6PdUEEmw4cuWuHaAyzxkHdKLmhDGF_wtswp_pcuGrmDgRCjdZiUjqFa6mOl9v14pQOGEbld-53tilNX5HcOhrCr7anJsZHM0dwzsw754UX5W8q_7FAG15oaqeDdoBmKY0n5ZkXSxLXTZy5STNn1c4UTcRojaj3QEmHEncUwN5VzZAWxLXPVpLlNLgLgPNaWghW0d-C55mp4aKNDGYCMKKlbXvFEwBeT1gSzXk_0sQz5YZIzfglGKhrJFdZTNNsSyDSPVpi_6NtZWFcHiJkUbydv3OoR3vEkaqCXsmgLFYmsjC_7Js1KtqjuovyhjAkz3w1Xxv1jsM8RNlWyh6h&flowName=GeneralOAuthFlow&as=S872805195%3A1760578904366490&client_id=913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8.apps.googleusercontent.com&rapt=AEjHL4OxwCQo4Yj3hC21IZS5X6FRgK7I1vTD3x-pJ2us8dvpZAN8hsErgKxt97JS_t-BsoTgdUp6G_OnJJXELBQLYfO1E3NwTqNhC8hYuijRpAV_jbyGkoc#\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+43ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+542ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+1s\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+27ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd#landing\" \u001b[38;5;45m+131ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd#landing\" \u001b[38;5;45m+26ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd#oauth-callback\" \u001b[38;5;45m+277ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForURL succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForURL started \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd#oauth-callback\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for navigation until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd#oauth-callback\" \u001b[38;5;45m+27ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd#oauth-callback\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#oauth-callback\" \u001b[38;5;45m+26ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#oauth-callback\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+32ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+27ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+290ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+25ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+860ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForURL failed \u001b[38;5;45m+9s\u001b[0m\n"
+                    },
+                    {
+                      "text": "❌ Google OAuth authentication failed: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=543ae124-7841-4ff4-8367-eefebe6df2dd#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================\n"
+                    },
+                    {
+                      "text": "\n"
+                    },
+                    {
+                      "text": "Troubleshooting:\n"
+                    },
+                    {
+                      "text": "1. Verify GOOGLE_TEST_EMAIL_1 is set in .env.test\n"
+                    },
+                    {
+                      "text": "2. Add test account to Google Cloud Console > OAuth Consent Screen > Test Users\n"
+                    },
+                    {
+                      "text": "3. Run with --headed flag to see browser: npx playwright test auth.setup --headed\n"
+                    },
+                    {
+                      "text": "4. Check network tab for OAuth errors\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.screenshot started \u001b[38;5;45m+4ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+4ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.screenshot succeeded \u001b[38;5;45m+41ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('body') \u001b[38;5;45m+3ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <body class=\"fonts-loaded\">…</body> \u001b[38;5;45m+9ms\u001b[0m\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2025-10-16T01:41:41.654Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/auth.setup.js-authenticate-with-Google-OAuth-setup-github-auth/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/auth.setup.js-authenticate-with-Google-OAuth-setup-github-auth/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/auth.setup.js-authenticate-with-Google-OAuth-setup-github-auth/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js",
+                    "column": 16,
+                    "line": 95
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f376efe52c54b1a876fd-fc7c3b5ebb46e4361c48",
+          "file": "setup/auth.setup.js",
+          "line": 54,
+          "column": 1
+        },
+        {
+          "title": "authenticate with GitHub OAuth",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "setup-github-auth",
+              "projectName": "setup-github-auth",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 24539,
+                  "error": {
+                    "message": "TimeoutError: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================",
+                    "stack": "TimeoutError: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================\n    at /Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js:163:16",
+                    "location": {
+                      "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js",
+                      "column": 16,
+                      "line": 163
+                    },
+                    "snippet": "  161 |\n  162 |     // Verify authentication succeeded by checking we're on dashboard\n> 163 |     await page.waitForURL(/dashboard/, { timeout: 10000 });\n      |                ^\n  164 |     console.log('✅ GitHub authentication successful - redirected to dashboard');\n  165 |\n  166 |     // Verify authenticated user elements are visible"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js",
+                        "column": 16,
+                        "line": 163
+                      },
+                      "message": "TimeoutError: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================\n\n  161 |\n  162 |     // Verify authentication succeeded by checking we're on dashboard\n> 163 |     await page.waitForURL(/dashboard/, { timeout: 10000 });\n      |                ^\n  164 |     console.log('✅ GitHub authentication successful - redirected to dashboard');\n  165 |\n  166 |     // Verify authenticated user elements are visible\n    at /Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js:163:16"
+                    }
+                  ],
+                  "stdout": [
+                    {
+                      "text": "⚠️ Auth state not found: github-user1.json\n"
+                    },
+                    {
+                      "text": "🔄 GitHub auth state expired or missing, re-authenticating...\n"
+                    },
+                    {
+                      "text": "⏳ This requires MANUAL authentication in headed browser mode\n"
+                    },
+                    {
+                      "text": "📧 Email: aimpactscannertest@gmail.com\n"
+                    },
+                    {
+                      "text": "⏳ Please complete GitHub login in the browser window...\n"
+                    },
+                    {
+                      "text": "   1. Enter username or email: aimpactscannertest@gmail.com\n"
+                    },
+                    {
+                      "text": "   2. Enter password\n"
+                    },
+                    {
+                      "text": "   3. Authorize OAuth app if prompted\n"
+                    },
+                    {
+                      "text": "   4. Wait for redirect to dashboard...\n"
+                    }
+                  ],
+                  "stderr": [
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+527ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+3ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+316ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+3ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:5173/\", waiting until \"networkidle\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+45ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+13ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+219ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+26ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+64ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+542ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+3ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Sign In\"), a:has-text(\"Sign In\")').first() \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button class=\"px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors\">Sign In</button> \u001b[38;5;45m+14ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting click action \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and stable \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  element is visible, enabled and stable \u001b[38;5;45m+28ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  scrolling into view if needed \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  done scrolling \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  performing click action \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#login\" \u001b[38;5;45m+34ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  click action done \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for scheduled navigations to finish \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigations have finished \u001b[38;5;45m+9ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForURL started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForURL succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  not waiting, \"load\" event already fired \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 10000ms \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Continue with GitHub\"), button:has-text(\"GitHub\")').first() \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button aria-label=\"Continue with GitHub\" class=\"w-full mt-3 flex items-center justify-center gap-3 px-6 py-3 bg-gray-800 hover:bg-gray-900 border-2 border-gray-800 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed\">…</button> \u001b[38;5;45m+362ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toBeVisible succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.click started \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('button:has-text(\"Continue with GitHub\"), button:has-text(\"GitHub\")').first() \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <button aria-label=\"Continue with GitHub\" class=\"w-full mt-3 flex items-center justify-center gap-3 px-6 py-3 bg-gray-800 hover:bg-gray-900 border-2 border-gray-800 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed\">…</button> \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting click action \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and stable \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  element is visible, enabled and stable \u001b[38;5;45m+14ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  scrolling into view if needed \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  done scrolling \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  performing click action \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  click action done \u001b[38;5;45m+5ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for scheduled navigations to finish \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigations have finished \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.click succeeded \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForURL started \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for navigation until \"load\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+764ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login?client_id=Ov23lirOaGuA7CxQqT0T&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23lirOaGuA7CxQqT0T%26redirect_to%3Dhttp%253A%252F%252Flocalhost%253A5173%252F%26redirect_uri%3Dhttps%253A%252F%252Fpdmtvkcxnqysujnpcnyh.supabase.co%252Fauth%252Fv1%252Fcallback%26response_type%3Dcode%26scope%3Duser%253Aemail%26state%3DeyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMzYsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI1NDBlNWZmMi1hYjZhLTRiOTktYTQ2MC1jMGQ4NmJlZTE4M2IifQ.6aOuGpWK314P_bKmmkaKqRkD__zEo1oTu_evqsEgJ3E\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login?client_id=Ov23lirOaGuA7CxQqT0T&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23lirOaGuA7CxQqT0T%26redirect_to%3Dhttp%253A%252F%252Flocalhost%253A5173%252F%26redirect_uri%3Dhttps%253A%252F%252Fpdmtvkcxnqysujnpcnyh.supabase.co%252Fauth%252Fv1%252Fcallback%26response_type%3Dcode%26scope%3Duser%253Aemail%26state%3DeyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMzYsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI1NDBlNWZmMi1hYjZhLTRiOTktYTQ2MC1jMGQ4NmJlZTE4M2IifQ.6aOuGpWK314P_bKmmkaKqRkD__zEo1oTu_evqsEgJ3E\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login?client_id=Ov23lirOaGuA7CxQqT0T&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23lirOaGuA7CxQqT0T%26redirect_to%3Dhttp%253A%252F%252Flocalhost%253A5173%252F%26redirect_uri%3Dhttps%253A%252F%252Fpdmtvkcxnqysujnpcnyh.supabase.co%252Fauth%252Fv1%252Fcallback%26response_type%3Dcode%26scope%3Duser%253Aemail%26state%3DeyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMzYsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI1NDBlNWZmMi1hYjZhLTRiOTktYTQ2MC1jMGQ4NmJlZTE4M2IifQ.6aOuGpWK314P_bKmmkaKqRkD__zEo1oTu_evqsEgJ3E\" \u001b[38;5;45m+498ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login?client_id=Ov23lirOaGuA7CxQqT0T&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23lirOaGuA7CxQqT0T%26redirect_to%3Dhttp%253A%252F%252Flocalhost%253A5173%252F%26redirect_uri%3Dhttps%253A%252F%252Fpdmtvkcxnqysujnpcnyh.supabase.co%252Fauth%252Fv1%252Fcallback%26response_type%3Dcode%26scope%3Duser%253Aemail%26state%3DeyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMzYsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI1NDBlNWZmMi1hYjZhLTRiOTktYTQ2MC1jMGQ4NmJlZTE4M2IifQ.6aOuGpWK314P_bKmmkaKqRkD__zEo1oTu_evqsEgJ3E\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login?client_id=Ov23lirOaGuA7CxQqT0T&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23lirOaGuA7CxQqT0T%26redirect_to%3Dhttp%253A%252F%252Flocalhost%253A5173%252F%26redirect_uri%3Dhttps%253A%252F%252Fpdmtvkcxnqysujnpcnyh.supabase.co%252Fauth%252Fv1%252Fcallback%26response_type%3Dcode%26scope%3Duser%253Aemail%26state%3DeyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMzYsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI1NDBlNWZmMi1hYjZhLTRiOTktYTQ2MC1jMGQ4NmJlZTE4M2IifQ.6aOuGpWK314P_bKmmkaKqRkD__zEo1oTu_evqsEgJ3E\" \u001b[38;5;45m+195ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login?client_id=Ov23lirOaGuA7CxQqT0T&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23lirOaGuA7CxQqT0T%26redirect_to%3Dhttp%253A%252F%252Flocalhost%253A5173%252F%26redirect_uri%3Dhttps%253A%252F%252Fpdmtvkcxnqysujnpcnyh.supabase.co%252Fauth%252Fv1%252Fcallback%26response_type%3Dcode%26scope%3Duser%253Aemail%26state%3DeyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMzYsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI1NDBlNWZmMi1hYjZhLTRiOTktYTQ2MC1jMGQ4NmJlZTE4M2IifQ.6aOuGpWK314P_bKmmkaKqRkD__zEo1oTu_evqsEgJ3E\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+787ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+8s\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login/oauth/authorize?client_id=Ov23lirOaGuA7CxQqT0T&redirect_to=http%3A%2F%2Flocalhost%3A5173%2F&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=user%3Aemail&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMzYsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI1NDBlNWZmMi1hYjZhLTRiOTktYTQ2MC1jMGQ4NmJlZTE4M2IifQ.6aOuGpWK314P_bKmmkaKqRkD__zEo1oTu_evqsEgJ3E\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login/oauth/authorize?client_id=Ov23lirOaGuA7CxQqT0T&redirect_to=http%3A%2F%2Flocalhost%3A5173%2F&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=user%3Aemail&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMzYsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI1NDBlNWZmMi1hYjZhLTRiOTktYTQ2MC1jMGQ4NmJlZTE4M2IifQ.6aOuGpWK314P_bKmmkaKqRkD__zEo1oTu_evqsEgJ3E\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login/oauth/authorize?client_id=Ov23lirOaGuA7CxQqT0T&redirect_to=http%3A%2F%2Flocalhost%3A5173%2F&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=user%3Aemail&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMzYsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI1NDBlNWZmMi1hYjZhLTRiOTktYTQ2MC1jMGQ4NmJlZTE4M2IifQ.6aOuGpWK314P_bKmmkaKqRkD__zEo1oTu_evqsEgJ3E\" \u001b[38;5;45m+53ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"https://github.com/login/oauth/authorize?client_id=Ov23lirOaGuA7CxQqT0T&redirect_to=http%3A%2F%2Flocalhost%3A5173%2F&redirect_uri=https%3A%2F%2Fpdmtvkcxnqysujnpcnyh.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=user%3Aemail&state=eyJhbGciOiJIUzI1NiIsImtpZCI6InBEZ3JaczcwTWhrN08xNXkiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3NjA1NzkyMzYsInNpdGVfdXJsIjoiaHR0cHM6Ly9haW1wYWN0c2Nhbm5lci5jb20iLCJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImZ1bmN0aW9uX2hvb2tzIjpudWxsLCJwcm92aWRlciI6ImdpdGh1YiIsInJlZmVycmVyIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczLyIsImZsb3dfc3RhdGVfaWQiOiI1NDBlNWZmMi1hYjZhLTRiOTktYTQ2MC1jMGQ4NmJlZTE4M2IifQ.6aOuGpWK314P_bKmmkaKqRkD__zEo1oTu_evqsEgJ3E\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+20ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+904ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+39ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128#landing\" \u001b[38;5;45m+96ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128#landing\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128#landing\" \u001b[38;5;45m+26ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128#oauth-callback\" \u001b[38;5;45m+765ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForURL succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForURL started \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128#oauth-callback\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for navigation until \"load\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128#oauth-callback\" \u001b[38;5;45m+30ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128#oauth-callback\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#oauth-callback\" \u001b[38;5;45m+29ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#oauth-callback\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+39ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+30ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+29ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+25ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:5173/#landing\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+1s\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForURL failed \u001b[38;5;45m+9s\u001b[0m\n"
+                    },
+                    {
+                      "text": "❌ GitHub OAuth authentication failed: page.waitForURL: Timeout 10000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/?code=529f4baf-2bb1-4af3-94d2-3c42d5e9e128#oauth-callback\"\n  navigated to \"http://localhost:5173/#oauth-callback\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n  navigated to \"http://localhost:5173/#landing\"\n============================================================\n"
+                    },
+                    {
+                      "text": "\n"
+                    },
+                    {
+                      "text": "Troubleshooting:\n"
+                    },
+                    {
+                      "text": "1. Verify GITHUB_TEST_EMAIL_1 is set in .env.test\n"
+                    },
+                    {
+                      "text": "2. Check GitHub OAuth app configuration in Supabase dashboard\n"
+                    },
+                    {
+                      "text": "3. Run with --headed flag to see browser: npx playwright test auth.setup --headed\n"
+                    },
+                    {
+                      "text": "4. Verify redirect URL is correct in GitHub OAuth app settings\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.screenshot started \u001b[38;5;45m+4ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+4ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+1ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.screenshot succeeded \u001b[38;5;45m+44ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('body') \u001b[38;5;45m+3ms\u001b[0m\n"
+                    },
+                    {
+                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <body class=\"fonts-loaded\">…</body> \u001b[38;5;45m+8ms\u001b[0m\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2025-10-16T01:42:13.735Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/auth.setup.js-authenticate-with-GitHub-OAuth-setup-github-auth/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/auth.setup.js-authenticate-with-GitHub-OAuth-setup-github-auth/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/test-results/auth.setup.js-authenticate-with-GitHub-OAuth-setup-github-auth/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Users/jamiewatters/DevProjects/aimpactscanner-mvp/tests/setup/auth.setup.js",
+                    "column": 16,
+                    "line": 163
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f376efe52c54b1a876fd-e5de1482d91214257abc",
+          "file": "setup/auth.setup.js",
+          "line": 123,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-10-16T01:40:33.923Z",
+    "duration": 125514.04400000001,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}

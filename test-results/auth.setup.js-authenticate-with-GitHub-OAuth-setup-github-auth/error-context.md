@@ -1,0 +1,51 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - img: AI
+  - text: AImpactScanner AI Search Optimization Platform 🆓 Free 3 left
+  - button "Sign Out"
+- main:
+  - button "🏠 Dashboard"
+  - button "🔍 New Analysis"
+  - button "💎 Upgrade"
+  - button "👤 Account"
+- contentinfo:
+  - heading "AImpactScanner" [level=3]
+  - paragraph: AI Search Optimization Platform powered by the MASTERY-AI Framework v3.1.1
+  - paragraph: Analyze how AI search engines see your website and optimize for better visibility.
+  - heading "Product" [level=4]
+  - list:
+    - listitem:
+      - button "Home"
+    - listitem:
+      - button "Pricing"
+    - listitem:
+      - button "About Us"
+  - heading "Legal" [level=4]
+  - list:
+    - listitem:
+      - button "Privacy Policy"
+    - listitem:
+      - button "Terms of Service"
+    - listitem:
+      - button "Contact Us"
+  - link "AI Search Mastery":
+    - /url: https://www.aisearchmastery.com
+    - text: AI Search Mastery
+    - img
+  - link "LLMs.TXT Mastery":
+    - /url: https://www.llmtxtmastery.com
+    - text: LLMs.TXT Mastery
+    - img
+  - link "MASTERY-AI Framework":
+    - /url: https://aisearchmastery.com/mastery-ai-framework
+    - text: MASTERY-AI Framework
+    - img
+  - link "Building in Public":
+    - /url: https://jamiewatters.work
+    - text: Building in Public
+    - img
+  - paragraph: © 2025 AI Search Mastery. All rights reserved.
+  - paragraph: Built with AI optimization insights • Powered by the MASTERY-AI Framework v3.1.1
+```

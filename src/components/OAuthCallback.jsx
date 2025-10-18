@@ -210,6 +210,11 @@ const OAuthCallback = ({ onNavigate }) => {
 
   const routeUser = async (userData, session, authContext) => {
     try {
+      console.log('🔄 routeUser CALLED');
+      console.log('📊 userData:', userData);
+      console.log('📊 is_first_login:', userData.is_first_login);
+      console.log('📊 authContext:', authContext);
+
       setMessage('Redirecting...');
 
       // Determine destination based on user state
@@ -219,16 +224,19 @@ const OAuthCallback = ({ onNavigate }) => {
         // First login after signup
         console.log('👋 First login, routing to post-signup destination');
         destination = getPostSignupDestination(session.user, authContext);
+        console.log('📍 getPostSignupDestination returned:', destination);
       } else {
         // Returning user
         console.log('🔄 Returning user, routing to post-login destination');
         destination = await getPostLoginDestination(userData, session);
+        console.log('📍 getPostLoginDestination returned:', destination);
       }
 
       // Clear auth context after use
       clearAuthContext();
 
-      console.log('🚀 Routing to:', destination);
+      console.log('🚀 Final destination object:', JSON.stringify(destination, null, 2));
+      console.log('🚀 Destination path:', destination.path);
 
       // Map paths to view names
       const pathToView = {
@@ -244,17 +252,22 @@ const OAuthCallback = ({ onNavigate }) => {
       const viewName = pathToView[destination.path] || 'dashboard';
 
       console.log('🗺️ Path mapping:', destination.path, '→', viewName);
+      console.log('🗺️ Final viewName to navigate to:', viewName);
 
       // Store destination state in sessionStorage for retrieval by next component
       if (destination.state) {
         sessionStorage.setItem('routeState', JSON.stringify(destination.state));
+        console.log('💾 Stored routeState in sessionStorage:', destination.state);
       }
 
       // SECURITY: Always use onNavigate callback to ensure route protection is applied
       // NEVER directly manipulate window.location.hash as it bypasses security checks
       if (onNavigate) {
         console.log('🔒 SECURITY: Using onNavigate callback for protected route navigation');
+        console.log('🔒 Calling onNavigate with viewName:', viewName);
+        console.log('🔒 onNavigate is typeof:', typeof onNavigate);
         onNavigate(viewName);
+        console.log('✅ onNavigate completed, should now be at view:', viewName);
       } else {
         console.error('❌ SECURITY: No onNavigate callback provided - cannot safely navigate to protected route');
         console.error('🚨 FALLBACK: Redirecting to dashboard');

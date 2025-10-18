@@ -1,5 +1,199 @@
 # AImpactScanner MVP - Progress Log
 
+## October 15, 2025 - CRITICAL OAUTH USER JOURNEY BUG DISCOVERED 🔴
+
+### Mission: Fix OAuth Flow Creating Duplicate Accounts
+**Status**: INVESTIGATION COMPLETE 🔴
+**Time**: 15:00 - 18:00 UTC
+**Type**: CRITICAL Bug Fix - Broken Business Logic
+**Priority**: BLOCKING PRODUCTION
+
+#### Issue Discovered
+
+While creating test accounts for OAuth testing, discovered **critical business logic failure** in OAuth authentication flow:
+
+**Symptoms**:
+- Existing users treated as "new" → creates duplicate accounts
+- New users bypass tier selection → auto-assigned "free" tier without consent
+- All users redirect to #landing instead of appropriate destinations
+- is_first_login flag exists but never used
+
+**User Impact**: CRITICAL
+- Existing users lose access to original accounts
+- New duplicate "free" accounts created on each login
+- Business model bypassed (no tier selection enforcement)
+- Revenue loss (users should select paid tiers)
+
+#### Root Cause Analysis - COMPLETE ✅
+
+**5 Critical Issues Identified**:
+
+1. **Missing Tier Selection** (Signup.jsx:65)
+   - Line: `selectedTier={null} // No tier selected yet - OAuth first!`
+   - Intent: OAuth-first flow without upfront tier selection
+   - Reality: Users NEVER see TierSelector → bypass business logic
+   - Impact: All signups default to free tier
+
+2. **getUserData() Timing Issue** (OAuthCallback.jsx:80)
+   - Database trigger creates users async
+   - OAuth callback checks immediately
+   - Returns `null` for EXISTING users
+   - Treats existing users as "new" → creates duplicates
+
+3. **Auto-Free Tier Creation** (useUserInitializer.js:144-191)
+   - Code: `if (selectedTier === 'free') { upsert(...) }`
+   - Problem: Creates "free" accounts when no tier selected
+   - Should: REQUIRE tier selection before account creation
+   - Impact: Business logic completely bypassed
+
+4. **Wrong Routing** (OAuthCallback.jsx:103, 146)
+   - All users redirect to #landing
+   - Should use: getPostLoginDestination, getPostSignupDestination
+   - Existing functions exist but not called
+   - Impact: Poor UX, users lost after authentication
+
+5. **Ignored is_first_login Flag**
+   - Flag exists in database
+   - Never checked in OAuthCallback.jsx
+   - Can't differentiate first login vs returning user
+   - Impact: Routing logic incomplete
+
+#### Investigation Process
+
+**Test Account Creation**:
+- ✅ Created Google test account: aimpactscannertest@gmail.com
+- ✅ Created GitHub test account: aimpactscannertest@gmail.com
+- ✅ Stored credentials in .env.test (gitignored)
+- ✅ Manual OAuth authentication successful
+
+**Testing Discovery**:
+- User authenticated with existing account on staging
+- Expected: Redirect to dashboard, recognize existing user
+- Actual: Redirected to #landing, NEW free account created (today's date)
+- Evidence: Account page shows "Account Created: October 15, 2025" for existing account
+
+**Code Investigation**:
+- Read OAuthCallback.jsx (153 lines) - found routing issues
+- Read authRouting.js (279 lines) - found proper functions exist but unused
+- Read Signup.jsx (140 lines) - found missing TierSelector
+- Read TierSelector.jsx (207 lines) - confirmed component exists and works
+- Read useUserInitializer.js (265 lines) - found auto-free tier logic
+- Read database migration 018 (279 lines) - found default 'free' tier
+
+#### Strategic Remediation Plan Created ✅
+
+**Document**: `oauth-user-journey-remediation-plan.md` (650+ lines)
+
+**5-Phase Fix Plan**:
+
+**Phase 1**: Add TierSelector to signup flow
+- Modify Signup.jsx to show TierSelector BEFORE OAuth
+- Store selectedTier in authContext before OAuth redirect
+- Disable OAuth buttons until tier selected
+
+**Phase 2**: Fix getUserData() timing (HOTFIX)
+- Add direct auth.users timestamp check
+- Add retry logic (3 attempts, 500ms delay)
+- Differentiate new vs existing users reliably
+
+**Phase 3**: Remove auto-free tier (HOTFIX)
+- Remove automatic account creation without tier
+- Require explicit tier selection
+- Update database trigger to respect null tiers
+
+**Phase 4**: Fix post-authentication routing
+- Use getPostLoginDestination for existing users
+- Use getPostSignupDestination for new users
+- Check is_first_login flag properly
+- Route to tier-based destinations
+
+**Phase 5**: Testing & validation
+- Create 5 comprehensive test cases
+- Playwright E2E tests for all user journeys
+- Validate no duplicate accounts
+- Confirm tier selection enforcement
+
+#### Deployment Strategy
+
+**Stage 1 - Hotfix (2-4 hours)**:
+- Deploy Phases 2+3 immediately
+- Stops duplicate account creation
+- Enforces tier consent
+- Production deployment ASAP
+
+**Stage 2 - Complete Fix (1-2 days)**:
+- Deploy Phases 1+4
+- Restore full business logic
+- Test on staging thoroughly
+- Production deployment after validation
+
+**Stage 3 - Validation (1 day)**:
+- Phase 5 comprehensive testing
+- Sign off for production
+
+#### Files Analyzed
+
+**Investigation Evidence**:
+- src/components/OAuthCallback.jsx (153 lines)
+- src/utils/authRouting.js (279 lines)
+- src/pages/Signup.jsx (140 lines)
+- src/components/TierSelector.jsx (207 lines)
+- src/hooks/useUserInitializer.js (265 lines)
+- supabase/migrations/018_consolidate_user_creation.sql (279 lines)
+
+**Documentation Created**:
+- oauth-user-journey-remediation-plan.md (650+ lines)
+- Updated project-plan.md with critical issue
+- Updated progress.md (this entry)
+
+#### Key Learnings
+
+**What Worked**:
+- ✅ Test account creation revealed production bug
+- ✅ Systematic investigation identified all root causes
+- ✅ Existing routing functions already implemented (just unused)
+- ✅ Comprehensive documentation created for remediation
+
+**Critical Discovery**:
+- OAuth flow has been LOSING tier selection and user recognition
+- Business model being bypassed (everyone gets free tier)
+- Duplicate accounts created for existing users
+- Root causes span 6 different files across codebase
+
+**Impact Assessment**:
+- CRITICAL: Blocks revenue (no paid tier enforcement)
+- CRITICAL: Breaks user experience (duplicate accounts)
+- CRITICAL: Data integrity issues (multiple accounts per user)
+- PRIORITY: Must fix before significant user growth
+
+#### Next Steps
+
+**IMMEDIATE**:
+- Await user confirmation to proceed with hotfix
+- Deploy Phases 2+3 to stop duplicate accounts
+- Monitor production for improvements
+
+**FOLLOW-UP**:
+- Deploy Phases 1+4 to restore business logic
+- Comprehensive testing (Phase 5)
+- User acceptance testing on staging
+
+#### Success Metrics
+
+**Before Fix (Current State)**:
+- ❌ 100% of OAuth users get free tier (wrong)
+- ❌ Unknown duplicate account rate
+- ❌ 0% tier selection enforcement
+- ❌ 100% redirect to #landing (wrong)
+
+**After Fix (Expected State)**:
+- ✅ 100% tier selection before account creation
+- ✅ 0% duplicate accounts
+- ✅ 100% correct routing (tier-based)
+- ✅ 100% is_first_login flag usage
+
+---
+
 ## October 12, 2025 - DOCUMENTATION CLEANUP & OAUTH FIX CLOSURE ✅
 
 ### Mission: Complete Option 1 & Archive Ad-Hoc Documentation

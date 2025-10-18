@@ -2,6 +2,75 @@
 
 ## Current Mission Status
 
+### 🔴 CRITICAL: OAuth User Journey Broken Business Logic (Oct 15, 2025)
+**Objective**: Fix OAuth flow creating duplicate accounts and bypassing tier selection
+**Status**: 🔴 INVESTIGATION COMPLETE - Ready for Implementation
+**Started**: 2025-10-15
+**Priority**: CRITICAL - Breaks core business logic
+
+**Issue**: OAuth authentication creates duplicate accounts for existing users, bypasses tier selection, and redirects to wrong destinations.
+
+#### Root Causes Identified
+1. **Missing Tier Selection**: Users never see TierSelector before OAuth (Signup.jsx:65)
+2. **getUserData() Timing Issue**: Returns null for existing users due to async database trigger
+3. **Auto-Free Tier**: System defaults to 'free' without user consent (useUserInitializer.js:144-191)
+4. **Wrong Routing**: All users redirect to #landing instead of tier-based destinations
+5. **Ignored is_first_login Flag**: Flag exists but never used in routing logic
+
+#### Remediation Plan (5 Phases)
+- [ ] Phase 1: Add TierSelector to signup flow (force selection before OAuth)
+- [ ] Phase 2: Fix getUserData() timing issue (stop duplicate accounts) - HOTFIX
+- [ ] Phase 3: Remove auto-free tier (enforce business logic) - HOTFIX
+- [ ] Phase 4: Fix post-authentication routing (use existing functions)
+- [ ] Phase 5: Testing & validation (comprehensive E2E tests)
+
+**3-Stage Deployment Strategy (APPROVED)**:
+
+**STAGE 1: Emergency Hotfix** 🔥 (TODAY - 2-4 hours)
+- Deploy: Phases 2+3 to production immediately
+- Goal: Stop duplicate accounts, enforce tier consent
+- Impact: Prevents revenue loss, protects existing users
+- Testing: Manual validation with test accounts
+- Risk: Low (only fixes broken behavior)
+- **Priority**: CRITICAL - Deploy ASAP
+
+**STAGE 2: Complete Business Logic** ✅ (Day 2 - 1-2 days)
+- Deploy: Phases 1+4 to restore intended user journey
+- Goal: Add TierSelector UI, fix routing destinations
+- Testing: Comprehensive staging validation
+- Risk: Medium (UI changes require testing)
+- **Priority**: HIGH - Full feature restoration
+
+**STAGE 3: Test Automation** 🧪 (Day 3 - 4 hours)
+- Complete: Test account setup (return to original mission)
+- Deploy: Phase 5 Playwright E2E tests
+- Goal: Automated regression prevention
+- Testing: Validate OAuth fixes with automation
+- **Priority**: MEDIUM - Quality assurance
+
+**Rationale**: Fix critical production issues first, then add comprehensive testing. Test accounts more valuable when testing CORRECT behavior.
+
+**Documentation**: `oauth-user-journey-remediation-plan.md`
+
+**Next Action**: Begin Stage 1 hotfix implementation (Phases 2+3).
+
+---
+
+### ✅ COMPLETED: Test Account Infrastructure Setup (Oct 15, 2025)
+**Objective**: Create dedicated test accounts for OAuth authentication testing
+**Status**: ✅ PARTIAL COMPLETE - Accounts created, testing revealed critical OAuth bugs
+**Completed**: 2025-10-15
+
+**Results**:
+- ✅ Test accounts created (Google + GitHub): aimpactscannertest@gmail.com
+- ✅ Credentials stored in .env.test (gitignored)
+- ✅ OAuth authentication successful
+- ❌ Tests revealed critical user journey issues (duplicate accounts, wrong routing)
+
+**Discovery**: Testing revealed OAuth flow broken - triggers new mission above.
+
+---
+
 ### ✅ COMPLETED: Documentation Cleanup & OAuth Fix Closure (Oct 12, 2025)
 **Objective**: Finalize OAuth fix documentation and archive completed mission files
 **Status**: ✅ COMPLETE

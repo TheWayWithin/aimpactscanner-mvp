@@ -533,16 +533,30 @@ function AppContent({ initialUrl }) {
       }
       
       // CRITICAL: Route to oauth-callback for OAuth sign-ins
+      // BUT ONLY if we're not already processing the callback
       if (event === 'SIGNED_IN' && session) {
-        console.log('✅ SIGNED_IN event - routing to oauth-callback');
-        console.log('📍 Current view before routing:', currentView);
-        setSession(session);
-        setSessionChecked(true);
-        setIsLoadingAuth(false);
-        setCurrentViewInternal('oauth-callback');
-        console.log('📍 Set view to oauth-callback, forcing hash update...');
-        window.location.hash = 'oauth-callback';
-        return; // Exit early - let OAuthCallback handle the rest
+        console.log('✅ SIGNED_IN event detected');
+        console.log('📍 Current view:', currentView);
+
+        // CRITICAL FIX: Don't redirect to oauth-callback if we're already there
+        // This prevents infinite loops when OAuthCallback completes and tries to navigate
+        if (currentView !== 'oauth-callback') {
+          console.log('✅ SIGNED_IN event - routing to oauth-callback');
+          setSession(session);
+          setSessionChecked(true);
+          setIsLoadingAuth(false);
+          setCurrentViewInternal('oauth-callback');
+          console.log('📍 Set view to oauth-callback, forcing hash update...');
+          window.location.hash = 'oauth-callback';
+          return; // Exit early - let OAuthCallback handle the rest
+        } else {
+          console.log('✅ SIGNED_IN event - already at oauth-callback, letting it complete');
+          // Just update session state, don't redirect
+          setSession(session);
+          setSessionChecked(true);
+          setIsLoadingAuth(false);
+          return;
+        }
       }
 
       if (event === 'SIGNED_OUT') {
