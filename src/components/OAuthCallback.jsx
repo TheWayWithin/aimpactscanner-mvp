@@ -235,13 +235,15 @@ const OAuthCallback = ({ onNavigate }) => {
         '/analyze': 'input',
         '/checkout': 'pricing', // For Stripe checkout
         '/dashboard': 'dashboard',
-        '/upsell/coffee': 'upsell-coffee',
-        '/upsell/growth': 'upsell-growth',
-        '/upsell/scale': 'upsell-scale',
-        '/welcome/scale': 'welcome-scale'
+        '/upsell/coffee': 'dashboard', // FIX: Send to dashboard instead of upsell page
+        '/upsell/growth': 'dashboard', // FIX: Send to dashboard instead of upsell page
+        '/upsell/scale': 'dashboard', // FIX: Send to dashboard instead of upsell page
+        '/welcome/scale': 'dashboard' // FIX: Send to dashboard instead of welcome page
       };
 
       const viewName = pathToView[destination.path] || 'dashboard';
+
+      console.log('🗺️ Path mapping:', destination.path, '→', viewName);
 
       // Store destination state in sessionStorage for retrieval by next component
       if (destination.state) {
