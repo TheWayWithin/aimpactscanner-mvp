@@ -1441,12 +1441,12 @@ function AppContent({ initialUrl }) {
     );
   }
 
-  // OAuth-first login (reuses Signup page with different heading)
+  // OAuth-first login (reuses Signup page with mode="login")
   if (currentView === 'login') {
     const Signup = React.lazy(() => import('./pages/Signup'));
     return (
       <Suspense fallback={<ComponentLoader message="Loading..." />}>
-        <Signup />
+        <Signup mode="login" />
       </Suspense>
     );
   }

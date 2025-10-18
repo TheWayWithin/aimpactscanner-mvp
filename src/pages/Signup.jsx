@@ -4,21 +4,37 @@ import { supabase } from '../lib/supabaseClient';
 import AuthMethodSelector from '../components/AuthMethodSelector';
 import TierSelector from '../components/TierSelector';
 
-const Signup = () => {
+const Signup = ({ mode = 'signup' }) => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [selectedTier, setSelectedTier] = useState(null);
-  const [showOAuthButtons, setShowOAuthButtons] = useState(false);
+  // For login mode, show OAuth buttons immediately (skip tier selection)
+  const [showOAuthButtons, setShowOAuthButtons] = useState(mode === 'login');
 
   // DEBUG: Log when component mounts
   useEffect(() => {
     console.log('🚀 Signup component mounted');
+    console.log('🔍 Mode:', mode);
     console.log('🔍 Current URL:', window.location.href);
     console.log('🔍 Current hash:', window.location.hash);
 
+    // For login mode, set authContext to 'login' mode (no tier selection needed)
+    if (mode === 'login') {
+      const authContext = {
+        mode: 'login',
+        timestamp: Date.now()
+      };
+      localStorage.setItem('authContext', JSON.stringify(authContext));
+
+      const ttl = 24 * 60 * 60 * 1000;
+      localStorage.setItem('authContextExpiry', (Date.now() + ttl).toString());
+
+      console.log('✅ Login mode: authContext set, skipping tier selection');
+    }
+
     // Note: Session detection now handled by App.jsx onAuthStateChange listener
     // No need for manual session checking here
-  }, []);
+  }, [mode]);
 
   const handleAuthSuccess = (successMessage) => {
     setMessage(successMessage);
@@ -37,9 +53,13 @@ const Signup = () => {
 
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-3">Get Started with AImpactScanner</h1>
+            <h1 className="text-4xl font-bold mb-3">
+              {mode === 'login' ? 'Welcome Back' : 'Get Started with AImpactScanner'}
+            </h1>
             <p className="text-lg text-gray-600">
-              Make your business AI-discoverable in 60 seconds
+              {mode === 'login'
+                ? 'Sign in to continue optimizing your AI discoverability'
+                : 'Make your business AI-discoverable in 60 seconds'}
             </p>
           </div>
 
@@ -54,8 +74,8 @@ const Signup = () => {
             </div>
           )}
 
-          {/* STEP 1: Tier Selection (shown first) */}
-          {!showOAuthButtons && (
+          {/* STEP 1: Tier Selection (shown first, ONLY for signup mode) */}
+          {!showOAuthButtons && mode === 'signup' && (
             <div className="mb-8">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                 <p className="text-sm text-blue-800">
@@ -87,52 +107,69 @@ const Signup = () => {
             </div>
           )}
 
-          {/* STEP 2: OAuth Buttons (shown after tier selection) */}
+          {/* STEP 2: OAuth Buttons (shown after tier selection for signup, immediately for login) */}
           {showOAuthButtons && (
             <div className="mb-8">
-              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded">
-                <p className="text-sm text-green-800">
-                  ✅ <strong>Plan Selected:</strong> {selectedTier === 'free' ? 'Free' : selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1)} Tier
-                  <button
-                    onClick={() => {
-                      setSelectedTier(null);
-                      setShowOAuthButtons(false);
-                      localStorage.removeItem('authContext');
-                      localStorage.removeItem('authContextExpiry');
-                      console.log('🔄 Tier selection reset');
-                    }}
-                    className="ml-2 text-green-700 hover:text-green-900 underline font-semibold"
-                  >
-                    Change Plan
-                  </button>
-                </p>
-              </div>
+              {/* Show tier confirmation ONLY in signup mode */}
+              {mode === 'signup' && selectedTier && (
+                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded">
+                  <p className="text-sm text-green-800">
+                    ✅ <strong>Plan Selected:</strong> {selectedTier === 'free' ? 'Free' : selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1)} Tier
+                    <button
+                      onClick={() => {
+                        setSelectedTier(null);
+                        setShowOAuthButtons(false);
+                        localStorage.removeItem('authContext');
+                        localStorage.removeItem('authContextExpiry');
+                        console.log('🔄 Tier selection reset');
+                      }}
+                      className="ml-2 text-green-700 hover:text-green-900 underline font-semibold"
+                    >
+                      Change Plan
+                    </button>
+                  </p>
+                </div>
+              )}
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                 <p className="text-sm text-blue-800">
-                  <strong>Step 2 of 2:</strong> Sign up with Google or GitHub. No passwords to remember.
+                  <strong>{mode === 'login' ? 'Sign in with:' : 'Step 2 of 2:'}</strong> {mode === 'login' ? 'Choose your preferred method' : 'Sign up with Google or GitHub. No passwords to remember.'}
                 </p>
               </div>
 
               <AuthMethodSelector
                 selectedTier={selectedTier}
-                mode="signup"
+                mode={mode}
                 onSuccess={handleAuthSuccess}
                 onError={handleAuthError}
               />
             </div>
           )}
 
-          {/* Sign In Link */}
+          {/* Sign In/Up Link */}
           <div className="text-center border-t pt-6">
             <p className="text-sm text-gray-600">
-              Already have an account?{' '}
-              <a
-                href="/#/login"
-                className="text-blue-600 hover:underline font-semibold"
-              >
-                Sign in here
-              </a>
+              {mode === 'login' ? (
+                <>
+                  Don't have an account?{' '}
+                  <a
+                    href="/#/signup"
+                    className="text-blue-600 hover:underline font-semibold"
+                  >
+                    Sign up here
+                  </a>
+                </>
+              ) : (
+                <>
+                  Already have an account?{' '}
+                  <a
+                    href="/#/login"
+                    className="text-blue-600 hover:underline font-semibold"
+                  >
+                    Sign in here
+                  </a>
+                </>
+              )}
             </p>
           </div>
 
