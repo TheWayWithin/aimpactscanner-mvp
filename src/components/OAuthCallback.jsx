@@ -260,6 +260,11 @@ const OAuthCallback = ({ onNavigate }) => {
         console.log('💾 Stored routeState in sessionStorage:', destination.state);
       }
 
+      // CRITICAL FIX: Add small delay to allow SIGNED_IN event handler to complete
+      // This ensures session state is updated before setCurrentView's route protection logic runs
+      console.log('⏳ Waiting 100ms for session state to update...');
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       // SECURITY: Always use onNavigate callback to ensure route protection is applied
       // NEVER directly manipulate window.location.hash as it bypasses security checks
       if (onNavigate) {
