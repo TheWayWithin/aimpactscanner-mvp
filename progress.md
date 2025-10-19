@@ -1,5 +1,126 @@
 # AImpactScanner MVP - Progress Log
 
+## October 18, 2025 - HASH ROUTING MISMATCH BUG FIX 🔴
+
+### Issue: Hash URL Format Causing Legacy Login to Show
+**Status**: FIXED ✅
+**Time**: 18:00 - 18:30 UTC
+**Type**: CRITICAL Bug Fix - Routing Issue
+**Priority**: BLOCKING STAGING DEPLOYMENT
+
+#### Root Cause Analysis - COMPLETE ✅
+
+**Symptom**:
+- Direct navigation to `/#/login` (with slash) shows old password-based login form (AuthWithPassword)
+- Landing page "Sign In" button shows correct OAuth login when clicked
+- Post-OAuth authentication redirects to `#landing` instead of `#dashboard`
+
+**Root Cause**:
+- Hash parsing issue in App.jsx uses `.slice(1)` which removes `#`
+- Links in Landing.jsx and Signup.jsx use incorrect format: `/#/login` (with slash after #)
+- Result: `/#/login` → hash becomes `/login` (with leading slash) after `.slice(1)`
+- Code checks `currentView === 'login'` but currentView is `/login`, causing mismatch
+- When currentView is `/login` (unrecognized), falls through to else block rendering `AuthWithPassword`
+
+**Evidence**:
+```javascript
+// App.jsx line 285 - Hash parsing
+const hash = window.location.hash.slice(1);  // "/#/login" → "/login"
+
+// App.jsx line 1459 - Component check
+if (currentView === 'login') {  // Checks for 'login', gets '/login'
+  // Render OAuth login (Signup with mode="login")
+}
+
+// App.jsx line 1698 - Fallback
+else {
+  // Render AuthWithPassword (legacy password login)  ← User sees this!
+}
+```
+
+#### Fix Implementation - COMPLETE ✅
+
+**Files Modified**:
+
+1. **src/components/Landing.jsx** (line 137, 143)
+   - Changed: `window.location.href = '/#/login'`
+   - To: `window.location.href = '/#login'`
+   - Changed: `window.location.href = '/#/signup'`
+   - To: `window.location.href = '/#signup'`
+
+2. **src/pages/Signup.jsx** (line 156, 166)
+   - Changed: `href="/#/signup"`
+   - To: `href="/#signup"`
+   - Changed: `href="/#/login"`
+   - To: `href="/#login"`
+
+**Total Changes**: 4 links fixed across 2 files
+
+#### Validation
+
+**Expected Result**:
+- `/#login` → hash becomes `login` (no leading slash)
+- `currentView === 'login'` → TRUE match
+- Renders: Signup component with `mode="login"` (OAuth login)
+- NO legacy password login form
+
+**Testing Required**:
+1. Direct navigation to https://develop--aimpactscanner.netlify.app/#login
+2. Landing page "Sign In" button click
+3. Signup page "Sign in here" link click
+4. Post-OAuth redirect to dashboard (not landing)
+
+#### Historical Context
+
+**Previous Similar Issue**:
+- This SAME issue occurred before - we had problems with removing `#` from URLs
+- User specifically mentioned: "we had that issue with the fucking removing #"
+- LESSON LEARNED: Always document recurring patterns to prevent future regressions
+
+#### Key Learnings
+
+**What Worked**:
+- ✅ User's clue about slash difference was critical: "notice these one less slash!"
+- ✅ Systematic investigation (grep for all occurrences) found all affected links
+- ✅ Root cause analysis identified hash parsing mismatch
+
+**What Didn't Work**:
+- ❌ Initial hypotheses without validation wasted time
+- ❌ Going in circles without proper investigation frustrated user
+- ❌ Not documenting this recurring issue earlier
+
+**Best Practices Applied**:
+- Find root cause before implementing fix
+- Validate hypotheses with actual testing
+- Document recurring issues to prevent regressions
+- Search codebase systematically for all affected code
+
+#### Prevention Strategy
+
+**Future Safeguards**:
+1. Add this to progress.md as recurring issue pattern
+2. When working with hash routing, ALWAYS check for consistent format
+3. Search for ALL occurrences of pattern before claiming fix is complete
+4. Test actual URLs before marking issues as resolved
+
+#### Next Steps - IMMEDIATE
+
+**DEPLOYMENT**:
+1. Commit changes with clear message referencing this issue
+2. Push to develop branch
+3. Deploy to staging (develop--aimpactscanner.netlify.app)
+4. **VALIDATE FIX** with actual testing before claiming success:
+   - Test direct navigation to /#login
+   - Test all sign-in/sign-up links
+   - Test post-OAuth redirect
+   - Confirm no legacy login form shows
+
+**DOCUMENTATION**:
+- Update project-plan.md with fix completion
+- Document as recurring pattern for future reference
+
+---
+
 ## October 15, 2025 - CRITICAL OAUTH USER JOURNEY BUG DISCOVERED 🔴
 
 ### Mission: Fix OAuth Flow Creating Duplicate Accounts

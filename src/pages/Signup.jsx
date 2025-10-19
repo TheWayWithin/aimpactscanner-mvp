@@ -153,7 +153,7 @@ const Signup = ({ mode = 'signup' }) => {
                 <>
                   Don't have an account?{' '}
                   <a
-                    href="/#/signup"
+                    href="/#signup"
                     className="text-blue-600 hover:underline font-semibold"
                   >
                     Sign up here
@@ -163,7 +163,7 @@ const Signup = ({ mode = 'signup' }) => {
                 <>
                   Already have an account?{' '}
                   <a
-                    href="/#/login"
+                    href="/#login"
                     className="text-blue-600 hover:underline font-semibold"
                   >
                     Sign in here
