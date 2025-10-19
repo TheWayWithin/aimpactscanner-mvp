@@ -103,21 +103,65 @@ else {
 3. Search for ALL occurrences of pattern before claiming fix is complete
 4. Test actual URLs before marking issues as resolved
 
+#### Validation Results
+
+**Test 1 - Hash Routing Fix**: ✅ VALIDATED
+- Direct navigation to `/#login` shows OAuth login (not legacy password form)
+- All sign-in/sign-up links use correct hash format
+- NO extra slash in URLs
+
+**Test 2 - Post-OAuth Redirect**: ❌ FAILED (Additional bug found)
+- OAuth authentication succeeded
+- User redirected to `#landing` instead of `#dashboard`
+- User session NOT established
+
+#### Second Root Cause Discovered - OAuth Redirect URL
+
+**Research Findings** (WebSearch):
+- Supabase `redirectTo` must be configured correctly for hash routing SPAs
+- OAuth tokens in hash fragments conflict with hash routing
+- Common issue: redirect URL doesn't include the callback route
+
+**Root Cause #2**:
+- `AuthMethodSelector.jsx` line 43: `redirectTo` set to base URL only
+- Should redirect to `/#oauth-callback` to trigger OAuthCallback component
+- Current: `https://develop--aimpactscanner.netlify.app/`
+- Correct: `https://develop--aimpactscanner.netlify.app/#oauth-callback`
+
+**Fix Implementation**:
+```javascript
+// BEFORE (line 43)
+return `${window.location.origin}/`;
+
+// AFTER (line 43)
+return `${window.location.origin}/#oauth-callback`;
+```
+
+#### Both Fixes Applied
+
+**File**: `src/components/AuthMethodSelector.jsx`
+- Updated `getRedirectUrl()` function
+- Now redirects to `#oauth-callback` after OAuth
+
+**Expected Flow**:
+1. User clicks "Continue with Google"
+2. OAuth completes → redirects to `/#oauth-callback#access_token=...`
+3. OAuthCallback component processes session
+4. Routes to `#dashboard`
+
 #### Next Steps - IMMEDIATE
 
 **DEPLOYMENT**:
-1. Commit changes with clear message referencing this issue
+1. Commit both fixes with clear message
 2. Push to develop branch
-3. Deploy to staging (develop--aimpactscanner.netlify.app)
-4. **VALIDATE FIX** with actual testing before claiming success:
-   - Test direct navigation to /#login
-   - Test all sign-in/sign-up links
-   - Test post-OAuth redirect
-   - Confirm no legacy login form shows
+3. Deploy to staging
+4. **USER VALIDATION REQUIRED**: Test complete OAuth flow manually
 
-**DOCUMENTATION**:
-- Update project-plan.md with fix completion
-- Document as recurring pattern for future reference
+**TESTING CHECKLIST**:
+- [ ] Direct navigation to /#login (hash routing fix)
+- [ ] OAuth with Google (redirect fix)
+- [ ] Lands on #dashboard (not #landing)
+- [ ] User authenticated (session established)
 
 ---
 
