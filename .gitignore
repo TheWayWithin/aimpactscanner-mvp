@@ -44,3 +44,7 @@ tests/setup/.auth/
 playwright/.auth/
 *.storage.json
 *-storage-state.json
+
+# Playwright Test Results - Generated Output
+test-results/
+playwright-report/
