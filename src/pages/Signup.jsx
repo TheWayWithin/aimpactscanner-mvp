@@ -1,14 +1,16 @@
 // Signup.jsx - Tier selection BEFORE OAuth authentication
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { supabase } from '../lib/supabaseClient';
 import AuthMethodSelector from '../components/AuthMethodSelector';
-import TierSelector from '../components/TierSelector';
+import TierDropdownSelector from '../components/TierDropdownSelector';
 
-const Signup = ({ mode = 'signup' }) => {
+const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [selectedTier, setSelectedTier] = useState(null);
+  const [selectedTier, setSelectedTier] = useState('coffee'); // Default to COFFEE tier
   // For login mode, show OAuth buttons immediately (skip tier selection)
+  // For signup mode, require explicit "Continue" button click
   const [showOAuthButtons, setShowOAuthButtons] = useState(mode === 'login');
 
   // DEBUG: Log when component mounts
@@ -17,6 +19,18 @@ const Signup = ({ mode = 'signup' }) => {
     console.log('🔍 Mode:', mode);
     console.log('🔍 Current URL:', window.location.href);
     console.log('🔍 Current hash:', window.location.hash);
+    console.log('🔍 Session exists:', !!session);
+
+    // FRICTIONLESS UX: If user is already logged in, redirect to dashboard
+    if (session?.user) {
+      console.log('✅ User already logged in, redirecting to dashboard');
+      if (onNavigate) {
+        onNavigate('dashboard');
+      } else {
+        window.location.hash = 'dashboard';
+      }
+      return;
+    }
 
     // For login mode, set authContext to 'login' mode (no tier selection needed)
     if (mode === 'login') {
@@ -26,7 +40,8 @@ const Signup = ({ mode = 'signup' }) => {
       };
       localStorage.setItem('authContext', JSON.stringify(authContext));
 
-      const ttl = 24 * 60 * 60 * 1000;
+      // FIX 3: Set 7-day expiry (was 24 hours)
+      const ttl = 7 * 24 * 60 * 60 * 1000;
       localStorage.setItem('authContextExpiry', (Date.now() + ttl).toString());
 
       console.log('✅ Login mode: authContext set, skipping tier selection');
@@ -34,7 +49,7 @@ const Signup = ({ mode = 'signup' }) => {
 
     // Note: Session detection now handled by App.jsx onAuthStateChange listener
     // No need for manual session checking here
-  }, [mode]);
+  }, [mode, session, onNavigate]);
 
   const handleAuthSuccess = (successMessage) => {
     setMessage(successMessage);
@@ -48,68 +63,85 @@ const Signup = ({ mode = 'signup' }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-lg p-8">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-3">
+            {mode === 'login' ? 'Welcome Back' : 'Get Started with AImpactScanner'}
+          </h1>
+          <p className="text-lg text-gray-600">
+            {mode === 'login'
+              ? 'Sign in to continue optimizing your AI discoverability'
+              : 'Make your business AI-discoverable in 60 seconds'}
+          </p>
+        </div>
 
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-3">
-              {mode === 'login' ? 'Welcome Back' : 'Get Started with AImpactScanner'}
-            </h1>
-            <p className="text-lg text-gray-600">
-              {mode === 'login'
-                ? 'Sign in to continue optimizing your AI discoverability'
-                : 'Make your business AI-discoverable in 60 seconds'}
-            </p>
+        {/* Message Display */}
+        {message && (
+          <div className={`mb-6 p-4 rounded-lg text-sm ${
+            messageType === 'error'
+              ? 'bg-red-50 text-red-700 border border-red-200'
+              : 'bg-green-50 text-green-700 border border-green-200'
+          }`}>
+            {message}
           </div>
+        )}
 
-          {/* Message Display */}
-          {message && (
-            <div className={`mb-6 p-4 rounded-lg text-sm ${
-              messageType === 'error'
-                ? 'bg-red-50 text-red-700 border border-red-200'
-                : 'bg-green-50 text-green-700 border border-green-200'
-            }`}>
-              {message}
+        {/* STEP 1: Tier Selection - Side-by-side layout on wider screens */}
+        {!showOAuthButtons && mode === 'signup' && (
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            {/* Blue banner - full width on mobile, spans both columns on desktop */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <p className="text-sm text-blue-800">
+                <strong>Step 1 of 2:</strong> Choose your plan first, then we'll securely connect your account.
+              </p>
             </div>
-          )}
 
-          {/* STEP 1: Tier Selection (shown first, ONLY for signup mode) */}
-          {!showOAuthButtons && mode === 'signup' && (
-            <div className="mb-8">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <p className="text-sm text-blue-800">
-                  <strong>Step 1 of 2:</strong> Choose your plan first, then we'll securely connect your account.
-                </p>
-              </div>
-
-              <TierSelector
+            {/* Single column layout - content expands on wider screens */}
+            <div className="max-w-3xl mx-auto">
+              <TierDropdownSelector
                 selectedTier={selectedTier}
                 onTierChange={(tier) => {
+                  // Just update the tier - DON'T auto-progress to OAuth
                   setSelectedTier(tier);
-                  setShowOAuthButtons(true);
-
-                  // Store in authContext for OAuth callback
-                  const authContext = {
-                    selectedTier: tier,
-                    mode: 'signup',
-                    timestamp: Date.now()
-                  };
-                  localStorage.setItem('authContext', JSON.stringify(authContext));
-
-                  // Set 24-hour expiry
-                  const ttl = 24 * 60 * 60 * 1000;
-                  localStorage.setItem('authContextExpiry', (Date.now() + ttl).toString());
-
-                  console.log('✅ Tier selected:', tier, 'stored in authContext');
+                  console.log('🔄 Tier changed to:', tier);
                 }}
               />
-            </div>
-          )}
 
-          {/* STEP 2: OAuth Buttons (shown after tier selection for signup, immediately for login) */}
-          {showOAuthButtons && (
-            <div className="mb-8">
+              {/* Continue Button - User must click to proceed to OAuth */}
+              <div className="mt-6">
+                <button
+                  onClick={() => {
+                    // Store in authContext for OAuth callback
+                    const authContext = {
+                      selectedTier,
+                      mode: 'signup',
+                      timestamp: Date.now()
+                    };
+                    localStorage.setItem('authContext', JSON.stringify(authContext));
+
+                    // FIX 3: Set 7-day expiry (was 24 hours)
+                    const ttl = 7 * 24 * 60 * 60 * 1000;
+                    localStorage.setItem('authContextExpiry', (Date.now() + ttl).toString());
+
+                    console.log('✅ Tier confirmed:', selectedTier, 'stored in authContext');
+
+                    // NOW show OAuth buttons
+                    setShowOAuthButtons(true);
+                  }}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg transition-colors text-lg shadow-lg hover:shadow-xl"
+                >
+                  Continue to Sign Up →
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 2: OAuth Buttons (shown after tier selection for signup, immediately for login) */}
+        {showOAuthButtons && (
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <div className="max-w-2xl mx-auto">
               {/* Show tier confirmation ONLY in signup mode */}
               {mode === 'signup' && selectedTier && (
                 <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded">
@@ -144,9 +176,11 @@ const Signup = ({ mode = 'signup' }) => {
                 onError={handleAuthError}
               />
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Sign In/Up Link */}
+        {/* Sign In/Up Link */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mt-8">
           <div className="text-center border-t pt-6">
             <p className="text-sm text-gray-600">
               {mode === 'login' ? (
@@ -220,11 +254,16 @@ const Signup = ({ mode = 'signup' }) => {
               — Solo Founder, Tech Startup
             </p>
           </div>
-
         </div>
       </div>
     </div>
   );
+};
+
+Signup.propTypes = {
+  mode: PropTypes.oneOf(['signup', 'login']),
+  session: PropTypes.object,
+  onNavigate: PropTypes.func
 };
 
 export default Signup;

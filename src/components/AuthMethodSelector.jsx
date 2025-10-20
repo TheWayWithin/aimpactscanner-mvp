@@ -26,8 +26,8 @@ const AuthMethodSelector = ({ selectedTier, mode = 'signup', onSuccess, onError 
       pendingAnalysisId: localStorage.getItem('pendingAnalysisId')
     };
 
-    // Store with 24-hour TTL
-    const ttl = 24 * 60 * 60 * 1000; // 24 hours
+    // FIX 3: Store with 7-day TTL (was 24 hours)
+    const ttl = 7 * 24 * 60 * 60 * 1000; // 7 days
     localStorage.setItem('authContext', JSON.stringify(context));
     localStorage.setItem('authContextExpiry', (Date.now() + ttl).toString());
 

@@ -10,7 +10,7 @@ import {
   getUserData
 } from '../utils/authRouting';
 
-const OAuthCallback = ({ onNavigate }) => {
+const OAuthCallback = ({ onNavigate, oauthCallbackProcessedRef }) => {
   const [status, setStatus] = useState('processing');
   const [message, setMessage] = useState('Completing authentication...');
   const [error, setError] = useState(null);
@@ -241,12 +241,12 @@ const OAuthCallback = ({ onNavigate }) => {
       // Map paths to view names
       const pathToView = {
         '/analyze': 'input',
-        '/checkout': 'pricing', // For Stripe checkout
+        '/checkout': 'checkout', // PHASE 1 FIX: Map to dedicated checkout view
         '/dashboard': 'dashboard',
-        '/upsell/coffee': 'dashboard', // FIX: Send to dashboard instead of upsell page
-        '/upsell/growth': 'dashboard', // FIX: Send to dashboard instead of upsell page
-        '/upsell/scale': 'dashboard', // FIX: Send to dashboard instead of upsell page
-        '/welcome/scale': 'dashboard' // FIX: Send to dashboard instead of welcome page
+        '/upsell/coffee': 'upsell-coffee',  // FIX 1: Show Coffee tier upsell
+        '/upsell/growth': 'upsell-growth',  // FIX 1: Show Growth tier upsell
+        '/upsell/scale': 'upsell-scale',    // FIX 1: Show Scale tier upsell
+        '/welcome/scale': 'welcome-scale'   // FIX 1: Show Scale tier welcome
       };
 
       const viewName = pathToView[destination.path] || 'dashboard';
@@ -260,10 +260,22 @@ const OAuthCallback = ({ onNavigate }) => {
         console.log('💾 Stored routeState in sessionStorage:', destination.state);
       }
 
+      // PHASE 1 FIX: For checkout flow, store tier in sessionStorage for auto-trigger
+      if (destination.path === '/checkout' && destination.state?.tier) {
+        sessionStorage.setItem('autoCheckoutTier', destination.state.tier);
+        console.log('💳 Auto-checkout tier stored:', destination.state.tier);
+      }
+
       // CRITICAL FIX: Add small delay to allow SIGNED_IN event handler to complete
       // This ensures session state is updated before setCurrentView's route protection logic runs
       console.log('⏳ Waiting 100ms for session state to update...');
       await new Promise(resolve => setTimeout(resolve, 100));
+
+      // FIX 2: Set flag BEFORE routing to prevent race condition
+      if (oauthCallbackProcessedRef) {
+        oauthCallbackProcessedRef.current = true;
+        console.log('✅ FIX 2: Set oauthCallbackProcessed flag to prevent race condition');
+      }
 
       // SECURITY: Always use onNavigate callback to ensure route protection is applied
       // NEVER directly manipulate window.location.hash as it bypasses security checks
@@ -336,7 +348,8 @@ const OAuthCallback = ({ onNavigate }) => {
 };
 
 OAuthCallback.propTypes = {
-  onNavigate: PropTypes.func
+  onNavigate: PropTypes.func,
+  oauthCallbackProcessedRef: PropTypes.object // FIX 2: useRef object to prevent race condition
 };
 
 export default OAuthCallback;

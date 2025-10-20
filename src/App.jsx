@@ -167,6 +167,9 @@ function AppContent({ initialUrl }) {
   // Track if we've already processed the pending analysis to prevent duplicate processing
   const pendingAnalysisProcessed = useRef(false);
 
+  // FIX 2: Track if oauth-callback has completed routing to prevent race condition
+  const oauthCallbackProcessed = useRef(false);
+
   // PDF preloading optimization
   const shouldPreloadPDF = usePDFPreloadTrigger(currentView, userTier);
   const isPDFPreloaded = usePDFPreloader(shouldPreloadPDF, 3000); // 3 second delay
@@ -310,6 +313,8 @@ function AppContent({ initialUrl }) {
       // SECURITY FIX: Store intended route but don't navigate yet - wait for session check
       localStorage.setItem('initial_route_pending', hash);
       console.log('🔒 SECURITY: Deferring route navigation until session check completes');
+      // DON'T override the hash - keep the user's intended route in the URL
+      // This allows the user to see they're on the correct page while waiting for auth check
     } else if (window.location.pathname === '/login') {
       setCurrentView('login');
       // Clear URL to prevent issues with navigation
@@ -318,9 +323,11 @@ function AppContent({ initialUrl }) {
       setCurrentView('register');
       window.history.replaceState({}, document.title, '/#register');
     }
-    
-    // Set initial history state
-    window.history.replaceState({ view: currentView }, '', `#${currentView}`);
+
+    // Set initial history state ONLY if we didn't have an initial hash that we're preserving
+    if (!hash || hasOAuthTokens) {
+      window.history.replaceState({ view: currentView }, '', `#${currentView}`);
+    }
     
     return () => {
       window.removeEventListener('popstate', handlePopState);
@@ -537,10 +544,11 @@ function AppContent({ initialUrl }) {
       if (event === 'SIGNED_IN' && session) {
         console.log('✅ SIGNED_IN event detected');
         console.log('📍 Current view:', currentView);
+        console.log('📍 oauthCallbackProcessed:', oauthCallbackProcessed.current);
 
-        // CRITICAL FIX: Don't redirect to oauth-callback if we're already there
-        // This prevents infinite loops when OAuthCallback completes and tries to navigate
-        if (currentView !== 'oauth-callback') {
+        // FIX 2: Don't redirect if oauth-callback already processed routing
+        // This prevents race condition where SIGNED_IN fires after OAuthCallback routing
+        if (currentView !== 'oauth-callback' && !oauthCallbackProcessed.current) {
           console.log('✅ SIGNED_IN event - routing to oauth-callback');
           setSession(session);
           setSessionChecked(true);
@@ -550,7 +558,7 @@ function AppContent({ initialUrl }) {
           window.location.hash = 'oauth-callback';
           return; // Exit early - let OAuthCallback handle the rest
         } else {
-          console.log('✅ SIGNED_IN event - already at oauth-callback, letting it complete');
+          console.log('✅ SIGNED_IN event - oauth-callback already processed or at callback, skipping redirect');
           // Just update session state, don't redirect
           setSession(session);
           setSessionChecked(true);
@@ -1420,7 +1428,17 @@ function AppContent({ initialUrl }) {
     const Signup = React.lazy(() => import('./pages/Signup'));
     return (
       <Suspense fallback={<ComponentLoader message="Loading..." />}>
-        <Signup />
+        <Signup session={session} onNavigate={setCurrentView} />
+      </Suspense>
+    );
+  }
+
+  // Handle /signup-test route - TEST route for Phase 1 A/B testing
+  if (currentView === 'signup-test') {
+    const Signup = React.lazy(() => import('./pages/Signup'));
+    return (
+      <Suspense fallback={<ComponentLoader message="Loading test signup..." />}>
+        <Signup mode="signup" session={session} onNavigate={setCurrentView} />
       </Suspense>
     );
   }
@@ -1430,7 +1448,7 @@ function AppContent({ initialUrl }) {
     const Signup = React.lazy(() => import('./pages/Signup'));
     return (
       <Suspense fallback={<ComponentLoader message="Loading signup..." />}>
-        <Signup />
+        <Signup session={session} onNavigate={setCurrentView} />
       </Suspense>
     );
   }
@@ -1460,7 +1478,7 @@ function AppContent({ initialUrl }) {
     const Signup = React.lazy(() => import('./pages/Signup'));
     return (
       <Suspense fallback={<ComponentLoader message="Loading..." />}>
-        <Signup mode="login" />
+        <Signup mode="login" session={session} onNavigate={setCurrentView} />
       </Suspense>
     );
   }
@@ -1470,7 +1488,7 @@ function AppContent({ initialUrl }) {
     const OAuthCallback = React.lazy(() => import('./components/OAuthCallback'));
     return (
       <Suspense fallback={<ComponentLoader message="Processing authentication..." />}>
-        <OAuthCallback onNavigate={setCurrentView} />
+        <OAuthCallback onNavigate={setCurrentView} oauthCallbackProcessedRef={oauthCallbackProcessed} />
       </Suspense>
     );
   }
@@ -1518,6 +1536,45 @@ function AppContent({ initialUrl }) {
         </Suspense>
       </ProtectedRoute>
     );
+  }
+
+  // PHASE 1 FIX: Auto-checkout view for Coffee tier signups
+  if (currentView === 'checkout') {
+    // Get tier from sessionStorage (set by OAuthCallback)
+    const autoCheckoutTier = sessionStorage.getItem('autoCheckoutTier');
+
+    if (autoCheckoutTier && session?.user) {
+      console.log('💳 Auto-triggering Stripe checkout for tier:', autoCheckoutTier);
+
+      // Clear the auto-checkout flag
+      sessionStorage.removeItem('autoCheckoutTier');
+
+      // Trigger the upgrade handler which will redirect to Stripe
+      setTimeout(() => {
+        handleUpgrade(autoCheckoutTier);
+      }, 100); // Small delay to ensure component is mounted
+
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <span className="text-lg text-gray-700">Redirecting to payment...</span>
+            </div>
+            <p className="text-sm text-gray-500">You'll be redirected to secure Stripe checkout</p>
+          </div>
+        </div>
+      );
+    } else {
+      // No auto-checkout tier set, fallback to pricing page
+      console.warn('⚠️ No autoCheckoutTier found, redirecting to pricing');
+      setTimeout(() => setCurrentView('pricing'), 100);
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
+          <ComponentLoader message="Loading checkout..." />
+        </div>
+      );
+    }
   }
 
   // Stripe Checkout Success - Payment confirmation page
