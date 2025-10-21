@@ -1255,7 +1255,7 @@ function AppContent({ initialUrl }) {
         action: 'upgrade'
       });
       trackFeatureUsage('usage_limit_reached', 'analysis_blocked');
-      setTimeout(() => setCurrentView('pricing'), 2000);
+      // Don't auto-redirect - let user click UPGRADE button
       return;
     }
 
@@ -1326,7 +1326,7 @@ function AppContent({ initialUrl }) {
         });
         setIsAnalyzing(false);
         trackFeatureUsage('usage_limit_reached', 'analysis_blocked_late');
-        setTimeout(() => setCurrentView('pricing'), 2000);
+        // Don't auto-redirect - let user click UPGRADE button
         return;
       }
 
@@ -1976,8 +1976,33 @@ function AppContent({ initialUrl }) {
                   <div className="error-content">
                     <h3>{analysisError.title}</h3>
                     <p>{analysisError.message}</p>
+                    {analysisError.action === 'upgrade' && (
+                      <button
+                        className="upgrade-button"
+                        onClick={() => {
+                          setAnalysisError(null);
+                          setCurrentView('pricing');
+                        }}
+                        style={{
+                          marginTop: '12px',
+                          padding: '10px 24px',
+                          backgroundColor: '#2563eb',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '8px',
+                          fontSize: '1rem',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#1d4ed8'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = '#2563eb'}
+                      >
+                        UPGRADE NOW
+                      </button>
+                    )}
                   </div>
-                  <button 
+                  <button
                     className="error-close"
                     onClick={() => setAnalysisError(null)}
                     aria-label="Dismiss error"

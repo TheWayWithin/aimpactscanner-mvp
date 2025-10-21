@@ -97,17 +97,33 @@
 
 **Root Cause**: Likely integer overflow or reset logic instead of enforcement
 
-#### Bug 3: Upgrade Button Non-Functional
+#### Bug 3: Upgrade Button Non-Functional ✅ FIXED
 **Severity**: 🟡 MAJOR
 **Impact**: Blocks upgrade path
+**Status**: ✅ RESOLVED - Ready for Testing
+**Fixed**: 2025-01-21
 
 **Details**:
-- After exceeding FREE limit, pink FREE icon appears
-- New "UPGRADE" button visible
-- Clicking UPGRADE button does nothing
-- No navigation, no modal, no action
+- After exceeding FREE limit, error banner appears
+- Error banner showed message but NO upgrade button
+- `analysisError.action = 'upgrade'` was set but never rendered
 
-**Expected**: Route to upgrade/pricing page or show upgrade modal
+**Root Cause**: Error banner component missing UPGRADE button render logic
+- Error object had `action: 'upgrade'` property
+- Banner displayed message and close button only
+- No CTA button rendered for the upgrade action
+
+**Solution Implemented**:
+- Added UPGRADE button to error banner (App.jsx lines 1979-2003)
+- Button conditionally renders when `analysisError.action === 'upgrade'`
+- Prominent blue CTA button with hover effects
+- Navigates to pricing page on click
+- Removed 2-second auto-redirect for better UX
+
+**Files Modified**:
+- `src/App.jsx` (lines 1258, 1329, 1979-2003) - Added button, removed auto-redirect
+
+**Testing**: Dev server running at http://localhost:5173 - ready for manual testing
 
 #### Bug 4: Dashboard "Start Analysis" Wrong Route
 **Severity**: 🟡 MEDIUM
@@ -225,30 +241,50 @@
 - `src/utils/authRouting.js` - Added tier-based routing logic
 - `src/components/OAuthCallback.jsx` - Added is_first_login flag management
 
-#### Bug 9: Manage Subscription Button Not Working
+#### Bug 9: Manage Subscription Button Not Working ✅ FIXED
 **Severity**: 🔴 CRITICAL
 **Impact**: Coffee tier users cannot manage subscriptions
-**Status**: 📋 DOCUMENTED
+**Status**: ✅ RESOLVED - Deployed to Staging
+**Fixed**: 2025-01-21
+**Deployed**: Staging environment
 
 **Details**:
 - Account page shows "Manage Subscription" button for Coffee tier
-- Clicking button shows error: "Unable to open subscription management"
+- Clicking button showed error: "Unable to open subscription management"
 - Console error: 400 from `create-portal-session` Edge Function
 - URL: `isgzvwpjokcmtizstwru.supabase.co/functions/v1/create-portal-session`
 
-**File**: `src/components/SimpleAccountDashboard.jsx` (lines 66-95)
-**Edge Function**: `supabase/functions/create-portal-session`
+**Root Cause**: Coffee tier users missing `stripe_customer_id` in database due to:
+- Webhook timing issues (tier set before webhook fired)
+- Webhook failures (Stripe webhook didn't update database)
+- Manual tier upgrades (admin set tier without customer ID)
+- Legacy users (upgraded before customer ID logic existed)
 
-**Root Cause**: Edge Function returning 400 Bad Request
+**Solution Implemented**: Self-healing Edge Function
+- Automatically searches Stripe for customer by email when customer ID missing
+- Backfills database with found customer ID
+- Proceeds with portal session transparently
+- Enhanced error messages for genuine issues
+- Zero user impact (works transparently)
+
+**Files Modified**:
+- `supabase/functions/create-portal-session/index.ts` (lines 67-114) - Added automatic recovery
+- `BUG-9-FIX-DOCUMENTATION.md` - Comprehensive technical documentation
+- `test-portal-fix.js` - Test script with manual testing instructions
+- `diagnose-bug9.js` - Database diagnostic tool
+
+**Deployment**:
+- Staging: ✅ DEPLOYED to `isgzvwpjokcmtizstwru` project
+- Production: ⏳ READY TO DEPLOY (awaiting approval)
 
 ### 🔄 REMAINING ACTIONS
 
 1. ✅ ~~Fix FREE tier limit enforcement (Bug #1)~~ - RESOLVED
 2. ✅ ~~Fix usage counter logic (Bug #2)~~ - RESOLVED
 3. ✅ ~~Fix Coffee tier login routing (Bug #8)~~ - RESOLVED (Commits 0e1113f + f175852)
-4. **CRITICAL**: Fix Manage Subscription button (Bug #9) - PRIORITY 1
-5. **MAJOR**: Fix upgrade button functionality (Bug #3)
-6. **MEDIUM**: Fix routing issues (Bugs #4, #5)
+4. ✅ ~~Fix Manage Subscription button (Bug #9)~~ - RESOLVED (Deployed to staging)
+5. ✅ ~~Fix upgrade button functionality (Bug #3)~~ - RESOLVED (Ready for testing)
+6. **MEDIUM**: Fix routing issues (Bugs #4, #5) - PRIORITY 1
 7. **MEDIUM**: Fix factor analysis display (Bug #6)
 8. **LOW**: Fix warning text overlap (Bug #7)
 
