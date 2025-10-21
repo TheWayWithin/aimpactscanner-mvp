@@ -759,6 +759,33 @@ function AppContent({ initialUrl }) {
     };
   }, []);
 
+  // Check for tier refresh flag after payment completion
+  useEffect(() => {
+    if (!session?.user?.id) return;
+
+    const tierRefreshNeeded = sessionStorage.getItem('tier_refresh_needed');
+    const tierRefreshTimestamp = sessionStorage.getItem('tier_refresh_timestamp');
+
+    if (tierRefreshNeeded === 'true') {
+      console.log('💳 Tier refresh requested after payment - refreshing user tier');
+
+      // Clear the cache to force fresh fetch
+      const userId = session.user.id;
+      userDataCache.current.delete(userId);
+      lastFetchTime.current.delete(userId);
+
+      // Force tier refresh
+      fetchUserTier(userId, session.user.email, session).then(() => {
+        console.log('✅ Tier refreshed after payment');
+        // Clear the flags
+        sessionStorage.removeItem('tier_refresh_needed');
+        sessionStorage.removeItem('tier_refresh_timestamp');
+      }).catch(err => {
+        console.error('❌ Failed to refresh tier after payment:', err);
+      });
+    }
+  }, [session?.user?.id, currentView]);
+
   const fetchUserTier = async (userId, userEmail = null, userSession = null) => {
     // CRITICAL FIX: Only skip if tab was recently hidden AND we're making duplicate calls
     // Don't block initial auth flows or legitimate data fetching
