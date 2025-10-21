@@ -149,15 +149,93 @@
 **Expected**: Factor breakdown for each pillar
 **Actual**: "No detailed factor analysis available"
 
-### 🔄 NEXT ACTIONS REQUIRED
+#### Bug 7: Usage Summary Warning Text Overlap
+**Severity**: 🟢 LOW - Cosmetic
+**Impact**: Visual display issue only
 
-1. **CRITICAL**: Fix FREE tier limit enforcement (Bug #1) - BLOCKS PRODUCTION
-2. **CRITICAL**: Fix usage counter logic (Bug #2) - BLOCKS PRODUCTION
-3. **MAJOR**: Fix upgrade button functionality (Bug #3)
-4. **MEDIUM**: Fix routing issues (Bugs #4, #5)
-5. **MEDIUM**: Fix factor analysis display (Bug #6)
+**Details**:
+- Account page Usage Summary section
+- Warning text "Monthly limit reached. Upgrade to Coffee for unlimited analyses!"
+- Text overlaps/obscured by blue progress bar
+- Text position too high in the layout
 
-**Production Deployment**: ⛔ BLOCKED until Bugs #1 and #2 resolved
+**Expected**: Warning text clearly visible below progress bar
+**Actual**: Warning text partially hidden behind progress bar
+
+**File**: `src/components/SimpleAccountDashboard.jsx` (line ~232)
+
+### ✅ RESOLVED CRITICAL BUGS (Jan 21, 2025)
+
+#### Bug 1: FREE Tier Limits Not Enforced ✅ FIXED
+**Fixed By**: Commit ab1874c
+**Solution**: Added check in App.jsx to block analysis when incrementUsage() returns false
+**Verified**: User tested - 4th analysis now properly blocked with upgrade prompt
+
+#### Bug 2: Usage Counter Incorrect ✅ FIXED
+**Fixed By**: Commits ab1874c + 4565fa6
+**Solution**:
+- Fixed Math.max(0, ...) in useUsageTracking.js
+- Fixed falsy 0 check in SimpleAccountDashboard.jsx
+**Verified**: User tested - now shows "3 used, 0 remaining" correctly
+
+### 🔴 NEW CRITICAL BUGS (Jan 21, 2025 - Post-Upgrade Testing)
+
+#### Bug 8: Coffee Tier Users Redirected to Stripe on Login ✅ FIXED
+**Severity**: 🔴 CRITICAL - BLOCKING
+**Impact**: Existing Coffee customers cannot access dashboard
+**Status**: ✅ RESOLVED
+**Fixed By**: Commit 0e1113f
+**Deployed**: 2025-01-21
+
+**Details**:
+- Coffee tier users sign in successfully
+- Instead of routing to dashboard, redirected to Stripe checkout
+- Happens on EVERY login attempt
+- Tier shows correctly in database and on Account page AFTER navigating
+- Header/TierIndicator shows "Free" despite database showing "Coffee"
+
+**Root Cause Identified**:
+- `src/utils/authRouting.js` lines 259-261 routed ALL returning users through `getUpsellPage()`
+- `getUpsellPage()` defaults undefined tier to 'free' (line 297)
+- Free tier routes to '/upsell/coffee' which triggers Stripe checkout
+
+**Solution**:
+- Added tier check in `getPostLoginDestination()` function
+- Paid tier users (Coffee/Growth/Scale) now route to dashboard
+- Only FREE tier users route to upsell page
+- Code changes: authRouting.js lines 259-271
+
+**Files Modified**:
+- `src/utils/authRouting.js` - Added tier-based routing logic
+
+#### Bug 9: Manage Subscription Button Not Working
+**Severity**: 🔴 CRITICAL
+**Impact**: Coffee tier users cannot manage subscriptions
+**Status**: 📋 DOCUMENTED
+
+**Details**:
+- Account page shows "Manage Subscription" button for Coffee tier
+- Clicking button shows error: "Unable to open subscription management"
+- Console error: 400 from `create-portal-session` Edge Function
+- URL: `isgzvwpjokcmtizstwru.supabase.co/functions/v1/create-portal-session`
+
+**File**: `src/components/SimpleAccountDashboard.jsx` (lines 66-95)
+**Edge Function**: `supabase/functions/create-portal-session`
+
+**Root Cause**: Edge Function returning 400 Bad Request
+
+### 🔄 REMAINING ACTIONS
+
+1. ✅ ~~Fix FREE tier limit enforcement (Bug #1)~~ - RESOLVED
+2. ✅ ~~Fix usage counter logic (Bug #2)~~ - RESOLVED
+3. ✅ ~~Fix Coffee tier login routing (Bug #8)~~ - RESOLVED (Commit 0e1113f)
+4. **CRITICAL**: Fix Manage Subscription button (Bug #9) - PRIORITY 1
+5. **MAJOR**: Fix upgrade button functionality (Bug #3)
+6. **MEDIUM**: Fix routing issues (Bugs #4, #5)
+7. **MEDIUM**: Fix factor analysis display (Bug #6)
+8. **LOW**: Fix warning text overlap (Bug #7)
+
+**Production Deployment**: ⏳ TESTING - Waiting for Netlify deployment and user validation
 
 ---
 
