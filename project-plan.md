@@ -183,30 +183,47 @@
 #### Bug 8: Coffee Tier Users Redirected to Stripe on Login ✅ FIXED
 **Severity**: 🔴 CRITICAL - BLOCKING
 **Impact**: Existing Coffee customers cannot access dashboard
-**Status**: ✅ RESOLVED
-**Fixed By**: Commit 0e1113f
+**Status**: ✅ RESOLVED (Complete fix with 2 parts)
+**Fixed By**: Commits 0e1113f + f175852
 **Deployed**: 2025-01-21
 
 **Details**:
 - Coffee tier users sign in successfully
 - Instead of routing to dashboard, redirected to Stripe checkout
-- Happens on EVERY login attempt
+- Happens on EVERY login attempt (infinite loop)
 - Tier shows correctly in database and on Account page AFTER navigating
-- Header/TierIndicator shows "Free" despite database showing "Coffee"
+- Manual fix: Setting `is_first_login: false` in database resolved issue
 
-**Root Cause Identified**:
-- `src/utils/authRouting.js` lines 259-261 routed ALL returning users through `getUpsellPage()`
-- `getUpsellPage()` defaults undefined tier to 'free' (line 297)
-- Free tier routes to '/upsell/coffee' which triggers Stripe checkout
+**Root Causes Identified** (2 separate issues):
 
-**Solution**:
-- Added tier check in `getPostLoginDestination()` function
-- Paid tier users (Coffee/Growth/Scale) now route to dashboard
-- Only FREE tier users route to upsell page
-- Code changes: authRouting.js lines 259-271
+1. **Tier-Based Routing Logic Missing** (authRouting.js):
+   - Lines 259-261 routed ALL returning users through `getUpsellPage()`
+   - `getUpsellPage()` defaults undefined tier to 'free' (line 297)
+   - Free tier routes to '/upsell/coffee' which triggers Stripe checkout
+   - **Fix**: Added tier check to route paid users to dashboard (0e1113f)
+
+2. **is_first_login Flag Never Cleared** (OAuthCallback.jsx):
+   - When `is_first_login: true`, routes through signup flow (Stripe for Coffee)
+   - `markFirstLoginComplete()` was NEVER called in this code path
+   - Creates infinite loop: signup → Stripe → login → signup → Stripe...
+   - **Fix**: Call `markFirstLoginComplete()` before routing (f175852)
+
+**Solutions Applied**:
+
+**Part 1** (Commit 0e1113f - authRouting.js):
+- Added tier check in `getPostLoginDestination()` function (lines 259-271)
+- Paid tier users (Coffee/Growth/Scale) → dashboard
+- FREE tier users → upsell page
+
+**Part 2** (Commit f175852 - OAuthCallback.jsx):
+- Import `markFirstLoginComplete` from authRouting
+- Call `await markFirstLoginComplete(userData.id)` at line 230
+- Sets `is_first_login: false` BEFORE routing
+- Prevents infinite redirect loop
 
 **Files Modified**:
 - `src/utils/authRouting.js` - Added tier-based routing logic
+- `src/components/OAuthCallback.jsx` - Added is_first_login flag management
 
 #### Bug 9: Manage Subscription Button Not Working
 **Severity**: 🔴 CRITICAL
@@ -228,7 +245,7 @@
 
 1. ✅ ~~Fix FREE tier limit enforcement (Bug #1)~~ - RESOLVED
 2. ✅ ~~Fix usage counter logic (Bug #2)~~ - RESOLVED
-3. ✅ ~~Fix Coffee tier login routing (Bug #8)~~ - RESOLVED (Commit 0e1113f)
+3. ✅ ~~Fix Coffee tier login routing (Bug #8)~~ - RESOLVED (Commits 0e1113f + f175852)
 4. **CRITICAL**: Fix Manage Subscription button (Bug #9) - PRIORITY 1
 5. **MAJOR**: Fix upgrade button functionality (Bug #3)
 6. **MEDIUM**: Fix routing issues (Bugs #4, #5)
