@@ -1800,10 +1800,11 @@ function AppContent({ initialUrl }) {
       <PerformanceOptimizer />
       
       {/* Consistent header across all authenticated pages */}
-      <AuthenticatedHeader 
+      <AuthenticatedHeader
         session={session}
         userTier={userTier}
         usageData={usageData}
+        onUpgrade={handleUpgrade}
         onSignOut={async () => {
           // Track sign out
           trackFeatureUsage('authentication', 'sign_out');
