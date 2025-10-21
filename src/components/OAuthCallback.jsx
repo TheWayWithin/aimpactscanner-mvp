@@ -7,7 +7,8 @@ import {
   clearAuthContext,
   getPostSignupDestination,
   getPostLoginDestination,
-  getUserData
+  getUserData,
+  markFirstLoginComplete
 } from '../utils/authRouting';
 
 const OAuthCallback = ({ onNavigate, oauthCallbackProcessedRef }) => {
@@ -223,6 +224,11 @@ const OAuthCallback = ({ onNavigate, oauthCallbackProcessedRef }) => {
       if (userData.is_first_login) {
         // First login after signup
         console.log('👋 First login, routing to post-signup destination');
+
+        // FIX: Mark first login as complete BEFORE routing
+        // This prevents infinite redirect loop to Stripe for Coffee tier users
+        await markFirstLoginComplete(userData.id);
+
         destination = getPostSignupDestination(session.user, authContext);
         console.log('📍 getPostSignupDestination returned:', destination);
       } else {
