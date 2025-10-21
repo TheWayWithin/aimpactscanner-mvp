@@ -36,7 +36,7 @@ const UpgradeHandler = ({ user, onSuccess, onError }) => {
           priceId,
           userId: user.id,
           tier: targetTier,
-          successUrl: `${window.location.origin}/#account`,
+          successUrl: `${window.location.origin}/#checkout-success`,
           cancelUrl: `${window.location.origin}/#pricing`
         }
       });
@@ -105,7 +105,7 @@ export const useUpgrade = (user, onSuccess, onError) => {
           priceId,
           userId: user.id,
           tier: targetTier,
-          successUrl: `${window.location.origin}/#account`,
+          successUrl: `${window.location.origin}/#checkout-success`,
           cancelUrl: `${window.location.origin}/#pricing`
         }
       });

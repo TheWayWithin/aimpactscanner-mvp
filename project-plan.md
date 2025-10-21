@@ -277,16 +277,59 @@
 - Staging: ✅ DEPLOYED to `isgzvwpjokcmtizstwru` project
 - Production: ⏳ READY TO DEPLOY (awaiting approval)
 
+#### Bug 10: Tier Not Updating in UI After Stripe Payment ✅ FIXED
+**Severity**: 🔴 CRITICAL
+**Impact**: Users see stale tier data after successful payment
+**Status**: ✅ RESOLVED - Ready for Testing
+**Fixed**: 2025-01-21
+
+**Details**:
+- User upgrades from FREE to Coffee via error banner → Stripe payment
+- Payment completes successfully in Stripe ✅
+- Backend tier updated (Coffee features work: unlimited analyses, PDF export) ✅
+- UI still shows "Free" badge in header ❌
+- Account page shows "Free Plan" ❌
+- Conflicting data: "Remaining Analyses: Unlimited" but "Current Plan: Free"
+
+**Root Cause**: UpgradeHandler success URL bypasses CheckoutSuccess page
+- Line 39 & 108 in UpgradeHandler.jsx: `successUrl: '/#account'`
+- User lands directly at Account page after Stripe payment
+- CheckoutSuccess page NEVER runs
+- `tier_refresh_needed` flag NEVER gets set in sessionStorage
+- App.jsx never knows to refresh the tier from database
+- Frontend shows stale cached tier data
+
+**Why This Happens**:
+1. Commit cb44278 implemented tier refresh logic in App.jsx
+2. Logic depends on CheckoutSuccess setting `tier_refresh_needed` flag
+3. UpgradeHandler routes directly to `/#account`, skipping CheckoutSuccess
+4. Only UpsellCoffee.jsx routes correctly to `/#checkout-success`
+
+**Solution Implemented**:
+- Changed UpgradeHandler.jsx success URL (lines 39 & 108)
+- FROM: `successUrl: '/#account'`
+- TO: `successUrl: '/#checkout-success'`
+- Now all payment flows route through CheckoutSuccess page
+- CheckoutSuccess sets tier_refresh_needed flag
+- App.jsx detects flag and refreshes tier from database
+- UI updates to show correct Coffee tier
+
+**Files Modified**:
+- `src/components/UpgradeHandler.jsx` (lines 39, 108) - Fixed success URL routing
+
+**Testing**: Affects magic link + error banner upgrade flow specifically
+
 ### 🔄 REMAINING ACTIONS
 
 1. ✅ ~~Fix FREE tier limit enforcement (Bug #1)~~ - RESOLVED
 2. ✅ ~~Fix usage counter logic (Bug #2)~~ - RESOLVED
 3. ✅ ~~Fix Coffee tier login routing (Bug #8)~~ - RESOLVED (Commits 0e1113f + f175852)
 4. ✅ ~~Fix Manage Subscription button (Bug #9)~~ - RESOLVED (Deployed to staging)
-5. ✅ ~~Fix upgrade button functionality (Bug #3)~~ - RESOLVED (Ready for testing)
-6. **MEDIUM**: Fix routing issues (Bugs #4, #5) - PRIORITY 1
-7. **MEDIUM**: Fix factor analysis display (Bug #6)
-8. **LOW**: Fix warning text overlap (Bug #7)
+5. ✅ ~~Fix upgrade button functionality (Bug #3)~~ - RESOLVED (Commit f7ac28e)
+6. ✅ ~~Fix tier not updating after Stripe payment (Bug #10)~~ - RESOLVED (Ready for testing)
+7. **MEDIUM**: Fix routing issues (Bugs #4, #5) - PRIORITY 1
+8. **MEDIUM**: Fix factor analysis display (Bug #6)
+9. **LOW**: Fix warning text overlap (Bug #7)
 
 **Production Deployment**: ⏳ TESTING - Waiting for Netlify deployment and user validation
 
