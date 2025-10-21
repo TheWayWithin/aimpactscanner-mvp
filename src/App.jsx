@@ -1805,6 +1805,7 @@ function AppContent({ initialUrl }) {
         userTier={userTier}
         usageData={usageData}
         onUpgrade={handleUpgrade}
+        onNavigate={setCurrentView}
         onSignOut={async () => {
           // Track sign out
           trackFeatureUsage('authentication', 'sign_out');
