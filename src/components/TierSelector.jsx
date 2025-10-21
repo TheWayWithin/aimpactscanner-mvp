@@ -6,17 +6,33 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
   const tiers = [
     {
       id: 'free',
-      name: '🆓 FREE',
+      name: '⚠️ FREE (Limited)',
       price: '$0/month',
-      description: '3 analyses/month, limited features',
+      description: 'Only 3 analyses/month - then locked for 30 days',
+      warnings: [
+        '❌ Only 3 analyses/month (then locked out for 30 days)',
+        '❌ No historical tracking (results expire)',
+        '❌ No exports or reports',
+        '⚠️ WARNING: You\'ll miss critical insights competitors WILL find'
+      ],
       recommended: false,
       visual: 'secondary'
     },
     {
       id: 'coffee',
-      name: '☕ COFFEE',
+      name: '☕ COFFEE - SMART CHOICE',
       price: '$4.95/month',
+      tagline: 'Less than one coffee per month',
       description: 'Unlimited analyses, professional reports',
+      benefits: [
+        '✅ Unlimited analyses (test every page, every competitor)',
+        '✅ 200+ pages per scan (10x deeper than free)',
+        '✅ Professional PDF reports (share with team)',
+        '✅ Historical tracking (watch improvements over time)',
+        '✅ 30-day money-back guarantee (zero risk)'
+      ],
+      socialProof: '🎯 Join 127 businesses who upgraded in the last 30 days',
+      urgency: '⏱️ Early adopter pricing - $4.95/month (increases to $9/month Feb 1st)',
       recommended: true,
       visual: 'primary',
       notice: 'After signup, secure Stripe payment ($4.95/month)'
@@ -111,10 +127,37 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
                 </div>
               </div>
 
-              {/* Coffee Tier Notice */}
+              {/* Free Tier Warnings */}
+              {isSelected && tier.id === 'free' && tier.warnings && (
+                <div className="mt-3 ml-6 space-y-1 max-w-full overflow-hidden">
+                  <ul className="text-sm text-red-700 space-y-1 break-words">
+                    {tier.warnings.map((warning, idx) => (
+                      <li key={idx} className="pr-2">{warning}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Coffee Tier Benefits */}
               {isSelected && tier.id === 'coffee' && (
-                <div className="mt-3 ml-6 text-xs text-orange-700 bg-orange-50 px-3 py-2 rounded border border-orange-200">
-                  ℹ️ {tier.notice}
+                <div className="mt-3 ml-6 space-y-2">
+                  {tier.benefits && (
+                    <ul className="text-sm text-gray-700 space-y-1">
+                      {tier.benefits.map((benefit, idx) => (
+                        <li key={idx}>{benefit}</li>
+                      ))}
+                    </ul>
+                  )}
+                  {tier.socialProof && (
+                    <div className="text-xs text-blue-700 bg-blue-50 px-3 py-2 rounded border border-blue-200">
+                      {tier.socialProof}
+                    </div>
+                  )}
+                  {tier.urgency && (
+                    <div className="text-xs text-orange-700 bg-orange-50 px-3 py-2 rounded border border-orange-200">
+                      {tier.urgency}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -138,7 +181,7 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
             <span className="text-green-600 mr-2 mt-0.5">💰</span>
             <div>
               <div className="font-semibold text-green-800">30-Day Money Back Guarantee</div>
-              <div className="text-green-700">Don't like the results? Get every penny back. No questions asked. No hoops to jump through.</div>
+              <div className="text-green-700">Don't like the results? Get every penny back. No questions asked. No hoops to jump through. Full refund processed in 24 hours.</div>
             </div>
           </div>
 
@@ -146,7 +189,7 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
             <span className="text-green-600 mr-2 mt-0.5">⚡</span>
             <div>
               <div className="font-semibold text-green-800">Cancel Instantly Anytime</div>
-              <div className="text-green-700">One click cancellation. No phone calls. No retention tactics. Cancel in 10 seconds flat.</div>
+              <div className="text-green-700">One click cancellation. No phone calls. No retention tactics. Cancel in 10 seconds flat. Keep access until your billing period ends.</div>
             </div>
           </div>
 
@@ -154,7 +197,7 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
             <span className="text-green-600 mr-2 mt-0.5">🏆</span>
             <div>
               <div className="font-semibold text-green-800">Results in 24 Hours or Refund</div>
-              <div className="text-green-700">See dramatic improvements within 24 hours or get a full refund immediately.</div>
+              <div className="text-green-700">See dramatic improvements within 24 hours or get a full refund immediately. We stand behind our MASTERY-AI framework.</div>
             </div>
           </div>
 

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
 function FactorCard({ factor, pillarColor }) {
-  const [showDetails, setShowDetails] = useState(false);
+  // Auto-expand details for low-scoring factors (<60) to highlight areas needing improvement
+  // Users can still collapse if desired
+  const [showDetails, setShowDetails] = useState(factor.score < 60);
 
   const getScoreColor = (score) => {
     if (score >= 80) return '#059669'; // Green
