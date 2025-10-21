@@ -1288,7 +1288,20 @@ function AppContent({ initialUrl }) {
       }
 
       // Increment usage tracking for all users (even unlimited for display purposes)
-      incrementUsage();
+      // For free tier users, block if incrementUsage returns false (limit reached)
+      const usageAllowed = incrementUsage();
+      if (!usageAllowed && userTier === 'free') {
+        console.error('❌ Usage limit reached after pre-flight check - blocking analysis');
+        setAnalysisError({
+          title: 'Usage Limit Reached',
+          message: 'You\'ve reached your monthly limit of 3 analyses. Upgrade to Coffee tier for unlimited analyses!',
+          action: 'upgrade'
+        });
+        setIsAnalyzing(false);
+        trackFeatureUsage('usage_limit_reached', 'analysis_blocked_late');
+        setTimeout(() => setCurrentView('pricing'), 2000);
+        return;
+      }
 
       // Switch to analysis view to show progress
       setCurrentView('analysis');
