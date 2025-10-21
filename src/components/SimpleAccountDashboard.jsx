@@ -107,7 +107,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
     if (usageData.isUnlimited || (userTier && userTier.toLowerCase() === 'coffee')) {
       return 'Unlimited';
     }
-    return usageData.remaining || 3;
+    return usageData.remaining !== undefined ? usageData.remaining : 3;
   };
 
   const getUsedAnalyses = () => {
