@@ -2,7 +2,7 @@ import React from 'react';
 import AILogo from './AILogo';
 import TierIndicator from './TierIndicator';
 
-const AuthenticatedHeader = ({ session, userTier, usageData, onSignOut }) => {
+const AuthenticatedHeader = ({ session, userTier, usageData, onSignOut, onUpgrade }) => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -19,12 +19,13 @@ const AuthenticatedHeader = ({ session, userTier, usageData, onSignOut }) => {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <TierIndicator 
-              user={session?.user} 
-              tierData={{ 
-                tier: userTier, 
-                remaining: userTier === 'free' ? usageData?.remaining : Infinity 
-              }} 
+            <TierIndicator
+              user={session?.user}
+              tierData={{
+                tier: userTier,
+                remaining: userTier === 'free' ? usageData?.remaining : Infinity
+              }}
+              onUpgrade={onUpgrade}
             />
             <button
               onClick={onSignOut}
