@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { getActualUserTier, getTierDisplayInfo } from '../lib/tierUtils';
 
-const TierIndicator = ({ user, onUpgrade, className = '', tierData = null, refreshTrigger = 0 }) => {
+const TierIndicator = ({ user, className = '', tierData = null, refreshTrigger = 0 }) => {
   const [localTierData, setLocalTierData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -95,10 +95,6 @@ const TierIndicator = ({ user, onUpgrade, className = '', tierData = null, refre
     return 'bg-blue-100 text-blue-800';
   };
 
-  const shouldShowUpgradePrompt = () => {
-    return localTierData?.tier === 'free' && getRemainingAnalyses() <= 1;
-  };
-
   if (loading) {
     return (
       <div className={`flex items-center space-x-2 ${className}`}>
@@ -121,19 +117,9 @@ const TierIndicator = ({ user, onUpgrade, className = '', tierData = null, refre
 
       {/* Remaining Analyses */}
       <div className="text-sm text-white hidden sm:block">
-        <span className="font-medium">{getRemainingAnalyses()}</span> 
+        <span className="font-medium">{getRemainingAnalyses()}</span>
         {localTierData.tier === 'free' ? ' left' : ''}
       </div>
-
-      {/* Upgrade Button (only for free users with low remaining) */}
-      {shouldShowUpgradePrompt() && (
-        <button
-          onClick={() => onUpgrade?.('coffee')}
-          className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium transition-colors"
-        >
-          Upgrade
-        </button>
-      )}
 
       {/* Expiration Warning */}
       {localTierData.tier_expires_at && new Date(localTierData.tier_expires_at) < new Date() && (

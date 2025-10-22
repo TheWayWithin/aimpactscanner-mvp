@@ -167,6 +167,9 @@ function AppContent({ initialUrl }) {
   // Track if we've already processed the pending analysis to prevent duplicate processing
   const pendingAnalysisProcessed = useRef(false);
 
+  // FIX 2: Track if oauth-callback has completed routing to prevent race condition
+  const oauthCallbackProcessed = useRef(false);
+
   // PDF preloading optimization
   const shouldPreloadPDF = usePDFPreloadTrigger(currentView, userTier);
   const isPDFPreloaded = usePDFPreloader(shouldPreloadPDF, 3000); // 3 second delay
@@ -310,6 +313,8 @@ function AppContent({ initialUrl }) {
       // SECURITY FIX: Store intended route but don't navigate yet - wait for session check
       localStorage.setItem('initial_route_pending', hash);
       console.log('🔒 SECURITY: Deferring route navigation until session check completes');
+      // DON'T override the hash - keep the user's intended route in the URL
+      // This allows the user to see they're on the correct page while waiting for auth check
     } else if (window.location.pathname === '/login') {
       setCurrentView('login');
       // Clear URL to prevent issues with navigation
@@ -318,9 +323,11 @@ function AppContent({ initialUrl }) {
       setCurrentView('register');
       window.history.replaceState({}, document.title, '/#register');
     }
-    
-    // Set initial history state
-    window.history.replaceState({ view: currentView }, '', `#${currentView}`);
+
+    // Set initial history state ONLY if we didn't have an initial hash that we're preserving
+    if (!hash || hasOAuthTokens) {
+      window.history.replaceState({ view: currentView }, '', `#${currentView}`);
+    }
     
     return () => {
       window.removeEventListener('popstate', handlePopState);
@@ -533,16 +540,31 @@ function AppContent({ initialUrl }) {
       }
       
       // CRITICAL: Route to oauth-callback for OAuth sign-ins
+      // BUT ONLY if we're not already processing the callback
       if (event === 'SIGNED_IN' && session) {
-        console.log('✅ SIGNED_IN event - routing to oauth-callback');
-        console.log('📍 Current view before routing:', currentView);
-        setSession(session);
-        setSessionChecked(true);
-        setIsLoadingAuth(false);
-        setCurrentViewInternal('oauth-callback');
-        console.log('📍 Set view to oauth-callback, forcing hash update...');
-        window.location.hash = 'oauth-callback';
-        return; // Exit early - let OAuthCallback handle the rest
+        console.log('✅ SIGNED_IN event detected');
+        console.log('📍 Current view:', currentView);
+        console.log('📍 oauthCallbackProcessed:', oauthCallbackProcessed.current);
+
+        // FIX 2: Don't redirect if oauth-callback already processed routing
+        // This prevents race condition where SIGNED_IN fires after OAuthCallback routing
+        if (currentView !== 'oauth-callback' && !oauthCallbackProcessed.current) {
+          console.log('✅ SIGNED_IN event - routing to oauth-callback');
+          setSession(session);
+          setSessionChecked(true);
+          setIsLoadingAuth(false);
+          setCurrentViewInternal('oauth-callback');
+          console.log('📍 Set view to oauth-callback, forcing hash update...');
+          window.location.hash = 'oauth-callback';
+          return; // Exit early - let OAuthCallback handle the rest
+        } else {
+          console.log('✅ SIGNED_IN event - oauth-callback already processed or at callback, skipping redirect');
+          // Just update session state, don't redirect
+          setSession(session);
+          setSessionChecked(true);
+          setIsLoadingAuth(false);
+          return;
+        }
       }
 
       if (event === 'SIGNED_OUT') {
@@ -736,6 +758,33 @@ function AppContent({ initialUrl }) {
       }
     };
   }, []);
+
+  // Check for tier refresh flag after payment completion
+  useEffect(() => {
+    if (!session?.user?.id) return;
+
+    const tierRefreshNeeded = sessionStorage.getItem('tier_refresh_needed');
+    const tierRefreshTimestamp = sessionStorage.getItem('tier_refresh_timestamp');
+
+    if (tierRefreshNeeded === 'true') {
+      console.log('💳 Tier refresh requested after payment - refreshing user tier');
+
+      // Clear the cache to force fresh fetch
+      const userId = session.user.id;
+      userDataCache.current.delete(userId);
+      lastFetchTime.current.delete(userId);
+
+      // Force tier refresh
+      fetchUserTier(userId, session.user.email, session).then(() => {
+        console.log('✅ Tier refreshed after payment');
+        // Clear the flags
+        sessionStorage.removeItem('tier_refresh_needed');
+        sessionStorage.removeItem('tier_refresh_timestamp');
+      }).catch(err => {
+        console.error('❌ Failed to refresh tier after payment:', err);
+      });
+    }
+  }, [session?.user?.id, currentView]);
 
   const fetchUserTier = async (userId, userEmail = null, userSession = null) => {
     // CRITICAL FIX: Only skip if tab was recently hidden AND we're making duplicate calls
@@ -1206,7 +1255,7 @@ function AppContent({ initialUrl }) {
         action: 'upgrade'
       });
       trackFeatureUsage('usage_limit_reached', 'analysis_blocked');
-      setTimeout(() => setCurrentView('pricing'), 2000);
+      // Don't auto-redirect - let user click UPGRADE button
       return;
     }
 
@@ -1266,7 +1315,20 @@ function AppContent({ initialUrl }) {
       }
 
       // Increment usage tracking for all users (even unlimited for display purposes)
-      incrementUsage();
+      // For free tier users, block if incrementUsage returns false (limit reached)
+      const usageAllowed = incrementUsage();
+      if (!usageAllowed && userTier === 'free') {
+        console.error('❌ Usage limit reached after pre-flight check - blocking analysis');
+        setAnalysisError({
+          title: 'Usage Limit Reached',
+          message: 'You\'ve reached your monthly limit of 3 analyses. Upgrade to Coffee tier for unlimited analyses!',
+          action: 'upgrade'
+        });
+        setIsAnalyzing(false);
+        trackFeatureUsage('usage_limit_reached', 'analysis_blocked_late');
+        // Don't auto-redirect - let user click UPGRADE button
+        return;
+      }
 
       // Switch to analysis view to show progress
       setCurrentView('analysis');
@@ -1406,7 +1468,17 @@ function AppContent({ initialUrl }) {
     const Signup = React.lazy(() => import('./pages/Signup'));
     return (
       <Suspense fallback={<ComponentLoader message="Loading..." />}>
-        <Signup />
+        <Signup session={session} onNavigate={setCurrentView} />
+      </Suspense>
+    );
+  }
+
+  // Handle /signup-test route - TEST route for Phase 1 A/B testing
+  if (currentView === 'signup-test') {
+    const Signup = React.lazy(() => import('./pages/Signup'));
+    return (
+      <Suspense fallback={<ComponentLoader message="Loading test signup..." />}>
+        <Signup mode="signup" session={session} onNavigate={setCurrentView} />
       </Suspense>
     );
   }
@@ -1416,7 +1488,7 @@ function AppContent({ initialUrl }) {
     const Signup = React.lazy(() => import('./pages/Signup'));
     return (
       <Suspense fallback={<ComponentLoader message="Loading signup..." />}>
-        <Signup />
+        <Signup session={session} onNavigate={setCurrentView} />
       </Suspense>
     );
   }
@@ -1441,12 +1513,12 @@ function AppContent({ initialUrl }) {
     );
   }
 
-  // OAuth-first login (reuses Signup page with different heading)
+  // OAuth-first login (reuses Signup page with mode="login")
   if (currentView === 'login') {
     const Signup = React.lazy(() => import('./pages/Signup'));
     return (
       <Suspense fallback={<ComponentLoader message="Loading..." />}>
-        <Signup />
+        <Signup mode="login" session={session} onNavigate={setCurrentView} />
       </Suspense>
     );
   }
@@ -1456,7 +1528,7 @@ function AppContent({ initialUrl }) {
     const OAuthCallback = React.lazy(() => import('./components/OAuthCallback'));
     return (
       <Suspense fallback={<ComponentLoader message="Processing authentication..." />}>
-        <OAuthCallback onNavigate={setCurrentView} />
+        <OAuthCallback onNavigate={setCurrentView} oauthCallbackProcessedRef={oauthCallbackProcessed} />
       </Suspense>
     );
   }
@@ -1504,6 +1576,45 @@ function AppContent({ initialUrl }) {
         </Suspense>
       </ProtectedRoute>
     );
+  }
+
+  // PHASE 1 FIX: Auto-checkout view for Coffee tier signups
+  if (currentView === 'checkout') {
+    // Get tier from sessionStorage (set by OAuthCallback)
+    const autoCheckoutTier = sessionStorage.getItem('autoCheckoutTier');
+
+    if (autoCheckoutTier && session?.user) {
+      console.log('💳 Auto-triggering Stripe checkout for tier:', autoCheckoutTier);
+
+      // Clear the auto-checkout flag
+      sessionStorage.removeItem('autoCheckoutTier');
+
+      // Trigger the upgrade handler which will redirect to Stripe
+      setTimeout(() => {
+        handleUpgrade(autoCheckoutTier);
+      }, 100); // Small delay to ensure component is mounted
+
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <span className="text-lg text-gray-700">Redirecting to payment...</span>
+            </div>
+            <p className="text-sm text-gray-500">You'll be redirected to secure Stripe checkout</p>
+          </div>
+        </div>
+      );
+    } else {
+      // No auto-checkout tier set, fallback to pricing page
+      console.warn('⚠️ No autoCheckoutTier found, redirecting to pricing');
+      setTimeout(() => setCurrentView('pricing'), 100);
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
+          <ComponentLoader message="Loading checkout..." />
+        </div>
+      );
+    }
   }
 
   // Stripe Checkout Success - Payment confirmation page
@@ -1716,7 +1827,7 @@ function AppContent({ initialUrl }) {
       <PerformanceOptimizer />
       
       {/* Consistent header across all authenticated pages */}
-      <AuthenticatedHeader 
+      <AuthenticatedHeader
         session={session}
         userTier={userTier}
         usageData={usageData}
@@ -1865,8 +1976,33 @@ function AppContent({ initialUrl }) {
                   <div className="error-content">
                     <h3>{analysisError.title}</h3>
                     <p>{analysisError.message}</p>
+                    {analysisError.action === 'upgrade' && (
+                      <button
+                        className="upgrade-button"
+                        onClick={() => {
+                          setAnalysisError(null);
+                          setCurrentView('pricing');
+                        }}
+                        style={{
+                          marginTop: '12px',
+                          padding: '10px 24px',
+                          backgroundColor: '#2563eb',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '8px',
+                          fontSize: '1rem',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#1d4ed8'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = '#2563eb'}
+                      >
+                        UPGRADE NOW
+                      </button>
+                    )}
                   </div>
-                  <button 
+                  <button
                     className="error-close"
                     onClick={() => setAnalysisError(null)}
                     aria-label="Dismiss error"

@@ -41,6 +41,48 @@ export const clearAuthContext = () => {
 };
 
 /**
+ * Validates that authContext exists and contains required tier selection
+ * @returns {boolean} True if valid, false otherwise
+ */
+export const validateAuthContext = () => {
+  const context = getAuthContext();
+
+  if (!context) {
+    console.warn('⚠️ No authContext found - tier selection required before OAuth');
+    return false;
+  }
+
+  if (!context.selectedTier) {
+    console.error('❌ authContext missing selectedTier - invalid signup flow');
+    return false;
+  }
+
+  // Check if context is expired (older than 24 hours)
+  const expiry = localStorage.getItem('authContextExpiry');
+  if (expiry && Date.now() > parseInt(expiry)) {
+    console.warn('⚠️ authContext expired, clearing');
+    clearAuthContext();
+    return false;
+  }
+
+  // Check if context timestamp is reasonable (within last 30 minutes for active flow)
+  const age = Date.now() - (context.timestamp || 0);
+  const thirtyMinutes = 30 * 60 * 1000;
+  if (age > thirtyMinutes) {
+    console.warn(`⚠️ authContext is ${Math.round(age / 60000)} minutes old (max 30 min for active flow)`);
+    // Don't clear - still valid within 24hr TTL, just warn
+  }
+
+  console.log('✅ authContext validation passed:', {
+    tier: context.selectedTier,
+    mode: context.mode,
+    age: `${Math.round(age / 1000)}s`
+  });
+
+  return true;
+};
+
+/**
  * Stores pending analysis URL for post-signup retrieval
  * @param {string} url - The URL to analyze
  * @param {string} id - Optional analysis ID
@@ -161,6 +203,46 @@ export const getPostLoginDestination = async (user, session) => {
   console.log('🧭 Determining post-login destination for user:', user?.id);
 
   try {
+    // PHASE 1 FIX: Check if user is coming from signup flow with tier selection
+    // This handles existing users who clicked "sign up" and selected a tier
+    const authContext = getAuthContext();
+
+    if (authContext?.mode === 'signup' && authContext?.selectedTier) {
+      console.log('🆕 Existing user coming from SIGNUP flow with tier selection');
+      console.log('📦 authContext:', authContext);
+      console.log('💡 Current database tier:', user?.tier);
+      console.log('💡 Requested tier:', authContext.selectedTier);
+
+      // If they selected a different tier, route through signup flow
+      if (authContext.selectedTier !== user?.tier) {
+        console.log('🔄 Tier change detected, routing to post-signup destination');
+
+        // Update user's tier in database
+        const { error: updateError } = await supabase
+          .from('users')
+          .update({
+            tier: authContext.selectedTier,
+            selected_tier: authContext.selectedTier,
+            subscription_status: authContext.selectedTier === 'free' ? 'active' : 'pending_payment'
+          })
+          .eq('id', user.id);
+
+        if (updateError) {
+          console.error('❌ Error updating user tier:', updateError);
+        } else {
+          console.log('✅ Updated user tier to:', authContext.selectedTier);
+        }
+
+        // Route to post-signup destination (includes Stripe checkout for Coffee tier)
+        const destination = getPostSignupDestination(session?.user, authContext);
+        clearAuthContext(); // Clear after use
+        return destination;
+      } else {
+        console.log('✅ Same tier as database, continuing normal login flow');
+        clearAuthContext(); // Clear unused context
+      }
+    }
+
     // Check if this is the first login (skip upsell)
     if (user?.is_first_login === true) {
       console.log('👋 First login detected, routing to post-signup destination');
@@ -169,14 +251,23 @@ export const getPostLoginDestination = async (user, session) => {
       await markFirstLoginComplete(user.id);
 
       // Route to post-signup destination
-      const authContext = getAuthContext();
       const destination = getPostSignupDestination(session?.user, authContext);
       clearAuthContext(); // Clear after use
       return destination;
     }
 
-    // Returning users: Show tier-based upsell
-    console.log('🔄 Returning user, routing to upsell');
+    // Returning users: Route based on tier
+    console.log('🔄 Returning user, checking tier for routing');
+    console.log('📊 User tier:', user?.tier);
+
+    // FIX BUG #8: Coffee/paid tier users should go to dashboard, not upsell
+    if (user?.tier && user.tier !== 'free') {
+      console.log('✅ Paid tier user (' + user.tier + '), routing to dashboard');
+      return { path: '/dashboard', state: {} };
+    }
+
+    // Only show upsell to FREE tier users
+    console.log('🆓 Free tier user, routing to upsell');
     return getUpsellPage(user);
 
   } catch (error) {

@@ -29,3 +29,22 @@ dist-ssr
 # Development archives
 /archive/
 .env.staging
+
+# Environment Variables - CRITICAL SECURITY
+.env
+.env.*
+!.env.template
+!.env*.template
+!.env.example
+!.env.production.template
+!.env.mcp.template
+
+# Playwright Authentication State - NEVER COMMIT
+tests/setup/.auth/
+playwright/.auth/
+*.storage.json
+*-storage-state.json
+
+# Playwright Test Results - Generated Output
+test-results/
+playwright-report/

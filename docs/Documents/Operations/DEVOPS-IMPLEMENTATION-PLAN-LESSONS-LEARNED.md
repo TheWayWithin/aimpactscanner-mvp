@@ -1,8 +1,8 @@
 # DevOps Implementation Plan - Production Ready Guide
 
-**Version:** 2.0.0 - With Real-World Lessons Learned  
-**Last Updated:** 2025-10-12  
-**Based On:** Actual SoloMarket staging deployment experience
+**Version:** 2.1.0 - With Real-World Lessons Learned
+**Last Updated:** 2025-10-13
+**Based On:** Actual SoloMarket + AImpactScanner staging deployments
 
 ---
 
@@ -31,6 +31,26 @@
    - ✅ **RIGHT**: Create `develop` branch → Push to GitHub → THEN configure Netlify
    - **Why**: Netlify can't deploy a branch that doesn't exist yet
    - **Correct Sequence**: GitHub branches → Netlify branch configuration → Environment variables
+
+6. **Migration Files ≠ Complete Schema** [NEW - Oct 2025 - AImpactScanner]
+   - ❌ **WRONG**: Trusting that running all migrations will recreate production schema
+   - ✅ **RIGHT**: Run migrations + Compare schema column-by-column + Fix mismatches
+   - **Why**: Production schema evolves through direct SQL changes, not just migrations
+   - **Real Impact**: Can cause 400 errors on API calls when columns don't match
+
+7. **Google OAuth: ADD to existing app, GitHub OAuth: CREATE new app** [NEW - Oct 2025 - AImpactScanner]
+   - ❌ **WRONG**: Reusing same GitHub OAuth app for staging and production
+   - ✅ **RIGHT**: Google = add staging callback to existing app, GitHub = create separate staging app
+   - **Why**: Prevents breaking production auth and provides environment isolation
+   - **Implementation**:
+     - Google: Add `https://[staging-ref].supabase.co/auth/v1/callback` to existing app
+     - GitHub: Create "AppName Staging" with new Client ID/Secret
+
+8. **Database Functions Are Part of Schema** [NEW - Oct 2025 - AImpactScanner]
+   - ❌ **WRONG**: Only checking tables and columns during schema verification
+   - ✅ **RIGHT**: Also verify functions, triggers, RLS policies, and enums match
+   - **Why**: Missing functions cause 400 errors that are hard to diagnose
+   - **How**: Export functions separately: `pg_dump --schema-only | grep "CREATE FUNCTION"`
 
 ---
 
@@ -117,18 +137,73 @@ psql "postgresql://postgres:[STAGING_PASSWORD]@db.[STAGING_REF].supabase.co:5432
 ```sql
 -- Connect to staging database
 -- Count tables (should match production exactly)
-SELECT COUNT(*) FROM information_schema.tables 
+SELECT COUNT(*) FROM information_schema.tables
 WHERE table_schema = 'public';
 
 -- List all tables
-SELECT tablename FROM pg_tables 
-WHERE schemaname = 'public' 
+SELECT tablename FROM pg_tables
+WHERE schemaname = 'public'
 ORDER BY tablename;
 
 -- If count doesn't match, you have missing tables!
 ```
 
-### Step 1.4: Fix Auth Schema Issues
+### Step 1.3.5: Verify Schema Column-by-Column [NEW - CRITICAL]
+
+**LESSON LEARNED (AImpactScanner)**: Migrations don't always match production schema!
+
+```bash
+# Export production columns for critical tables
+export PGPASSWORD='[PROD_PASSWORD]' && psql -h db.[PROD_REF].supabase.co -p 5432 -U postgres -d postgres -c "\d+ analyses" > /tmp/prod_analyses.txt
+
+# Export staging columns
+export PGPASSWORD='[STAGING_PASSWORD]' && psql -h db.[STAGING_REF].supabase.co -p 5432 -U postgres -d postgres -c "\d+ analyses" > /tmp/staging_analyses.txt
+
+# Compare
+diff /tmp/prod_analyses.txt /tmp/staging_analyses.txt
+```
+
+**If there are differences:**
+```sql
+-- Add missing columns
+ALTER TABLE analyses ADD COLUMN IF NOT EXISTS column_name data_type;
+
+-- Drop obsolete columns
+ALTER TABLE analyses DROP COLUMN IF EXISTS old_column_name;
+```
+
+**Common tables that need verification:**
+- `analyses` (core data table)
+- `users` (auth-related fields)
+- `subscriptions` (payment tier logic)
+- Any table with JSONB columns (structure changes frequently)
+
+### Step 1.4: Verify and Migrate Database Functions [NEW - CRITICAL]
+
+**LESSON LEARNED (AImpactScanner)**: Functions are schema too!
+
+```bash
+# Export all functions from production
+export PGPASSWORD='[PROD_PASSWORD]' && psql -h db.[PROD_REF].supabase.co -p 5432 -U postgres -d postgres << 'EOF' > /tmp/prod_functions.sql
+SELECT
+  pg_get_functiondef(p.oid) || ';' as function_definition
+FROM pg_proc p
+JOIN pg_namespace n ON p.pronamespace = n.oid
+WHERE n.nspname = 'public'
+ORDER BY p.proname;
+EOF
+
+# Apply each function to staging
+export PGPASSWORD='[STAGING_PASSWORD]' && psql -h db.[STAGING_REF].supabase.co -p 5432 -U postgres -d postgres < /tmp/prod_functions.sql
+```
+
+**Critical functions to verify:**
+- User tier/subscription functions (e.g., `get_actual_user_tier`)
+- Auth triggers (e.g., `handle_new_user`)
+- RLS policy functions
+- Custom aggregations or calculations
+
+### Step 1.5: Fix Auth Schema Issues
 
 **LESSON LEARNED**: Auth schema needs special attention
 
@@ -176,11 +251,13 @@ CREATE TRIGGER on_auth_user_created
 
 ### Step 2.2: Google OAuth Setup
 
-**LESSON LEARNED**: Each environment needs proper callback URLs
+**LESSON LEARNED (AImpactScanner)**: ADD staging to existing Google OAuth app - DO NOT create new app
+
+**Strategy**: Google OAuth apps can handle multiple callback URLs safely, so ADD staging to your existing production app.
 
 **For Google Cloud Console:**
 1. Go to: https://console.cloud.google.com/apis/credentials
-2. Your OAuth 2.0 Client
+2. Click your **EXISTING** OAuth 2.0 Client (same one used for production)
 3. Add to "Authorized JavaScript origins":
    ```
    https://[staging-ref].supabase.co
@@ -189,17 +266,27 @@ CREATE TRIGGER on_auth_user_created
    ```
    https://[staging-ref].supabase.co/auth/v1/callback
    ```
-5. Save
+5. **IMPORTANT**: Leave production URLs in place! You're ADDING, not replacing.
+6. Save
 
-**In Supabase Dashboard:**
+**In Supabase Dashboard (Staging):**
 1. Go to: Authentication → Providers → Google
 2. Enable Google
-3. Add Client ID and Secret from Google Cloud Console
+3. **Use the SAME Client ID and Secret from production** (it now works for both environments)
 4. Save
+
+**Why this works**: Google OAuth apps support multiple redirect URLs, so one app can safely serve both environments.
 
 ### Step 2.3: GitHub OAuth Setup
 
-**LESSON LEARNED**: Create separate OAuth apps per environment
+**LESSON LEARNED (AImpactScanner)**: CREATE separate GitHub OAuth app - DO NOT reuse production app
+
+**Strategy**: Unlike Google, GitHub OAuth apps should be environment-specific to avoid production disruption.
+
+**Why separate apps?**
+- GitHub OAuth apps allow only ONE callback URL (unlike Google's multiple)
+- Changing production app's callback could break production authentication
+- Separate apps provide clear environment isolation
 
 **Create Staging GitHub OAuth App:**
 1. Go to: https://github.com/settings/developers
@@ -211,14 +298,19 @@ CREATE TRIGGER on_auth_user_created
    Authorization callback URL: https://[staging-ref].supabase.co/auth/v1/callback
    ```
 4. Register application
-5. Generate Client Secret
-6. Save Client ID and Secret
+5. Click "Generate a new client secret"
+6. **Save both Client ID and Client Secret** (you'll need them in next step)
 
-**In Supabase Dashboard:**
+**In Supabase Dashboard (Staging):**
 1. Go to: Authentication → Providers → GitHub
 2. Enable GitHub
-3. Add Client ID and Secret from GitHub
-4. Save
+3. Enter the NEW Client ID from the staging app
+4. Enter the NEW Client Secret from the staging app
+5. Save
+
+**Summary**:
+- **Google OAuth**: 1 app for all environments (add callback URLs)
+- **GitHub OAuth**: 1 app PER environment (separate apps)
 
 ---
 
@@ -428,7 +520,7 @@ For `develop` branch:
 **Solution**: Enable provider in Supabase dashboard AND add callback URLs
 
 ### Issue 2: Foreign key constraint errors during data import
-**Solution**: 
+**Solution**:
 ```sql
 -- Disable constraints temporarily
 SET session_replication_role = 'replica';
@@ -446,22 +538,84 @@ SET session_replication_role = 'origin';
 ### Issue 5: Environment variables not working
 **Solution**: Ensure they're scoped to correct branch context in Netlify
 
+### Issue 6: OAuth redirects to localhost after authorization [NEW - AImpactScanner]
+**Problem**: After OAuth signin, redirected to `http://localhost:3000/?code=...`
+**Solution**: Configure Supabase Site URL settings
+```
+Dashboard → Authentication → URL Configuration
+Site URL: https://develop--yourapp.netlify.app
+Redirect URLs: https://develop--yourapp.netlify.app/**
+```
+
+### Issue 7: 400 errors on API calls after deployment [NEW - AImpactScanner]
+**Problem**: Dashboard loads but API calls fail with 400 status
+**Root Cause**: Schema mismatch between staging and production (columns or functions)
+**Solution**:
+```bash
+# Compare table schemas
+psql [PROD] -c "\d+ table_name" > prod.txt
+psql [STAGING] -c "\d+ table_name" > staging.txt
+diff prod.txt staging.txt
+
+# Add missing columns
+ALTER TABLE table_name ADD COLUMN column_name data_type;
+
+# Check for missing functions
+psql [PROD] -c "\df+ function_name"
+# Apply to staging
+```
+
+### Issue 8: Function returns wrong data or errors [NEW - AImpactScanner]
+**Problem**: Functions exist but return incorrect results
+**Root Cause**: Function definition out of sync with production
+**Solution**:
+```bash
+# Export function from production
+psql [PROD] -c "SELECT pg_get_functiondef(oid) FROM pg_proc WHERE proname='function_name';"
+
+# Apply to staging with CREATE OR REPLACE
+psql [STAGING] << 'EOF'
+CREATE OR REPLACE FUNCTION ...
+EOF
+```
+
 ---
 
 ## ✅ Final Verification Checklist
 
 Before considering staging complete:
 
+### Database Schema
 - [ ] Database has EXACT same number of tables as production
+- [ ] Critical tables have matching columns (use `\d+ table_name` to compare)
+- [ ] All database functions exist and match production (e.g., `get_actual_user_tier`)
+- [ ] Triggers are in place (e.g., `handle_new_user`)
+- [ ] RLS policies are enabled and match production
+
+### Authentication
 - [ ] Can create new user via Google OAuth
-- [ ] Can create new user via GitHub OAuth  
-- [ ] User is redirected to staging URL (not production)
-- [ ] Can create a test listing
+- [ ] Can create new user via GitHub OAuth
+- [ ] User is redirected to staging URL (not production or localhost)
+- [ ] User profile is automatically created in database after signup
+- [ ] Site URL configured in Supabase: `https://develop--yourapp.netlify.app`
+
+### Core Functionality
+- [ ] Can perform primary user actions (e.g., create analysis, listing, etc.)
+- [ ] API calls return 200 status (no 400/500 errors in console)
+- [ ] Data loads correctly from staging database
+- [ ] User tier/subscription logic works correctly
+
+### Deployment Pipeline
+- [ ] `develop` branch exists and is pushed to GitHub
 - [ ] Changes to develop branch auto-deploy to staging
 - [ ] Staging URL shows correct data from database
+- [ ] Environment variables are scoped to branch deploys
 - [ ] No console errors on staging site
-- [ ] GitHub Actions tests pass on develop branch
+- [ ] GitHub Actions tests pass on develop branch (if configured)
+
+### Workflow Verification
 - [ ] Can create PR from develop to main
+- [ ] Production remains unaffected by staging changes
 
 ---
 

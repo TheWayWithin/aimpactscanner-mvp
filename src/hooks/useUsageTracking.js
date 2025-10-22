@@ -71,7 +71,7 @@ export const useUsageTracking = (userEmail) => {
         } else {
           setUsageData({
             monthlyUsed: data.monthlyUsed || 0,
-            remaining: data.isUnlimited ? Infinity : FREE_TIER_LIMIT - (data.monthlyUsed || 0),
+            remaining: data.isUnlimited ? Infinity : Math.max(0, FREE_TIER_LIMIT - (data.monthlyUsed || 0)),
             resetDate: getMonthResetDate(),
             isUnlimited: data.isUnlimited || false,
             tier: data.tier || 'free'

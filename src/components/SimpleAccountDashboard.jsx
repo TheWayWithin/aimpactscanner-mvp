@@ -107,7 +107,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
     if (usageData.isUnlimited || (userTier && userTier.toLowerCase() === 'coffee')) {
       return 'Unlimited';
     }
-    return usageData.remaining || 3;
+    return usageData.remaining !== undefined ? usageData.remaining : 3;
   };
 
   const getUsedAnalyses = () => {
@@ -199,7 +199,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
             
             {showUpgradeButton && (
               <a
-                href="/pricing"
+                href="/#pricing"
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 inline-block"
               >
                 Upgrade to Coffee ☕
@@ -229,7 +229,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
                 />
               </div>
               {getRemainingAnalyses() === 0 && (
-                <p className="text-sm text-orange-600 mt-2">
+                <p className="text-sm text-orange-600 mt-2 max-w-full overflow-hidden break-words">
                   Monthly limit reached. Upgrade to Coffee for unlimited analyses!
                 </p>
               )}

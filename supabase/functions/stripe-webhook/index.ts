@@ -7,7 +7,17 @@ import { TierManager } from '../analyze-page/lib/TierManager.ts'
 
 const STRIPE_WEBHOOK_SECRET = Deno.env.get('STRIPE_WEBHOOK_SECRET');
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature',
+}
+
 serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
   try {
     console.log('=== STRIPE WEBHOOK RECEIVED ===');
     
@@ -75,12 +85,18 @@ serve(async (req) => {
       default:
         console.log(`Unhandled event type: ${event.type}`);
     }
-    
-    return new Response('Webhook handled successfully', { status: 200 });
-    
+
+    return new Response('Webhook handled successfully', {
+      status: 200,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
+
   } catch (error) {
     console.error('Webhook processing error:', error);
-    return new Response(`Webhook error: ${error.message}`, { status: 400 });
+    return new Response(`Webhook error: ${error.message}`, {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
   }
 });
 

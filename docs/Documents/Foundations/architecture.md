@@ -129,6 +129,8 @@ External Services:
 - **Target Websites**: External sites being analyzed for AI optimization
 - **Netlify**: Frontend hosting and CDN delivery
 - **SendGrid**: Transactional email service for authentication
+- **Google Cloud Platform**: OAuth authentication provider for Google Sign-In
+- **GitHub OAuth Apps**: OAuth authentication provider for GitHub Sign-In
 
 ### User Journey
 
@@ -701,6 +703,83 @@ interface UserProfile {
 
 **Review Trigger**: When database response times exceed 500ms consistently
 
+---
+
+### ADR-011: Multi-Environment OAuth Strategy
+**Date**: 2025-10-13
+**Status**: Accepted
+**Context**: Need secure, maintainable OAuth authentication across production, staging, and development environments
+
+**Options Considered:**
+1. **Shared OAuth Apps for All Providers**: Single app for Google and GitHub across all environments
+2. **Separate OAuth Apps for All Providers**: Dedicated apps per environment for both Google and GitHub
+3. **Hybrid Strategy (Selected)**: Shared Google app, separate GitHub apps per environment
+
+**Decision**: Implement hybrid OAuth strategy with shared Google application and separate GitHub applications per environment
+
+**Rationale:**
+
+**Google OAuth (Shared Strategy):**
+- Google's robust consent management provides sufficient security isolation
+- User experience consistency across environments
+- Simplified credential management
+- Cost efficiency (no multiple Google Cloud projects required)
+- Redirect URL validation provides adequate environment separation
+
+**GitHub OAuth (Separate Strategy):**
+- Enhanced security isolation for production credentials
+- GitHub OAuth apps have broader access to organization/repository data
+- Clear audit trail per environment
+- Credential compromise mitigation (staging leak doesn't affect production)
+- Independent permission scopes per environment
+
+**Consequences:**
+- **Positive**:
+  - Optimal balance of security and operational efficiency
+  - Production GitHub credentials completely isolated from non-production
+  - Simplified Google OAuth management
+  - Clear security boundaries for sensitive GitHub organizational access
+  - Independent secret rotation for GitHub per environment
+
+- **Negative**:
+  - Two different OAuth management patterns to maintain
+  - GitHub requires multiple OAuth app configurations
+  - More complex documentation and onboarding
+
+- **Neutral**:
+  - GitHub secrets must be rotated every 90 days per environment
+  - Google shared secret rotated as needed
+  - Team must understand different strategies for different providers
+
+**Implementation Details:**
+
+**Google OAuth Configuration:**
+- Client ID: `913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8`
+- Shared across: Production, Staging, Development
+- Redirect URLs: Multiple authorized URLs in single OAuth app
+- Secret Management: Single secret shared across Supabase projects
+
+**GitHub OAuth Configuration:**
+- Production: Dedicated OAuth app with separate client ID/secret
+- Staging: Client ID `Ov23liJJhx3ydaUtbCdq` with separate secret
+- Development: Dedicated OAuth app with separate client ID/secret
+- Each environment has completely isolated GitHub credentials
+
+**Security Benefits:**
+1. Production GitHub credentials never exposed to non-production environments
+2. Staging GitHub testing cannot impact production authentication
+3. Clear audit trails per environment for GitHub activity
+4. Simplified Google OAuth operations with adequate security
+5. Defense in depth through multi-layer isolation
+
+**Review Trigger**:
+- If Google OAuth security requirements increase
+- If GitHub simplifies environment-specific OAuth management
+- If operational complexity becomes problematic
+- Annual security review of OAuth strategy
+
+---
+
 ### Architecture Principles
 
 1. **Graceful Degradation**: Always provide fallback when services fail
@@ -1192,6 +1271,293 @@ const securityHeaders = {
 - **Email Verification**: Comprehensive verification flow
 - **Session Management**: Secure JWT handling with refresh tokens
 - **Account Recovery**: Password reset with secure token handling
+- **OAuth Providers**: Google and GitHub OAuth integration
+  - **Google OAuth**: Client ID `913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8` (shared across environments)
+  - **GitHub OAuth Staging**: Client ID `Ov23liJJhx3ydaUtbCdq` (separate per environment)
+  - **Multi-Environment Strategy**: Shared Google app, separate GitHub apps for isolation
+
+#### A.4.3 OAuth Architecture
+
+**Foundation Specification:**
+- Basic OAuth provider integration
+- Single-environment authentication
+
+**Current Multi-Environment OAuth Implementation:**
+
+AImpactScanner implements a sophisticated multi-environment OAuth strategy that balances operational efficiency with security isolation. The system uses different approaches for Google and GitHub OAuth providers based on their specific characteristics and security requirements.
+
+**Provider-Specific Strategies:**
+
+##### Google OAuth (Shared Application Strategy)
+
+**Configuration:**
+- **Client ID**: `913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8`
+- **Strategy**: Single OAuth application shared across all environments
+- **Environments**: Production, Staging, Development
+- **Redirect URLs**: Multiple authorized redirect URIs in single app
+
+**Rationale for Sharing:**
+1. **Google's Robust Consent Management**: Google OAuth includes comprehensive user consent screens that clearly identify the application
+2. **Simplified Credential Management**: Single set of credentials reduces operational complexity
+3. **User Experience Consistency**: Users see the same "AImpactScanner" application name across environments
+4. **Cost Efficiency**: No need for multiple Google Cloud projects
+5. **Security Sufficiency**: Google's OAuth implementation provides adequate isolation through redirect URL validation
+
+**Security Measures:**
+- Multiple authorized redirect URLs configured in single OAuth application
+- Each environment uses its own Supabase redirect URL
+- Google validates redirect URL on every OAuth flow
+- User consent required for each new environment session
+- Tokens are environment-specific despite shared client ID
+
+**Authorized Redirect URLs:**
+```
+Production: https://pdmtvkcxnqysujnpcnyh.supabase.co/auth/v1/callback
+Staging: https://[staging-project-id].supabase.co/auth/v1/callback
+Development: http://localhost:54321/auth/v1/callback
+```
+
+##### GitHub OAuth (Separate Applications Strategy)
+
+**Configuration:**
+- **Staging Client ID**: `Ov23liJJhx3ydaUtbCdq`
+- **Production Client ID**: [Separate OAuth App]
+- **Strategy**: Dedicated OAuth application per environment
+- **Environments**: Isolated production, staging, and development apps
+
+**Rationale for Separation:**
+1. **Enhanced Security Isolation**: Complete separation of production and non-production credentials
+2. **GitHub's Security Model**: GitHub OAuth apps have broader access to organization and repository data
+3. **Audit Trail Clarity**: Separate apps provide clear audit logs per environment
+4. **Credential Compromise Mitigation**: Staging credential leak doesn't affect production
+5. **Organization Access Control**: Different permission scopes can be configured per environment
+
+**Security Benefits:**
+- Zero credential overlap between environments
+- Production credentials never used in testing
+- Separate client secrets for each environment
+- Independent revocation capabilities
+- Clear separation in GitHub organization settings
+
+**Environment-Specific Configuration:**
+
+```javascript
+// Staging Environment
+{
+  provider: 'github',
+  clientId: 'Ov23liJJhx3ydaUtbCdq',
+  redirectUrl: 'https://[staging-project-id].supabase.co/auth/v1/callback',
+  scopes: ['read:user', 'user:email']
+}
+
+// Production Environment
+{
+  provider: 'github',
+  clientId: '[production-client-id]',
+  redirectUrl: 'https://pdmtvkcxnqysujnpcnyh.supabase.co/auth/v1/callback',
+  scopes: ['read:user', 'user:email']
+}
+```
+
+**Supabase Configuration Per Environment:**
+
+Each Supabase project (production, staging) maintains its own OAuth provider configuration:
+
+**Production Supabase Project:**
+```toml
+[auth.external.google]
+enabled = true
+client_id = "913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
+
+[auth.external.github]
+enabled = true
+client_id = "[production-github-client-id]"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GITHUB_SECRET)"
+```
+
+**Staging Supabase Project:**
+```toml
+[auth.external.google]
+enabled = true
+client_id = "913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8"  # Same as production
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"  # Same secret
+
+[auth.external.github]
+enabled = true
+client_id = "Ov23liJJhx3ydaUtbCdq"  # Different from production
+secret = "env(SUPABASE_AUTH_EXTERNAL_GITHUB_SECRET_STAGING)"  # Different secret
+```
+
+**OAuth Callback Flow Architecture:**
+
+```
+User Authentication Request
+        |
+        ↓
+┌─────────────────────────────────────────────────────────────┐
+│              Frontend Application                           │
+│  User clicks "Sign in with Google/GitHub"                  │
+│  → Calls: supabase.auth.signInWithOAuth({ provider })     │
+└─────────────────────────────────────────────────────────────┘
+        |
+        ↓
+┌─────────────────────────────────────────────────────────────┐
+│           Supabase Auth Service                              │
+│  1. Retrieves OAuth config for provider                     │
+│  2. Generates state parameter (CSRF protection)             │
+│  3. Constructs authorization URL                            │
+│  4. Redirects to OAuth provider                             │
+└─────────────────────────────────────────────────────────────┘
+        |
+        ↓
+┌─────────────────────────────────────────────────────────────┐
+│         OAuth Provider (Google/GitHub)                       │
+│  1. User authenticates with provider                        │
+│  2. User grants consent (if required)                       │
+│  3. Provider generates authorization code                   │
+│  4. Redirects to Supabase callback URL                      │
+└─────────────────────────────────────────────────────────────┘
+        |
+        ↓
+┌─────────────────────────────────────────────────────────────┐
+│      Supabase Auth Callback Handler                          │
+│  1. Validates state parameter (CSRF check)                  │
+│  2. Exchanges code for access token                         │
+│  3. Fetches user profile from provider                      │
+│  4. Creates/updates user in Supabase                        │
+│  5. Generates Supabase session tokens                       │
+│  6. Redirects to application with tokens                    │
+└─────────────────────────────────────────────────────────────┘
+        |
+        ↓
+┌─────────────────────────────────────────────────────────────┐
+│        Frontend OAuth Callback Component                     │
+│  File: /src/components/OAuthCallback.jsx                    │
+│  1. Extracts tokens from URL hash/query                     │
+│  2. Establishes Supabase session                            │
+│  3. Validates authentication state                          │
+│  4. Redirects to protected route (dashboard)                │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Multi-Environment OAuth Architecture Diagram:**
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                    GOOGLE OAUTH (SHARED APP)                      │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  Client ID: 913334617953-9oi1ie4ngmqhl9eoe4r24l843m1ugdj8       │
+│                                                                    │
+│  ┌─────────────────┐    ┌─────────────────┐    ┌──────────────┐ │
+│  │   Production    │    │     Staging     │    │ Development  │ │
+│  │   Supabase      │    │    Supabase     │    │   Local      │ │
+│  │                 │    │                 │    │   Supabase   │ │
+│  │  Redirect:      │    │  Redirect:      │    │  Redirect:   │ │
+│  │  prod.supabase  │    │  staging.supabase│   │  localhost   │ │
+│  │  /auth/callback │    │  /auth/callback │    │  /auth/...   │ │
+│  └─────────────────┘    └─────────────────┘    └──────────────┘ │
+│           │                       │                      │        │
+│           └───────────────────────┴──────────────────────┘        │
+│                                   │                               │
+│                     ┌─────────────▼─────────────┐                │
+│                     │   Google Cloud Platform   │                │
+│                     │   Single OAuth App        │                │
+│                     │   Multiple Redirect URLs  │                │
+│                     └───────────────────────────┘                │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│                 GITHUB OAUTH (SEPARATE APPS)                      │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌─────────────────┐    ┌─────────────────┐    ┌──────────────┐ │
+│  │   Production    │    │     Staging     │    │ Development  │ │
+│  │   Supabase      │    │    Supabase     │    │   Local      │ │
+│  │                 │    │                 │    │   Supabase   │ │
+│  │  GitHub App:    │    │  GitHub App:    │    │  GitHub App: │ │
+│  │  [Prod ID]      │    │  Ov23liJJhx...  │    │  [Dev ID]    │ │
+│  │                 │    │                 │    │              │ │
+│  │  Redirect:      │    │  Redirect:      │    │  Redirect:   │ │
+│  │  prod.supabase  │    │  staging.supabase│   │  localhost   │ │
+│  │  /auth/callback │    │  /auth/callback │    │  /auth/...   │ │
+│  └────────┬────────┘    └────────┬────────┘    └──────┬───────┘ │
+│           │                      │                     │         │
+│           ▼                      ▼                     ▼         │
+│  ┌─────────────────┐    ┌─────────────────┐    ┌──────────────┐ │
+│  │ GitHub OAuth    │    │ GitHub OAuth    │    │ GitHub OAuth │ │
+│  │ Production App  │    │  Staging App    │    │   Dev App    │ │
+│  │ (Separate)      │    │  (Separate)     │    │  (Separate)  │ │
+│  └─────────────────┘    └─────────────────┘    └──────────────┘ │
+│                                                                    │
+└──────────────────────────────────────────────────────────────────┘
+
+SECURITY ISOLATION BENEFITS:
+✓ Production credentials never used in non-production (GitHub)
+✓ Staging testing cannot affect production OAuth (GitHub)
+✓ Clear audit trail per environment (GitHub)
+✓ Simplified operations with adequate security (Google)
+✓ Each environment has its own Supabase project isolation
+```
+
+**Security Implications:**
+
+**Advantages of Multi-Environment Strategy:**
+1. **Defense in Depth**: Multiple layers of security isolation
+2. **Credential Compromise Mitigation**: Staging breach doesn't affect production (GitHub)
+3. **Audit Trail Clarity**: Environment-specific logs and monitoring
+4. **Testing Safety**: Safe testing environment without production risk
+5. **Operational Flexibility**: Different configurations per environment needs
+
+**Security Controls:**
+- **Redirect URL Validation**: Strict validation on every OAuth flow
+- **CSRF Protection**: State parameter validation in callback
+- **Token Isolation**: Tokens are environment-specific and non-transferable
+- **Secret Rotation**: Independent secret rotation per environment (GitHub)
+- **Access Control**: Production secrets restricted to production team only
+
+**Operational Considerations:**
+
+**Credential Management:**
+```bash
+# Production secrets (restricted access)
+SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET="[production-secret]"
+SUPABASE_AUTH_EXTERNAL_GITHUB_SECRET="[production-secret]"
+
+# Staging secrets (developer access)
+SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET="[same-as-production]"
+SUPABASE_AUTH_EXTERNAL_GITHUB_SECRET_STAGING="[staging-secret]"
+```
+
+**Environment Variable Management:**
+- Production secrets stored in production Supabase project settings
+- Staging secrets stored in staging Supabase project settings
+- No secrets in frontend code (all handled by Supabase backend)
+- Secrets rotation schedule: Every 90 days for GitHub, as needed for Google
+
+**Monitoring and Observability:**
+- OAuth success/failure rates tracked per environment
+- Separate error logging for each provider
+- User authentication metrics per environment
+- Provider-specific performance monitoring
+
+**Migration Path:**
+If future requirements demand separate Google OAuth apps:
+1. Create dedicated Google Cloud projects per environment
+2. Configure separate OAuth applications
+3. Update Supabase configuration for each environment
+4. Migrate users gradually (existing tokens remain valid)
+5. Monitor for any authentication issues during migration
+
+**Best Practices Implemented:**
+- ✅ Principle of least privilege (minimal OAuth scopes)
+- ✅ Defense in depth (multiple security layers)
+- ✅ Secure by default (production isolation)
+- ✅ Clear separation of concerns (environment-specific configs)
+- ✅ Audit trail maintenance (per-environment logging)
+- ✅ Regular secret rotation (90-day schedule)
+- ✅ Comprehensive documentation (this section)
 
 ### A.5 Performance Optimization Implementation
 

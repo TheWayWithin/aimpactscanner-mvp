@@ -94,6 +94,10 @@ const CheckoutSuccess = () => {
   }, []);
 
   const handleContinue = () => {
+    // Signal App.jsx to refresh tier after payment
+    sessionStorage.setItem('tier_refresh_needed', 'true');
+    sessionStorage.setItem('tier_refresh_timestamp', Date.now().toString());
+
     // Route to appropriate destination
     if (destination?.url) {
       // Store URL for Analysis page to retrieve
@@ -104,8 +108,8 @@ const CheckoutSuccess = () => {
       sessionStorage.setItem('analysisSource', 'post_payment');
       window.location.hash = 'input'; // Analysis page
     } else {
-      // No pending analysis, go to analysis page
-      window.location.hash = 'input';
+      // No pending analysis, go to dashboard
+      window.location.hash = 'dashboard';
     }
   };
 
