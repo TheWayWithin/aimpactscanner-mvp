@@ -229,7 +229,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
                 />
               </div>
               {getRemainingAnalyses() === 0 && (
-                <p className="text-sm text-orange-600 mt-2">
+                <p className="text-sm text-orange-600 mt-2 max-w-full overflow-hidden break-words">
                   Monthly limit reached. Upgrade to Coffee for unlimited analyses!
                 </p>
               )}
