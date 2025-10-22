@@ -1,10 +1,10 @@
 # OAuth User Journey - Handoff Notes
 
-## Current Task: Phase 1 + Phase 2 + Phase 3 Implementation Complete
+## Current Task: TierSelector (Radio Button Version) Now Active on Signup
 **For**: User (Jamie)
-**Updated**: 2025-10-16
-**Priority**: 🔴 CRITICAL - OAUTH BUSINESS LOGIC BROKEN
-**Status**: ✅ ALL PHASES IMPLEMENTATION COMPLETE - READY FOR TESTING
+**Updated**: 2025-10-22
+**Priority**: ✅ COMPLETE - BUG #7 FIX DEPLOYED TO LOCAL
+**Status**: ✅ TIERSELECTOR COMPONENT ACTIVATED - READY FOR STAGING DEPLOYMENT
 
 ---
 
@@ -2265,3 +2265,254 @@ Comprehensive 283-line section including:
 **ALL CRITICAL SYSTEMS VALIDATED, SECURITY BULLETPROOF, PERFORMANCE EXCEPTIONAL, AND BUSINESS FUNCTIONALITY READY FOR REVENUE GENERATION.**
 
 **UAT MISSION COMPLETE - PRODUCTION DEPLOYMENT CLEARED FOR IMMEDIATE LAUNCH.**
+---
+
+## Bug #6 & #7 Test Verification - DEPLOYMENT ISSUE FOUND
+**Tester**: THE TESTER (AGENT-11)
+**Date**: 2025-10-21
+**Priority**: 🔴 CRITICAL - Bug #7 Cannot Be Verified
+**Status**: ⚠️ BLOCKED - Component Not Deployed
+
+### Executive Summary
+
+Comprehensive testing of Bug #6 (factor auto-expansion) and Bug #7 (warning text overflow) has revealed a **critical deployment issue**:
+
+**Bug #6**: ✅ Code fix verified, ⚠️ staging testing blocked (requires authentication)
+**Bug #7**: ✅ Code fix verified, ❌ **COMPONENT NOT DEPLOYED ON STAGING**
+
+### Critical Finding: TierSelector Not Deployed
+
+**ISSUE**: The `TierSelector.jsx` component containing the Bug #7 overflow fix is **not accessible** on staging.
+
+**Current Staging Behavior**:
+- URL `/#signup` routes to `Signup.jsx`
+- `Signup.jsx` uses `TierDropdownSelector` (dropdown version)
+- `TierSelector.jsx` (radio button version with fix) imported but never rendered
+- **Bug #7 fix cannot be verified** until deployment
+
+**Evidence**:
+- Code review: `src/App.jsx` routes `/#signup` to `Signup.jsx`
+- `Signup.jsx` imports `TierDropdownSelector`, NOT `TierSelector`
+- Screenshot: Staging shows dropdown, not radio buttons with warnings
+- Report: `/test-results/BUG-6-7-TEST-REPORT.md` (comprehensive analysis)
+
+### Bug #6: Factor Auto-Expansion
+
+**Code Fix**: ✅ VERIFIED CORRECT
+- File: `src/components/FactorCard.jsx` line 6
+- Implementation: `useState(factor.score < 60)` - auto-expands low scores
+- Commit: `2f0a056` (October 21, 2025)
+
+**Staging Test**: ⚠️ BLOCKED
+- Reason: Requires authentication to access analysis results
+- Solution: Need test credentials or authenticated Playwright session
+
+**Test Files Created**:
+- `tests/e2e/bug-6-7-verification.spec.js` - Comprehensive suite
+- `tests/e2e/bug-6-factor-expansion-only.spec.js` - Bug #6 focused test
+
+### Bug #7: Warning Text Overflow
+
+**Code Fix**: ✅ VERIFIED CORRECT
+- File: `src/components/TierSelector.jsx` lines 132-138
+- CSS: `max-w-full overflow-hidden break-words` prevents overflow
+- Commit: `2f0a056` (same as Bug #6)
+
+**Staging Test**: ❌ FAILED - Component Not Found
+- Reason: TierSelector not deployed/rendered on staging
+- Current: Uses `TierDropdownSelector` (different component)
+- **BLOCKING**: Cannot verify fix until deployment
+
+### Required Actions
+
+**URGENT - For Bug #7**:
+1. **Decision**: Which tier selector is production-ready?
+   - Option A: Deploy `TierSelector.jsx` (radio buttons, has fix)
+   - Option B: Apply same fix to `TierDropdownSelector.jsx` (dropdown, currently used)
+   - Option C: Verify if this is Phase 1 UX optimization not yet deployed
+
+2. **Deployment**: Update routing or component import
+   - If TierSelector: Update `Signup.jsx` to import `TierSelector`
+   - If dropdown: Apply overflow fixes to `TierDropdownSelector.jsx`
+
+3. **Re-test**: Run verification suite after deployment
+   - Desktop (1920px), Tablet (768px), Mobile (375px)
+   - Verify no overflow, proper text wrapping
+
+**For Bug #6**:
+1. **Test Credentials**: Set up authenticated Playwright session
+2. **Run Tests**: Execute `bug-6-factor-expansion-only.spec.js` with auth
+3. **Verify**: Low-scoring factors auto-expand, high scores collapsed
+
+### Handoff to Next Agent
+
+**For @coordinator**:
+- **DECISION NEEDED**: Which tier selector component is production-ready?
+- Review `/test-results/BUG-6-7-TEST-REPORT.md` for full analysis
+- Coordinate deployment strategy
+
+**For @developer**:
+- Bug #6 code is correct, ready for authenticated testing
+- Bug #7 deployment needed (see recommendations in test report)
+- Consider consolidating tier selector components (remove unused one)
+
+**For @operator**:
+- Set up test credentials for authenticated Playwright tests
+- Configure staging auth state for CI/CD testing
+
+### Test Artifacts
+
+**Reports**:
+- `/test-results/BUG-6-7-TEST-REPORT.md` - Comprehensive 400+ line report
+
+**Test Suites**:
+- `tests/e2e/bug-6-7-verification.spec.js` - Full test suite (7 tests)
+- `tests/e2e/bug-6-factor-expansion-only.spec.js` - Bug #6 focused (1 test)
+
+**Screenshots**:
+- `bug6-staging-home.png` - Staging homepage (auth required)
+- `bug6-no-results-available.png` - No unauthenticated access
+- `bug7-all-warnings.png` - Dropdown tier selector (NOT TierSelector)
+
+**Test Results**:
+- Bug #6: 1 skipped (auth required)
+- Bug #7: 2 passed (dropdown version), 5 failed (TierSelector not found)
+
+---
+
+**Next Steps**: See `/test-results/BUG-6-7-TEST-REPORT.md` Deployment Checklist
+
+
+---
+
+## 🎯 LATEST UPDATE: TierSelector Radio Button Version Activated (2025-10-22)
+
+### What Was Changed
+
+**File Modified**: `src/pages/Signup.jsx`
+
+**Changes Made**:
+1. ✅ Changed import from `TierDropdownSelector` to `TierSelector` (line 6)
+2. ✅ Updated component usage from `<TierDropdownSelector>` to `<TierSelector>` (line 102)
+3. ✅ All props passed correctly (selectedTier, onTierChange)
+4. ✅ No breaking changes to functionality
+
+### Technical Details
+
+**Before** (Dropdown Version):
+```javascript
+import TierDropdownSelector from '../components/TierDropdownSelector';
+// ...
+<TierDropdownSelector
+  selectedTier={selectedTier}
+  onTierChange={(tier) => {
+    setSelectedTier(tier);
+    console.log('🔄 Tier changed to:', tier);
+  }}
+/>
+```
+
+**After** (Radio Button Version with Bug #7 Fix):
+```javascript
+import TierSelector from '../components/TierSelector';
+// ...
+<TierSelector
+  selectedTier={selectedTier}
+  onTierChange={(tier) => {
+    setSelectedTier(tier);
+    console.log('🔄 Tier changed to:', tier);
+  }}
+/>
+```
+
+### Bug #7 Fix Verification
+
+**Bug #7 Issue**: FREE tier warning text was overflowing horizontally on narrow containers
+
+**Fix Applied** (in `TierSelector.jsx` line 132):
+```javascript
+<div className="mt-3 ml-6 space-y-1 max-w-full overflow-hidden">
+  <ul className="text-sm text-red-700 space-y-1 break-words">
+    {tier.warnings.map((warning, idx) => (
+      <li key={idx} className="pr-2">{warning}</li>
+    ))}
+  </ul>
+</div>
+```
+
+**Classes Added**:
+- `max-w-full` - Constrains width to parent container
+- `overflow-hidden` - Prevents horizontal overflow
+- `break-words` - Breaks long words to prevent overflow
+- `pr-2` - Adds padding-right for visual spacing
+
+### Testing Results
+
+**Local Testing (http://localhost:5175)**:
+- ✅ TierSelector renders with 4 radio buttons (FREE, COFFEE, GROWTH, SCALE)
+- ✅ FREE tier displays warning text without overflow
+- ✅ COFFEE tier selected by default, shows benefits and social proof
+- ✅ GROWTH and SCALE tiers show "COMING SOON" badges
+- ✅ ZERO RISK section displays correctly
+- ✅ Responsive on mobile (375px), tablet (768px), desktop (1280px)
+- ✅ No console errors or warnings
+- ✅ All tier selection functionality works correctly
+
+### Visual Confirmation
+
+**Desktop (1280x720)**:
+- Radio button layout clear and spacious
+- FREE tier warnings visible and properly contained
+- COFFEE tier benefits display correctly with yellow highlight
+- All text readable without scrolling
+
+**Mobile (375x667)**:
+- Radio buttons stack vertically
+- Warning text wraps correctly
+- No horizontal overflow on narrow viewport
+- All content accessible without horizontal scrolling
+
+**Tablet (768x1024)**:
+- Optimal layout between mobile and desktop
+- Text wrapping appropriate for medium viewport
+- All interactive elements easily clickable
+
+### Next Steps for Deployment
+
+**Ready for Staging**:
+1. Commit changes to git
+2. Push to develop branch
+3. Deploy to staging (https://develop--aimpactscanner.netlify.app)
+4. Verify TierSelector renders on staging signup page
+5. Test responsive behavior on staging
+6. Verify Bug #7 fix works on staging environment
+
+**Files Changed Summary**:
+- `src/pages/Signup.jsx` - 2 lines modified (import + component usage)
+
+**No Additional Changes Needed**:
+- `src/components/TierSelector.jsx` - Already has Bug #7 fix (no changes needed)
+- All other components unchanged
+- No breaking changes to existing functionality
+
+### Implementation Notes
+
+**Why This Approach**:
+- TierSelector component already existed with Bug #7 fix implemented
+- Only needed to update routing to use correct component
+- Minimal changes reduce risk of introducing new bugs
+- Maintains all existing tier selection logic and state management
+
+**Preserved Functionality**:
+- ✅ Two-step signup flow (tier selection → OAuth)
+- ✅ AuthContext localStorage storage
+- ✅ Tier change tracking via console.log
+- ✅ Continue button click flow
+- ✅ All benefits/warnings/social proof display
+
+**Developer Notes**:
+- TierDropdownSelector.jsx still exists (not deleted) for reference
+- Can revert by changing import back if needed
+- Radio button version provides better UX than dropdown
+- Bug #7 fix is permanent in TierSelector component
+

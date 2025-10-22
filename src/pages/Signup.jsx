@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { supabase } from '../lib/supabaseClient';
 import AuthMethodSelector from '../components/AuthMethodSelector';
-import TierDropdownSelector from '../components/TierDropdownSelector';
+import TierSelector from '../components/TierSelector';
 
 const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
   const [message, setMessage] = useState('');
@@ -99,7 +99,7 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
 
             {/* Single column layout - content expands on wider screens */}
             <div className="max-w-3xl mx-auto">
-              <TierDropdownSelector
+              <TierSelector
                 selectedTier={selectedTier}
                 onTierChange={(tier) => {
                   // Just update the tier - DON'T auto-progress to OAuth
