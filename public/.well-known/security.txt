@@ -1,0 +1,17 @@
+Contact: mailto:security@aimpactscanner.com
+Expires: 2026-10-24T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://aimpactscanner.com/.well-known/security.txt
+Policy: https://aimpactscanner.com/security-policy
+Acknowledgments: https://aimpactscanner.com/security-acknowledgments
+
+# Security Contact Information for AImpactScanner
+#
+# If you discover a security vulnerability in AImpactScanner,
+# please report it to us via the contact information above.
+#
+# We appreciate responsible disclosure and will acknowledge
+# all valid security reports.
+#
+# For more information about our security practices, please
+# visit our security policy page.

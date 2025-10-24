@@ -1,0 +1,36 @@
+/* TEAM */
+Founder & Developer: Jamie Watters
+Site: https://jamiewatters.work
+Location: United Kingdom
+
+AI Development Assistant: Claude (Anthropic)
+Role: Code development, architecture, testing
+
+/* THANKS */
+Built with the MASTERY-AI Framework
+Community: Security researchers and early users
+Open Source: React, Vite, Tailwind CSS communities
+
+/* TECHNOLOGY COLOPHON */
+Frontend Framework: React 19
+Build Tool: Vite 7
+Styling: Tailwind CSS 4
+State Management: React Context API
+Routing: Custom hash-based routing
+PDF Generation: jsPDF 3
+HTML to Canvas: html2canvas
+Authentication: Supabase Auth (OAuth + Magic Links)
+Database: Supabase (PostgreSQL)
+Edge Functions: Supabase Edge Functions (Deno)
+Payment Processing: Stripe
+Hosting: Netlify
+Development: ESLint 9, Prettier
+Testing: Playwright 1.55, Vitest 2
+Coverage: Vitest Coverage V8
+
+/* SITE */
+Last update: 2025/10/24
+Standards: HTML5, CSS3, ES2020+
+Components: Accessible, semantic, responsive
+Doctype: HTML5
+IDE: Claude Code, VS Code
