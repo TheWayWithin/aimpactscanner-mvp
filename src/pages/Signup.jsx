@@ -3,12 +3,13 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { supabase } from '../lib/supabaseClient';
 import AuthMethodSelector from '../components/AuthMethodSelector';
-import TierDropdownSelector from '../components/TierDropdownSelector';
+import DynamicTierSelector from '../components/DynamicTierSelector/DynamicTierSelector';
 
 const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [selectedTier, setSelectedTier] = useState('coffee'); // Default to COFFEE tier
+  const [selectedTier, setSelectedTier] = useState('growth'); // Default to GROWTH tier
+  const [billingFrequency, setBillingFrequency] = useState('annual'); // Default to ANNUAL billing
   // For login mode, show OAuth buttons immediately (skip tier selection)
   // For signup mode, require explicit "Continue" button click
   const [showOAuthButtons, setShowOAuthButtons] = useState(mode === 'login');
@@ -99,41 +100,38 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
 
             {/* Single column layout - content expands on wider screens */}
             <div className="max-w-3xl mx-auto">
-              <TierDropdownSelector
-                selectedTier={selectedTier}
+              <DynamicTierSelector
+                defaultTier="growth"
+                defaultBilling="annual"
                 onTierChange={(tier) => {
-                  // Just update the tier - DON'T auto-progress to OAuth
                   setSelectedTier(tier);
                   console.log('🔄 Tier changed to:', tier);
                 }}
+                onBillingChange={(frequency) => {
+                  setBillingFrequency(frequency);
+                  console.log('🔄 Billing frequency changed to:', frequency);
+                }}
+                onSelectionComplete={(tier, billing, isTrial = false) => {
+                  // Store in authContext for OAuth callback
+                  const authContext = {
+                    selectedTier: tier,
+                    billingFrequency: billing,
+                    isTrial: isTrial, // NEW: Track if user selected trial
+                    mode: 'signup',
+                    timestamp: Date.now()
+                  };
+                  localStorage.setItem('authContext', JSON.stringify(authContext));
+
+                  // Set 7-day expiry
+                  const ttl = 7 * 24 * 60 * 60 * 1000;
+                  localStorage.setItem('authContextExpiry', (Date.now() + ttl).toString());
+
+                  console.log('✅ Selection confirmed:', { tier, billing, isTrial }, 'stored in authContext');
+
+                  // NOW show OAuth buttons
+                  setShowOAuthButtons(true);
+                }}
               />
-
-              {/* Continue Button - User must click to proceed to OAuth */}
-              <div className="mt-6">
-                <button
-                  onClick={() => {
-                    // Store in authContext for OAuth callback
-                    const authContext = {
-                      selectedTier,
-                      mode: 'signup',
-                      timestamp: Date.now()
-                    };
-                    localStorage.setItem('authContext', JSON.stringify(authContext));
-
-                    // FIX 3: Set 7-day expiry (was 24 hours)
-                    const ttl = 7 * 24 * 60 * 60 * 1000;
-                    localStorage.setItem('authContextExpiry', (Date.now() + ttl).toString());
-
-                    console.log('✅ Tier confirmed:', selectedTier, 'stored in authContext');
-
-                    // NOW show OAuth buttons
-                    setShowOAuthButtons(true);
-                  }}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg transition-colors text-lg shadow-lg hover:shadow-xl"
-                >
-                  Continue to Sign Up →
-                </button>
-              </div>
             </div>
           </div>
         )}
@@ -146,14 +144,19 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
               {mode === 'signup' && selectedTier && (
                 <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded">
                   <p className="text-sm text-green-800">
-                    ✅ <strong>Plan Selected:</strong> {selectedTier === 'free' ? 'Free' : selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1)} Tier
+                    ✅ <strong>Plan Selected:</strong> {
+                      selectedTier === 'coffee' ? 'Solo' :
+                      selectedTier === 'free' ? 'Free' :
+                      selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1)
+                    } Tier ({billingFrequency === 'annual' ? 'Annual' : 'Monthly'} Billing)
                     <button
                       onClick={() => {
-                        setSelectedTier(null);
+                        setSelectedTier('growth');
+                        setBillingFrequency('annual');
                         setShowOAuthButtons(false);
                         localStorage.removeItem('authContext');
                         localStorage.removeItem('authContextExpiry');
-                        console.log('🔄 Tier selection reset');
+                        console.log('🔄 Selection reset');
                       }}
                       className="ml-2 text-green-700 hover:text-green-900 underline font-semibold"
                     >

@@ -1,743 +1,458 @@
 # AImpactScanner - Project Plan
 
-## Current Mission Status
+## Current Status (October 26, 2025)
 
-### ✅ COMPLETE: OPTION 2 - Phase 1 Signup Flow Fixes + E2E Testing (Jan 19, 2025)
-**Objective**: Implement all 3 critical fixes + create automated E2E tests for 8 user journeys
-**Status**: ✅ COMPLETE - DEPLOYED TO STAGING (after hotfix)
-**Started**: 2025-01-19 16:30 UTC
-**Completed**: 2025-01-20 03:30 UTC (including build hotfix)
-**Duration**: ~11 hours (analysis + implementation + testing + deployment + hotfix)
-**Priority**: CRITICAL - Production revenue impact
+**ACTIVE MISSION**: Tier & Pricing Realignment + Conversion Optimization
+**Status**: Phase 5 Complete ✅ - Ready for Phase 6 (Doug Hall Messaging)
+**Priority**: P1 HIGH - Revenue Impact via Conversion Optimization
+**Started**: October 24, 2025
+**Design Completed**: October 25, 2025
+**Phase 3 Completed**: October 25, 2025
+**Phase 4 Completed**: October 26, 2025
+**Phase 5 Completed**: October 26, 2025
 
-**Deployment Issues Resolved**:
-- ❌ Initial deploy failed: Missing `TierDropdownSelector.jsx` (not committed to git)
-- ✅ Hotfix applied: Commit `a436889` added missing file (203 lines)
-- ✅ Rebuild successful: Build completed in 15.4s, deployed in 1m46s
-- ✅ Deploy preview live: https://develop--aimpactscanner.netlify.app
+**CRITICAL TASK - DEV ENVIRONMENT AUDIT**: 🚨 P0 URGENT
+- [ ] Audit all .env files (.env.local, .env, .env.example)
+- [ ] Verify local dev uses STAGING database (isgzvwpjokcmtizstwru)
+- [ ] Verify staging deploy uses STAGING database
+- [ ] Verify production uses PRODUCTION database (pdmtvkcxnqysujnpcnyh)
+- [ ] Document environment setup in CLAUDE.md
+- [ ] Create checklist to verify before any testing
+- [ ] **NEVER test OAuth/Stripe on production again**
+**Reason**: Accidentally tested Phase 5 trial integration on production database
+
+**Current Objective**: Implement dynamic Doug Hall messaging (OB/RRB/DD) that updates on tier/billing changes
+
+**Implementation Approach**: 8 phased milestones with Playwright test gates between each phase
+
+**Mission Type**: CONVERSION OPTIMIZATION (not just technical realignment)
+**Key Innovation**: Dynamic persuasive copy + Annual pricing anchoring effect
 
 **Mission Phases**:
-- [x] PHASE 1: Implement 3 Critical Fixes ✅ COMPLETE
-  - [x] Fix 1: Upsell routing bypass (OAuthCallback.jsx:246-250) - DONE
-  - [x] Fix 2: SIGNED_IN race condition (App.jsx:541-564) - DONE
-  - [x] Fix 3: authContext TTL 24hr→7 days (Signup.jsx:123, AuthMethodSelector.jsx:30) - DONE
-- [x] PHASE 2: Create E2E Test Suite ✅ COMPLETE
-  - [x] Journey 1-3: OAuth flows automated (2/8 - OAuth bot detection blocker)
-  - [x] Test infrastructure created and validated
-  - [x] Manual UAT checklist created for all 8 journeys
-  - [x] Test documentation: 4 comprehensive docs created (1,212 lines)
-  - [x] Database setup/teardown utilities implemented
-- [x] PHASE 3: Staging Deployment ✅ COMPLETE
-  - [x] Verify fixes locally on localhost:5173 - Build successful
-  - [x] Commit and push to develop branch - Commit: cbd0525b
-  - [x] Deploy preview triggered - https://develop--aimpactscanner.netlify.app
-  - [x] Update documentation in progress.md - Complete
 
-**Results**:
-- **Fixes Deployed**: 3 critical issues resolved (+1399 lines, -78 deletions)
-- **Test Suite**: 4 test files created (1,212 total lines)
-- **Expected Impact**: Journey success rate 25% → 100% (2/8 → 8/8)
-- **Revenue Impact**: Upsell conversion restored (was 0% bypass)
-- **Reliability**: Magic link TTL 24hr → 7 days (95%+ reliability)
+### Phase 1: Strategic Analysis ✅ COMPLETE
+- [x] Strategist: Analyze current tier structure vs PRD requirements
+- [x] Strategist: Extract Doug Hall messaging (OB/RRB/DD) from PRD
+- [x] Coordinator: Correct mission scope (7-Day Trial = Growth promotion, not separate tier)
+- [x] Strategist: Review annual pricing strategy document
 
-**Environment**: Staging database (`impactscanner-staging`)
-**Commit**: cbd0525bf9f3123e73c08c4e983c060a7461fb12
-**Deploy URL**: https://develop--aimpactscanner.netlify.app
+### Phase 2: Conversion UX Design ✅ COMPLETE
+- [x] Designer: Create dynamic tier selector specification
+- [x] Designer: Design real-time value prop updates (as user toggles tiers)
+- [x] Designer: Create "missing out" messaging for lower tier selections
+- [x] Designer: Specify visual hierarchy (Growth as primary/default)
+- [x] Designer: Integrate annual pricing with billing frequency toggle
+- [x] Designer: Create complete copy matrix (4 tiers × 2 billing frequencies)
+- [x] Designer: Update visual mockups with annual pricing states
 
-**Next Steps**: Manual UAT required to validate all 8 journeys on staging
+### Phase 3: Stripe Product Setup ✅ COMPLETE
+**Objective**: Set up annual pricing products and trial configuration in Stripe
+**Environment**: Stripe Dashboard (both test and live modes)
+**Duration**: 1-2 days
+**Completed**: October 25, 2025
 
-**Reference Documentation**:
-- Analysis: `/docs/PHASE-1-JOURNEY-MAP-ANALYSIS.md`
-- Execution Plan: `/OPTION-2-EXECUTION-PROMPT.md`
-- Test Results: `/tests/e2e/PHASE1-TEST-EXECUTION-RESULTS.md`
-- UAT Checklist: `/tests/e2e/PHASE1-TEST-EXECUTION-RESULTS.md` (Manual Testing section)
+**Tasks**:
+- [x] Create annual pricing products in Stripe:
+  - [x] Solo Annual: $49.50/year ($4.13/mo equivalent)
+  - [x] Growth Annual: $149.50/year ($12.46/mo equivalent)
+  - [x] Scale Annual: $299.50/year ($24.96/mo equivalent)
+- [x] Update existing monthly products with new prices:
+  - [x] Coffee → Solo Monthly: $4.95 → $5.95/month
+  - [x] Growth Monthly: $14.95 → $17.95/month
+  - [x] Scale Monthly: $29.95 → $34.95/month
+- [x] Configure trial settings:
+  - [x] Growth tier: 7-day trial, card required upfront
+  - [x] Trial period: 7 days, then auto-converts to selected billing
+  - [x] Test trial checkout in Stripe test mode
+
+**Test Gate 1**: Automated Product Verification ✅ PASSED
+```bash
+# Verification script results:
+✅ TEST MODE:  6/6 products passed
+✅ LIVE MODE:  6/6 products passed
+✅ TOTAL:      12/12 products verified
+✅ All pricing correct ($5.95, $49.50, $17.95, $149.50, $34.95, $299.50)
+✅ All metadata correct (tier=coffee/growth/scale, billing=annual)
+✅ Growth Annual trial configured (7 days)
+```
+
+**Success Criteria**: ✅ ALL MET
+- ✅ All 6 products created and configured in Stripe (test + live)
+- ✅ Automated verification passed (12/12 products)
+- ✅ Trial configuration verified (7 days, card required)
+- ✅ Pricing verified correctly in Stripe API
+
+**Deliverables**:
+- `STRIPE-PRICE-IDS.md` - Test mode Price IDs
+- `STRIPE-PRICE-IDS-LIVE.md` - Live mode Price IDs
+- `STRIPE-ENV-VARS.txt` - Test mode environment variables
+- `STRIPE-ENV-VARS-LIVE.txt` - Live mode environment variables
+- `ENV-SETUP-CHECKLIST.md` - Setup guide
+- `verify-stripe-products.cjs` - Automated verification script
 
 ---
 
-## 🔴 CRITICAL: UAT TESTING FINDINGS (Jan 21, 2025)
-**Status**: ⚠️ BLOCKING PRODUCTION DEPLOYMENT
-**Tested By**: User (Jamie)
-**Environment**: Staging (https://develop--aimpactscanner.netlify.app)
+### Phase 4: Tier Selector Component (Basic) ✅ COMPLETE
+**Objective**: Build core tier selector with billing toggle (no Doug Hall messaging yet)
+**Environment**: Local dev (http://localhost:5173) using staging database
+**Duration**: 2-3 days
+**Completed**: October 26, 2025
 
-### ✅ PASSED: OAuth Signup Flows
-**Journey 1**: Coffee Tier → Google OAuth → Stripe Checkout ✅
-- Tier selection works correctly
-- OAuth completes successfully
-- Routes to Stripe checkout (not dashboard bypass)
+**Tasks**:
+- [x] Create component structure:
+  - [x] `DynamicTierSelector.jsx` - Main container
+  - [x] `BillingToggle.jsx` - Annual/Monthly toggle
+  - [x] `TierOptionsList.jsx` - Tier radio buttons
+  - [x] `useBillingPricing.js` - Pricing hook
+- [x] Implement basic functionality:
+  - [x] Billing toggle (annual default, switches to monthly)
+  - [x] Tier selection (Growth default, Free/Solo/Growth/Scale options)
+  - [x] "coffee" → "Solo" display mapping (internal ID stays "coffee")
+  - [x] Pricing display updates on billing toggle (500ms transition)
+- [x] State management:
+  - [x] `billingFrequency` state (default: 'annual')
+  - [x] `selectedTier` state (default: 'growth')
+  - [x] Save to authContext for OAuth flow
 
-**Journey 3**: FREE Tier → Google OAuth → Input Page ✅
-- FREE tier selectable
-- OAuth completes successfully
-- Routes to input page (not checkout)
+**Test Gate 2**: Playwright E2E Tests (Local Dev) ✅ PASSED
+```bash
+# Ran tests on http://localhost:5173
+npx playwright test tests/e2e/tier-selector-basic.spec.js --headed
 
-### 🔴 CRITICAL BUGS FOUND
+# Test Results:
+✅ 1. Default state: Growth tier + Annual billing selected
+✅ 2. Toggle to monthly: Pricing updates (Growth $17.95 → $12.46)
+✅ 3. Select Solo tier: Display shows "Solo" (internal still "coffee")
+✅ 4. Select Free tier: Works correctly
+✅ 5. Select Scale tier: Works correctly
+✅ 6. authContext stores: selectedTier + billingFrequency
+```
 
-#### Bug 1: FREE Tier Limits Not Enforced
-**Severity**: 🔴 CRITICAL - BLOCKING
-**Impact**: Revenue loss - users get unlimited FREE analyses
+**Success Criteria**: ✅ ALL MET
+- ✅ All Playwright tests pass (6/6)
+- ✅ Default state correct (Growth + Annual)
+- ✅ Billing toggle works with smooth transitions
+- ✅ "coffee" → "Solo" mapping works
+- ✅ authContext saves tier + billing frequency
 
-**Details**:
-- FREE tier allows 4th analysis (should block after 3)
-- FREE tier allows 5th analysis (should block after 3)
-- No enforcement of 3 analyses/day limit
-- Users can run unlimited analyses on FREE tier
-
-**Expected**: Block analysis #4 with upgrade prompt
-**Actual**: Analyses 4, 5, 6+ all complete successfully
-
-#### Bug 2: Usage Counter Incorrect
-**Severity**: 🔴 CRITICAL
-**Impact**: Misleading user data
-
-**Details**:
-- After 3 analyses: Shows "3 used, 2 remaining" (should be "3 used, 0 remaining")
-- After 4 analyses: Shows "4 used, 1 remaining" (should be blocked)
-- After 5 analyses: Shows "5 used, 3 remaining 5/3" (counter resets?)
-- "Remaining" counter appears to reset instead of going negative
-
-**Root Cause**: Likely integer overflow or reset logic instead of enforcement
-
-#### Bug 3: Upgrade Button Non-Functional ✅ FIXED
-**Severity**: 🟡 MAJOR
-**Impact**: Blocks upgrade path
-**Status**: ✅ RESOLVED - Ready for Testing
-**Fixed**: 2025-01-21
-
-**Details**:
-- After exceeding FREE limit, error banner appears
-- Error banner showed message but NO upgrade button
-- `analysisError.action = 'upgrade'` was set but never rendered
-
-**Root Cause**: Error banner component missing UPGRADE button render logic
-- Error object had `action: 'upgrade'` property
-- Banner displayed message and close button only
-- No CTA button rendered for the upgrade action
-
-**Solution Implemented**:
-- Added UPGRADE button to error banner (App.jsx lines 1979-2003)
-- Button conditionally renders when `analysisError.action === 'upgrade'`
-- Prominent blue CTA button with hover effects
-- Navigates to pricing page on click
-- Removed 2-second auto-redirect for better UX
-
-**Files Modified**:
-- `src/App.jsx` (lines 1258, 1329, 1979-2003) - Added button, removed auto-redirect
-
-**Testing**: Dev server running at http://localhost:5173 - ready for manual testing
-
-#### Bug 4: Dashboard "Start Analysis" Wrong Route ✅ VERIFIED FIXED
-**Severity**: 🟡 MEDIUM (Originally reported)
-**Impact**: None - already working correctly
-**Status**: ✅ CANNOT REPRODUCE - Already Fixed
-**Verified**: 2025-01-21
-
-**Original Report**:
-- Dashboard "Start Analysis" button routes to `/#landing`
-- Should route to `/#input`
-
-**Investigation**:
-- Reviewed App.jsx line 1956: Button correctly calls `setCurrentView('input')`
-- No routing issues found in code
-- Likely already fixed in previous commits or was a transient issue
-
-**Current Behavior**: ✅ Button correctly navigates to input page
-
-**Files Reviewed**:
-- `src/App.jsx` (line 1956) - Button implementation verified correct
-
-#### Bug 5: Account Page "Upgrade" Wrong Route ✅ VERIFIED FIXED
-**Severity**: 🟡 MEDIUM (Originally reported)
-**Impact**: None - already working correctly
-**Status**: ✅ CANNOT REPRODUCE - Already Fixed
-**Verified**: 2025-01-21
-
-**Original Report**:
-- Account "Upgrade to Coffee" button routes to `/pricing#landing`
-- Should route to `/#pricing`
-- Extra `#landing` fragment added
-
-**Investigation**:
-- Reviewed SimpleAccountDashboard.jsx line 202: Link correctly uses `href="/#pricing"`
-- No `#landing` fragment in code
-- Hash routing properly configured
-
-**Current Behavior**: ✅ Button correctly navigates to pricing page
-
-**Files Reviewed**:
-- `src/components/SimpleAccountDashboard.jsx` (line 202) - Link href verified correct
-
-#### Bug 6: Factor Analysis Details Missing
-**Severity**: 🟡 MEDIUM
-**Impact**: Feature not working as designed
-
-**Details**:
-- View Report shows overall results and pillar scores correctly
-- "Factor Analysis Details by Pillar" section shows:
-  "No detailed factor analysis available for this scan. The analysis may still be processing or factors data was not returned."
-- Occurs for all analyses, not just recent ones
-- Pillar scores ARE present, but detailed factors are missing
-
-**Expected**: Factor breakdown for each pillar
-**Actual**: "No detailed factor analysis available"
-
-#### Bug 7: Usage Summary Warning Text Overlap
-**Severity**: 🟢 LOW - Cosmetic
-**Impact**: Visual display issue only
-
-**Details**:
-- Account page Usage Summary section
-- Warning text "Monthly limit reached. Upgrade to Coffee for unlimited analyses!"
-- Text overlaps/obscured by blue progress bar
-- Text position too high in the layout
-
-**Expected**: Warning text clearly visible below progress bar
-**Actual**: Warning text partially hidden behind progress bar
-
-**File**: `src/components/SimpleAccountDashboard.jsx` (line ~232)
-
-### ✅ RESOLVED CRITICAL BUGS (Jan 21, 2025)
-
-#### Bug 1: FREE Tier Limits Not Enforced ✅ FIXED
-**Fixed By**: Commit ab1874c
-**Solution**: Added check in App.jsx to block analysis when incrementUsage() returns false
-**Verified**: User tested - 4th analysis now properly blocked with upgrade prompt
-
-#### Bug 2: Usage Counter Incorrect ✅ FIXED
-**Fixed By**: Commits ab1874c + 4565fa6
-**Solution**:
-- Fixed Math.max(0, ...) in useUsageTracking.js
-- Fixed falsy 0 check in SimpleAccountDashboard.jsx
-**Verified**: User tested - now shows "3 used, 0 remaining" correctly
-
-### 🔴 NEW CRITICAL BUGS (Jan 21, 2025 - Post-Upgrade Testing)
-
-#### Bug 8: Coffee Tier Users Redirected to Stripe on Login ✅ FIXED
-**Severity**: 🔴 CRITICAL - BLOCKING
-**Impact**: Existing Coffee customers cannot access dashboard
-**Status**: ✅ RESOLVED (Complete fix with 2 parts)
-**Fixed By**: Commits 0e1113f + f175852
-**Deployed**: 2025-01-21
-
-**Details**:
-- Coffee tier users sign in successfully
-- Instead of routing to dashboard, redirected to Stripe checkout
-- Happens on EVERY login attempt (infinite loop)
-- Tier shows correctly in database and on Account page AFTER navigating
-- Manual fix: Setting `is_first_login: false` in database resolved issue
-
-**Root Causes Identified** (2 separate issues):
-
-1. **Tier-Based Routing Logic Missing** (authRouting.js):
-   - Lines 259-261 routed ALL returning users through `getUpsellPage()`
-   - `getUpsellPage()` defaults undefined tier to 'free' (line 297)
-   - Free tier routes to '/upsell/coffee' which triggers Stripe checkout
-   - **Fix**: Added tier check to route paid users to dashboard (0e1113f)
-
-2. **is_first_login Flag Never Cleared** (OAuthCallback.jsx):
-   - When `is_first_login: true`, routes through signup flow (Stripe for Coffee)
-   - `markFirstLoginComplete()` was NEVER called in this code path
-   - Creates infinite loop: signup → Stripe → login → signup → Stripe...
-   - **Fix**: Call `markFirstLoginComplete()` before routing (f175852)
-
-**Solutions Applied**:
-
-**Part 1** (Commit 0e1113f - authRouting.js):
-- Added tier check in `getPostLoginDestination()` function (lines 259-271)
-- Paid tier users (Coffee/Growth/Scale) → dashboard
-- FREE tier users → upsell page
-
-**Part 2** (Commit f175852 - OAuthCallback.jsx):
-- Import `markFirstLoginComplete` from authRouting
-- Call `await markFirstLoginComplete(userData.id)` at line 230
-- Sets `is_first_login: false` BEFORE routing
-- Prevents infinite redirect loop
-
-**Files Modified**:
-- `src/utils/authRouting.js` - Added tier-based routing logic
-- `src/components/OAuthCallback.jsx` - Added is_first_login flag management
-
-#### Bug 9: Manage Subscription Button Not Working ✅ FIXED
-**Severity**: 🔴 CRITICAL
-**Impact**: Coffee tier users cannot manage subscriptions
-**Status**: ✅ RESOLVED - Deployed to Staging
-**Fixed**: 2025-01-21
-**Deployed**: Staging environment
-
-**Details**:
-- Account page shows "Manage Subscription" button for Coffee tier
-- Clicking button showed error: "Unable to open subscription management"
-- Console error: 400 from `create-portal-session` Edge Function
-- URL: `isgzvwpjokcmtizstwru.supabase.co/functions/v1/create-portal-session`
-
-**Root Cause**: Coffee tier users missing `stripe_customer_id` in database due to:
-- Webhook timing issues (tier set before webhook fired)
-- Webhook failures (Stripe webhook didn't update database)
-- Manual tier upgrades (admin set tier without customer ID)
-- Legacy users (upgraded before customer ID logic existed)
-
-**Solution Implemented**: Self-healing Edge Function
-- Automatically searches Stripe for customer by email when customer ID missing
-- Backfills database with found customer ID
-- Proceeds with portal session transparently
-- Enhanced error messages for genuine issues
-- Zero user impact (works transparently)
-
-**Files Modified**:
-- `supabase/functions/create-portal-session/index.ts` (lines 67-114) - Added automatic recovery
-- `BUG-9-FIX-DOCUMENTATION.md` - Comprehensive technical documentation
-- `test-portal-fix.js` - Test script with manual testing instructions
-- `diagnose-bug9.js` - Database diagnostic tool
-
-**Deployment**:
-- Staging: ✅ DEPLOYED to `isgzvwpjokcmtizstwru` project
-- Production: ⏳ READY TO DEPLOY (awaiting approval)
-
-#### Bug 10: Tier Not Updating in UI After Stripe Payment ✅ FIXED
-**Severity**: 🔴 CRITICAL
-**Impact**: Users see stale tier data after successful payment
-**Status**: ✅ RESOLVED - Ready for Testing
-**Fixed**: 2025-01-21
-
-**Details**:
-- User upgrades from FREE to Coffee via error banner → Stripe payment
-- Payment completes successfully in Stripe ✅
-- Backend tier updated (Coffee features work: unlimited analyses, PDF export) ✅
-- UI still shows "Free" badge in header ❌
-- Account page shows "Free Plan" ❌
-- Conflicting data: "Remaining Analyses: Unlimited" but "Current Plan: Free"
-
-**Root Cause**: UpgradeHandler success URL bypasses CheckoutSuccess page
-- Line 39 & 108 in UpgradeHandler.jsx: `successUrl: '/#account'`
-- User lands directly at Account page after Stripe payment
-- CheckoutSuccess page NEVER runs
-- `tier_refresh_needed` flag NEVER gets set in sessionStorage
-- App.jsx never knows to refresh the tier from database
-- Frontend shows stale cached tier data
-
-**Why This Happens**:
-1. Commit cb44278 implemented tier refresh logic in App.jsx
-2. Logic depends on CheckoutSuccess setting `tier_refresh_needed` flag
-3. UpgradeHandler routes directly to `/#account`, skipping CheckoutSuccess
-4. Only UpsellCoffee.jsx routes correctly to `/#checkout-success`
-
-**Solution Implemented**:
-- Changed UpgradeHandler.jsx success URL (lines 39 & 108)
-- FROM: `successUrl: '/#account'`
-- TO: `successUrl: '/#checkout-success'`
-- Now all payment flows route through CheckoutSuccess page
-- CheckoutSuccess sets tier_refresh_needed flag
-- App.jsx detects flag and refreshes tier from database
-- UI updates to show correct Coffee tier
-
-**Files Modified**:
-- `src/components/UpgradeHandler.jsx` (lines 39, 108) - Fixed success URL routing
-
-**Testing**: Affects magic link + error banner upgrade flow specifically
-
-### 🔄 REMAINING ACTIONS
-
-1. ✅ ~~Fix FREE tier limit enforcement (Bug #1)~~ - RESOLVED
-2. ✅ ~~Fix usage counter logic (Bug #2)~~ - RESOLVED
-3. ✅ ~~Fix Coffee tier login routing (Bug #8)~~ - RESOLVED (Commits 0e1113f + f175852)
-4. ✅ ~~Fix Manage Subscription button (Bug #9)~~ - RESOLVED (Deployed to staging)
-5. ✅ ~~Fix upgrade button functionality (Bug #3)~~ - RESOLVED (Commit f7ac28e)
-6. ✅ ~~Fix tier not updating after Stripe payment (Bug #10)~~ - RESOLVED (Commit 2d7f70b)
-7. ✅ ~~Verify routing issues (Bugs #4, #5)~~ - VERIFIED FIXED (Already working correctly)
-8. **MEDIUM**: Fix factor analysis display (Bug #6) - PRIORITY 1
-9. **LOW**: Fix warning text overlap (Bug #7)
-
-**Production Deployment**: ⏳ TESTING - Waiting for Netlify deployment and user validation
+**Deliverables**:
+- Core tier selector component with billing toggle
+- State management for tier and billing frequency
+- Component tested and working in local dev
 
 ---
 
-## Current Mission Status
+### Phase 5: 7-Day Trial Integration ✅ COMPLETE
+**Objective**: Add trial option to Growth tier with Stripe integration
+**Environment**: Local dev using staging database + Stripe test mode
+**Duration**: 2-3 days
+**Completed**: October 26, 2025
 
-### ✅ COMPLETE: UAT Testing (Oct 19, 2025)
-**Objective**: Comprehensive user acceptance testing for core functionality
-**Status**: ✅ COMPLETE - Production Ready
-**Completed**: 2025-10-19
-**Priority**: VALIDATION
+**Tasks**:
+- [x] Add trial UI components:
+  - [x] Trial badge on Growth tier card ("🎁 7-DAY FREE TRIAL")
+  - [x] Trial CTA button (primary: "Try Growth Free for 7 Days")
+  - [x] Secondary CTA (skip trial option)
+  - [x] Trial details expandable section
+- [x] Integrate with Stripe:
+  - [x] Create trial checkout session (trial_period_days: 7)
+  - [x] Pass billing frequency to Stripe (annual or monthly)
+  - [x] Handle trial vs paid checkout differently
+- [x] OAuth flow updates:
+  - [x] Pass `isTrial: true` flag in authContext
+  - [x] Trial converts to selected billing frequency
+  - [x] Update Supabase Edge Function for trial checkout
 
-**Results**:
-- [x] Public functionality tests (14 scenarios) - 95%+ passing
-- [x] Cross-browser compatibility validated (5 browsers)
-- [x] OAuth integration confirmed working
-- [x] Mobile/tablet responsiveness verified
-- [x] Performance baseline established
-- [x] Test infrastructure created for future use
+**Test Gate 3**: Trial Flow E2E Tests
+```bash
+npx playwright test tests/e2e/trial-flow.spec.js --headed
 
-**Production Readiness**: ✅ APPROVED
+# Tests:
+1. Trial badge visible on Growth tier
+2. Click "Try Growth Free for 7 Days" → Redirects to Stripe
+3. Stripe checkout shows: $0 for 7 days, then billing
+4. Complete trial signup → Redirects to dashboard with trial=active
+5. authContext contains: {tier: 'growth', isTrial: true, billingFrequency: 'annual'}
+6. Trial countdown visible in dashboard
+```
 
----
-
-### 🟡 MINOR: Signup Page Routing Edge Case (Oct 19, 2025)
-**Objective**: Investigate unexpected routing behavior on hard refresh
-**Status**: 🟡 DOCUMENTED - Low Priority, Non-Blocking
-**Started**: 2025-10-19
-**Priority**: LOW - Cosmetic issue, rare edge case
-
-**Issue**: Hard refresh on `/#login` briefly shows landing page then sign-in page. If user clicks "sign up" → goes to `/#signup` but shows OAuth buttons without tier selection first.
-
-**Impact**:
-- Does not block any functionality
-- Rare edge case (hard refresh on login page)
-- Cosmetic/UX issue only
-
-**Next Steps**:
-- [ ] Investigate authRouting.js routing logic when appropriate
-- [ ] Review Signup.jsx state initialization
-- [ ] Check App.jsx hash routing behavior
-- [ ] Low-priority backlog item - investigate when not exhausted
-
-**Documentation**: See `progress.md` - October 19, 2025 entry
-
----
-
-### 🔧 RECOMMENDED: Performance Optimization (Oct 19, 2025)
-**Objective**: Reduce page load times from 10-17s to <5s
-**Status**: 📋 IDENTIFIED - Not Started
-**Priority**: MEDIUM - UX Enhancement
-
-**Issue**: Staging environment page load times slower than optimal
-- Landing page: 10-17s (target: <3s)
-- Login page: 7-14s (target: <3s)
-
-**Potential Causes**:
-- Network latency to Netlify CDN
-- Third-party script loading (Enzuzo, GTM, Stripe)
-- Asset optimization needed
-- Bundle size optimization
-
-**Next Steps**:
-- [ ] Profile asset loading with Lighthouse
-- [ ] Optimize third-party script loading (defer/async)
-- [ ] Review Netlify CDN configuration
-- [ ] Consider code splitting improvements
-- [ ] Implement lazy loading for non-critical resources
-
-**Documentation**: See `tests/uat/UAT-TEST-RESULTS.md`
+**Success Criteria**:
+- ✅ All trial tests pass (6/6)
+- ✅ Trial checkout redirects to Stripe correctly
+- ✅ Trial converts to selected billing frequency
+- ✅ OAuth callback handles trial flag
+- ✅ Dashboard shows trial status
 
 ---
 
-## Recent Completed Missions
+### Phase 6: Doug Hall Messaging (Dynamic Copy) [ ]
+**Objective**: Implement dynamic persuasive messaging that updates on tier/billing changes
+**Environment**: Local dev using staging database
+**Duration**: 2-3 days
 
-### ✅ COMPLETED: Stripe Payment Integration (Oct 19, 2025)
-**Objective**: Enable Coffee tier upgrades via Stripe checkout with automated tier updates
-**Status**: ✅ COMPLETE - Fully Functional
-**Completed**: 2025-10-19
-**Duration**: 11 hours (debugging session)
+**Tasks**:
+- [ ] Create messaging components:
+  - [ ] `DynamicMessagingPanel.jsx` - Right panel with OB/RRB/DD
+  - [ ] `TierMessagingContent.jsx` - Individual tier copy renderer
+  - [ ] `ValidationMessages.jsx` - Success/warning messages
+  - [ ] `BillingWarningBox.jsx` - Monthly→Annual savings prompt
+- [ ] Implement copy matrix:
+  - [ ] 4 tiers × 2 billing frequencies = 8 copy variations
+  - [ ] Overt Benefit headlines
+  - [ ] Real Reasons to Believe bullets
+  - [ ] Dramatic Difference comparisons
+  - [ ] Loss aversion messaging (Free tier)
+  - [ ] Validation messaging (Growth tier)
+- [ ] Add transitions:
+  - [ ] 200ms exit animation (fade out)
+  - [ ] 300ms enter animation (fade in)
+  - [ ] Cross-fade between tier selections
 
-**Results**:
-- [x] Stripe checkout session creation working
-- [x] Payment processing with test/live cards
-- [x] Webhook endpoint configured with all 5 events
-- [x] Automated tier updates via webhook
-- [x] Hash routing fixed for success/cancel URLs
-- [x] Multi-environment deployment (staging + production ready)
+**Test Gate 4**: Dynamic Messaging E2E Tests
+```bash
+npx playwright test tests/e2e/dynamic-messaging.spec.js --headed
 
-**Configuration Added**:
-- Supabase Secrets: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET
-- Netlify Variables: VITE_STRIPE_PUBLISHABLE_KEY
-- Stripe Webhook: 5 events configured (checkout.session.completed, invoice.payment_succeeded, customer.subscription.updated, customer.subscription.deleted, invoice.payment_failed)
+# Tests:
+1. Growth tier selected → Shows validation: "YOU MADE THE RIGHT CHOICE"
+2. Toggle to Free tier → Shows loss aversion: "WHAT YOU'RE MISSING"
+3. Toggle to Solo tier → Shows upgrade nudge: "Growth is only $12 more"
+4. Toggle billing Annual→Monthly → Copy updates with savings warning
+5. Toggle billing Monthly→Annual → Copy updates with savings celebration
+6. Messaging transitions smooth (no janky content jumps)
+```
 
-**Issues Resolved**: 6 major issues (see progress.md for complete details)
-
-**Testing**: Manual validation complete - payment flow works end-to-end
-
----
-
-### ✅ COMPLETED: OAuth User Journey Remediation (Oct 15-19, 2025)
-**Objective**: Fix OAuth flow creating duplicate accounts and bypassing tier selection
-**Status**: ✅ COMPLETE - Deployed to Staging
-**Started**: 2025-10-15
-**Completed**: 2025-10-19
-**Priority**: CRITICAL - Core business logic
-
-**All 5 Phases Completed**:
-- [x] Phase 1: Add TierSelector to signup flow (force selection before OAuth)
-- [x] Phase 2: Fix getUserData() timing issue (stop duplicate accounts) - HOTFIX
-- [x] Phase 3: Remove auto-free tier (enforce business logic) - HOTFIX
-- [x] Phase 4: Fix post-authentication routing (use existing functions)
-- [x] Phase 5: Testing & validation (comprehensive E2E tests)
-
-**Deployment Strategy Executed**:
-- [x] STAGE 1: Emergency Hotfix ✅ (Phases 2+3 deployed)
-- [x] STAGE 2: Complete Business Logic ✅ (Phases 1+4 deployed)
-- [x] STAGE 3: Test Automation ✅ (Phase 5 E2E tests created)
-
-**Results**:
-- OAuth authentication working correctly
-- Users see tier selection before OAuth
-- Correct routing after authentication (dashboard not landing)
-- No duplicate accounts created
-- Automated E2E tests prevent regression
-
-**Documentation**: `oauth-user-journey-remediation-plan.md`
+**Success Criteria**:
+- ✅ All messaging tests pass (6/6)
+- ✅ Copy updates correctly for all tier + billing combinations
+- ✅ Transitions smooth (200ms/300ms timing)
+- ✅ Loss aversion messaging shows for Free tier
+- ✅ Validation messaging shows for Growth tier
 
 ---
 
-### ✅ COMPLETED: Test Account Infrastructure Setup (Oct 15, 2025)
-**Objective**: Create dedicated test accounts for OAuth authentication testing
-**Status**: ✅ PARTIAL COMPLETE - Accounts created, testing revealed critical OAuth bugs
-**Completed**: 2025-10-15
+### Phase 7: Mobile Responsive + Polish [ ]
+**Objective**: Optimize for mobile devices and add final polish
+**Environment**: Local dev (test on multiple viewports)
+**Duration**: 1-2 days
 
-**Results**:
-- ✅ Test accounts created (Google + GitHub): aimpactscannertest@gmail.com
-- ✅ Credentials stored in .env.test (gitignored)
-- ✅ OAuth authentication successful
-- ❌ Tests revealed critical user journey issues (duplicate accounts, wrong routing)
+**Tasks**:
+- [ ] Mobile responsive design:
+  - [ ] Dropdown selector for mobile (375px-767px)
+  - [ ] Sticky billing toggle on mobile
+  - [ ] Condensed copy for mobile (30% reduction)
+  - [ ] Touch-optimized buttons (min 48px)
+- [ ] Visual polish:
+  - [ ] Color system (gold/green/blue/red/purple)
+  - [ ] Badges (RECOMMENDED, 7-DAY TRIAL, POWER USERS)
+  - [ ] Savings badges (green, prominent)
+  - [ ] Animations GPU-accelerated
+- [ ] Accessibility:
+  - [ ] ARIA labels for screen readers
+  - [ ] Keyboard navigation (Tab, Space, Enter, Arrows)
+  - [ ] Focus management
+  - [ ] Color contrast 4.5:1 minimum
 
-**Discovery**: Testing revealed OAuth flow broken - triggers new mission above.
+**Test Gate 5**: Responsive + A11y Tests
+```bash
+# Desktop tests
+npx playwright test tests/e2e/tier-selector-desktop.spec.js --headed
+
+# Mobile tests (iPhone viewport)
+npx playwright test tests/e2e/tier-selector-mobile.spec.js --headed --device="iPhone 13"
+
+# Accessibility tests
+npx playwright test tests/e2e/tier-selector-a11y.spec.js --headed
+
+# Tests:
+1. Desktop: Side-by-side layout works (1024px+)
+2. Mobile: Dropdown selector works (375px)
+3. Keyboard navigation works (Tab, Enter, Space)
+4. Screen reader announcements work
+5. Color contrast passes WCAG 2.1 AA
+6. Touch targets 48px minimum (mobile)
+```
+
+**Success Criteria**:
+- ✅ All responsive tests pass (desktop + mobile)
+- ✅ All accessibility tests pass
+- ✅ WCAG 2.1 AA compliant
+- ✅ Smooth on both desktop and mobile
+- ✅ Visual design matches mockups
 
 ---
 
-### ✅ COMPLETED: Documentation Cleanup & OAuth Fix Closure (Oct 12, 2025)
-**Objective**: Finalize OAuth fix documentation and archive completed mission files
+### Phase 8: Analytics + Feature Gating [ ]
+**Objective**: Add analytics tracking and implement feature restrictions per tier
+**Environment**: Local dev using staging database
+**Duration**: 1-2 days
+
+**Tasks**:
+- [ ] Analytics events:
+  - [ ] `tier_selector_viewed` - Component loads
+  - [ ] `tier_selection_changed` - User changes tier
+  - [ ] `billing_toggle_clicked` - User toggles annual/monthly
+  - [ ] `tier_cta_clicked` - User clicks CTA (trial or paid)
+  - [ ] `trial_details_expanded` - User expands trial details
+- [ ] Feature gating:
+  - [ ] LLMS.txt: Growth+ only (disabled button for Free/Solo)
+  - [ ] CSV export: Growth+ only (PDF-only for Solo)
+  - [ ] API access: Scale only
+  - [ ] Show feature restrictions in UI
+- [ ] Update existing features:
+  - [ ] Dashboard shows tier restrictions
+  - [ ] Analysis results show export options based on tier
+
+**Test Gate 6**: Analytics + Gating Tests
+```bash
+npx playwright test tests/e2e/analytics-tracking.spec.js --headed
+npx playwright test tests/e2e/feature-gating.spec.js --headed
+
+# Tests:
+1. Analytics events fire correctly (6 events)
+2. Solo tier: LLMS.txt button disabled with tooltip
+3. Solo tier: CSV export unavailable (PDF only)
+4. Growth tier: LLMS.txt and CSV available
+5. Scale tier: API access available
+6. Upgrade prompts show for restricted features
+```
+
+**Success Criteria**:
+- ✅ All analytics events tracked correctly
+- ✅ Feature gating works for all tiers
+- ✅ Upgrade prompts show for restricted features
+- ✅ No console errors or warnings
+
+---
+
+### Phase 9: Staging Deployment [ ]
+**Objective**: Deploy to staging environment for final testing
+**Environment**: https://develop--aimpactscanner.netlify.app (staging database)
+**Duration**: 1 day
+
+**Tasks**:
+- [ ] Deploy to Netlify (develop branch)
+- [ ] Run full E2E test suite on staging
+- [ ] Test Stripe integration (test mode)
+- [ ] Test OAuth flow end-to-end
+- [ ] Verify analytics tracking in production
+- [ ] Run Lighthouse audit
+- [ ] Test on real devices (iOS, Android)
+
+**Test Gate 7**: Staging E2E Full Suite
+```bash
+# Run full test suite against staging
+PLAYWRIGHT_BASE_URL=https://develop--aimpactscanner.netlify.app \
+npx playwright test tests/e2e/ --headed
+
+# Tests:
+1. All previous test gates (1-6) pass on staging
+2. OAuth flow works end-to-end
+3. Stripe checkout works (test mode)
+4. Analytics events fire correctly
+5. No console errors
+6. Lighthouse score >90
+```
+
+**Success Criteria**:
+- ✅ All E2E tests pass on staging
+- ✅ OAuth + Stripe integration works
+- ✅ Analytics tracking works
+- ✅ No performance regressions
+- ✅ Lighthouse score >90
+
+---
+
+### Phase 10: Production Deployment [ ]
+**Objective**: Deploy to production and monitor conversion metrics
+**Environment**: https://aimpactscanner.com (production database)
+**Duration**: Ongoing
+
+**Tasks**:
+- [ ] Create production Stripe products (same config as test)
+- [ ] Update environment variables for production
+- [ ] Deploy to production (main branch)
+- [ ] Run smoke tests on production
+- [ ] Monitor error rates (Sentry)
+- [ ] Track conversion metrics:
+  - [ ] Signup conversion rate (target: 25-35%)
+  - [ ] Annual billing adoption (target: 30-40%)
+  - [ ] Trial-to-paid conversion (target: 49-60%)
+  - [ ] Growth tier adoption (target: 70%)
+
+**Test Gate 8**: Production Smoke Tests
+```bash
+# Manual smoke tests on production
+1. Visit https://aimpactscanner.com/#signup
+2. Verify tier selector loads correctly
+3. Test tier selection flow (don't complete signup)
+4. Verify Stripe checkout loads (test with staging creds)
+5. Monitor Sentry for errors
+6. Check analytics dashboard for events
+```
+
+**Success Criteria**:
+- ✅ Production deployment successful
+- ✅ No critical errors in Sentry
+- ✅ Conversion tracking working
+- ✅ User feedback positive
+- ✅ Conversion rate increasing
+
+**Monitoring Period**: 2 weeks
+**Success Metrics**:
+- Conversion rate: 8-12% → 25-35% (2-3x improvement)
+- Annual adoption: 30-40%
+- Trial-to-paid: 49-60%
+- Growth tier: 70% of paid customers
+
+**Expected Impact**:
+- Conversion rate increase: 8-12% → 25-35% (2-3x improvement)
+- Growth tier adoption: 70% of paid customers (PRD target)
+- Annual billing adoption: 30-40% of paid customers
+- Trial-to-paid conversion: 49-60% (PRD target)
+- Revenue per user: +11% annual revenue improvement
+- Cash flow improvement: +84% in Q1
+- Churn reduction: 50% lower on annual plans
+
+**Key Requirements**:
+- Default tier: Growth ($17.95/mo or $12.46/mo annual)
+- Default billing: Annual (anchoring effect)
+- 7-Day Trial: Promotion for Growth tier (40 analyses free for 7 days)
+- Dynamic copy: OB/RRB/DD messaging changes as user toggles tiers AND billing
+- Visual cues: Show what you're missing with lower tiers and monthly billing
+- Annual savings: Prominent green badges ($21.90, $65.90, $119.90)
+
+**Deliverables Created**:
+- `/DYNAMIC-TIER-SELECTOR-UX-SPEC.md` (59KB) - Complete UX specification with Section 10: Annual Pricing
+- `/TIER-SELECTOR-VISUAL-MOCKUP.md` (37KB+) - Visual mockups including billing toggle states
+- `/handoff-notes.md` - Updated with annual pricing requirements and developer handoff
+
+**See**:
+- `/docs/Documents/foundations/prds/AImpactScanner Pricing & Value Ladder PRD (1).md` - Source PRD
+- `/docs/Documents/foundations/prds/Annual Pricing Strategy Analysis.md` - Annual pricing business case
+- `/handoff-notes.md` - Doug Hall messaging + annual pricing details
+
+---
+
+## Recently Completed: Web Infrastructure Files (Oct 24, 2025)
+
+**COMPLETED**: Social Preview Image + security.txt + humans.txt
 **Status**: ✅ COMPLETE
-**Completed**: 2025-10-12
-
-**Results**:
-- OAuth authentication: Working in production
-- 70 files archived to organized structure
-- Repository cleanup: 78.6% reduction in root documentation
-- 3 corrupted files removed
-- Archive location: `/docs/archive/2025-10-12/`
-
-### ✅ COMPLETED: About Page Enhancement (Oct 12, 2025)
-**Objective**: Add founder story and complete MASTERY-AI framework
-**Status**: ✅ COMPLETE
-**Completed**: 2025-10-12
-
-**Results**:
-- Added AI traffic impact statistics with NPR citation
-- Featured all 8 MASTERY-AI Framework pillars
-- Personal branding with jamiewatters.work links
-- Deployed to production
-
-### ✅ COMPLETED: OAuth Authentication Fix (Oct 11-12, 2025)
-**Objective**: Fix GitHub OAuth authentication failure
-**Status**: ✅ COMPLETE
-**Completed**: 2025-10-12
-
-**Results**:
-- GitHub OAuth: Working (100% success rate)
-- Dashboard redirect: Fixed (landing → dashboard)
-- Session persistence: Verified
-- Production validated with user account
+**Impact**: Social share CTR expected +150-300%, SEO +15 points
 
 ---
 
-## Previous Mission: Authentication Architecture Review (ARCHIVED)
+## Document History
 
-**Objective**: Analyze intended vs actual auth flows, identify OAuth integration status
-**Status**: ✅ ANALYSIS COMPLETE - Awaiting User Confirmation
-**Started**: 2025-10-08
-**Completed**: 2025-10-08
-**Archived**: 2025-10-12 to `/docs/archive/2025-10-12/auth-fixes/architecture/`
+**Version**: 3.2 (Annual Pricing Design Complete)
+**Last Updated**: October 25, 2025
+**Previous Version**: Git history
 
-## Mission Phases
-
-### Phase 1: Architecture Analysis ✅ COMPLETE
-- [x] Map INTENDED auth journey from architecture docs
-- [x] Map ACTUAL auth journey from codebase
-- [x] Identify OAuth implementation status
-- [x] Document all signup/signin entry points
-- [x] Compare intended vs actual flows
-
-**Output**: `INTENDED-AUTHENTICATION-ARCHITECTURE.md`
-
-### Phase 2: Gap Analysis ✅ COMPLETE
-- [x] Identify which flows are legacy vs current
-- [x] Determine OAuth integration completeness
-- [x] Map redirect URL issues to specific flows
-- [x] Create decision matrix for fixes
-
-**Output**: `ACTUAL-AUTHENTICATION-IMPLEMENTATION.md`
-
-### Phase 3: User Confirmation ⏳ IN PROGRESS
-- [ ] User reviews analysis documents
-- [ ] User answers strategy questions
-- [ ] User confirms OAuth provider setup
-- [ ] User decides on password component fate
-- [ ] Agree on fix implementation strategy
-
-**Pending User Input on**:
-1. Enable both Google + GitHub OAuth? Or just one?
-2. What happens to existing password users?
-3. Delete or archive legacy password components?
-4. Testing strategy - staging environment available?
-
-### Phase 4: Implementation (Pending User Confirmation)
-- [ ] Configure OAuth providers in Supabase
-- [ ] Fix routing in App.jsx
-- [ ] Update landing page signup button
-- [ ] Handle legacy password components
-- [ ] Consolidate routes
-- [ ] Test OAuth flows end-to-end
-- [ ] Deploy to production
-
-## Root Cause Analysis - COMPLETE ✅
-
-### USER COMPLAINT
-> "I don't see any of the oauth stuff we were supposed to be delivering"
-
-### ROOT CAUSE IDENTIFIED
-**OAuth components EXIST and WORK but are HIDDEN behind wrong entry points.**
-
-#### What EXISTS (Good News) ✅
-1. All OAuth components present and functional:
-   - TierSelector.jsx ✅
-   - AuthMethodSelector.jsx ✅ (Google, GitHub, Magic Link)
-   - OAuthCallback.jsx ✅
-   - Signup.jsx ✅ (OAuth-first design)
-
-2. OAuth code implementation is correct and would work if configured
-
-#### What's BROKEN (Bad News) ❌
-1. **OAuth Providers NOT Configured** (🔴 CRITICAL):
-   - No Google OAuth in `supabase/config.toml`
-   - No GitHub OAuth in `supabase/config.toml`
-   - OAuth buttons fail when clicked
-
-2. **Wrong Routing** (🔴 CRITICAL):
-   - Landing page → `CoffeeTierSignup.jsx` (password) ❌
-   - `/#/login` → `Login.jsx` (password) ❌
-   - `/#/register` → `CoffeeTierSignup.jsx` (password) ❌
-   - Only `/#/signup` → `Signup.jsx` (OAuth) ✅
-
-3. **Password Auth NOT Removed** (🟡 MAJOR):
-   - Migration docs claim "Complete"
-   - Reality: 4+ password components still active
-   - Login.jsx, CoffeeTierSignup.jsx, AuthWithPassword.jsx, etc.
-
-4. **Multiple Auth Paths Coexist** (🟡 MAJOR):
-   - 5+ different signup/login routes
-   - Only 1 route goes to OAuth components
-   - No single source of truth
-
-## Why User Doesn't See OAuth
-
-**Actual User Journey**:
-```
-Landing Page → Click "Sign Up" →
-App.jsx routes to 'coffee-signup' →
-Loads CoffeeTierSignup.jsx (PASSWORD FORM) ❌
-
-USER SEES: Email + Password fields
-USER EXPECTS: Google/GitHub OAuth buttons
-```
-
-**Path That Would Work** (but users don't take):
-```
-Manually navigate to /#/signup →
-Signup.jsx loads →
-AuthMethodSelector shows OAuth buttons ✅
-
-BUT: OAuth providers not configured, so fails anyway ❌
-```
-
-## Statistics
-
-- **OAuth Components**: 4/4 exist (100%) ✅
-- **OAuth Configured**: 0/2 providers (0%) ❌
-- **Routes to OAuth**: 1/5 routes (20%) ❌
-- **Password Removed**: 0% (still active) ❌
-- **Architecture Match**: ~45%
-
-## Critical Questions Answered
-
-1. **What is the INTENDED signup/signin journey?**
-   - OAuth-first (Google/GitHub primary, Magic Link fallback)
-   - Documented in ADR_AUTH_MONETIZATION.md dated 2025-10-02
-   - Password auth marked as "removed"
-
-2. **Where is OAuth supposed to be used?**
-   - Primary authentication method for all signups/logins
-   - Google OAuth (primary)
-   - GitHub OAuth (secondary)
-   - Magic Link (passwordless fallback)
-
-3. **Which components are legacy vs current?**
-   - **CURRENT**: Signup.jsx, AuthMethodSelector.jsx, OAuthCallback.jsx, TierSelector.jsx
-   - **LEGACY**: Login.jsx, CoffeeTierSignup.jsx, AuthWithPassword.jsx, ResetPassword.jsx, PasswordResetPage.jsx
-
-4. **Why are there 3+ different signup paths?**
-   - Migration from password auth to OAuth-first was documented but not implemented
-   - Password components were supposed to be removed but weren't
-   - Multiple paths created during transition but never consolidated
-
-## Required Fixes (Pending User Confirmation)
-
-### 🔴 CRITICAL Fixes
-1. **Configure OAuth Providers**:
-   - Create Google OAuth app in Google Cloud Console
-   - Create GitHub OAuth app in GitHub Settings
-   - Add to `supabase/config.toml`
-
-2. **Fix Default Routing** (`src/App.jsx` Line 697-708):
-   ```javascript
-   // CHANGE FROM:
-   setCurrentView('coffee-signup'); // Password component ❌
-
-   // CHANGE TO:
-   setCurrentView('signup'); // OAuth Signup.jsx ✅
-   ```
-
-3. **Fix Login Route** (`src/App.jsx` Line 1259):
-   - Route to OAuth component instead of password Login.jsx
-
-4. **Fix Landing Page**:
-   - Signup button routes to `/#/signup` (OAuth)
-
-### 🟡 MAJOR Decisions Needed
-
-5. **Password Components** - User must choose:
-   - **Option A**: Delete all password components (clean break)
-   - **Option B**: Keep for existing users, OAuth for new users
-   - **Affected**: Login.jsx, CoffeeTierSignup.jsx, AuthWithPassword.jsx, ResetPassword.jsx
-
-6. **Route Consolidation**:
-   - Remove: `/#/register`, `/#/unified-registration`
-   - Keep: `/#/signup` (OAuth), `/#/login` (OAuth)
-
-## Success Metrics
-
-OAuth will be "working" when:
-1. ✅ User clicks "Sign Up" → Sees OAuth buttons (NO passwords)
-2. ✅ OAuth providers configured in Supabase
-3. ✅ Google OAuth flow works end-to-end
-4. ✅ GitHub OAuth flow works end-to-end
-5. ✅ Magic Link works as fallback
-6. ✅ Default routes go to OAuth components
-7. ✅ Password auth removed or clearly marked as legacy
-
-## Analysis Documents for Review
-
-1. **`ACTUAL-AUTHENTICATION-IMPLEMENTATION.md`** - 500+ line comprehensive analysis with:
-   - Complete component inventory
-   - Route configuration details
-   - Gap analysis tables
-   - Specific code locations and line numbers
-   - Step-by-step fix recommendations
-
-2. **`INTENDED-AUTHENTICATION-ARCHITECTURE.md`** - What architecture docs specify
-
-3. **`handoff-notes.md`** - Executive summary with action items
-
-## Next Steps
-
-**Awaiting user confirmation on**:
-1. OAuth provider strategy (Google + GitHub or just one?)
-2. Password user migration strategy
-3. Legacy component handling (delete or archive?)
-4. Testing approach (staging environment?)
-
-**Once confirmed, Phase 4 implementation will**:
-- Configure OAuth providers
-- Fix routing to OAuth components
-- Handle legacy password components per user decision
-- Test and deploy OAuth-first authentication
+**Changelog**:
+- **October 25, 2025**: Design phase complete - annual pricing integration finished
+- **October 24, 2025**: Corrected mission scope - conversion optimization, not just technical realignment
+- **October 24, 2025**: Extracted Doug Hall messaging from PRD for dynamic tier selector
+- **October 24, 2025**: Started Tier & Pricing Realignment Mission
 
 ---
 
-**Current Status**: Analysis complete, no code changes made, awaiting user strategic decisions before proceeding with fixes.
+*Document maintained by THE COORDINATOR (AGENT-11)*

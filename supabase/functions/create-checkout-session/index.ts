@@ -17,27 +17,51 @@ serve(async (req) => {
 
   try {
     console.log('=== CREATE CHECKOUT SESSION START ===');
-    
+
     const requestBody = await req.json();
-    let { priceId, userId, tier, successUrl, cancelUrl, mode, customerCreation, allowPromotionCodes } = requestBody;
+    let { priceId, userId, tier, successUrl, cancelUrl, mode, customerCreation, allowPromotionCodes, billingFrequency, isTrial } = requestBody;
     
     // Map 'starter' to 'coffee' for backward compatibility
     if (tier === 'starter') {
       tier = 'coffee';
       console.log('Mapped starter tier to coffee');
     }
-    
-    // If priceId is not provided or is a placeholder, use the actual price ID
+
+    // Price ID mapping (Test Mode) - matches STRIPE-PRICE-IDS.md
+    const STRIPE_PRICE_IDS = {
+      coffee: {
+        monthly: 'price_1SMFnZIiC84gpR8HBsYj7vsE',
+        annual: 'price_1SMFnZIiC84gpR8HD7oRJxlN'
+      },
+      growth: {
+        monthly: 'price_1SMFnaIiC84gpR8HzHaQmjYc',
+        annual: 'price_1SMFnbIiC84gpR8HB3CeS1ud' // Has 7-day trial configured in Stripe
+      },
+      scale: {
+        monthly: 'price_1SMFncIiC84gpR8HbCRQwnCW',
+        annual: 'price_1SMFncIiC84gpR8HaHS0RCGe'
+      }
+    };
+
+    // Determine billing frequency (default to monthly if not provided)
+    const billing = billingFrequency || 'monthly';
+    console.log('Billing frequency:', billing);
+    console.log('Is trial:', isTrial);
+
+    // If priceId is not provided, select based on tier and billing frequency
     if (!priceId || priceId === 'price_coffee_tier_monthly') {
-      // Use the actual Coffee tier price ID from environment
-      const coffeePriceId = Deno.env.get('STRIPE_COFFEE_PRICE_ID');
-      if (coffeePriceId) {
-        priceId = coffeePriceId;
-        console.log('Using Coffee price ID from environment:', priceId);
+      if (STRIPE_PRICE_IDS[tier] && STRIPE_PRICE_IDS[tier][billing]) {
+        priceId = STRIPE_PRICE_IDS[tier][billing];
+        console.log(`Using ${tier} ${billing} price ID:`, priceId);
+
+        // For Growth Annual with trial, Stripe handles trial automatically
+        if (tier === 'growth' && billing === 'annual' && isTrial) {
+          console.log('✅ Growth Annual trial - Stripe will apply 7-day trial period automatically');
+        }
       } else {
-        // Fallback to the known working price ID
+        // Fallback to old Coffee price ID
         priceId = 'price_1RnSa4IiC84gpR8HXmbDgaNy';
-        console.log('Using fallback Coffee price ID:', priceId);
+        console.log('⚠️ Using fallback Coffee price ID:', priceId);
       }
     }
     
@@ -132,7 +156,11 @@ serve(async (req) => {
       success_url: successUrl || `${req.headers.get('origin')}/upgrade-success`,
       cancel_url: cancelUrl || `${req.headers.get('origin')}/pricing`,
       'metadata[tier]': tier,
+      'metadata[billing_frequency]': billing,
+      'metadata[is_trial]': isTrial?.toString() || 'false',
       'subscription_data[metadata][tier]': tier,
+      'subscription_data[metadata][billing_frequency]': billing,
+      'subscription_data[metadata][is_trial]': isTrial?.toString() || 'false',
       allow_promotion_codes: allowPromotionCodes?.toString() || 'true',
       billing_address_collection: 'auto',
       'payment_method_types[0]': 'card'
