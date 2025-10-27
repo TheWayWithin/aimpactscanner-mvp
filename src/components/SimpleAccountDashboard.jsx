@@ -104,10 +104,21 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
   };
 
   const getRemainingAnalyses = () => {
-    if (usageData.isUnlimited || (userTier && userTier.toLowerCase() === 'coffee')) {
-      return 'Unlimited';
-    }
-    return usageData.remaining !== undefined ? usageData.remaining : 3;
+    const tier = userTier?.toLowerCase();
+    const used = getUsedAnalyses();
+
+    // Tier limits
+    const tierLimits = {
+      'free': 3,
+      'coffee': 10,
+      'growth': 40,
+      'scale': 100
+    };
+
+    const limit = tierLimits[tier];
+    if (!limit) return 3; // Default to free tier limit
+
+    return Math.max(0, limit - used);
   };
 
   const getUsedAnalyses = () => {
@@ -237,7 +248,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
           ) : (
             <div className="bg-green-50 rounded-lg p-4">
               <p className="text-green-800">
-                ✅ Unlimited analyses with your {getTierDisplayName(userTier)} plan
+                ✅ {getRemainingAnalyses()} analyses remaining with your {getTierDisplayName(userTier)} plan
               </p>
               <p className="text-sm text-green-600 mt-1">
                 You've completed {getUsedAnalyses()} analyses this month
