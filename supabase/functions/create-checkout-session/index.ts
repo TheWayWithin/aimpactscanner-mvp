@@ -171,6 +171,13 @@ serve(async (req) => {
       // Registration flow - for subscription mode, Stripe creates customer automatically
       // Don't use customer_creation parameter as it's only for payment mode
       // Stripe will create a customer automatically for subscriptions
+
+      // FIX: Add userId to metadata even in registration flow (webhook needs this)
+      if (userId) {
+        sessionParams.append('metadata[user_id]', userId);
+        sessionParams.append('subscription_data[metadata][user_id]', userId);
+        console.log('Added userId to metadata for registration flow:', userId);
+      }
     } else {
       // Existing user flow
       if (customerId) {

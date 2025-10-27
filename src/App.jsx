@@ -1648,7 +1648,8 @@ function AppContent({ initialUrl }) {
               tier: autoCheckoutTier,
               isTrial: autoCheckoutIsTrial,
               billingFrequency: autoCheckoutBilling,
-              mode: 'registration', // FIX: Tell Edge Function this is a new signup
+              userId: session.user.id, // FIX: Pass userId for webhook
+              mode: 'registration', // FIX: Tell Edge Function this is a new signup (skips DB lookup)
               successUrl: `${window.location.origin}/#checkout-success`,
               cancelUrl: `${window.location.origin}/#pricing`
             }
