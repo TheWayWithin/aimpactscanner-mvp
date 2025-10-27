@@ -157,11 +157,12 @@ export class TierManager {
   }
 
   /**
-   * Upgrades a user to Coffee tier (called by Stripe webhook)
+   * Upgrades a user to specified tier (called by Stripe webhook)
+   * Supports: coffee, growth, scale
    */
-  async upgradeToCoffeeTier(userId: string, subscriptionData: any): Promise<void> {
+  async upgradeToTier(userId: string, tier: string, subscriptionData: any): Promise<void> {
     try {
-      console.log('☕ Upgrading user to Coffee tier:', userId);
+      console.log(`🚀 Upgrading user to ${tier} tier:`, userId);
 
       const expiresAt = new Date();
       expiresAt.setMonth(expiresAt.getMonth() + 1); // 1 month from now
@@ -170,7 +171,7 @@ export class TierManager {
       const { error: userError } = await this.supabase
         .from('users')
         .update({
-          tier: 'coffee',
+          tier: tier, // Use the tier passed in
           tier_expires_at: expiresAt.toISOString(),
           stripe_customer_id: subscriptionData.customer,
           subscription_status: 'active'
@@ -184,7 +185,7 @@ export class TierManager {
         .from('subscriptions')
         .upsert({
           user_id: userId,
-          tier: 'coffee',
+          tier: tier, // Use the tier passed in
           stripe_subscription_id: subscriptionData.id,
           stripe_price_id: subscriptionData.items.data[0].price.id,
           status: 'active',
@@ -197,12 +198,20 @@ export class TierManager {
 
       if (subError) throw subError;
 
-      console.log('✅ User upgraded to Coffee tier successfully');
+      console.log(`✅ User upgraded to ${tier} tier successfully`);
 
     } catch (error) {
-      console.error('❌ TierManager.upgradeToCoffeeTier error:', error);
+      console.error(`❌ TierManager.upgradeToTier error (${tier}):`, error);
       throw error;
     }
+  }
+
+  /**
+   * Upgrades a user to Coffee tier (called by Stripe webhook)
+   * @deprecated Use upgradeToTier() instead for better multi-tier support
+   */
+  async upgradeToCoffeeTier(userId: string, subscriptionData: any): Promise<void> {
+    return this.upgradeToTier(userId, 'coffee', subscriptionData);
   }
 
   /**
