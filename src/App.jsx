@@ -1635,12 +1635,20 @@ function AppContent({ initialUrl }) {
       // Call Edge Function directly with trial/billing params
       setTimeout(async () => {
         try {
+          console.log('💳 Invoking create-checkout-session Edge Function...');
+          console.log('📊 Params:', {
+            tier: autoCheckoutTier,
+            isTrial: autoCheckoutIsTrial,
+            billing: autoCheckoutBilling,
+            mode: 'registration'
+          });
+
           const { data, error } = await supabase.functions.invoke('create-checkout-session', {
             body: {
               tier: autoCheckoutTier,
               isTrial: autoCheckoutIsTrial,
               billingFrequency: autoCheckoutBilling,
-              userId: session.user.id,
+              mode: 'registration', // FIX: Tell Edge Function this is a new signup
               successUrl: `${window.location.origin}/#checkout-success`,
               cancelUrl: `${window.location.origin}/#pricing`
             }
