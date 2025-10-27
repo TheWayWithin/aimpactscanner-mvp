@@ -92,8 +92,16 @@ function AppContent({ initialUrl }) {
     if (view !== currentView) {
       // SECURITY: Check if route requires authentication
       if (isProtectedRoute(view)) {
+        // CRITICAL FIX: Don't check auth if session check hasn't completed yet
+        // This prevents premature redirects to landing when session state is updating
+        if (!sessionChecked) {
+          console.log('⏳ SECURITY: Session check not complete - deferring navigation to:', view);
+          localStorage.setItem('deferred_route', view);
+          return; // Queue the navigation until session check completes
+        }
+
         const isAuthenticated = !!(session?.user?.id);
-        
+
         if (!isAuthenticated) {
           console.log('🔒 SECURITY: Unauthorized access attempt to protected route:', view);
           console.log('🔄 SECURITY: Redirecting unauthenticated user to appropriate page');
@@ -408,47 +416,52 @@ function AppContent({ initialUrl }) {
         if (session.expires_at && session.expires_at > now) {
           console.log('✅ Valid session restored, setting auth state');
           setSession(session);
-          
+
           // Fetch user tier in background (non-blocking)
           fetchUserTier(session.user.id, session.user.email).catch(err => {
             console.warn('Failed to fetch user tier:', err);
             setUserTier('free'); // Fallback
           });
-          
-          // Check if there's a pending analysis from landing page
-          const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
-          const pendingId = localStorage.getItem('pendingAnalysisId');
-          const landingData = localStorage.getItem('landingAnalysisData');
-          
-          if (pendingUrl && pendingId && landingData && !pendingAnalysisProcessed.current) {
-            console.log('✅ Initial session: Found pending analysis, redirecting to results');
-            pendingAnalysisProcessed.current = true; // Mark as processed
-            
-            try {
-              const data = JSON.parse(landingData);
-              setAnalysisResults(data.results);
-              setCurrentUrl(pendingUrl);
-              setCurrentAnalysisId(pendingId);
-              setCurrentView('results');
-              // Clear the pending data
-              localStorage.removeItem('pendingAnalysisUrl');
-              localStorage.removeItem('pendingAnalysisId');
-              localStorage.removeItem('landingAnalysisData');
-            } catch (error) {
-              console.error('Error parsing pending analysis data:', error);
-              setCurrentView('dashboard');
+
+          // CRITICAL FIX: Wait for session state to propagate before navigation
+          // React batches state updates, so setCurrentView would see old (null) session
+          console.log('⏳ Waiting for session state to propagate before navigation...');
+          setTimeout(() => {
+            // Check if there's a pending analysis from landing page
+            const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
+            const pendingId = localStorage.getItem('pendingAnalysisId');
+            const landingData = localStorage.getItem('landingAnalysisData');
+
+            if (pendingUrl && pendingId && landingData && !pendingAnalysisProcessed.current) {
+              console.log('✅ Initial session: Found pending analysis, redirecting to results');
+              pendingAnalysisProcessed.current = true; // Mark as processed
+
+              try {
+                const data = JSON.parse(landingData);
+                setAnalysisResults(data.results);
+                setCurrentUrl(pendingUrl);
+                setCurrentAnalysisId(pendingId);
+                setCurrentView('results');
+                // Clear the pending data
+                localStorage.removeItem('pendingAnalysisUrl');
+                localStorage.removeItem('pendingAnalysisId');
+                localStorage.removeItem('landingAnalysisData');
+              } catch (error) {
+                console.error('Error parsing pending analysis data:', error);
+                setCurrentView('dashboard');
+              }
+            } else if (!pendingAnalysisProcessed.current) {
+              // Check for intended route and redirect if authenticated
+              const intendedRoute = localStorage.getItem('intended_route');
+              if (intendedRoute && shouldPreserveIntent(intendedRoute)) {
+                console.log('🎯 Restoring intended route after session restoration:', intendedRoute);
+                localStorage.removeItem('intended_route');
+                setCurrentView(intendedRoute);
+              } else {
+                setCurrentView('dashboard');
+              }
             }
-          } else if (!pendingAnalysisProcessed.current) {
-            // Check for intended route and redirect if authenticated
-            const intendedRoute = localStorage.getItem('intended_route');
-            if (intendedRoute && shouldPreserveIntent(intendedRoute)) {
-              console.log('🎯 Restoring intended route after session restoration:', intendedRoute);
-              localStorage.removeItem('intended_route');
-              setCurrentView(intendedRoute);
-            } else {
-              setCurrentView('dashboard');
-            }
-          }
+          }, 100);
         } else {
           console.warn('⚠️ Session expired, clearing auth state');
           setSession(null);
@@ -461,26 +474,36 @@ function AppContent({ initialUrl }) {
       }
       
       setSessionChecked(true);
-      
-      // SECURITY FIX: Process any deferred initial route now that session check is complete
+
+      // SECURITY FIX: Process any deferred routes now that session check is complete
       const pendingRoute = localStorage.getItem('initial_route_pending');
-      if (pendingRoute) {
-        console.log('🔒 SECURITY: Processing deferred route with session check complete:', pendingRoute);
+      const deferredRoute = localStorage.getItem('deferred_route');
+
+      if (deferredRoute) {
+        console.log('🔒 SECURITY: Processing deferred route after session check:', deferredRoute);
+        localStorage.removeItem('deferred_route');
+        setCurrentView(deferredRoute);
+      } else if (pendingRoute) {
+        console.log('🔒 SECURITY: Processing initial pending route:', pendingRoute);
         localStorage.removeItem('initial_route_pending');
-        // Now apply route protection with proper session state
         setCurrentView(pendingRoute);
       }
     } catch (error) {
       console.warn('⚠️ Session restoration failed:', error);
       setSession(null);
       setSessionChecked(true);
-      
-      // SECURITY FIX: Process any deferred initial route even if session restoration failed
+
+      // SECURITY FIX: Process any deferred routes even if session restoration failed
       const pendingRoute = localStorage.getItem('initial_route_pending');
-      if (pendingRoute) {
-        console.log('🔒 SECURITY: Processing deferred route after session error:', pendingRoute);
+      const deferredRoute = localStorage.getItem('deferred_route');
+
+      if (deferredRoute) {
+        console.log('🔒 SECURITY: Processing deferred route after session error:', deferredRoute);
+        localStorage.removeItem('deferred_route');
+        setCurrentView(deferredRoute);
+      } else if (pendingRoute) {
+        console.log('🔒 SECURITY: Processing initial pending route after error:', pendingRoute);
         localStorage.removeItem('initial_route_pending');
-        // Apply route protection - will redirect unauthenticated users appropriately
         setCurrentView(pendingRoute);
       }
     } finally {
@@ -508,19 +531,27 @@ function AppContent({ initialUrl }) {
           sessionChecked,
           userEmail: session?.user?.email
         });
-        
+
         if (session && !sessionChecked) {
           console.log('✅ Session restored from storage on app load');
           setSession(session);
           setSessionChecked(true);
           setIsLoadingAuth(false);
-          
+
           // Fetch user tier for restored session
           fetchUserTier(session.user.id, session.user.email).catch(err => {
             console.warn('Failed to fetch user tier for restored session:', err);
             setUserTier('free');
           });
-          
+
+          // CRITICAL FIX: Check URL hash directly (not currentView) to detect oauth-callback
+          // currentView might still be 'landing' when INITIAL_SESSION fires
+          const urlHash = window.location.hash.slice(1);
+          if (urlHash === 'oauth-callback' || urlHash.startsWith('oauth-callback')) {
+            console.log('📍 OAuth callback in URL - skipping auto-navigation, let OAuthCallback component handle it');
+            return;
+          }
+
           // Navigate to intended route or dashboard
           const intendedRoute = localStorage.getItem('intended_route');
           if (intendedRoute && shouldPreserveIntent(intendedRoute)) {
@@ -831,23 +862,27 @@ function AppContent({ initialUrl }) {
     
     try {
       console.log('🔍 Fetching user tier for:', userId);
-      
+
       // Mark as being fetched
       fetchingUsers.current.add(userId);
-      
+
+      // CRITICAL FIX: Load real Supabase client before using rpc()
+      // The facade doesn't have the rpc method
+      const real = await supabase.loadRealSupabase ? await supabase.loadRealSupabase() : supabase;
+
       // Try the RPC function first (more reliable for missing users)
-      let { data, error } = await supabase.rpc('get_user_data', { user_id: userId });
-      
+      let { data, error } = await real.rpc('get_user_data', { user_id: userId });
+
       if (error) {
         console.warn('⚠️ RPC function failed, trying direct query:', error);
-        
+
         // Fallback to direct query with error handling
-        const result = await supabase
+        const result = await real
           .from('users')
           .select('*') // Select all columns to avoid 406 errors
           .eq('id', userId)
           .maybeSingle(); // Use maybeSingle() instead of single() to avoid errors on missing rows
-        
+
         data = result.data ? [result.data] : null;
         error = result.error;
       }
@@ -1578,21 +1613,52 @@ function AppContent({ initialUrl }) {
     );
   }
 
-  // PHASE 1 FIX: Auto-checkout view for Coffee tier signups
+  // PHASE 1 FIX: Auto-checkout view for Coffee/Growth/Scale tier signups
   if (currentView === 'checkout') {
-    // Get tier from sessionStorage (set by OAuthCallback)
+    // Get params from sessionStorage (set by OAuthCallback)
     const autoCheckoutTier = sessionStorage.getItem('autoCheckoutTier');
+    const autoCheckoutIsTrial = sessionStorage.getItem('autoCheckoutIsTrial') === 'true';
+    const autoCheckoutBilling = sessionStorage.getItem('autoCheckoutBilling') || 'annual';
 
     if (autoCheckoutTier && session?.user) {
-      console.log('💳 Auto-triggering Stripe checkout for tier:', autoCheckoutTier);
+      console.log('💳 Auto-triggering Stripe checkout:', {
+        tier: autoCheckoutTier,
+        isTrial: autoCheckoutIsTrial,
+        billing: autoCheckoutBilling
+      });
 
-      // Clear the auto-checkout flag
+      // Clear the auto-checkout flags
       sessionStorage.removeItem('autoCheckoutTier');
+      sessionStorage.removeItem('autoCheckoutIsTrial');
+      sessionStorage.removeItem('autoCheckoutBilling');
 
-      // Trigger the upgrade handler which will redirect to Stripe
-      setTimeout(() => {
-        handleUpgrade(autoCheckoutTier);
-      }, 100); // Small delay to ensure component is mounted
+      // Call Edge Function directly with trial/billing params
+      setTimeout(async () => {
+        try {
+          const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+            body: {
+              tier: autoCheckoutTier,
+              isTrial: autoCheckoutIsTrial,
+              billingFrequency: autoCheckoutBilling,
+              userId: session.user.id,
+              successUrl: `${window.location.origin}/#checkout-success`,
+              cancelUrl: `${window.location.origin}/#pricing`
+            }
+          });
+
+          if (error) throw error;
+
+          if (data?.url) {
+            window.location.href = data.url;
+          } else {
+            throw new Error('No checkout URL returned');
+          }
+        } catch (err) {
+          console.error('Checkout error:', err);
+          alert(`Upgrade failed: ${err.message}`);
+          setCurrentView('pricing');
+        }
+      }, 100);
 
       return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
