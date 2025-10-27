@@ -67,10 +67,18 @@ const CheckoutSuccess = () => {
         setLoading(false);
       } catch (error) {
         console.error('Error checking tier update:', error);
+        console.error('Error details:', error.message, error.code);
+
+        // Even on error, show the success page (payment went through)
+        // Set default values so page can render
+        setUserName('there');
+        setUserTier('growth'); // Default to growth since that's what they paid for
+        setDestination({ path: '/analyze', url: null, id: null });
         setLoading(false);
       }
     };
 
+    console.log('🎉 CheckoutSuccess component mounted');
     checkTierUpdate();
 
     // If tier not updated immediately, poll for updates (webhook may take a few seconds)
