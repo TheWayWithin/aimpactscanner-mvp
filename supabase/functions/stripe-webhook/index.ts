@@ -167,16 +167,16 @@ async function verifyStripeSignature(
 async function handleCheckoutCompleted(session: any, tierManager: TierManager) {
   try {
     console.log('Processing checkout.session.completed...');
-    
+
     const userId = session.metadata?.user_id;
     const tier = session.metadata?.tier || 'coffee';
-    
+
     if (!userId) {
       throw new Error('No user_id in session metadata');
     }
-    
+
     console.log(`Upgrading user ${userId} to ${tier} tier`);
-    
+
     // Get subscription details if this was a subscription
     let subscriptionData = null;
     if (session.subscription) {
@@ -187,14 +187,14 @@ async function handleCheckoutCompleted(session: any, tierManager: TierManager) {
           'Authorization': `Bearer ${STRIPE_SECRET_KEY}`
         }
       });
-      
+
       if (response.ok) {
         subscriptionData = await response.json();
       }
     }
-    
-    // Upgrade user to Coffee tier
-    await tierManager.upgradeToCoffeeTier(userId, {
+
+    // FIX: Use generic upgradeToTier() to support all tiers (coffee, growth, scale)
+    await tierManager.upgradeToTier(userId, tier, {
       id: session.subscription,
       customer: session.customer,
       current_period_start: subscriptionData?.current_period_start || Math.floor(Date.now() / 1000),
@@ -208,9 +208,9 @@ async function handleCheckoutCompleted(session: any, tierManager: TierManager) {
         }]
       }
     });
-    
-    console.log('Checkout completed successfully');
-    
+
+    console.log(`Checkout completed successfully for ${tier} tier`);
+
   } catch (error) {
     console.error('Error handling checkout completion:', error);
     throw error;

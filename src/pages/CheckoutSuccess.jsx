@@ -7,6 +7,7 @@ const CheckoutSuccess = () => {
   const [loading, setLoading] = useState(true);
   const [tierUpdated, setTierUpdated] = useState(false);
   const [userName, setUserName] = useState('');
+  const [userTier, setUserTier] = useState('coffee'); // Track actual tier
   const [destination, setDestination] = useState(null);
 
   useEffect(() => {
@@ -38,9 +39,11 @@ const CheckoutSuccess = () => {
         const name = userData.email?.split('@')[0] || 'there';
         setUserName(name.charAt(0).toUpperCase() + name.slice(1));
 
-        // Check if tier has been updated to coffee
-        if (userData.tier === 'coffee') {
+        // Check if tier has been updated to any paid tier
+        const paidTiers = ['coffee', 'growth', 'scale'];
+        if (paidTiers.includes(userData.tier)) {
           setTierUpdated(true);
+          setUserTier(userData.tier); // Store the actual tier
         }
 
         // Determine destination based on pending analysis
@@ -64,10 +67,18 @@ const CheckoutSuccess = () => {
         setLoading(false);
       } catch (error) {
         console.error('Error checking tier update:', error);
+        console.error('Error details:', error.message, error.code);
+
+        // Even on error, show the success page (payment went through)
+        // Set default values so page can render
+        setUserName('there');
+        setUserTier('growth'); // Default to growth since that's what they paid for
+        setDestination({ path: '/analyze', url: null, id: null });
         setLoading(false);
       }
     };
 
+    console.log('🎉 CheckoutSuccess component mounted');
     checkTierUpdate();
 
     // If tier not updated immediately, poll for updates (webhook may take a few seconds)
@@ -81,8 +92,10 @@ const CheckoutSuccess = () => {
         .eq('id', user.id)
         .single();
 
-      if (userData?.tier === 'coffee') {
+      const paidTiers = ['coffee', 'growth', 'scale'];
+      if (userData?.tier && paidTiers.includes(userData.tier)) {
         setTierUpdated(true);
+        setUserTier(userData.tier);
         clearInterval(pollInterval);
       }
     }, 2000);
@@ -92,6 +105,52 @@ const CheckoutSuccess = () => {
 
     return () => clearInterval(pollInterval);
   }, []);
+
+  // Tier-specific content
+  const getTierContent = (tier) => {
+    const content = {
+      coffee: {
+        emoji: '☕',
+        name: 'Coffee',
+        title: 'Welcome to Coffee Tier!',
+        analyses: '10 analyses/month',
+        benefits: [
+          { title: '10 analyses per month', desc: 'Perfect for individuals and small projects' },
+          { title: '10 MASTERY-AI Framework factors', desc: 'Comprehensive Phase A analysis' },
+          { title: '30-day analysis history', desc: 'Access your recent analyses' },
+          { title: 'Professional PDF reports', desc: 'Clean, watermark-free reports' }
+        ]
+      },
+      growth: {
+        emoji: '🚀',
+        name: 'Growth',
+        title: 'Welcome to Growth Tier!',
+        analyses: '40 analyses/month',
+        benefits: [
+          { title: '40 analyses per month', desc: 'Scale your AI optimization efforts' },
+          { title: '10 MASTERY-AI Framework factors', desc: 'Comprehensive Phase A analysis' },
+          { title: '90-day analysis history', desc: 'Track trends over time' },
+          { title: 'CSV + LLMS.txt exports', desc: 'Export data for further analysis' },
+          { title: 'Professional PDF reports', desc: 'Clean, watermark-free reports' }
+        ]
+      },
+      scale: {
+        emoji: '🏢',
+        name: 'Scale',
+        title: 'Welcome to Scale Tier!',
+        analyses: '100 analyses/month',
+        benefits: [
+          { title: '100 analyses per month', desc: 'Enterprise-level capacity' },
+          { title: '10 MASTERY-AI Framework factors', desc: 'Comprehensive Phase A analysis' },
+          { title: 'Unlimited analysis history', desc: 'Never lose your data' },
+          { title: 'Full data exports + API access', desc: 'Integrate with your tools' },
+          { title: 'Professional PDF reports', desc: 'Clean, watermark-free reports' },
+          { title: 'Priority support', desc: 'Get help faster' }
+        ]
+      }
+    };
+    return content[tier] || content.coffee;
+  };
 
   const handleContinue = () => {
     // Signal App.jsx to refresh tier after payment
@@ -112,6 +171,8 @@ const CheckoutSuccess = () => {
       window.location.hash = 'dashboard';
     }
   };
+
+  const tierContent = getTierContent(userTier);
 
   if (loading) {
     return (
@@ -158,14 +219,14 @@ const CheckoutSuccess = () => {
 
         {/* Success Message */}
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-          🎉 Welcome to Coffee Tier!
+          🎉 {tierContent.title}
         </h1>
 
         <p className="text-xl text-gray-700 mb-8 leading-normal">
           {tierUpdated ? (
             <>
               Thank you for your payment, <span className="font-semibold">{userName}</span>!
-              Your account has been upgraded to <span className="font-semibold text-green-600">Coffee tier</span>.
+              Your account has been upgraded to <span className="font-semibold text-green-600">{tierContent.emoji} {tierContent.name} tier</span>.
             </>
           ) : (
             <>
@@ -182,45 +243,15 @@ const CheckoutSuccess = () => {
           </h2>
 
           <div className="grid gap-4">
-            <div className="flex items-start gap-3">
-              <div className="text-green-500 text-2xl">✅</div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Unlimited AI-powered analyses</h3>
-                <p className="text-gray-600 text-sm">Run as many analyses as you need, no limits</p>
+            {tierContent.benefits.map((benefit, index) => (
+              <div key={index} className="flex items-start gap-3">
+                <div className="text-green-500 text-2xl">✅</div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">{benefit.title}</h3>
+                  <p className="text-gray-600 text-sm">{benefit.desc}</p>
+                </div>
               </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="text-green-500 text-2xl">✅</div>
-              <div>
-                <h3 className="font-semibold text-gray-900">10 MASTERY-AI Framework factors</h3>
-                <p className="text-gray-600 text-sm">Comprehensive Phase A analysis for AI optimization</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="text-green-500 text-2xl">✅</div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Professional PDF reports</h3>
-                <p className="text-gray-600 text-sm">Clean, watermark-free reports you can share</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="text-green-500 text-2xl">✅</div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Email support</h3>
-                <p className="text-gray-600 text-sm">Get help when you need it</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="text-green-500 text-2xl">✅</div>
-              <div>
-                <h3 className="font-semibold text-gray-900">30-day money-back guarantee</h3>
-                <p className="text-gray-600 text-sm">Risk-free trial period</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 

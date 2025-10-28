@@ -266,16 +266,22 @@ const OAuthCallback = ({ onNavigate, oauthCallbackProcessedRef }) => {
         console.log('💾 Stored routeState in sessionStorage:', destination.state);
       }
 
-      // PHASE 1 FIX: For checkout flow, store tier in sessionStorage for auto-trigger
+      // PHASE 1 FIX: For checkout flow, store tier + trial + billing in sessionStorage for auto-trigger
       if (destination.path === '/checkout' && destination.state?.tier) {
         sessionStorage.setItem('autoCheckoutTier', destination.state.tier);
-        console.log('💳 Auto-checkout tier stored:', destination.state.tier);
+        sessionStorage.setItem('autoCheckoutIsTrial', destination.state.isTrial?.toString() || 'false');
+        sessionStorage.setItem('autoCheckoutBilling', destination.state.billingFrequency || 'annual');
+        console.log('💳 Auto-checkout params stored:', {
+          tier: destination.state.tier,
+          isTrial: destination.state.isTrial,
+          billing: destination.state.billingFrequency
+        });
       }
 
-      // CRITICAL FIX: Add small delay to allow SIGNED_IN event handler to complete
+      // CRITICAL FIX: Add delay to allow SIGNED_IN event handler to complete
       // This ensures session state is updated before setCurrentView's route protection logic runs
-      console.log('⏳ Waiting 100ms for session state to update...');
-      await new Promise(resolve => setTimeout(resolve, 100));
+      console.log('⏳ Waiting 500ms for session state to update...');
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // FIX 2: Set flag BEFORE routing to prevent race condition
       if (oauthCallbackProcessedRef) {

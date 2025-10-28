@@ -169,21 +169,26 @@ export const getPostSignupDestination = (user, authContext = null) => {
 
   // Check if tier requires payment (Coffee/Growth/Scale)
   const tier = authContext?.selectedTier || user?.user_metadata?.selected_tier || 'free';
+  const isTrial = authContext?.isTrial || false;
+  const billingFrequency = authContext?.billingFrequency || 'annual';
 
-  if (tier === 'coffee') {
-    console.log('💳 Coffee tier selected, routing to Stripe checkout');
+  // Paid tiers: Coffee, Growth, Scale
+  if (tier === 'coffee' || tier === 'growth' || tier === 'scale') {
+    console.log(`💳 ${tier} tier selected, routing to Stripe checkout (trial: ${isTrial}, billing: ${billingFrequency})`);
     return {
       path: '/checkout',
       state: {
-        tier: 'coffee',
+        tier: tier,
+        isTrial: isTrial,
+        billingFrequency: billingFrequency,
         userId: user?.id,
         email: user?.email
       }
     };
   }
 
-  // Default: Go to analysis page without pre-filled URL
-  console.log('📊 No pending analysis, routing to empty /analyze');
+  // Free tier: Go to analysis page
+  console.log('📊 Free tier selected, routing to /analyze');
   return {
     path: '/analyze',
     state: {
