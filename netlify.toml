@@ -29,7 +29,7 @@
     Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://*.supabase.co https://api.stripe.com https://www.google-analytics.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; frame-src https://js.stripe.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://checkout.stripe.com; frame-ancestors 'none'"
 
     # Permissions Policy - blocks unnecessary browser features, allows Stripe payments
-    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(self \"https://js.stripe.com\"), usb=(), interest-cohort=()"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(self 'https://js.stripe.com'), usb=(), interest-cohort=()"
 
     # DNS Prefetch Control - enables faster external resource loading
     X-DNS-Prefetch-Control = "on"
