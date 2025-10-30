@@ -40,6 +40,12 @@
     Access-Control-Allow-Methods = "GET, POST, OPTIONS"
     Access-Control-Allow-Headers = "Content-Type, Authorization"
 
+# HTML files - NEVER cache to ensure latest JS bundles load
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
 # Caching for static assets
 [[headers]]
   for = "/assets/*"
