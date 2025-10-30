@@ -66,12 +66,23 @@ const DynamicTierSelector = ({
 
   // Handle trial selection (Growth tier only)
   const handleTrialSelect = (wantsTrial, autoProceed = false) => {
+    console.log('[DynamicTierSelector] handleTrialSelect called');
+    console.log('[DynamicTierSelector] wantsTrial parameter:', wantsTrial);
+    console.log('[DynamicTierSelector] autoProceed parameter:', autoProceed);
+    console.log('[DynamicTierSelector] selectedTier:', selectedTier);
+    console.log('[DynamicTierSelector] billingFrequency:', billingFrequency);
+
     setIsTrial(wantsTrial);
     console.log('🎁 Trial option selected:', wantsTrial ? 'YES' : 'NO');
 
     // If autoProceed is true, immediately proceed to OAuth selection
     if (autoProceed && onSelectionComplete) {
       console.log('🚀 Auto-proceeding to OAuth with trial:', wantsTrial);
+      console.log('[DynamicTierSelector] Calling onSelectionComplete with:', {
+        tier: selectedTier,
+        billing: billingFrequency,
+        isTrial: wantsTrial
+      });
       onSelectionComplete(selectedTier, billingFrequency, wantsTrial);
     }
   };

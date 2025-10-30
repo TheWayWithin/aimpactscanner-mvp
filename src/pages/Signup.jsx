@@ -112,6 +112,12 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
                   console.log('🔄 Billing frequency changed to:', frequency);
                 }}
                 onSelectionComplete={(tier, billing, isTrial = false) => {
+                  console.log('[Signup] onSelectionComplete called');
+                  console.log('[Signup] Received tier:', tier);
+                  console.log('[Signup] Received billing:', billing);
+                  console.log('[Signup] Received isTrial:', isTrial);
+                  console.log('[Signup] isTrial type:', typeof isTrial);
+
                   // Store in authContext for OAuth callback
                   const authContext = {
                     selectedTier: tier,
@@ -120,6 +126,10 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
                     mode: 'signup',
                     timestamp: Date.now()
                   };
+
+                  console.log('[Signup] authContext object:', authContext);
+                  console.log('[Signup] authContext stringified:', JSON.stringify(authContext));
+
                   localStorage.setItem('authContext', JSON.stringify(authContext));
 
                   // Set 7-day expiry

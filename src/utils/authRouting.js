@@ -172,10 +172,17 @@ export const getPostSignupDestination = (user, authContext = null) => {
   const isTrial = authContext?.isTrial || false;
   const billingFrequency = authContext?.billingFrequency || 'annual';
 
+  console.log('[authRouting] getPostSignupDestination - authContext:', authContext);
+  console.log('[authRouting] Extracted tier:', tier);
+  console.log('[authRouting] Extracted isTrial:', isTrial);
+  console.log('[authRouting] isTrial type:', typeof isTrial);
+  console.log('[authRouting] Extracted billingFrequency:', billingFrequency);
+
   // Paid tiers: Coffee, Growth, Scale
   if (tier === 'coffee' || tier === 'growth' || tier === 'scale') {
     console.log(`💳 ${tier} tier selected, routing to Stripe checkout (trial: ${isTrial}, billing: ${billingFrequency})`);
-    return {
+
+    const destination = {
       path: '/checkout',
       state: {
         tier: tier,
@@ -185,6 +192,9 @@ export const getPostSignupDestination = (user, authContext = null) => {
         email: user?.email
       }
     };
+
+    console.log('[authRouting] Destination object:', destination);
+    return destination;
   }
 
   // Free tier: Go to analysis page

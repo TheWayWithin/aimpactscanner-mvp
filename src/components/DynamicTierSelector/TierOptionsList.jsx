@@ -111,6 +111,8 @@ const TierOptionsList = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
+                      console.log('[TierOptionsList] User clicked: Try Growth Free for 7 Days');
+                      console.log('[TierOptionsList] Calling onTrialSelect(true, true)');
                       if (onTrialSelect) {
                         onTrialSelect(true, true); // Second param = auto-proceed
                       }

@@ -1616,9 +1616,17 @@ function AppContent({ initialUrl }) {
   // PHASE 1 FIX: Auto-checkout view for Coffee/Growth/Scale tier signups
   if (currentView === 'checkout') {
     // Get params from sessionStorage (set by OAuthCallback)
+    console.log('[App.jsx] Reading sessionStorage values for checkout');
     const autoCheckoutTier = sessionStorage.getItem('autoCheckoutTier');
-    const autoCheckoutIsTrial = sessionStorage.getItem('autoCheckoutIsTrial') === 'true';
+    const autoCheckoutIsTrialStr = sessionStorage.getItem('autoCheckoutIsTrial');
+    const autoCheckoutIsTrial = autoCheckoutIsTrialStr === 'true';
     const autoCheckoutBilling = sessionStorage.getItem('autoCheckoutBilling') || 'annual';
+
+    console.log('[App.jsx] Retrieved sessionStorage values:');
+    console.log('[App.jsx]   autoCheckoutTier:', autoCheckoutTier);
+    console.log('[App.jsx]   autoCheckoutIsTrial (raw string):', autoCheckoutIsTrialStr);
+    console.log('[App.jsx]   autoCheckoutIsTrial (boolean):', autoCheckoutIsTrial);
+    console.log('[App.jsx]   autoCheckoutBilling:', autoCheckoutBilling);
 
     if (autoCheckoutTier && session?.user) {
       console.log('💳 Auto-triggering Stripe checkout:', {
