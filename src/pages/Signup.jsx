@@ -111,18 +111,23 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
                   setBillingFrequency(frequency);
                   console.log('🔄 Billing frequency changed to:', frequency);
                 }}
-                onSelectionComplete={(tier, billing, isTrial = false) => {
+                onSelectionComplete={(tier, billing, isTrial) => {
                   console.log('[Signup] onSelectionComplete called');
                   console.log('[Signup] Received tier:', tier);
                   console.log('[Signup] Received billing:', billing);
-                  console.log('[Signup] Received isTrial:', isTrial);
+                  console.log('[Signup] Received isTrial (raw):', isTrial);
                   console.log('[Signup] isTrial type:', typeof isTrial);
+
+                  // CRITICAL FIX: Handle undefined explicitly instead of default parameter
+                  // Default parameters can cause issues if the caller passes undefined
+                  const normalizedIsTrial = isTrial === true;  // Only true if explicitly true
+                  console.log('[Signup] Normalized isTrial:', normalizedIsTrial);
 
                   // Store in authContext for OAuth callback
                   const authContext = {
                     selectedTier: tier,
                     billingFrequency: billing,
-                    isTrial: isTrial, // NEW: Track if user selected trial
+                    isTrial: normalizedIsTrial, // FIXED: Use normalized boolean value
                     mode: 'signup',
                     timestamp: Date.now()
                   };

@@ -169,7 +169,9 @@ export const getPostSignupDestination = (user, authContext = null) => {
 
   // Check if tier requires payment (Coffee/Growth/Scale)
   const tier = authContext?.selectedTier || user?.user_metadata?.selected_tier || 'free';
-  const isTrial = authContext?.isTrial || false;
+  // CRITICAL FIX: Use explicit boolean check instead of OR operator
+  // This ensures that false (no trial) is preserved correctly
+  const isTrial = authContext?.isTrial === true;  // Only true if explicitly true
   const billingFrequency = authContext?.billingFrequency || 'annual';
 
   console.log('[authRouting] getPostSignupDestination - authContext:', authContext);
