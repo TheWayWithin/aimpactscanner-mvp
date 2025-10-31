@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { supabase } from '../lib/supabaseClient';
 
-const AuthMethodSelector = ({ selectedTier, mode = 'signup', onSuccess, onError }) => {
+const AuthMethodSelector = ({ selectedTier, isTrial = false, billingFrequency = 'annual', mode = 'signup', onSuccess, onError }) => {
   const [loading, setLoading] = useState(false);
   const [loadingMethod, setLoadingMethod] = useState(null);
   const [showMagicLink, setShowMagicLink] = useState(false);
@@ -20,6 +20,8 @@ const AuthMethodSelector = ({ selectedTier, mode = 'signup', onSuccess, onError 
   const storeAuthContext = () => {
     const context = {
       selectedTier,
+      billingFrequency,  // CRITICAL FIX: Include billing frequency
+      isTrial,            // CRITICAL FIX: Include trial flag
       timestamp: Date.now(),
       mode,
       pendingAnalysisUrl: localStorage.getItem('pendingAnalysisUrl'),
@@ -357,6 +359,8 @@ const AuthMethodSelector = ({ selectedTier, mode = 'signup', onSuccess, onError 
 
 AuthMethodSelector.propTypes = {
   selectedTier: PropTypes.oneOf(['free', 'coffee', 'growth', 'scale', null]), // Allow null for OAuth-first signup
+  isTrial: PropTypes.bool,
+  billingFrequency: PropTypes.oneOf(['monthly', 'annual']),
   mode: PropTypes.oneOf(['signup', 'login']),
   onSuccess: PropTypes.func,
   onError: PropTypes.func

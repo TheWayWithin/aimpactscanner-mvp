@@ -189,6 +189,8 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
 
               <AuthMethodSelector
                 selectedTier={selectedTier}
+                isTrial={selectedTier === 'growth'} // Pass trial flag to AuthMethodSelector
+                billingFrequency={billingFrequency}
                 mode={mode}
                 onSuccess={handleAuthSuccess}
                 onError={handleAuthError}
