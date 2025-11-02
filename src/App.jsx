@@ -478,8 +478,15 @@ function AppContent({ initialUrl }) {
       // SECURITY FIX: Process any deferred routes now that session check is complete
       const pendingRoute = localStorage.getItem('initial_route_pending');
       const deferredRoute = localStorage.getItem('deferred_route');
+      const currentHash = window.location.hash.slice(1); // Get current URL hash without #
 
-      if (deferredRoute) {
+      // Don't override checkout-success - user just completed payment
+      if (pendingRoute === 'checkout-success' || deferredRoute === 'checkout-success' || currentHash === 'checkout-success') {
+        console.log('🔒 SECURITY: User on checkout-success, preserving route');
+        localStorage.removeItem('initial_route_pending');
+        localStorage.removeItem('deferred_route');
+        setCurrentView('checkout-success');
+      } else if (deferredRoute) {
         console.log('🔒 SECURITY: Processing deferred route after session check:', deferredRoute);
         localStorage.removeItem('deferred_route');
         setCurrentView(deferredRoute);
@@ -496,8 +503,15 @@ function AppContent({ initialUrl }) {
       // SECURITY FIX: Process any deferred routes even if session restoration failed
       const pendingRoute = localStorage.getItem('initial_route_pending');
       const deferredRoute = localStorage.getItem('deferred_route');
+      const currentHash = window.location.hash.slice(1); // Get current URL hash without #
 
-      if (deferredRoute) {
+      // Don't override checkout-success - user just completed payment
+      if (pendingRoute === 'checkout-success' || deferredRoute === 'checkout-success' || currentHash === 'checkout-success') {
+        console.log('🔒 SECURITY: User on checkout-success (error path), preserving route');
+        localStorage.removeItem('initial_route_pending');
+        localStorage.removeItem('deferred_route');
+        setCurrentView('checkout-success');
+      } else if (deferredRoute) {
         console.log('🔒 SECURITY: Processing deferred route after session error:', deferredRoute);
         localStorage.removeItem('deferred_route');
         setCurrentView(deferredRoute);
