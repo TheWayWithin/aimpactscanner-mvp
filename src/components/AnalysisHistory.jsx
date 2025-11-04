@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabaseClient';
 import { useTabVisibility } from '../hooks/useTabVisibility';
 import { normalizeUrl, getDomainFromUrl } from '../utils/urlUtils';
 
-const AnalysisHistory = ({ onViewAnalysis }) => {
+const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -17,9 +17,23 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
   const [filteredHistory, setFilteredHistory] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const lastLoadTime = useRef(0);
-  
+
   // Tab visibility tracking
   const { isTabVisible } = useTabVisibility();
+
+  // Get tier display name (matching SimpleAccountDashboard)
+  const getTierDisplayName = (tier) => {
+    const tierNames = {
+      'free': 'Free',
+      'coffee': 'Solo',
+      'coffee_pending': 'Solo (Payment Pending)',
+      'pending_payment': 'Payment Pending',
+      'pending_registration': 'Registration Incomplete',
+      'growth': 'Growth',
+      'scale': 'Scale'
+    };
+    return tierNames[tier] || tier || 'Free';
+  };
 
   useEffect(() => {
     // Get current session and listen for auth changes
@@ -693,7 +707,7 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h2>
             <p className="text-gray-600">
-              {statistics ? `${statistics.totalAnalyses} analyses • Coffee tier` : 'Track your website performance'}
+              {statistics ? `${statistics.totalAnalyses} analyses • ${getTierDisplayName(userTier)} tier` : 'Track your website performance'}
             </p>
           </div>
         </div>
@@ -875,7 +889,7 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Analyses</p>
                 <p className="text-2xl font-bold text-gray-900">{statistics.totalAnalyses}</p>
-                <p className="text-sm text-gray-500 mt-1">Coffee tier</p>
+                <p className="text-sm text-gray-500 mt-1">{getTierDisplayName(userTier)} tier</p>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

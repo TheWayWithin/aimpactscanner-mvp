@@ -2059,7 +2059,11 @@ function AppContent({ initialUrl }) {
               </div>
           </div>
           <Suspense fallback={<ComponentLoader message="Loading analysis history..." />}>
-            <AnalysisHistory onViewAnalysis={handleViewHistoryAnalysis} />
+            <AnalysisHistory
+              onViewAnalysis={handleViewHistoryAnalysis}
+              user={userData}
+              userTier={userTier}
+            />
           </Suspense>
             </div>
           </ProtectedRoute>
