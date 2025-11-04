@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import BillingToggle from './BillingToggle';
 import TierOptionsList from './TierOptionsList';
+import TierMessagingSection from './TierMessagingSection';
+import SavingsHighlight from './SavingsHighlight';
 import { useBillingPricing } from './useBillingPricing';
 
 const DynamicTierSelector = ({
@@ -123,6 +125,21 @@ const DynamicTierSelector = ({
         onTierSelect={handleTierChange}
         isTransitioning={isTransitioning}
         onTrialSelect={handleTrialSelect}
+      />
+
+      {/* Doug Hall Messaging: OB + RRB */}
+      <div className="mt-6">
+        <TierMessagingSection
+          selectedTier={selectedTier}
+          isTransitioning={isTransitioning}
+        />
+      </div>
+
+      {/* Doug Hall Messaging: DD (Dramatic Demonstration) */}
+      <SavingsHighlight
+        selectedTier={selectedTier}
+        billingFrequency={billingFrequency}
+        isTransitioning={isTransitioning}
       />
 
       {/* Selected Tier Summary */}
