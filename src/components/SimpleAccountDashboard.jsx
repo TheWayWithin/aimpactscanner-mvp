@@ -41,8 +41,8 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
   const getTierDisplayName = (tier) => {
     const tierNames = {
       'free': '🆓 Free',
-      'coffee': '☕ Coffee',
-      'coffee_pending': '☕ Coffee (Payment Pending)',
+      'coffee': '☕ Solo',
+      'coffee_pending': '☕ Solo (Payment Pending)',
       'pending_payment': '⏳ Payment Pending',
       'pending_registration': '📝 Registration Incomplete',
       'growth': '🚀 Growth',
@@ -178,7 +178,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
           {showPaymentPending && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <p className="text-yellow-800">
-                ⏳ Your Coffee tier subscription is pending payment. 
+                ⏳ Your Solo tier subscription is pending payment.
                 Please complete the payment process to activate your subscription.
               </p>
             </div>
@@ -213,7 +213,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
                 href="/#pricing"
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 inline-block"
               >
-                Upgrade to Coffee ☕
+                Upgrade to Solo ☕
               </a>
             )}
           </div>
@@ -241,7 +241,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
               </div>
               {getRemainingAnalyses() === 0 && (
                 <p className="text-sm text-orange-600 mt-2 max-w-full overflow-hidden break-words">
-                  Monthly limit reached. Upgrade to Coffee for unlimited analyses!
+                  Monthly limit reached. Upgrade to Solo for 10 analyses/month!
                 </p>
               )}
             </div>
