@@ -94,7 +94,8 @@ function AppContent({ initialUrl }) {
       if (isProtectedRoute(view)) {
         // CRITICAL FIX: Don't check auth if session check hasn't completed yet
         // This prevents premature redirects to landing when session state is updating
-        if (!sessionChecked) {
+        // EXCEPTION: checkout-success should never be deferred (user just completed payment)
+        if (!sessionChecked && view !== 'checkout-success') {
           console.log('⏳ SECURITY: Session check not complete - deferring navigation to:', view);
           localStorage.setItem('deferred_route', view);
           return; // Queue the navigation until session check completes
