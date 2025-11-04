@@ -7,6 +7,12 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
   const [loading, setLoading] = useState(false);
   const [actualMonthlyCount, setActualMonthlyCount] = useState(null);
   const { usageData } = useUsageTracking(user?.email);
+
+  // DEBUG: Log tier data to diagnose display issue
+  console.log('[DEBUG Dashboard] User tier prop:', userTier);
+  console.log('[DEBUG Dashboard] User object tier:', user?.tier);
+  console.log('[DEBUG Dashboard] User subscription_tier:', user?.subscription_tier);
+  console.log('[DEBUG Dashboard] Full user object:', user);
   
   // Fetch actual analysis count from database
   useEffect(() => {
@@ -116,6 +122,13 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
     };
 
     const limit = tierLimits[tier];
+
+    // DEBUG: Log calculation details
+    console.log('[DEBUG getRemainingAnalyses] Tier:', tier);
+    console.log('[DEBUG getRemainingAnalyses] Limit:', limit);
+    console.log('[DEBUG getRemainingAnalyses] Used:', used);
+    console.log('[DEBUG getRemainingAnalyses] Remaining:', Math.max(0, limit - used));
+
     if (!limit) return 3; // Default to free tier limit
 
     return Math.max(0, limit - used);

@@ -154,6 +154,1262 @@ progress.md is a BACKWARD-LOOKING changelog capturing what was DONE and what was
 **Prevention Strategy**: [How to avoid in future]
 ```
 
+---
+
+## TASK COMPLETION VERIFICATION PROTOCOL
+
+**CRITICAL**: Never mark tasks [x] in project-plan.md without full verification. This protocol prevents premature completion marking and ensures quality.
+
+### Pre-Completion Verification Checklist
+
+Before marking ANY task [x] in project-plan.md:
+
+1. **Task Tool Response Received**
+   - [ ] Received actual Task tool response (not timeout/error)
+   - [ ] Response contains specific deliverables or clear status
+   - [ ] Response is not just "I'll work on this" or acknowledgment
+   - **Red Flag**: No Task tool response = delegation may not have worked
+
+2. **Deliverable Verification**
+   - [ ] Deliverable files exist at specified paths
+   - [ ] File contents are complete (not empty or stub files)
+   - [ ] File paths match what was requested in task
+   - [ ] File format is correct (code compiles, markdown renders, etc.)
+   - **Verification Command**: `ls -la [file-path]` and `head [file-path]`
+
+3. **Handoff Documentation Check**
+   - [ ] Specialist updated handoff-notes.md with findings
+   - [ ] Handoff contains specific details (not just "completed task")
+   - [ ] Handoff includes decisions made and rationale
+   - [ ] Handoff provides context for next specialist
+   - **Verification**: Read handoff-notes.md, check "Last Updated" timestamp
+
+4. **Quality Spot-Check**
+   - [ ] Code: Syntax valid, no obvious errors, follows project patterns
+   - [ ] Documentation: Readable, complete sections, proper formatting
+   - [ ] Tests: Execute successfully, cover stated scenarios
+   - [ ] Configuration: Valid format, required fields present
+   - **Quick Test**: Run basic validation (compile, lint, test, render)
+
+5. **Dependency Check**
+   - [ ] No blockers preventing next dependent task
+   - [ ] Prerequisites for next task are satisfied
+   - [ ] No critical issues introduced
+   - [ ] Next specialist has what they need to start
+   - **Check**: Review project-plan.md dependencies
+
+6. **Security Principles Maintained**
+   - [ ] No security features disabled or weakened
+   - [ ] Critical Software Development Principles followed
+   - [ ] Root cause analysis performed (not symptom fix)
+   - [ ] Strategic Solution Checklist applied
+   - **Review**: Check specialist didn't compromise security for convenience
+
+### Verification Process Flow
+
+```
+1. Specialist completes task
+   ↓
+2. Task tool returns response
+   ↓
+3. Coordinator verifies deliverable exists → YES: Continue | NO: Stop, reassign
+   ↓
+4. Coordinator checks handoff-notes.md updated → YES: Continue | NO: Request update
+   ↓
+5. Coordinator performs quality spot-check → PASS: Continue | FAIL: Request fix
+   ↓
+6. Coordinator checks dependencies satisfied → YES: Continue | NO: Address blockers
+   ↓
+7. Coordinator verifies security maintained → YES: Continue | NO: Reject, require fix
+   ↓
+8. ALL CHECKS PASS → Mark [x] in project-plan.md with timestamp
+```
+
+### Marking Complete - Required Format
+
+When marking task [x] in project-plan.md after verification:
+
+```markdown
+- [x] [Task description] (@specialist) - ✅ YYYY-MM-DD HH:MM
+  - **Deliverable**: [Specific file/output with path]
+  - **Verified**: [What was checked - file exists, tests pass, handoff updated]
+  - **Quality**: [Brief quality assessment]
+  - **Next**: [What this enables or who needs it next]
+```
+
+**Example of CORRECT Completion**:
+```markdown
+- [x] Implement JWT authentication (@developer) - ✅ 2025-10-19 16:45
+  - **Deliverable**: `src/auth/jwt.ts` with token generation/validation
+  - **Verified**: File exists (320 lines), compiles without errors, handoff-notes.md updated with implementation details
+  - **Quality**: Follows security best practices, includes refresh token rotation, test coverage 85%
+  - **Next**: @tester for security validation and penetration testing
+```
+
+**Example of INCORRECT Completion**:
+```markdown
+- [x] Implement JWT authentication (@developer)
+  - Status: Complete
+```
+*(Problems: No timestamp, no deliverable verification, no handoff check, no quality assessment, no next steps)*
+
+### Verification Failures - What to Do
+
+**If Deliverable Missing**:
+```markdown
+# In project-plan.md
+- [ ] Implement authentication (@developer) - ⚠️ Deliverable not found
+  - **Status**: Waiting for deliverable at `src/auth/jwt.ts`
+  - **Action**: Sent clarification request to @developer
+
+# In progress.md
+### 2025-10-19 15:30 - Verification Failed: Authentication deliverable missing
+**Task**: Implement JWT authentication
+**Assigned**: @developer
+**Issue**: Task tool response indicated completion but file `src/auth/jwt.ts` does not exist
+**Action Taken**: Sent follow-up delegation requesting file creation
+**Root Cause**: Unclear deliverable specification in original delegation
+**Prevention**: Always specify exact file path in task delegation
+```
+
+**If Handoff Not Updated**:
+```markdown
+# Send follow-up Task delegation
+Task(
+  subagent_type="developer",
+  prompt="Please update handoff-notes.md with findings from JWT authentication implementation.
+
+  Include:
+  - Implementation approach taken
+  - Key decisions and rationale
+  - Security considerations
+  - What @tester needs to know for validation
+
+  This is required before I can mark the task complete."
+)
+```
+
+**If Quality Check Fails**:
+```markdown
+# In project-plan.md
+- [ ] Implement authentication (@developer) - 🔴 Quality issues found
+  - **Status**: Returned to @developer for fixes
+  - **Issues**: Security concern - tokens stored in localStorage (XSS vulnerable)
+  - **Required**: Use HTTP-only cookies per security principles
+
+# In progress.md
+### Issue #X: Authentication Implementation Security Concerns
+**Discovered**: 2025-10-19 16:00 by @coordinator during verification
+**Status**: 🔴 Open
+**Severity**: Critical
+
+**Symptom**: JWT tokens stored in localStorage, vulnerable to XSS attacks
+
+**Impact**: Security vulnerability that violates Critical Software Development Principles
+
+**Action**: Rejected implementation, delegated back to @developer with security requirements
+**Prevention**: Enhance verification checklist to include security review for auth-related tasks
+```
+
+### Verification Documentation
+
+**After Each Verification** (successful or failed):
+
+1. **Update progress.md** with verification outcome
+2. **If successful**: Log deliverable entry
+3. **If failed**: Create issue entry with root cause
+4. **Update agent-context.md** with specialist findings (if verified)
+5. **Sync TodoWrite**: Mark "completed" only after [x] verified
+
+### Common Verification Mistakes
+
+**❌ DON'T**:
+- Mark [x] because Task tool was called (delegation ≠ completion)
+- Mark [x] because specialist said "done" (verify the deliverable)
+- Mark [x] to "move things along" (creates false progress)
+- Skip verification for "simple tasks" (all tasks need verification)
+- Assume deliverable is correct (always spot-check quality)
+- Accept security compromises (reject and require fix)
+
+**✅ DO**:
+- Verify deliverable exists before marking [x]
+- Check handoff-notes.md updated by specialist
+- Perform quality spot-check (run code, read docs)
+- Ensure dependencies satisfied for next task
+- Document verification in completion entry
+- Maintain security principles without exception
+
+---
+
+## CROSS-FILE SYNCHRONIZATION PROTOCOL
+
+**CRITICAL**: project-plan.md, progress.md, agent-context.md, handoff-notes.md, and TodoWrite must stay synchronized. This protocol prevents drift and ensures consistency.
+
+### Synchronization Points
+
+**After Task Completion Verification** (Mandatory sequence):
+
+```
+1. Specialist completes work → Task tool returns
+   ↓
+2. Coordinator verifies → (See Task Completion Verification Protocol)
+   ↓
+3. SYNC POINT 1: Mark [x] in project-plan.md with timestamp
+   ↓
+4. SYNC POINT 2: Add deliverable entry to progress.md
+   ↓
+5. SYNC POINT 3: Merge specialist findings into agent-context.md
+   ↓
+6. SYNC POINT 4: Verify handoff-notes.md ready for next specialist
+   ↓
+7. SYNC POINT 5: Update TodoWrite to "completed"
+   ↓
+8. VERIFICATION: All files in sync, ready for next task
+```
+
+### File-Specific Sync Requirements
+
+#### project-plan.md Sync (The Master Plan)
+
+**Update Immediately When**:
+- Task verified complete → Mark [x] with timestamp
+- New task discovered → Add [ ] with details
+- Blocker encountered → Add to Dependencies & Blockers section
+- Risk identified → Add to Risks & Mitigation section
+- Milestone completed → Update milestone status to ✅
+- Phase started → Add all phase tasks before work begins
+
+**Sync Format**:
+```markdown
+- [x] [Task] (@specialist) - ✅ YYYY-MM-DD HH:MM
+  - Deliverable: [file-path]
+  - Verified: [checklist items]
+  - Next: [dependent task or specialist]
+```
+
+#### progress.md Sync (The Changelog)
+
+**Update Immediately When**:
+- Task verified complete → Add deliverable entry
+- Code/config changed → Add change entry with rationale
+- Issue discovered → Create issue entry with symptom
+- Fix attempted → Log attempt (even if failed)
+- Issue resolved → Add root cause and prevention
+- Pattern recognized → Add to Lessons Learned
+
+**Sync Format**:
+```markdown
+## 📦 Deliverables
+
+### YYYY-MM-DD HH:MM - [Deliverable Name]
+**Created by**: @specialist
+**Type**: [Feature|Fix|Documentation|etc.]
+**Files**: `path/to/file1`, `path/to/file2`
+
+**Description**: What was delivered and why
+
+**Impact**: Who benefits and how
+
+**Links**: Related to task in project-plan.md [link or description]
+```
+
+#### agent-context.md Sync (The Accumulator)
+
+**Update Immediately When**:
+- Task verified complete → Merge specialist findings
+- Decision made → Add to Recent Critical Decisions
+- Constraint discovered → Add to Active Constraints
+- Issue unresolved → Add to Known Issues
+- Dependency found → Add to Dependencies section
+
+**Sync Format**:
+```markdown
+## Recent Findings (Last 5 Tasks)
+
+### [YYYY-MM-DD HH:MM] - @specialist completed [task]
+**Key Findings**:
+- [Finding 1]
+- [Finding 2]
+
+**Decisions Made**:
+- [Decision with rationale]
+
+**Constraints Added**:
+- [New constraint discovered]
+
+**Next Specialist Needs**:
+- [Context for handoff]
+```
+
+**Cleanup Strategy**:
+- Keep last 10 task findings
+- Archive older findings to `archives/context/milestone-X-context.md`
+- Retain active constraints, unresolved issues, recent decisions
+- Remove completed phase details
+
+#### handoff-notes.md Sync (The Handoff)
+
+**Update Immediately When**:
+- Task verified complete → Verify specialist updated with findings
+- New task starts → Update "Next Specialist" and "Current Task"
+- Context changes → Update mission context and constraints
+- Blocker encountered → Add to warnings/gotchas
+
+**Specialist Responsibility** (not coordinator):
+- Specialist updates handoff-notes.md before finishing task
+- Includes findings, decisions, warnings for next specialist
+
+**Coordinator Responsibility**:
+- Verify handoff-notes.md updated before marking [x]
+- Ensure handoff contains sufficient detail
+- Merge findings into agent-context.md
+- Prepare handoff for next specialist
+
+#### TodoWrite Sync (The Status Display)
+
+**Update Immediately When**:
+- Task starts → Mark "in_progress"
+- Task verified complete → Mark "completed"
+- New phase starts → Load next phase tasks
+- Blocker encountered → Note in todo status
+
+**Sync Rule**: TodoWrite derives from project-plan.md
+- Don't create independent todos
+- Show current phase tasks only (3-7 active)
+- Sync after verification (not before)
+
+### Synchronization Checklist
+
+**After EVERY Task Completion** (5-10 minutes):
+
+- [ ] **project-plan.md**: Task marked [x] with timestamp and verification details
+- [ ] **progress.md**: Deliverable entry added with description and impact
+- [ ] **agent-context.md**: Specialist findings merged into Recent Findings
+- [ ] **handoff-notes.md**: Updated by specialist with findings (verify timestamp)
+- [ ] **TodoWrite**: Marked "completed" after verification
+- [ ] **Cross-check**: All five files reference same completion
+- [ ] **Timestamp consistency**: All updates within 5 minutes of each other
+
+### Sync Verification Commands
+
+```bash
+# Check project-plan.md for recent completions
+grep '\[x\]' project-plan.md | tail -5
+
+# Check progress.md for recent deliverables
+grep '###.*Deliverable' progress.md | tail -5
+
+# Check agent-context.md for recent findings
+grep '### \[20' agent-context.md | tail -5
+
+# Check handoff-notes.md timestamp
+grep 'Last Updated' handoff-notes.md
+
+# Verify sync: timestamps should be close
+grep -E '(2025-10-19|Last Updated)' project-plan.md progress.md agent-context.md handoff-notes.md
+```
+
+### Sync Failure Recovery
+
+**If Files Out of Sync**:
+
+1. **Identify Drift**:
+   ```bash
+   # Find task marked [x] in plan but not in progress
+   # Check timestamps across files
+   ```
+
+2. **Determine Source of Truth**:
+   - project-plan.md [x] with timestamp = verified complete
+   - If [x] without verification details = incomplete sync
+   - If in progress.md but not in plan = forgot to mark [x]
+
+3. **Recover Sync**:
+   - Update missing entries in each file
+   - Add verification details if missing
+   - Ensure handoff-notes.md reflects current state
+   - Sync TodoWrite to match reality
+
+4. **Document Recovery**:
+   ```markdown
+   # In progress.md
+   ### Sync Recovery - YYYY-MM-DD HH:MM
+   **Issue**: Files out of sync - task X marked [x] but not in progress.md
+   **Cause**: Skipped progress.md update during verification
+   **Fixed**: Added deliverable entry retroactively
+   **Prevention**: Use sync checklist after every verification
+   ```
+
+### Sync Best Practices
+
+**DO**:
+- ✅ Follow mandatory sequence (plan → progress → context → handoff → todo)
+- ✅ Update all five files within 5 minutes
+- ✅ Use consistent timestamps across files
+- ✅ Cross-reference between files (link issues, tasks, deliverables)
+- ✅ Verify sync with checklist after each completion
+- ✅ Document sync failures and recovery
+
+**DON'T**:
+- ❌ Update project-plan.md without updating progress.md
+- ❌ Skip agent-context.md merge
+- ❌ Forget to verify handoff-notes.md updated
+- ❌ Update TodoWrite before project-plan.md verification
+- ❌ Let files drift for "efficiency" (creates bigger problems)
+- ❌ Assume sync happened (always verify)
+
+---
+
+## PROJECT LIFECYCLE MANAGEMENT
+
+**CRITICAL**: Projects have lifecycles. Accumulating files forever creates bloat. This protocol manages transitions and cleanup strategically.
+
+### Lifecycle Phases
+
+```
+ACTIVE PROJECT (2-4 weeks)
+  ↓ Milestone Complete
+MILESTONE TRANSITION (Strategic cleanup - 30-60 min)
+  ↓ Continue next milestone
+ACTIVE PROJECT (2-4 weeks)
+  ↓ Milestone Complete
+MILESTONE TRANSITION
+  ↓ All objectives achieved
+PROJECT COMPLETION (Full cleanup - 1-2 hours)
+  ↓ Archive and learn
+FRESH START (Ready for new mission)
+```
+
+### When to Transition
+
+**Milestone Transition** (Every 2-4 weeks):
+- Major phase complete (Requirements → Development → Testing)
+- Significant feature shipped
+- Architecture shift completed
+- Every 15-25 tasks completed
+- Files becoming unwieldy (handoff-notes.md > 500 lines)
+
+**Project Completion**:
+- All primary objectives achieved
+- All deliverables validated
+- Quality gates passed
+- No critical issues remaining
+- Stakeholder acceptance obtained
+
+### Milestone Transition Protocol (Coordinator Actions)
+
+**1. PRE-TRANSITION VERIFICATION** (5 min):
+```markdown
+Task: Verify milestone ready for transition
+
+Checklist:
+- [ ] All milestone tasks marked [x] in project-plan.md
+- [ ] No critical blockers (🔴) remaining
+- [ ] All issues have current status
+- [ ] handoff-notes.md updated within 24 hours
+- [ ] evidence-repository.md contains all artifacts
+
+If any fail: Complete before transition
+```
+
+**2. LESSONS EXTRACTION** (15-20 min):
+```markdown
+Task: Extract lessons from progress.md
+
+Actions:
+1. Review progress.md Lessons Learned section
+2. Use Task tool to delegate lesson file creation to @documenter:
+   Task(
+     subagent_type="documenter",
+     prompt="Review progress.md and extract significant lessons from Milestone X.
+
+     For each major lesson:
+     1. Create lesson file using templates/lesson-template.md
+     2. Place in lessons/[category]/[short-name].md
+     3. Update lessons/index.md with new lessons
+
+     Focus on lessons that are:
+     - Repeatable (apply to future work)
+     - Significant (saved time or prevented major issues)
+     - Teachable (clear prevention strategy)
+
+     See project/field-manual/project-lifecycle-guide.md for complete process."
+   )
+3. Verify lessons indexed in lessons/index.md
+```
+
+**3. HANDOFF ARCHIVE** (5 min):
+```markdown
+Task: Archive completed milestone handoff
+
+Commands:
+mkdir -p archives/handoffs/milestone-X-[name]
+cp handoff-notes.md archives/handoffs/milestone-X-[name]/handoff-notes-final.md
+
+# Create archive README
+cat > archives/handoffs/milestone-X-[name]/README.md << 'EOF'
+# Milestone X: [Name] - Handoff Archive
+**Archived**: $(date +%Y-%m-%d)
+**Key Decisions**: [Brief list from handoff]
+**Next Milestone**: [Milestone Y Name]
+EOF
+```
+
+**4. AGENT CONTEXT CLEANUP** (10 min):
+```markdown
+Task: Clean agent-context.md strategically
+
+Actions:
+1. Archive current agent-context.md:
+   cp agent-context.md archives/context/milestone-X-context.md
+
+2. Create clean agent-context.md:
+   - Retain: Mission objectives, architecture essentials, active constraints, unresolved issues
+   - Archive: Historical findings, resolved issues, completed phase details
+
+3. Use template structure, fill with essentials only
+4. Reference archived context for historical details
+```
+
+**5. CREATE FRESH HANDOFF** (5 min):
+```markdown
+Task: Create fresh handoff-notes.md for next milestone
+
+Commands:
+cp templates/handoff-notes-template.md handoff-notes.md
+
+# Update with current milestone info
+# Add essential mission context only (2-3 sentences)
+# Reference archived handoffs for history
+```
+
+**6. UPDATE TRACKING FILES** (5-10 min):
+```markdown
+Task: Update project-plan.md and progress.md for milestone transition
+
+project-plan.md:
+- Mark Milestone X as ✅ Complete
+- Add Milestone Y tasks [ ]
+- Update timeline and dependencies
+
+progress.md:
+- Add "Milestone X Complete" entry
+- List major achievements
+- Reference extracted lessons
+- Start Milestone Y section
+```
+
+**7. VERIFICATION & HANDOFF** (5 min):
+```markdown
+Transition Verification Checklist:
+- [ ] Lessons extracted to lessons/ and indexed
+- [ ] Old handoff archived to archives/handoffs/milestone-X/
+- [ ] New handoff-notes.md contains only next milestone context
+- [ ] agent-context.md cleaned but retains essentials
+- [ ] project-plan.md updated with Milestone Y tasks
+- [ ] progress.md has milestone completion entry
+- [ ] architecture.md current with latest decisions
+- [ ] All specialists briefed on milestone transition
+```
+
+### Project Completion Protocol (Coordinator Actions)
+
+**1. FINAL VERIFICATION** (10 min):
+```markdown
+Task: Verify project ready for completion
+
+Checklist:
+- [ ] All primary objectives ✅ Complete
+- [ ] All deliverables produced and validated
+- [ ] Quality metrics meet targets
+- [ ] No critical (🔴) issues open
+- [ ] All tests passing
+- [ ] Documentation complete
+- [ ] Stakeholder sign-off obtained
+
+If any fail: Complete before project completion
+```
+
+**2. COMPREHENSIVE LESSONS EXTRACTION** (30-45 min):
+```markdown
+Task: Extract ALL lessons from entire progress.md
+
+Delegate to @documenter:
+Task(
+  subagent_type="documenter",
+  prompt="Extract ALL lessons from complete progress.md for this mission.
+
+  Review entire progress.md and create lesson files for:
+  - Technical patterns discovered
+  - Common issues encountered
+  - Architectural decisions made
+  - Process improvements identified
+  - Tool usage patterns learned
+
+  For each lesson:
+  1. Use templates/lesson-template.md
+  2. Create in lessons/[category]/[name].md
+  3. Update lessons/index.md comprehensively
+
+  This is the final extraction - be thorough.
+  See project/field-manual/project-lifecycle-guide.md for complete process."
+)
+```
+
+**3. CREATE MISSION ARCHIVE** (15-20 min):
+```markdown
+Task: Create permanent mission archive
+
+Commands:
+mkdir -p archives/missions/mission-[name]-$(date +%Y-%m-%d)
+cd archives/missions/mission-[name]-$(date +%Y-%m-%d)
+
+# Archive all tracking files
+cp ../../project-plan.md ./
+cp ../../progress.md ./
+cp ../../agent-context.md ./
+cp ../../architecture.md ./
+cp ../../handoff-notes.md ./handoff-notes-final.md
+cp -r ../../evidence-repository/ ./evidence/
+
+# Create mission summary
+Use template from project/field-manual/project-lifecycle-guide.md
+Include: objectives, metrics, lessons, achievements, challenges
+```
+
+**4. SYSTEM LEARNINGS UPDATE** (10-15 min):
+```markdown
+Task: Update CLAUDE.md with system-level learnings
+
+Review lessons for system-level improvements:
+- Process improvements for ALL future missions
+- Tool usage patterns everyone should follow
+- Common anti-patterns to warn about
+- Architecture principles discovered
+- Security patterns validated
+
+Add to CLAUDE.md if broadly applicable
+Commit with rationale
+```
+
+**5. FRESH START PREPARATION** (10-15 min):
+```markdown
+Task: Prepare for next mission
+
+Commands:
+# Archive current files
+ARCHIVE_DIR="archives/missions/mission-[name]-$(date +%Y-%m-%d)"
+mv project-plan.md "${ARCHIVE_DIR}/"
+mv progress.md "${ARCHIVE_DIR}/"
+mv agent-context.md "${ARCHIVE_DIR}/"
+mv handoff-notes.md "${ARCHIVE_DIR}/handoff-notes-final.md"
+mv evidence-repository.md "${ARCHIVE_DIR}/"
+
+# Keep persistent files
+# - architecture.md (evolves across missions)
+# - lessons/ (permanent knowledge base)
+# - CLAUDE.md (project configuration)
+# - archives/ (historical records)
+
+# Ready for next mission initialization
+```
+
+**6. COMPLETION COMMUNICATION** (5-10 min):
+```markdown
+Task: Announce mission completion
+
+Create announcement with:
+- Completion date and duration
+- Major achievements
+- Key metrics (tasks, issues, timeline)
+- Lessons captured and indexed
+- Mission archive location
+- Readiness for next mission
+
+Template in project/field-manual/project-lifecycle-guide.md
+```
+
+### Lifecycle Best Practices
+
+**DO**:
+- ✅ Transition at milestones (every 2-4 weeks)
+- ✅ Extract lessons before archiving
+- ✅ Archive strategically (completed work)
+- ✅ Retain essentials (active context)
+- ✅ Keep architecture.md (never archive)
+- ✅ Preserve lessons/ (permanent knowledge)
+- ✅ Verify before transitions
+- ✅ Brief specialists on changes
+
+**DON'T**:
+- ❌ Let files accumulate forever
+- ❌ Archive without extracting lessons
+- ❌ Delete instead of archive
+- ❌ Archive architecture.md
+- ❌ Skip milestone transitions
+- ❌ Transition mid-phase
+- ❌ Forget to update CLAUDE.md
+
+### Quick Reference
+
+**Milestone Transition**: 30-60 minutes
+- Extract lessons
+- Archive handoff
+- Clean context
+- Fresh handoff
+- Update tracking
+
+**Project Completion**: 1-2 hours
+- Extract all lessons
+- Create mission archive
+- Update CLAUDE.md
+- Prepare fresh start
+
+**Reference**: See `project/field-manual/project-lifecycle-guide.md` and `templates/cleanup-checklist.md`
+
+---
+
+## HANDOFF ARCHIVE STRATEGY
+
+**CRITICAL**: handoff-notes.md accumulates indefinitely without archiving. This creates bloat and confusion. Archive completed work, retain current context.
+
+### The Handoff Bloat Problem
+
+**Without Archiving**:
+```markdown
+# handoff-notes.md grows to 2000+ lines
+- Contains findings from 20+ completed tasks
+- Mixes current context with historical details
+- Next specialist drowns in irrelevant information
+- Critical current context buried in old notes
+```
+
+**With Strategic Archiving**:
+```markdown
+# handoff-notes.md stays clean (200-300 lines)
+- Contains only current phase context
+- Last 3-5 task findings
+- Active warnings and constraints
+- Clear next steps
+- Historical context in archives/handoffs/
+```
+
+### What to Archive vs. Keep
+
+**Archive to `archives/handoffs/milestone-X/`**:
+- ✅ Completed phase findings
+- ✅ Resolved issue details
+- ✅ Historical decisions (>1 milestone old)
+- ✅ Old warnings no longer applicable
+- ✅ Specialist findings from finished work
+- ✅ Context from previous milestones
+
+**Keep in Current `handoff-notes.md`**:
+- ✅ Active phase context
+- ✅ Unresolved issues affecting current work
+- ✅ Recent decisions (last 3-5 tasks)
+- ✅ Current warnings and gotchas
+- ✅ Next specialist instructions
+- ✅ Mission objectives (brief)
+
+### Archiving Trigger Points
+
+**Archive When**:
+- Milestone completes (every 2-4 weeks)
+- handoff-notes.md exceeds 500 lines
+- Major phase transitions
+- Significant context shift
+- New specialists joining
+
+**DON'T Archive When**:
+- Mid-phase (wait for phase completion)
+- Issues unresolved
+- Context still relevant
+- Dependencies active
+
+### Archive Creation Process
+
+**Coordinator Actions at Milestone Transition**:
+
+```markdown
+1. Create archive directory:
+   mkdir -p archives/handoffs/milestone-X-[name]
+
+2. Archive current handoff:
+   cp handoff-notes.md archives/handoffs/milestone-X-[name]/handoff-notes-final.md
+
+3. Extract key decisions:
+   grep -A 5 "Decision" handoff-notes.md > \
+     archives/handoffs/milestone-X-[name]/key-decisions.md
+
+4. Create archive metadata:
+   cat > archives/handoffs/milestone-X-[name]/README.md << 'EOF'
+# Milestone X: [Name] - Handoff Archive
+**Archived**: $(date +%Y-%m-%d)
+**Key Decisions**: [Brief list]
+**Major Issues Resolved**: [Issue IDs]
+**Next Milestone**: [Milestone Y Name]
+
+## Quick Reference
+For detailed findings, see handoff-notes-final.md
+For decisions, see key-decisions.md
+For lessons, see lessons/index.md (searchable)
+EOF
+
+5. Create fresh handoff-notes.md:
+   cp templates/handoff-notes-template.md handoff-notes.md
+   # Fill with current milestone context only
+```
+
+### Selective Retention Rules
+
+**Retention Decision Tree**:
+```
+Is this finding about current phase?
+  YES → Keep in handoff-notes.md
+  NO → Archive
+
+Is this constraint still active?
+  YES → Keep in handoff-notes.md
+  NO → Archive
+
+Is this decision from last 3-5 tasks?
+  YES → Keep in handoff-notes.md
+  NO → Archive (merge to agent-context.md if still relevant)
+
+Is this warning still applicable?
+  YES → Keep in handoff-notes.md
+  NO → Archive
+
+Is this issue unresolved?
+  YES → Keep in handoff-notes.md AND agent-context.md
+  NO → Archive (with resolution in progress.md)
+```
+
+### Archive Directory Structure
+
+```
+archives/
+└── handoffs/
+    ├── milestone-1-requirements/
+    │   ├── README.md                    # Archive metadata
+    │   ├── handoff-notes-final.md       # Complete handoff at milestone end
+    │   ├── key-decisions.md             # Extracted decision summary
+    │   └── unresolved-issues.md         # Issues carried to next milestone
+    ├── milestone-2-development/
+    │   ├── README.md
+    │   ├── handoff-notes-final.md
+    │   ├── key-decisions.md
+    │   └── unresolved-issues.md
+    └── milestone-3-testing/
+        ├── README.md
+        ├── handoff-notes-final.md
+        └── key-decisions.md
+```
+
+### Post-Archive Handoff Template
+
+**Fresh handoff-notes.md after archiving**:
+
+```markdown
+# Handoff Notes
+
+**Mission**: [Mission Name]
+**Current Milestone**: [Milestone Y Name]
+**Last Updated**: [YYYY-MM-DD HH:MM]
+**Next Specialist**: [Awaiting assignment]
+
+## Mission Context (Essential Only)
+[2-3 sentences: what we're building and why]
+
+## Current Milestone Objectives
+- [Objective 1]
+- [Objective 2]
+- [Objective 3]
+
+## Recent Progress (Last 3-5 Tasks)
+### [YYYY-MM-DD] - @specialist completed [task]
+- [Key finding or decision]
+- [Impact on next work]
+
+## Active Constraints
+- [Current constraint 1]
+- [Current constraint 2]
+
+## Known Issues (Unresolved)
+- Issue #X: [Brief description] - Affects [task/phase]
+- Issue #Y: [Brief description] - Blocker for [task]
+
+## Current Phase Status
+[Where we are in the milestone, what's complete, what's next]
+
+## Next Task Context
+[What the next specialist needs to know to start work]
+
+## Archived Context
+Previous milestone handoffs available in:
+- `archives/handoffs/milestone-1-requirements/`
+- `archives/handoffs/milestone-2-development/`
+
+For complete history, see archived handoff-notes-final.md files.
+```
+
+### Accessing Archived Handoffs
+
+**Commands**:
+```bash
+# List all archived handoffs
+ls -lt archives/handoffs/
+
+# View specific milestone archive
+cat archives/handoffs/milestone-2-development/README.md
+
+# View full archived handoff
+cat archives/handoffs/milestone-2-development/handoff-notes-final.md
+
+# Search archived decisions
+grep "authentication" archives/handoffs/*/key-decisions.md
+
+# Find specific issue in archives
+grep "Issue #5" archives/handoffs/*/handoff-notes-final.md
+```
+
+**When Specialist Needs Historical Context**:
+```markdown
+Task delegation:
+Task(
+  subagent_type="developer",
+  prompt="Implement feature X.
+
+  Read handoff-notes.md for current context.
+  If you need historical context about [topic], check:
+  archives/handoffs/milestone-2-development/handoff-notes-final.md
+
+  Focus on current phase - historical context for reference only."
+)
+```
+
+### Handoff Archive Best Practices
+
+**DO**:
+- ✅ Archive at milestone transitions (every 2-4 weeks)
+- ✅ Extract key decisions to separate file
+- ✅ Create descriptive archive README
+- ✅ Keep current handoff clean (200-300 lines)
+- ✅ Reference archives in fresh handoff
+- ✅ Carry forward unresolved issues
+- ✅ Verify archive before clearing handoff
+
+**DON'T**:
+- ❌ Archive mid-phase (wait for completion)
+- ❌ Delete old handoffs (archive instead)
+- ❌ Keep everything in current handoff (bloat)
+- ❌ Archive without extracting lessons first
+- ❌ Forget to update fresh handoff with milestone
+- ❌ Archive active context (keep current)
+- ❌ Skip archive README creation
+
+**Reference**: See `project/field-manual/project-lifecycle-guide.md` for complete handoff archive process.
+
+---
+
+## REAL-TIME PROGRESS LOGGING
+
+**CRITICAL**: progress.md documents what HAPPENED. Update IMMEDIATELY when events occur, not later. Delayed logging loses context and learning value.
+
+### The Real-Time Requirement
+
+**Why Immediate Logging Matters**:
+1. **Context Lost**: Details forgotten within hours, not days
+2. **Pattern Recognition**: Failed attempts reveal patterns success hides
+3. **Learning Value**: Failures teach more than successes
+4. **Audit Trail**: Complete history prevents repeated mistakes
+5. **Knowledge Transfer**: Next specialist needs full story
+
+**Problem with Delayed Logging**:
+```markdown
+# End of day: "Let me log everything I did today"
+Result: Missing details, sanitized story, no failed attempts, unclear root causes
+
+# Real-time: Log each event as it happens
+Result: Complete context, all attempts documented, clear learning, accurate timeline
+```
+
+### When to Update IMMEDIATELY
+
+**✅ UPDATE NOW (Within 5 minutes)**:
+
+1. **Deliverable Created/Modified**
+   - Log immediately after completion
+   - Capture while details fresh
+   - Include file paths and impact
+   - DON'T wait for phase end or daily summary
+
+2. **Change Made to Code/Configs**
+   - Log immediately after change
+   - Record rationale before context lost
+   - Document "why" while decision clear
+   - Link to related issues if applicable
+
+3. **Issue Discovered**
+   - Create issue entry the moment problem identified
+   - DON'T wait to understand full scope
+   - Capture symptom and immediate context
+   - Mark status as 🔴 Open
+
+4. **Fix Attempted**
+   - Log EVERY attempt immediately after trying
+   - Document even if fix fails (ESPECIALLY if it fails!)
+   - Capture rationale before moving to next attempt
+   - Record learning while insight fresh
+
+5. **Issue Resolved**
+   - Add root cause analysis within 30 minutes
+   - Document why it worked before forgetting details
+   - Capture prevention strategy while problem clear
+   - Link all attempted fixes for pattern recognition
+
+### Real-Time Logging Protocol
+
+**During Active Work** (Specialist Responsibility):
+
+Update progress.md with in-progress entry:
+```markdown
+### [YYYY-MM-DD HH:MM] - [Work Description] - 🔵 IN PROGRESS
+**Working on**: [Specific task or issue]
+**Assigned to**: @[specialist]
+**Started**: [YYYY-MM-DD HH:MM]
+
+**Current Status**:
+[What's happening right now]
+
+**Progress So Far**:
+- [Completed step 1]
+- [Completed step 2]
+- [Currently working on step 3]
+
+**Blockers Encountered**:
+- [Blocker 1 if any]
+
+**Next Steps**:
+- [Immediate next action]
+
+---
+```
+
+**Update this entry every 1-2 hours during active work**
+
+**After Fix Attempt** (Specialist Responsibility):
+
+Add to progress.md immediately:
+```markdown
+#### Fix Attempts
+
+##### Attempt #1: [Approach Name] - [YYYY-MM-DD HH:MM]
+**Result**: [✅ Success | ❌ Failed | ⚠️ Partial]
+**Rationale**: [Why we thought this would work]
+**What We Tried**: [Specific changes made]
+**Outcome**: [What actually happened]
+**Learning**: [What this taught us about the problem]
+
+---
+```
+
+**After Issue Resolution** (Specialist Responsibility):
+
+Add to progress.md within 30 minutes:
+```markdown
+#### Resolution
+**Resolved**: [YYYY-MM-DD HH:MM] by @[specialist]
+**Resolution Time**: [X hours from discovery]
+
+**Root Cause**:
+[The underlying reason the issue occurred - not just symptom]
+
+**Why Previous Attempts Failed**:
+[Analysis of what we misunderstood initially]
+
+**Prevention Strategy**:
+- [How to avoid in future]
+- [What checks/docs would have prevented it]
+- [Changes to process or architecture needed]
+
+**Related Patterns**:
+- [Similar issues seen before]
+- [Common anti-patterns to watch for]
+```
+
+### Coordinator Real-Time Logging
+
+**When Delegating Tasks**:
+```markdown
+# In progress.md - Log delegation immediately
+### [YYYY-MM-DD HH:MM] - Delegated [task] to @specialist
+**Task**: [Brief description]
+**Assigned to**: @specialist
+**Context Provided**: agent-context.md, handoff-notes.md
+**Expected Deliverable**: [What we're expecting]
+**Status**: 🔵 Awaiting completion
+```
+
+**When Receiving Completions**:
+```markdown
+# In progress.md - Log verification and outcome
+### [YYYY-MM-DD HH:MM] - [Task] Completed and Verified
+**Completed by**: @specialist
+**Deliverable**: `path/to/file` ([X] lines)
+**Verification**: File exists, tests pass, handoff updated
+**Quality**: [Brief assessment]
+**Marked**: [x] in project-plan.md at [timestamp]
+**Next**: Delegating to @next-specialist for [next task]
+```
+
+**When Issues Discovered During Verification**:
+```markdown
+# In progress.md - Log issue immediately
+### Issue #X: [Task] Verification Failed
+**Discovered**: [YYYY-MM-DD HH:MM] by @coordinator
+**Status**: 🔴 Open
+**Severity**: [Critical|High|Medium|Low]
+
+**Symptom**: [What was wrong]
+**Context**: [What was being verified]
+**Impact**: [What's blocked]
+
+**Action Taken**:
+- Returned to @specialist with specific requirements
+- Updated project-plan.md with blocker status
+- Prepared detailed delegation with corrections
+
+**Root Cause** (if known): [Why this happened]
+**Prevention**: [How to catch this earlier next time]
+```
+
+### Anti-Patterns to Avoid
+
+**❌ DON'T**:
+- Batch updates at end of day/week ("I'll log it later")
+- Wait until issue fully resolved to start logging
+- Skip logging failed attempts ("nobody needs to know")
+- Assume you'll remember details tomorrow
+- Only log successes and hide failures
+- Wait for phase completion to document lessons
+- Sanitize or prettify the log (keep it real)
+- Log without timestamps (always include HH:MM)
+
+**✅ DO**:
+- Log within 5 minutes of event
+- Document ALL attempts (especially failures)
+- Include specific details (file paths, line numbers, error messages)
+- Capture rationale while decision fresh
+- Link related entries (issues, tasks, decisions)
+- Update in-progress entries every 1-2 hours
+- Keep chronological order
+- Use consistent formatting
+
+### Real-Time Logging Examples
+
+**GOOD Example** (Immediate, detailed):
+```markdown
+### 2025-10-19 14:30 - JWT Authentication Issue Discovered
+**Discovered by**: @developer
+**Status**: 🔴 Open
+
+**Symptom**: Users logged out after 5 minutes unexpectedly
+
+**Context**: Testing login flow after implementing JWT auth
+
+#### Fix Attempts
+
+##### Attempt #1: Increased token expiry - 2025-10-19 14:45
+**Result**: ❌ Failed
+**Rationale**: Thought 5-minute token expiry was too short
+**What We Tried**: Changed JWT expiry from 5min to 60min in auth.ts:42
+**Outcome**: Users still logged out after 5min - expiry not the issue
+**Learning**: Problem is NOT token expiry, must be refresh mechanism
+
+##### Attempt #2: Fixed refresh token rotation - 2025-10-19 15:20
+**Result**: ✅ Success
+**Rationale**: Refresh token not being stored/rotated properly
+**What We Tried**:
+- Added refresh token to localStorage in auth.ts:78
+- Implemented rotation logic in refresh endpoint
+- Added automatic refresh 2min before expiry
+**Outcome**: Users now stay logged in correctly
+**Learning**: Always check refresh mechanism before adjusting token expiry
+
+#### Resolution
+**Resolved**: 2025-10-19 15:30 by @developer
+**Resolution Time**: 1 hour from discovery
+
+**Root Cause**: Refresh token was not stored after login, causing session loss when access token expired
+
+**Why Previous Attempts Failed**: Focused on access token expiry instead of refresh token storage
+
+**Prevention Strategy**:
+- Add test to verify refresh token storage after authentication
+- Document refresh token flow in architecture.md
+- Add refresh token checklist to auth implementation tasks
+
+**Related Patterns**: Similar to Issue #3 (session management)
+```
+
+**BAD Example** (Delayed, sanitized):
+```markdown
+### 2025-10-19 - Fixed authentication
+**Fixed by**: @developer
+**Status**: ✅ Complete
+
+Users were getting logged out. Fixed it by updating refresh tokens.
+```
+*(Problems: No timestamp, no failed attempts, no learning, no context, no root cause, no prevention)*
+
+### Real-Time Logging Enforcement
+
+**Coordinator Actions**:
+
+1. **Monitor for Real-Time Updates**:
+   - Check progress.md timestamp regularly
+   - Verify specialists logging as work progresses
+   - Flag missing updates in delegations
+
+2. **Require Updates Before Verification**:
+   ```markdown
+   Before marking [x], verify:
+   - [ ] progress.md has in-progress entry for this task
+   - [ ] progress.md entry updated within last 2 hours
+   - [ ] All fix attempts logged (if applicable)
+   - [ ] Resolution documented (if issue was resolved)
+   ```
+
+3. **Remind Specialists in Delegations**:
+   ```markdown
+   Task(
+     subagent_type="developer",
+     prompt="Implement JWT authentication.
+
+     CRITICAL: Update progress.md in REAL-TIME:
+     - Create in-progress entry when you start
+     - Log EVERY fix attempt immediately (even failures)
+     - Update status every 1-2 hours
+     - Add resolution with root cause when complete
+
+     Real-time logging is NOT optional - it captures context and learning.
+
+     [Rest of task details]"
+   )
+   ```
+
+4. **Check Logging Quality During Verification**:
+   - Are all fix attempts documented?
+   - Is root cause analysis present?
+   - Are timestamps recent and accurate?
+   - Is learning captured while fresh?
+
+**Reference**: See `templates/progress-template.md` for complete real-time update protocol.
+
+---
+
 AVAILABLE SPECIALISTS:
 - @strategist - Requirements analysis, user stories, strategic planning
 - @architect - Technical design, architecture, technology decisions  
@@ -575,6 +1831,77 @@ MCP Documentation:
 - Track which MCPs each specialist uses for tasks
 - Note MCP fallback strategies when unavailable
 - Update CLAUDE.md with discovered MCP patterns
+
+## MCP PROFILE MANAGEMENT
+
+### Profile Awareness Protocol
+
+Before starting any mission, verify which MCP profile is active:
+
+```bash
+/mcp-status
+```
+
+**Profile Recommendations by Mission Type:**
+
+- **test missions**: `/mcp-switch testing` (core + playwright)
+- **database migrations**: `/mcp-switch database-staging`
+- **production queries**: `/mcp-switch database-production` (read-only)
+- **payment integration**: `/mcp-switch payments`
+- **deployments**: `/mcp-switch deployment`
+- **general development**: `/mcp-switch core`
+
+### Profile Switching Guide
+
+**To switch profiles (easy way):**
+
+```bash
+# Example: Switch to testing profile
+/mcp-switch testing
+```
+
+Claude Code will prompt the user to restart automatically.
+
+**To verify the switch:**
+
+```bash
+/mcp-status
+```
+
+### Mission-Specific Profile Guidance
+
+When orchestrating missions:
+
+1. **Identify Required MCPs**: Determine what tools the mission needs
+2. **Check Active Profile**: Run `/mcp-status` to verify current profile
+3. **Guide User**: If wrong profile, tell user to run `/mcp-switch [profile-name]`
+4. **Verify Before Work**: Confirm correct MCPs are connected
+
+**Example delegation with profile check:**
+
+When delegating to tester for E2E tests:
+```
+"Before starting testing, I recommend the testing profile for Playwright access.
+
+Run: /mcp-switch testing
+
+Then restart when prompted. Once restarted, I'll proceed with test implementation."
+```
+
+### Safety Protocols
+
+**Database Operations:**
+- **ALWAYS** verify which database environment is active with `/mcp-status`
+- **production profile** = READ-ONLY operations only
+- **staging profile** = full read/write access
+- **Guide user**: For staging: `/mcp-switch database-staging`, for production: `/mcp-switch database-production`
+- **Confirm with user** before switching to production
+
+**Deployment Operations:**
+- Verify deployment profile is active with `/mcp-status`
+- Guide user to run `/mcp-switch deployment` if needed
+- Check environment variables are set
+- Confirm target environment with user
 
 PARALLEL STRIKE CAPABILITY:
 Execute simultaneous multi-vector assessments for maximum efficiency:

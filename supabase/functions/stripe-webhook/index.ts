@@ -1,152 +1,127 @@
 // stripe-webhook/index.ts - Stripe Webhook Handler
 // Processes Coffee tier subscription events and updates user tiers
-
-import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { TierManager } from '../analyze-page/lib/TierManager.ts'
-
+import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { TierManager } from '../analyze-page/lib/TierManager.ts';
 const STRIPE_WEBHOOK_SECRET = Deno.env.get('STRIPE_WEBHOOK_SECRET');
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature',
-}
-
-serve(async (req) => {
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature'
+};
+serve(async (req)=>{
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', {
+      headers: corsHeaders
+    });
   }
-
   try {
     console.log('=== STRIPE WEBHOOK RECEIVED ===');
-    
     const signature = req.headers.get('stripe-signature');
     const body = await req.text();
-    
     if (!signature) {
       console.error('Missing stripe signature header');
-      return new Response('Missing signature', { status: 401 });
+      return new Response('Missing signature', {
+        status: 401
+      });
     }
-    
     console.log('Webhook secret configured:', !!STRIPE_WEBHOOK_SECRET);
-    
     // Verify webhook signature for security
     if (!STRIPE_WEBHOOK_SECRET) {
       console.error('Webhook secret not configured - rejecting request');
-      return new Response('Webhook secret not configured', { status: 500 });
+      return new Response('Webhook secret not configured', {
+        status: 500
+      });
     }
-    
     const isValidSignature = await verifyStripeSignature(body, signature, STRIPE_WEBHOOK_SECRET);
     if (!isValidSignature) {
       console.error('Invalid webhook signature');
-      return new Response('Invalid signature', { status: 401 });
+      return new Response('Invalid signature', {
+        status: 401
+      });
     }
-    
     console.log('Webhook signature verified successfully');
-    
     // Parse the event
     const event = JSON.parse(body);
     console.log('Webhook event type:', event.type);
-    
     // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL');
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-    
     if (!supabaseUrl || !supabaseKey) {
       throw new Error('Missing Supabase environment variables');
     }
-    
     const supabase = createClient(supabaseUrl, supabaseKey);
     const tierManager = new TierManager(supabase);
-    
     // Handle different event types
-    switch (event.type) {
+    switch(event.type){
       case 'checkout.session.completed':
         await handleCheckoutCompleted(event.data.object, tierManager);
         break;
-        
       case 'invoice.payment_succeeded':
         await handlePaymentSucceeded(event.data.object, tierManager);
         break;
-        
       case 'customer.subscription.updated':
         await handleSubscriptionUpdated(event.data.object, tierManager);
         break;
-        
       case 'customer.subscription.deleted':
         await handleSubscriptionCanceled(event.data.object, tierManager);
         break;
-        
       case 'invoice.payment_failed':
         await handlePaymentFailed(event.data.object, tierManager);
         break;
-        
       default:
         console.log(`Unhandled event type: ${event.type}`);
     }
-
     return new Response('Webhook handled successfully', {
       status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json'
+      }
     });
-
   } catch (error) {
     console.error('Webhook processing error:', error);
     return new Response(`Webhook error: ${error.message}`, {
       status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json'
+      }
     });
   }
 });
-
-async function verifyStripeSignature(
-  payload: string, 
-  signature: string, 
-  secret: string
-): Promise<boolean> {
+async function verifyStripeSignature(payload, signature, secret) {
   try {
     // Parse Stripe signature header
     const elements = signature.split(',');
-    const timestamp = elements.find(e => e.startsWith('t='))?.split('=')[1];
-    const signatureHash = elements.find(e => e.startsWith('v1='))?.split('=')[1];
-    
+    const timestamp = elements.find((e)=>e.startsWith('t='))?.split('=')[1];
+    const signatureHash = elements.find((e)=>e.startsWith('v1='))?.split('=')[1];
     if (!timestamp || !signatureHash) {
       console.error('Missing timestamp or signature hash');
       return false;
     }
-    
     // Check timestamp to prevent replay attacks (within 5 minutes)
     const currentTimestamp = Math.floor(Date.now() / 1000);
     const webhookTimestamp = parseInt(timestamp, 10);
     const timeDifference = Math.abs(currentTimestamp - webhookTimestamp);
-    
-    if (timeDifference > 300) { // 5 minutes
+    if (timeDifference > 300) {
       console.error('Webhook timestamp too old:', timeDifference, 'seconds');
       return false;
     }
-    
     // Create the signed payload string
     const signedPayload = `${timestamp}.${payload}`;
-    
     // Compute HMAC-SHA256 signature
     const encoder = new TextEncoder();
     const keyData = encoder.encode(secret);
     const messageData = encoder.encode(signedPayload);
-    
-    const cryptoKey = await crypto.subtle.importKey(
-      'raw',
-      keyData,
-      { name: 'HMAC', hash: 'SHA-256' },
-      false,
-      ['sign']
-    );
-    
+    const cryptoKey = await crypto.subtle.importKey('raw', keyData, {
+      name: 'HMAC',
+      hash: 'SHA-256'
+    }, false, [
+      'sign'
+    ]);
     const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
-    const computedSignature = Array.from(new Uint8Array(signatureBuffer))
-      .map(byte => byte.toString(16).padStart(2, '0'))
-      .join('');
-    
+    const computedSignature = Array.from(new Uint8Array(signatureBuffer)).map((byte)=>byte.toString(16).padStart(2, '0')).join('');
     // Compare signatures using constant-time comparison
     if (computedSignature !== signatureHash) {
       console.error('Signature mismatch');
@@ -154,29 +129,22 @@ async function verifyStripeSignature(
       console.error('Computed:', computedSignature);
       return false;
     }
-    
     console.log('Webhook signature verified successfully');
     return true;
-    
   } catch (error) {
     console.error('Signature verification error:', error);
     return false;
   }
 }
-
-async function handleCheckoutCompleted(session: any, tierManager: TierManager) {
+async function handleCheckoutCompleted(session, tierManager) {
   try {
     console.log('Processing checkout.session.completed...');
-
     const userId = session.metadata?.user_id;
     const tier = session.metadata?.tier || 'coffee';
-
     if (!userId) {
       throw new Error('No user_id in session metadata');
     }
-
     console.log(`Upgrading user ${userId} to ${tier} tier`);
-
     // Get subscription details if this was a subscription
     let subscriptionData = null;
     if (session.subscription) {
@@ -187,12 +155,10 @@ async function handleCheckoutCompleted(session: any, tierManager: TierManager) {
           'Authorization': `Bearer ${STRIPE_SECRET_KEY}`
         }
       });
-
       if (response.ok) {
         subscriptionData = await response.json();
       }
     }
-
     // FIX: Use generic upgradeToTier() to support all tiers (coffee, growth, scale)
     await tierManager.upgradeToTier(userId, tier, {
       id: session.subscription,
@@ -201,142 +167,97 @@ async function handleCheckoutCompleted(session: any, tierManager: TierManager) {
       current_period_end: subscriptionData?.current_period_end || Math.floor((Date.now() + 30 * 24 * 60 * 60 * 1000) / 1000),
       cancel_at_period_end: subscriptionData?.cancel_at_period_end || false,
       items: {
-        data: [{
-          price: {
-            id: subscriptionData?.items?.data?.[0]?.price?.id || 'unknown'
+        data: [
+          {
+            price: {
+              id: subscriptionData?.items?.data?.[0]?.price?.id || 'unknown'
+            }
           }
-        }]
+        ]
       }
     });
-
     console.log(`Checkout completed successfully for ${tier} tier`);
-
   } catch (error) {
     console.error('Error handling checkout completion:', error);
     throw error;
   }
 }
-
-async function handlePaymentSucceeded(invoice: any, tierManager: TierManager) {
+async function handlePaymentSucceeded(invoice, tierManager) {
   try {
     console.log('Processing invoice.payment_succeeded...');
-    
     const subscriptionId = invoice.subscription;
     const customerId = invoice.customer;
-    
     if (!subscriptionId) {
       console.log('No subscription ID in invoice, skipping...');
       return;
     }
-    
     // Find user by Stripe customer ID
-    const { data: user, error } = await tierManager.supabase
-      .from('users')
-      .select('id, tier')
-      .eq('stripe_customer_id', customerId)
-      .single();
-      
+    const { data: user, error } = await tierManager.supabase.from('users').select('id, tier').eq('stripe_customer_id', customerId).single();
     if (error || !user) {
       throw new Error(`User not found for customer ID: ${customerId}`);
     }
-    
     console.log(`Payment succeeded for user ${user.id}, tier: ${user.tier}`);
-    
     // For recurring payments, just log the success
     // The subscription should already be active from the initial checkout
     console.log('Recurring payment processed successfully');
-    
   } catch (error) {
     console.error('Error handling payment success:', error);
     throw error;
   }
 }
-
-async function handleSubscriptionUpdated(subscription: any, tierManager: TierManager) {
+async function handleSubscriptionUpdated(subscription, tierManager) {
   try {
     console.log('Processing customer.subscription.updated...');
-    
     const customerId = subscription.customer;
     const status = subscription.status;
-    
     // Find user by Stripe customer ID
-    const { data: user, error } = await tierManager.supabase
-      .from('users')
-      .select('id')
-      .eq('stripe_customer_id', customerId)
-      .single();
-      
+    const { data: user, error } = await tierManager.supabase.from('users').select('id').eq('stripe_customer_id', customerId).single();
     if (error || !user) {
       throw new Error(`User not found for customer ID: ${customerId}`);
     }
-    
     console.log(`Subscription updated for user ${user.id}, status: ${status}`);
-    
     // Update subscription status
     if (status === 'canceled' || status === 'incomplete_expired') {
       await tierManager.downgradeTier(user.id, 'subscription_canceled');
     }
-    
   } catch (error) {
     console.error('Error handling subscription update:', error);
     throw error;
   }
 }
-
-async function handleSubscriptionCanceled(subscription: any, tierManager: TierManager) {
+async function handleSubscriptionCanceled(subscription, tierManager) {
   try {
     console.log('Processing customer.subscription.deleted...');
-    
     const customerId = subscription.customer;
-    
     // Find user by Stripe customer ID
-    const { data: user, error } = await tierManager.supabase
-      .from('users')
-      .select('id')
-      .eq('stripe_customer_id', customerId)
-      .single();
-      
+    const { data: user, error } = await tierManager.supabase.from('users').select('id').eq('stripe_customer_id', customerId).single();
     if (error || !user) {
       throw new Error(`User not found for customer ID: ${customerId}`);
     }
-    
     console.log(`Subscription canceled for user ${user.id}`);
-    
     // Downgrade user to free tier
     await tierManager.downgradeTier(user.id, 'subscription_canceled');
-    
   } catch (error) {
     console.error('Error handling subscription cancellation:', error);
     throw error;
   }
 }
-
-async function handlePaymentFailed(invoice: any, tierManager: TierManager) {
+async function handlePaymentFailed(invoice, tierManager) {
   try {
     console.log('Processing invoice.payment_failed...');
-    
     const customerId = invoice.customer;
     const attemptCount = invoice.attempt_count;
-    
     // Find user by Stripe customer ID
-    const { data: user, error } = await tierManager.supabase
-      .from('users')
-      .select('id, email')
-      .eq('stripe_customer_id', customerId)
-      .single();
-      
+    const { data: user, error } = await tierManager.supabase.from('users').select('id, email').eq('stripe_customer_id', customerId).single();
     if (error || !user) {
       throw new Error(`User not found for customer ID: ${customerId}`);
     }
-    
     console.log(`Payment failed for user ${user.id}, attempt: ${attemptCount}`);
-    
     // After multiple failed attempts, consider downgrading
     if (attemptCount >= 3) {
       console.log('Multiple payment failures, considering downgrade...');
-      // In production, you might implement a grace period or email notifications
+    // In production, you might implement a grace period or email notifications
     }
-    
   } catch (error) {
     console.error('Error handling payment failure:', error);
     throw error;

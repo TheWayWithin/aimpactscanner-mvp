@@ -1,0 +1,115 @@
+# Stripe Environment Variables - LIVE MODE (PRODUCTION)
+# Generated: 2025-10-25
+#
+# ⚠️  WARNING: THESE ARE LIVE MODE CREDENTIALS - THEY WILL CHARGE REAL MONEY
+#
+# Use these ONLY for production deployment to aimpactscanner.com
+# DO NOT use in development, testing, or staging environments
+
+# ============================================================
+# STRIPE API KEYS (LIVE MODE - PRODUCTION)
+# ============================================================
+VITE_STRIPE_PUBLISHABLE_KEY=pk_live_51KSrA8IiC84gpR8HHFQo8JM2BwV69hfPMHdF5oUuALqDUhZLYcDiTkJdzbfvxhbTCmGZZK8mMmGG8IaZTZDPjC4q00gT5l2Nmy
+STRIPE_SECRET_KEY=REMOVED_STRIPE_LIVE
+
+# ============================================================
+# STRIPE PRICE IDs (LIVE MODE - PRODUCTION)
+# ============================================================
+
+# Solo Tier (Internal: "coffee")
+STRIPE_PRICE_SOLO_MONTHLY=price_1SMGZ2IiC84gpR8H0dShUU0z
+STRIPE_PRICE_SOLO_ANNUAL=price_1SMGZ2IiC84gpR8HQtENjbRm
+
+# Growth Tier (Has 7-day trial on annual)
+STRIPE_PRICE_GROWTH_MONTHLY=price_1SMGZ3IiC84gpR8HQvEjhBv5
+STRIPE_PRICE_GROWTH_ANNUAL=price_1SMGZ3IiC84gpR8Hk0aMTjB2
+
+# Scale Tier
+STRIPE_PRICE_SCALE_MONTHLY=price_1SMGZ4IiC84gpR8H30pVuKqm
+STRIPE_PRICE_SCALE_ANNUAL=price_1SMGZ5IiC84gpR8HTP46tTjj
+
+# ============================================================
+# STRIPE PRODUCT IDs (LIVE MODE) - For reference
+# ============================================================
+STRIPE_PRODUCT_SOLO=prod_TIsJs3mBI4Ubik
+STRIPE_PRODUCT_GROWTH=prod_TIsJsb4yxg0SAV
+STRIPE_PRODUCT_SCALE=prod_TIsJguLGJqqDWi
+
+# ============================================================
+# STRIPE WEBHOOK CONFIGURATION (LIVE MODE)
+# ============================================================
+# When setting up PRODUCTION webhooks:
+# 1. Create webhook endpoint in Stripe Dashboard (LIVE mode)
+# 2. Point to: https://pdmtvkcxnqysujnpcnyh.supabase.co/functions/v1/stripe-webhook
+# 3. Select same events as test mode
+# 4. Copy the LIVE signing secret:
+STRIPE_WEBHOOK_SECRET=whsec_[YOUR_LIVE_WEBHOOK_SIGNING_SECRET]
+
+# ============================================================
+# ⚠️  CRITICAL: PRODUCTION DEPLOYMENT CHECKLIST
+# ============================================================
+#
+# Before deploying to production with these credentials:
+#
+# [ ] Test Mode products verified working in staging
+# [ ] All 6 checkout sessions tested in Live Mode with real card
+# [ ] Growth Annual trial verified in Live Mode (subscription shows 'trialing')
+# [ ] Live Mode webhook endpoint created and tested
+# [ ] Webhook signing secret configured in Supabase production secrets
+# [ ] Environment variables configured in Netlify PRODUCTION environment
+# [ ] Production Supabase database (pdmtvkcxnqysujnpcnyh) configured
+# [ ] User approval obtained for production deployment
+# [ ] Backup and rollback plan documented
+# [ ] Monitoring and error tracking configured (Sentry)
+#
+# ⛔ NEVER DEPLOY LIVE MODE CREDENTIALS TO:
+# - Staging environment (develop--aimpactscanner.netlify.app)
+# - Local development (localhost:5173)
+# - Deploy previews
+# - Test environments
+#
+# ============================================================
+# USAGE INSTRUCTIONS - PRODUCTION ONLY
+# ============================================================
+#
+# For Production Deployment (.env.production):
+# - Copy ALL variables above to production environment
+# - These are LIVE MODE credentials - real charges will occur
+# - Deploy ONLY to aimpactscanner.com
+#
+# For Production Supabase Edge Functions:
+# - Use Supabase CLI targeting PRODUCTION project (pdmtvkcxnqysujnpcnyh)
+# - Command: supabase secrets set --project-ref pdmtvkcxnqysujnpcnyh STRIPE_SECRET_KEY=...
+# - Set all 7 Price IDs + secret key + webhook secret
+#
+# For Netlify Production Environment:
+# - Add via Netlify Dashboard → Site Settings → Environment Variables
+# - Scope: "Production" ONLY (not deploy previews)
+# - Variable: VITE_STRIPE_PUBLISHABLE_KEY (frontend only)
+#
+# ============================================================
+# TESTING LIVE MODE (Use with caution)
+# ============================================================
+#
+# To test Live Mode products BEFORE production deployment:
+# 1. Use REAL payment card (test cards won't work in live mode)
+# 2. IMMEDIATELY cancel subscription after verifying checkout
+# 3. Verify refund policy applies if needed
+# 4. Document test customer IDs for cleanup
+# 5. Monitor Stripe Dashboard for any test charges
+#
+# Test Customer Cleanup:
+# - Go to Stripe Dashboard → Customers (LIVE mode)
+# - Find test customers created during testing
+# - Cancel any active subscriptions
+# - Archive test customer records
+#
+# ============================================================
+# RELATED FILES
+# ============================================================
+# - Price IDs (Live): STRIPE-PRICE-IDS-LIVE.md
+# - Price IDs (Test): STRIPE-PRICE-IDS.md
+# - Env Vars (Test): STRIPE-ENV-VARS.txt
+# - Setup Script (Live): setup-stripe-products-live.cjs
+# - Setup Results (Live): stripe-setup-results-live.json
+# - ENV Checklist: ENV-SETUP-CHECKLIST.md

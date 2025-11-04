@@ -1,0 +1,91 @@
+# Stripe Environment Variables - Test Mode
+# Generated: 2025-10-25
+#
+# Copy these variables to your environment files:
+# - .env.local (for local development)
+# - .env.staging (for staging environment)
+# - Netlify environment variables (for deploy previews)
+# - Supabase Edge Function secrets (via Supabase CLI or Dashboard)
+
+# ============================================================
+# STRIPE API KEYS (Test Mode)
+# ============================================================
+VITE_STRIPE_PUBLISHABLE_KEY=pk_test_51KSrA8IiC84gpR8HHFQo8JM2BwV69hfPMHdF5oUuALqDUhZLYcDiTkJdzbfvxhbTCmGZZK8mMmGG8IaZTZDPjC4q00gT5l2Nmy
+STRIPE_SECRET_KEY=REMOVED_STRIPE_TEST
+
+# ============================================================
+# STRIPE PRICE IDs (Test Mode)
+# ============================================================
+
+# Solo Tier (Internal: "coffee")
+STRIPE_PRICE_SOLO_MONTHLY=price_1SMFnZIiC84gpR8HBsYj7vsE
+STRIPE_PRICE_SOLO_ANNUAL=price_1SMFnZIiC84gpR8HD7oRJxlN
+
+# Growth Tier (Has 7-day trial on annual)
+STRIPE_PRICE_GROWTH_MONTHLY=price_1SMFnaIiC84gpR8HzHaQmjYc
+STRIPE_PRICE_GROWTH_ANNUAL=price_1SMFnbIiC84gpR8HB3CeS1ud
+
+# Scale Tier
+STRIPE_PRICE_SCALE_MONTHLY=price_1SMFncIiC84gpR8HbCRQwnCW
+STRIPE_PRICE_SCALE_ANNUAL=price_1SMFncIiC84gpR8HaHS0RCGe
+
+# ============================================================
+# STRIPE PRODUCT IDs (Test Mode) - For reference
+# ============================================================
+STRIPE_PRODUCT_SOLO=prod_TIrWJJRhCf5L9M
+STRIPE_PRODUCT_GROWTH=prod_TIrWgOUJy5D7OM
+STRIPE_PRODUCT_SCALE=prod_TIrW8Xjeee7S3o
+
+# ============================================================
+# STRIPE WEBHOOK CONFIGURATION
+# ============================================================
+# When setting up webhooks, you'll need to:
+# 1. Create webhook endpoint in Stripe Dashboard (Test mode)
+# 2. Point to: https://[your-supabase-url]/functions/v1/stripe-webhook
+# 3. Select events:
+#    - customer.subscription.created
+#    - customer.subscription.updated
+#    - customer.subscription.deleted
+#    - customer.subscription.trial_will_end
+#    - invoice.payment_succeeded
+#    - invoice.payment_failed
+# 4. Copy the signing secret to:
+STRIPE_WEBHOOK_SECRET=whsec_[YOUR_WEBHOOK_SIGNING_SECRET]
+
+# ============================================================
+# USAGE INSTRUCTIONS
+# ============================================================
+#
+# For Local Development (.env.local):
+# - Copy ALL variables above to .env.local
+# - These are TEST MODE credentials - safe for local testing
+#
+# For Staging (.env.staging):
+# - Copy ALL variables above to .env.staging
+# - Staging uses TEST MODE Stripe
+#
+# For Supabase Edge Functions:
+# - These variables need to be set as Supabase secrets
+# - Use Supabase CLI: supabase secrets set STRIPE_SECRET_KEY=...
+# - Or via Supabase Dashboard → Project Settings → Edge Functions → Secrets
+#
+# For Netlify (Deploy Previews):
+# - Add variables via Netlify Dashboard → Site Settings → Environment Variables
+# - Scope: "Deploy previews" for test mode
+# - These are frontend variables (VITE_*) only
+#
+# For Production (LIVE MODE):
+# - DO NOT use these Price IDs in production
+# - Create identical products in Stripe LIVE MODE
+# - Use STRIPE-PRICE-IDS-LIVE.md for production Price IDs
+# - Update STRIPE-ENV-VARS-LIVE.txt when ready for production
+
+# ============================================================
+# EDGE FUNCTION INTEGRATION (Phase 6)
+# ============================================================
+# These Price IDs will be used in:
+# - /supabase/functions/create-checkout-session/index.ts
+# - /supabase/functions/stripe-webhook/index.ts
+#
+# The Edge Function will map tier + billing frequency to Price ID:
+# const priceId = STRIPE_PRICE_IDS[tier][billingFrequency];
