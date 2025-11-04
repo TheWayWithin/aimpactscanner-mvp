@@ -2061,7 +2061,7 @@ function AppContent({ initialUrl }) {
           <Suspense fallback={<ComponentLoader message="Loading analysis history..." />}>
             <AnalysisHistory
               onViewAnalysis={handleViewHistoryAnalysis}
-              user={userData}
+              user={dashboardData}
               userTier={userTier}
             />
           </Suspense>
