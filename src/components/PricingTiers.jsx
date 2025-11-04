@@ -44,6 +44,8 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
       id: 'free',
       name: 'Free Trial',
       originalPrice: 0,
+      monthlyPrice: 0,
+      annualPrice: 0,
       price: 0,
       analyses: '3 analyses',
       features: [
@@ -63,17 +65,18 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
     },
     {
       id: 'coffee',
-      name: 'Starter',
-      originalPrice: 10,
-      price: billingCycle === 'annual' ? 4.95 : 4.95,
-      analyses: 'Unlimited',
+      name: 'Solo',
+      originalPrice: 0,
+      monthlyPrice: 5.95,
+      annualPrice: 49.50,
+      price: billingCycle === 'annual' ? 4.13 : 5.95,
+      analyses: '10 analyses/month',
       features: [
-        'Unlimited analyses for continuous optimization',
-        'Track improvements over time with history',
-        'Export results as PDF reports',
-        'Less than a coffee, more value than a consultant',
-        'Built for people who ship fast and iterate',
-        'Email support'
+        '✨ Professional PDF reports',
+        'Clean, exportable results',
+        'Educational content',
+        'Email support',
+        'Cancel anytime'
       ],
       cta: 'Start Analyzing',
       highlight: false,
@@ -81,35 +84,61 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
       size: 'standard',
       userCount: '8,234',
       guarantee: true,
-      description: 'Perfect for solopreneurs and small teams',
-      savings: billingCycle === 'annual' ? 50 : 0
+      description: 'Perfect for solopreneurs',
+      savings: billingCycle === 'annual' ? 30 : 0
     },
     {
-      id: 'professional',
-      name: 'Professional',
-      originalPrice: 58,
-      price: billingCycle === 'annual' ? 29 : 39,
-      analyses: 'Unlimited',
+      id: 'growth',
+      name: 'Growth',
+      originalPrice: 0,
+      monthlyPrice: 17.95,
+      annualPrice: 149.50,
+      price: billingCycle === 'annual' ? 12.46 : 17.95,
+      analyses: '40 analyses/month',
+      trial: true,
       features: [
-        'Everything in Starter',
-        'Complete 22-factor analysis',
-        'Advanced AI insights',
-        'Priority support (24hr)',
-        'API access & integrations',
-        'Custom branding options',
-        'Team collaboration tools',
-        'Advanced reporting dashboard'
+        '🎁 7-day free trial',
+        'Everything in Solo',
+        '📊 CSV export',
+        '🤖 AI Remediation Planner',
+        'Progress tracking dashboard',
+        'Priority support'
       ],
-      cta: 'Go Professional',
+      cta: 'Start Free Trial',
       highlight: true,
       popular: true,
       size: 'featured',
       userCount: '15,692',
       guarantee: true,
       description: 'Most popular for growing businesses',
-      savings: billingCycle === 'annual' ? 50 : 25,
+      savings: billingCycle === 'annual' ? 30 : 0,
       badge: 'MOST POPULAR',
-      limitedOffer: true
+      limitedOffer: false
+    },
+    {
+      id: 'scale',
+      name: 'Scale',
+      originalPrice: 0,
+      monthlyPrice: 34.95,
+      annualPrice: 299.50,
+      price: billingCycle === 'annual' ? 24.96 : 34.95,
+      analyses: '100 analyses/month',
+      features: [
+        'Everything in Growth',
+        '🔗 API access',
+        '📄 White-label PDF reports',
+        'Team collaboration',
+        'Custom reporting',
+        'Dedicated support'
+      ],
+      cta: 'Go Enterprise',
+      highlight: false,
+      popular: false,
+      size: 'standard',
+      userCount: '5,234',
+      guarantee: true,
+      description: 'For teams and agencies',
+      savings: billingCycle === 'annual' ? 28 : 0
     }
   ];
 
@@ -220,14 +249,14 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
           <button
             onClick={() => setBillingCycle('annual')}
             className={`px-6 py-2 rounded-full text-sm font-semibold transition-all ${
-              billingCycle === 'annual' 
-                ? 'bg-white shadow-sm text-gray-900' 
+              billingCycle === 'annual'
+                ? 'bg-white shadow-sm text-gray-900'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
             Annual
             <span className="ml-2 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
-              Save 50%
+              Save 30%
             </span>
           </button>
         </div>
@@ -245,24 +274,10 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
           </select>
         </div>
 
-        {/* Limited Time Offer */}
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8 max-w-md mx-auto">
-          <div className="flex items-center justify-center mb-2">
-            <span className="text-red-600 font-semibold text-sm">⏰ Limited Time Offer</span>
-          </div>
-          <div className="flex items-center justify-center space-x-2 font-mono font-bold text-red-700">
-            <div className="bg-red-100 px-2 py-1 rounded">{String(timeLeft.hours).padStart(2, '0')}</div>
-            <span>:</span>
-            <div className="bg-red-100 px-2 py-1 rounded">{String(timeLeft.minutes).padStart(2, '0')}</div>
-            <span>:</span>
-            <div className="bg-red-100 px-2 py-1 rounded">{String(timeLeft.seconds).padStart(2, '0')}</div>
-          </div>
-          <p className="text-xs text-red-600 mt-1">Extra 25% off Professional plan!</p>
-        </div>
       </div>
 
       {/* Pricing Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-6 xl:gap-8 mb-12 items-end">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4 xl:gap-6 mb-12 items-end">
         {tiers.map((tier) => (
           <div
             key={tier.id}
@@ -322,10 +337,15 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
                   </span>
                   {tier.price > 0 && (
                     <span className="text-gray-500 text-sm ml-1">
-                      /{billingCycle === 'annual' ? 'year' : 'month'}
+                      /month
                     </span>
                   )}
                 </div>
+                {billingCycle === 'annual' && tier.annualPrice > 0 && (
+                  <div className="text-sm text-gray-600 mt-1">
+                    Billed as {formatPrice(tier.annualPrice)}/year
+                  </div>
+                )}
               </div>
               
               <p className="text-sm font-medium mb-1" style={{ color: 'var(--mastery-blue)' }}>
