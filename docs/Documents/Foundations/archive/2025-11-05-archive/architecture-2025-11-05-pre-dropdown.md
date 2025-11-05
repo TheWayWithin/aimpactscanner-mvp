@@ -104,7 +104,7 @@ AImpactScanner is a SaaS web application that analyzes websites for AI optimizat
 - **Analysis Flow**: URL input, progress tracking, results display with auto-expansion
 - **Account Management**: Tier selection, usage tracking, Stripe billing integration
 - **Results Dashboard**: Framework-compliant scoring with smart factor visibility
-- **Tier Selector**: Dropdown UI with Growth default and anchoring psychology
+- **Tier Selector**: Radio button UI with responsive overflow constraints
 - **Upgrade Handler**: Proper routing to pricing page and Stripe checkout
 
 #### Backend Services
@@ -259,7 +259,7 @@ STAGING ENVIRONMENT:
 │  │ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────┐││
 │  │ │TierDropdown │ │   Payment   │ │   Upgrade   │ │Checkout │││
 │  │ │  Selector   │ │   Handler   │ │   Handler   │ │Success  │││
-│  │ │Growth Default│ │4-Tier Model │ │Fixed Routing│ │w/Refresh│││
+│  │ │w/Responsive │ │             │ │Fixed Routing│ │w/Refresh│││
 │  │ └─────────────┘ └─────────────┘ └─────────────┘ └─────────┘││
 │  └─────────────────────────────────────────────────────────────┘│
 │                                     │                           │
@@ -345,10 +345,9 @@ STAGING ENVIRONMENT:
 │         │                                                       │
 │         ▼                                                       │
 │  ┌────────────────────┐                                        │
-│  │ Select Tier        │                                        │
-│  │ (Dropdown)         │                                        │
-│  │ Growth (default)   │                                        │
-│  │ Solo/Scale options │                                        │
+│  │ Select Tier (Radio)│                                        │
+│  │ Coffee (default)   │                                        │
+│  │ or Free            │                                        │
 │  └────────────────────┘                                        │
 │         │                                                       │
 │         ▼                                                       │
@@ -389,12 +388,12 @@ STAGING ENVIRONMENT:
 │  │Processed flag      │                                        │
 │  └────────────────────┘                                        │
 │         │                                                       │
-│         ├─ Paid tier? ────────────┐                           │
-│         │                          │                           │
-│         ▼                          ▼                           │
+│         ├─ Coffee tier? ─────────┐                            │
+│         │                         │                            │
+│         ▼                         ▼                            │
 │  ┌────────────────────┐  ┌────────────────────┐              │
 │  │Go to Dashboard     │  │Go to Stripe Checkout│              │
-│  │(Free tier)         │  │(Solo/Growth/Scale)  │              │
+│  │(Free tier)         │  │(Coffee tier)        │              │
 │  └────────────────────┘  └────────────────────┘              │
 │                                   │                            │
 │                                   ▼                            │
@@ -429,13 +428,12 @@ STAGING ENVIRONMENT:
 
 #### Current Component Status
 - **✅ OAuth Components**: Google + GitHub authentication working with environment-specific config
-- **✅ Tier Selection**: TierDropdownSelector with Growth default, anchoring psychology
+- **✅ Tier Selection**: Dropdown with Coffee default, responsive constraints
 - **✅ Smart Factor Display**: Auto-expand low scores (<60), collapse high scores
 - **✅ Upgrade Flow**: Proper routing from dashboard to pricing/checkout
 - **✅ Stripe Portal**: Auto-recovery of missing customer IDs
 - **✅ Payment Completion**: Automatic tier UI refresh after checkout
-- **✅ Free Tier Enforcement**: Client + server-side 5 analysis lifetime limit
-- **✅ 4-Tier Model**: Solo ($5), Growth ($20 default), Scale ($50), Free (5 lifetime)
+- **✅ Free Tier Enforcement**: Client + server-side 3 analysis limit
 
 #### Architecture Patterns Used
 - **React Functional Components**: Hooks-based state management
@@ -828,16 +826,16 @@ CREATE POLICY "Users respect tier limits" ON analyses
 - ✅ Improved conversion tracking - Know user intent before auth
 - ✅ Clearer user intent - Users commit to tier before signup
 - ✅ Better onboarding - Personalized post-auth experience
-- ✅ Higher Growth tier adoption - Default to middle-high tier
+- ✅ Higher Coffee tier adoption - Default to paid tier
 - ⚠️ Additional complexity - Must persist tier selection through OAuth flow
 - ⚠️ Context expiry handling - 7-day TTL prevents lost tier selection
 - 🔄 Testing required - Comprehensive journey testing implemented
 
 **Implementation Details**:
-- **Component**: `TierDropdownSelector.jsx` (dropdown with anchoring psychology)
+- **Component**: `TierDropdownSelector.jsx` (radio buttons with responsive constraints)
 - **Storage**: authContext in localStorage with 7-day TTL
-- **Default**: Growth tier pre-selected ($20/month)
-- **Flow**: Tier selection → OAuth → Checkout (Solo/Growth/Scale) or Dashboard (Free)
+- **Default**: Coffee tier pre-selected
+- **Flow**: Tier selection → OAuth → Checkout (Coffee) or Dashboard (Free)
 - **Race Condition Fix**: oauthCallbackProcessed ref flag in App.jsx
 
 #### ADR-011: Usage Tracking and Free Tier Limit Enforcement (NEW)
@@ -881,7 +879,7 @@ CREATE POLICY "Users respect tier limits" ON analyses
 #### ADR-013: Stripe Customer ID Auto-Recovery (NEW)
 **Status**: Accepted
 **Date**: October 2025
-**Context**: Some paid tier users missing `stripe_customer_id` in database, causing 400 errors when accessing Customer Portal
+**Context**: Some Coffee tier users missing `stripe_customer_id` in database, causing 400 errors when accessing Customer Portal
 **Decision**: Edge Function automatically searches Stripe by email and backfills database when customer ID missing
 **Consequences**:
 - ✅ Self-healing system - Automatically repairs data inconsistencies
@@ -932,7 +930,7 @@ CREATE POLICY "Users respect tier limits" ON analyses
 - Optimize for perceived performance over technical metrics
 - Provide clear feedback and error handling
 - Design for accessibility and global usage
-- Smart defaults (Growth tier, auto-expand low scores)
+- Smart defaults (Coffee tier, auto-expand low scores)
 
 #### 3. Reliability Through Redundancy
 - Implement fallback mechanisms for critical features
@@ -985,15 +983,15 @@ CREATE POLICY "Users respect tier limits" ON analyses
 
 **Bug #7: Warning Text Overflow Fix** ✅
 - **Issue**: FREE tier warnings could overflow on mobile
-- **Fix**: `TierDropdownSelector.jsx` - Responsive constraints with dropdown design
+- **Fix**: `TierSelector.jsx` - Responsive constraints (`max-w-full`, `overflow-hidden`, `break-words`)
 - **Impact**: Clean mobile UX without text overlap
-- **Files**: `src/components/TierDropdownSelector.jsx`
+- **Files**: `src/components/TierSelector.jsx`
 
-**Bug #8: Paid Tier Login Routing** ✅ (2-Part Fix)
-- **Issue**: Paid tier users stuck in Stripe redirect loop
+**Bug #8: Coffee Tier Login Routing** ✅ (2-Part Fix)
+- **Issue**: Coffee tier users stuck in Stripe redirect loop
 - **Part 1**: `OAuthCallback.jsx` - Mark `is_first_login` complete
 - **Part 2**: `App.jsx` - Check `is_first_login` before Stripe redirect
-- **Impact**: Paid tier users can login without infinite loops
+- **Impact**: Coffee tier users can login without infinite loops
 - **Files**: `src/components/OAuthCallback.jsx`, `src/App.jsx`
 
 **Bug #9: Manage Subscription Button** ✅
@@ -1018,10 +1016,10 @@ CREATE POLICY "Users respect tier limits" ON analyses
 - **Files**: `src/components/OAuthCallback.jsx`
 
 **Tier Selector UI Improvements** ✅
-- **Change**: Dropdown with Growth ($20) default, anchoring psychology
-- **Impact**: Increased conversion from 8-12% Solo to 25-35% Growth target
+- **Change**: Radio buttons with Coffee default, responsive overflow fix
+- **Impact**: Better mobile UX, clearer tier selection
 - **Files**: `src/components/TierDropdownSelector.jsx`
-- **ADR**: ADR-010, ADR-014
+- **ADR**: ADR-010
 
 **Upsell Routing Corrections** ✅
 - **Change**: Fixed routing to upsell pages for existing users
@@ -1120,7 +1118,7 @@ Commit: fb9d20a (merge commit)
 **Phase 1 Signup Flow Tests**:
 - File: `tests/e2e/phase1-signup-flow.spec.js`
 - Coverage:
-  - ✅ Journey 1: New user → Growth tier (default) → OAuth
+  - ✅ Journey 1: New user → Coffee tier → OAuth
   - ✅ Journey 3: New user → Free tier → OAuth
   - ⚠️ Journeys 2,4,5,6,7,8: Manual UAT (OAuth bot detection)
 
@@ -1279,7 +1277,7 @@ npx playwright show-report
 **Objective**: Measure Phase 1 signup optimization impact
 **Tasks**:
 - [ ] Implement full funnel analytics (tier selection → conversion)
-- [ ] Track Growth tier adoption rate (target: 25-35%)
+- [ ] Track Coffee tier adoption rate (target: 25-35%)
 - [ ] Monitor OAuth vs Magic Link conversion rates
 - [ ] Track free tier limit hit rate and upgrade conversions
 - [ ] Measure factor auto-expansion engagement
@@ -1310,7 +1308,7 @@ npx playwright show-report
 - [ ] Mobile-specific optimizations
 - [ ] A/B testing framework
 
-**Target**: Increase Growth tier adoption from 8-12% → 25-35%
+**Target**: Increase Coffee tier adoption from 25% → 40%
 
 #### 5. User Onboarding Improvements
 **Objective**: Reduce time to first value
@@ -1408,7 +1406,7 @@ npx playwright show-report
 
 #### Business Metrics (October 2025 Targets)
 - Signup conversion rate: **35%** (up from 23%)
-- Growth tier adoption: **25-35%** (up from 8-12% Solo tier baseline)
+- Coffee tier adoption: **25-35%** (up from 8-12%)
 - Free tier → paid conversion: **15%** (target)
 - Monthly recurring revenue growth: **20% month-over-month**
 - Customer satisfaction scores: **>4.5/5**

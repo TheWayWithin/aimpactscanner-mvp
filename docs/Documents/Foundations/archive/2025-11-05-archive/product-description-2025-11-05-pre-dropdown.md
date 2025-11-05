@@ -64,59 +64,35 @@ Our production system implements **18 strategically selected factors** from the 
 
 ## Business Model Evolution: Strategic Market Entry
 
-### Current Tier Structure (4-Tier with Dropdown UX)
+### Current Tier Structure (Conversion Optimized)
 
 #### Free Tier - Foundation Building
-- **Usage**: 5 total analyses (lifetime)
+- **Usage**: 3 comprehensive analyses per month
 - **Features**: Full professional-quality analysis experience
 - **Value**: Complete 18-factor MASTERY-AI Framework assessment
 - **Strategy**: Demonstrate value and build market awareness
 - **Conversion**: Natural upgrade prompts at usage limit
 - **Enforcement**: Client + server-side usage tracking with automatic limits
 
-#### Solo Tier - $5/month (Entry Point)
-- **Usage**: 50 analyses per month
-- **Features**: Professional PDF reports, clean exportable results, scan history
-- **Value**: Accessible professional optimization for individual users
-- **Target**: Individual consultants, freelancers, small business owners
-- **Strategy**: Low barrier entry ($5 psychological threshold - price of a coffee)
+#### Coffee Tier - $4.95/month (Strategic Pricing)
+- **Usage**: Unlimited Phase A analyses (18 factors)
+- **Features**: Professional PDF reports, clean exportable results
+- **Value**: Accessible professional optimization for growing businesses
+- **Target**: Regular content creators, small business owners, agencies
+- **Strategy**: Volume conversion with psychological pricing optimization
 - **Self-Healing**: Automatic tier refresh after Stripe payment completion
-
-#### Growth Tier - $20/month (DEFAULT SELECTION)
-- **Usage**: 200 analyses per month
-- **Features**: All Solo tier features + advanced impact metrics, custom branding
-- **Value**: Professional reporting for client deliverables
-- **Target**: Small teams, consultancies, agencies
-- **Strategy**: Pre-selected in dropdown to anchor users at higher value tier
-- **Psychology**: Default selection creates upward pressure without friction
-
-#### Scale Tier - $50/month (Enterprise Entry)
-- **Usage**: 1000 analyses per month
-- **Features**: All Growth tier features + API access, dedicated support
-- **Value**: Scale AI impact assessments across the organization
-- **Target**: Larger organizations, enterprise teams
-- **Strategy**: Aspirational tier for growing organizations
-
-### Dropdown UX Design Pattern
-**Component**: `TierDropdownSelector` replaces radio buttons with elegant dropdown
-**Default Behavior**: Growth tier ($20/month) pre-selected on mount
-**Psychology**: Anchoring effect - users see $20 as the "standard" choice
-**Fallback Options**: Users can select Solo ($5) or Scale ($50) if needed
-**Visual Design**: Clean, professional dropdown with tier descriptions and pricing
-**Conversion Goal**: Increase from 8-12% Coffee tier to 25-35% Growth tier selections
 
 ### Strategic Business Model Rationale
 
-#### 4-Tier Structure with Growth Default Selection
-1. **Anchoring Psychology**: Pre-selecting Growth ($20) creates upward pressure without friction
-2. **Conversion Optimization**: Default to middle-high tier increases average revenue per user
-3. **Choice Architecture**: Dropdown replaces radio buttons - cleaner, less overwhelming
-4. **Fallback Options**: Solo ($5) and Scale ($50) available but Growth is "standard"
-5. **Expected Impact**: Conversion from 8-12% Solo to 25-35% Growth tier selections
+#### Why 2-Tier vs Original 4-Tier Model
+1. **Conversion Optimization**: Reduces decision paralysis, clearer upgrade path
+2. **Market Validation**: Prove value proposition before enterprise pricing
+3. **Foundation Building**: Create user base and case studies for enterprise approach
+4. **Pricing Psychology**: $4.95 vs $5.00 optimizes conversion psychology
 
 #### Evolution Path to Original Enterprise Vision
-- **Phase 1** (Current): 4-tier model with dropdown UX and Growth default
-- **Phase 2** (6-12 months): Enhanced Growth/Scale features, API access expansion
+- **Phase 1** (Current): Foundation building through accessible market
+- **Phase 2** (6-12 months): Growth + Scale tiers ($29/$99) with expanded features
 - **Phase 3** (12-24 months): Enterprise pilot programs and Fortune 1000 approach
 - **Phase 4** (24+ months): Full enterprise model ($5K-$75K) with proven foundation
 
@@ -291,14 +267,14 @@ Our production system implements **18 strategically selected factors** from the 
 
 ### For Investors: Strategic Discipline & Execution Excellence
 
-**Message**: "AImpactScanner demonstrates exceptional strategic discipline by building market validation foundation before enterprise expansion. Current implementation exceeds all technical targets while maintaining clear path to original $5K-75K enterprise revenue goals. November 2025 dropdown UX implementation uses anchoring psychology to increase Growth tier conversions from 8-12% to 25-35%."
+**Message**: "AImpactScanner demonstrates exceptional strategic discipline by building market validation foundation before enterprise expansion. Current implementation exceeds all technical targets while maintaining clear path to original $5K-75K enterprise revenue goals. October 2025 deployment proves continuous improvement commitment with 6 critical bug fixes and self-healing system implementations."
 
 **Key Points**:
 - 98% foundation alignment with strategic business improvements
 - Production-ready with proven conversion funnel and technical excellence
-- Clear scaling path from current 4-tier model to future $75K enterprise model
+- Clear scaling path from current $60 annual to future $75K enterprise model
 - Market validation strategy reduces enterprise expansion risk
-- **November 2025**: Dropdown UX with Growth default optimizes conversion psychology
+- **October 2025**: Self-healing systems and 100% user journey completion demonstrate production maturity
 
 ### For Customers: Current Value & Future Potential
 
