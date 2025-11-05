@@ -63,6 +63,8 @@
 - Used for: Production website ONLY (https://aimpactscanner.com)
 - Region: AWS us-east-2
 - **⛔ NEVER MODIFY THIS WITHOUT EXPLICIT USER APPROVAL ⛔**
+- **⛔ NEVER USE IN LOCAL DEV OR TESTING ⛔**
+- **⛔ CHECK BROWSER CONSOLE BEFORE TESTING ⛔**
 
 **STAGING (SAFE FOR TESTING)**: `isgzvwpjokcmtizstwru.supabase.co`
 - Project Name: `impactscanner-staging`
@@ -94,9 +96,91 @@
 
 ### Current Testing Environment
 
-**WE ARE TESTING ON**: `http://localhost:5173`
+**WE ARE TESTING ON**: `http://localhost:5173` (local) OR `https://develop--aimpactscanner.netlify.app` (staging)
 **WHICH USES**: `isgzvwpjokcmtizstwru` Supabase database (STAGING)
 **SAFE TO MODIFY**: YES - this is the staging/testing database
+
+**⚠️ BEFORE TESTING - VERIFY DATABASE**:
+1. Open browser DevTools → Console
+2. Look for Supabase client initialization logs
+3. Confirm URL contains `isgzvwpjokcmtizstwru` (STAGING)
+4. If you see `pdmtvkcxnqysujnpcnyh` (PRODUCTION) → **STOP**
+
+### Environment Setup & Safety Guidelines
+
+⚠️ **CRITICAL**: Always verify which database your environment connects to before testing.
+
+#### Quick Reference
+
+| Environment | Database URL | Project | Safe for Testing? |
+|------------|--------------|---------|-------------------|
+| Local Dev | `isgzvwpjokcmtizstwru` | impactscanner-staging | ✅ YES |
+| Deploy Previews | `isgzvwpjokcmtizstwru` | impactscanner-staging | ✅ YES |
+| Production | `pdmtvkcxnqysujnpcnyh` | aimpactscanner-mvp | ❌ NO |
+
+#### Local Development Setup
+
+**1. Create `.env.local` (gitignored)**:
+```bash
+cp .env.example .env.local
+```
+
+**2. Verify `.env.local` uses STAGING database**:
+```bash
+# Should contain:
+VITE_SUPABASE_URL="https://isgzvwpjokcmtizstwru.supabase.co"  # STAGING
+VITE_SUPABASE_ANON_KEY="your-staging-anon-key"
+```
+
+**3. Verify database connection**:
+```bash
+npm run dev
+# Open browser DevTools → Console
+# Should see: isgzvwpjokcmtizstwru.supabase.co (STAGING)
+# Should NOT see: pdmtvkcxnqysujnpcnyh.supabase.co (PRODUCTION)
+```
+
+#### Pre-Testing Checklist
+
+Before ANY testing (local or staging):
+
+- [ ] Check browser console for Supabase URL
+- [ ] Confirm URL is `isgzvwpjokcmtizstwru` (STAGING)
+- [ ] If URL is `pdmtvkcxnqysujnpcnyh` (PRODUCTION) → **STOP IMMEDIATELY**
+- [ ] Never copy credentials from `.env.production.template`
+- [ ] Never test OAuth/Stripe on production database
+
+#### Netlify Configuration
+
+**Deploy Previews** (staging):
+- Uses `netlify.toml` → `[context.deploy-preview.environment]`
+- Should use: `isgzvwpjokcmtizstwru.supabase.co` (STAGING)
+- **Fixed**: November 5, 2025 (commit 79ba318)
+
+**Production**:
+- Uses Netlify Dashboard environment variables
+- Should use: `pdmtvkcxnqysujnpcnyh.supabase.co` (PRODUCTION)
+- **Verification**: Required via Netlify Dashboard
+
+#### Emergency: If You Accidentally Connect to Production
+
+1. **STOP TESTING IMMEDIATELY**
+2. Verify `.env.local` or `netlify.toml` configuration
+3. Check browser console for Supabase URL
+4. If production URL detected:
+   - Close all browser tabs
+   - Fix `.env.local` to use staging URL
+   - Restart dev server
+   - Verify in console before continuing
+5. Report incident to project lead
+
+#### Historical Context
+
+**October 24-26, 2025**: Phase 5 trial testing accidentally used production database
+**Root Cause**: Local dev `.env.local` pointed to production
+**Fix**: Updated `.env.local` to staging (Oct 26)
+**Remaining Issue**: `netlify.toml` deploy previews still used production
+**Final Fix**: Updated `netlify.toml` line 71 (Nov 5, commit 79ba318)
 
 ## Active Implementation
 

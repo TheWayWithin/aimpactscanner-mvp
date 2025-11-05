@@ -1251,6 +1251,137 @@ Proceed with staging deployment and E2E test updates
 
 ---
 
+## ✅ ENVIRONMENT SETUP DOCUMENTATION (COMPLETE)
+
+**Status**: ✅ COMPLETE - CLAUDE.md Updated
+**Completed By**: THE DOCUMENTER (Agent-11)
+**Completion Date**: November 5, 2025
+**Deliverable**: Updated `/CLAUDE.md` with comprehensive environment setup guidelines
+
+### Documentation Updates Summary
+
+Successfully added comprehensive environment setup documentation to CLAUDE.md to prevent future database connection incidents.
+
+**Sections Added**:
+1. ✅ **Environment Setup & Safety Guidelines** (lines 109-183)
+   - Quick reference matrix (Local/Deploy Previews/Production)
+   - Local development setup steps (3-step verification)
+   - Pre-testing checklist (5 safety checks)
+   - Netlify configuration documentation
+   - Emergency procedures for production connection
+   - Historical context (Oct 24-Nov 5 incidents)
+
+2. ✅ **Updated Production Database Warnings** (lines 61-67)
+   - Added "NEVER USE IN LOCAL DEV OR TESTING" warning
+   - Added "CHECK BROWSER CONSOLE BEFORE TESTING" warning
+   - Increased visual emphasis with emoji warnings
+
+3. ✅ **Updated Current Testing Environment** (lines 97-107)
+   - Added pre-testing verification steps (4-step checklist)
+   - Added browser console verification procedure
+   - Clarified local vs staging URLs
+
+**Build Verification**: ✅ PASSED
+- `npm run build` completed successfully
+- No errors or warnings
+- All infrastructure files present
+
+### Documentation Highlights
+
+**Quick Reference Matrix**:
+| Environment | Database URL | Safe for Testing? |
+|------------|--------------|-------------------|
+| Local Dev | `isgzvwpjokcmtizstwru` | ✅ YES |
+| Deploy Previews | `isgzvwpjokcmtizstwru` | ✅ YES |
+| Production | `pdmtvkcxnqysujnpcnyh` | ❌ NO |
+
+**Pre-Testing Checklist**:
+- [ ] Check browser console for Supabase URL
+- [ ] Confirm URL is `isgzvwpjokcmtizstwru` (STAGING)
+- [ ] If URL is `pdmtvkcxnqysujnpcnyh` (PRODUCTION) → **STOP IMMEDIATELY**
+- [ ] Never copy credentials from `.env.production.template`
+- [ ] Never test OAuth/Stripe on production database
+
+**Emergency Procedures**:
+1. **STOP TESTING IMMEDIATELY**
+2. Verify `.env.local` or `netlify.toml` configuration
+3. Check browser console for Supabase URL
+4. If production URL detected:
+   - Close all browser tabs
+   - Fix `.env.local` to use staging URL
+   - Restart dev server
+   - Verify in console before continuing
+5. Report incident to project lead
+
+**Historical Context Documented**:
+- **October 24-26, 2025**: Phase 5 trial testing accidentally used production database
+- **Root Cause**: Local dev `.env.local` pointed to production
+- **Fix**: Updated `.env.local` to staging (Oct 26)
+- **Remaining Issue**: `netlify.toml` deploy previews still used production
+- **Final Fix**: Updated `netlify.toml` line 71 (Nov 5, commit 79ba318)
+
+### Files Modified
+
+**Updated Documentation**:
+- `/CLAUDE.md` (lines 61-67, 97-183)
+  - Added 75 lines of environment setup documentation
+  - Enhanced production database warnings
+  - Added pre-testing verification steps
+  - Documented emergency procedures
+  - Added historical incident context
+
+### Prevention Impact
+
+**Future Incidents Prevented**:
+- ✅ Clear visual warnings on production database section
+- ✅ Pre-testing checklist forces browser console verification
+- ✅ Emergency procedures documented for quick incident response
+- ✅ Historical context helps understand past issues
+- ✅ Quick reference matrix provides instant environment identification
+
+**Developer Experience Improvements**:
+- Clear 3-step local development setup
+- Environment-specific verification commands
+- Visual table for quick reference
+- Explicit instructions for `.env.local` setup
+- Netlify configuration documentation
+
+### Success Criteria Met
+
+- ✅ Production database warnings enhanced (3 new warning lines)
+- ✅ Environment setup section added (75 new lines)
+- ✅ Pre-testing checklist created (5 safety checks)
+- ✅ Emergency procedures documented (5-step process)
+- ✅ Historical context preserved (4 incidents documented)
+- ✅ Build verification passed (no errors)
+
+### Risk Assessment
+
+**Risk Level**: ✅ LOW
+- Documentation-only changes (no code modifications)
+- Build passed successfully
+- No breaking changes
+- Improves safety for all future testing
+
+**Deployment Recommendation**: ✅ **SAFE TO DEPLOY**
+- No functional code changes
+- Pure documentation improvements
+- No testing required beyond build verification
+
+### Next Steps
+
+**Immediate Actions**:
+1. ✅ Documentation committed to repository
+2. ⏳ All agents should re-read CLAUDE.md before testing
+3. ⏳ Verify production Netlify environment variables (Netlify Dashboard)
+
+**Future Enhancements**:
+- Consider adding automated environment verification script
+- Add pre-commit hook to check `.env.local` for production URLs
+- Create environment detection utility for runtime verification
+
+---
+
 ## Phase 6 Doug Hall Messaging E2E Test Report
 
 **Test Date**: November 3, 2025  
