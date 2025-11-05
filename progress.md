@@ -1,5 +1,170 @@
 # AImpactScanner MVP - Progress Log
 
+## November 4, 2025 - DROPDOWN TIER SELECTOR UX REDESIGN ✅
+
+### Mission: Replace Radio Buttons with Dropdown Selector (llmtxtmastery.com Pattern)
+**Status**: ✅ IMPLEMENTED - READY FOR STAGING DEPLOYMENT
+**Time**: 2025-11-04
+**Type**: P1 - Conversion UX Optimization
+**Priority**: COMPLETED - Signup Flow Enhanced
+
+#### Problem Identified
+
+**User Vision**: User wanted to change from radio button tier selection to dropdown pattern (inspired by llmtxtmastery.com) to:
+- Default to Growth tier (target conversion tier)
+- Reduce decision fatigue (fewer visible options)
+- Create cleaner, more professional UI
+- Improve mobile experience
+- Strengthen per-tier persuasive messaging
+
+**Current Issues**:
+- Radio buttons showed ALL tiers simultaneously ❌
+- No clear default (Growth not emphasized) ❌
+- More visual clutter than necessary ❌
+- Less focused persuasion ❌
+- Required more scrolling on mobile ❌
+
+#### Solution Implemented
+
+**UX Pattern**: Dropdown selector with dynamic benefits panel (two-column desktop, stacked mobile)
+
+**Key Features**:
+1. **Dropdown defaults to Growth tier** - User must actively change to see other options
+2. **Single tier display** - Right panel shows only selected tier's benefits
+3. **Responsive layout** - Side-by-side (40/60) on desktop, stacked on mobile
+4. **Trial CTAs** - Show below dropdown only for Growth tier
+5. **Keyboard navigation** - Full accessibility (Tab, Enter, Arrows, Escape)
+6. **Smooth transitions** - 300ms fade when changing tiers
+
+#### Files Created
+
+**New Component**: `src/components/DynamicTierSelector/TierDropdownSelector.jsx` (387 lines)
+- Custom dropdown with 4 tier options (Free, Solo, Growth, Scale)
+- Default selection: Growth tier
+- Visual indicators: Checkmark for selected, "⭐ RECOMMENDED" badge on Growth
+- Pricing display using `useBillingPricing` hook
+- Trial CTAs (Growth tier only):
+  - Primary: "🎁 Try Growth Free for 7 Days"
+  - Secondary: "Skip trial, subscribe now"
+  - Expandable trial details accordion
+- Keyboard navigation: Tab, Enter, Space, Arrow keys, Escape
+- Accessibility: `role="button"`, `aria-haspopup`, `aria-selected`, focus states
+- Click-outside-to-close functionality
+
+#### Files Modified
+
+**Refactored**: `src/components/DynamicTierSelector/DynamicTierSelector.jsx`
+- Replaced `<TierOptionsList />` with `<TierDropdownSelector />`
+- Added responsive grid:
+  - Desktop (≥1024px): `grid-cols-[40% 60%]` with 6px gap
+  - Mobile: `grid-cols-1` stacked with 4px gap
+- Left column: TierDropdownSelector (dropdown + pricing + trial CTAs)
+- Right column: TierMessagingSection (Doug Hall benefits messaging)
+- BillingToggle above grid (full-width)
+- SavingsHighlight below grid (persuasion box)
+- Transition state: 300ms fade on benefits panel during tier change
+
+**Preserved Components** (No Changes):
+- `BillingToggle.jsx` - Billing frequency toggle
+- `TierMessagingSection.jsx` - Doug Hall OB/RRB messaging
+- `SavingsHighlight.jsx` - Dramatic Difference comparisons
+- `useBillingPricing.js` - Pricing hook
+
+#### Design Specification
+
+**Desktop Layout (≥1024px)**:
+```
+[Billing Toggle - Full Width]
+
+┌──────────────────────┬────────────────────────────┐
+│ Dropdown Selector    │ Selected Tier Benefits     │
+│ Pricing Display      │ (Dynamic OB/RRB messaging) │
+│ Trial CTAs (Growth)  │                            │
+└──────────────────────┴────────────────────────────┘
+
+[Persuasion Box - Full Width]
+[Continue Button]
+```
+
+**Mobile Layout (<768px)**:
+```
+[Billing Toggle]
+[Dropdown Selector]
+[Pricing Display]
+[Trial CTAs (Growth)]
+[Benefits Panel - Stacked]
+[Persuasion Box]
+[Continue Button]
+```
+
+#### Accessibility Features
+
+- **Keyboard Navigation**: Full support (Tab, Enter, Space, Arrows, Escape)
+- **ARIA Labels**: `role="button"`, `aria-haspopup="listbox"`, `aria-selected`
+- **Focus States**: 2px outline with tier-specific colors
+- **Tap Targets**: Minimum 44px (mobile), 56px dropdown items
+- **Screen Reader**: Announces "Tier selector, Growth selected, 4 options"
+- **Color Contrast**: WCAG AA compliant
+
+#### Testing Results
+
+**Manual Testing** (User verified on http://localhost:5173/#signup):
+- ✅ Dropdown defaults to Growth tier
+- ✅ All 4 tiers visible in dropdown menu
+- ✅ Benefits panel updates dynamically when tier changes
+- ✅ Trial CTAs show only for Growth tier
+- ✅ Billing toggle updates pricing correctly
+- ✅ Desktop layout: Side-by-side (40/60 split)
+- ✅ Mobile layout: Stacks vertically (responsive)
+- ✅ Keyboard navigation works (Tab, Enter, Arrows, Escape)
+- ✅ Click outside closes dropdown
+- ✅ Smooth transitions (no janky jumps)
+
+**Build Verification**: ✅ SUCCESS
+- No compilation errors
+- No TypeScript errors
+- No linting errors
+- Production bundle generated successfully
+
+#### Impact Summary
+
+**Before**: Radio buttons showed all tiers equally, no clear default, more visual clutter
+**After**: Dropdown defaults to Growth (target tier), cleaner UI, better mobile experience, focused persuasion
+
+**Conversion Benefits**:
+- Defaults to Growth tier (target 25-35% conversion)
+- Reduces decision fatigue (fewer visible options)
+- Cleaner, more professional appearance
+- Better mobile UX (less scrolling)
+- Stronger tier-specific messaging
+
+#### Implementation Details
+
+**Component Architecture**:
+- **TierDropdownSelector**: Custom dropdown with pricing and trial CTAs
+- **DynamicTierSelector**: Responsive grid container (40/60 desktop, stacked mobile)
+- **State Management**: `isOpen`, `focusedIndex`, `showTrialDetails`, `isTransitioning`
+- **Transitions**: 200ms dropdown, 300ms benefits panel fade
+
+**Styling**:
+- Tier-specific border colors (Growth = yellow-400)
+- Tier-specific backgrounds (Growth = yellow-50)
+- Smooth transitions (opacity, transform)
+- Responsive breakpoints (768px, 1024px)
+
+**Preserved Functionality**:
+- All 4 tiers (Free, Solo, Growth, Scale)
+- Billing toggle (Annual/Monthly)
+- Trial option (Growth tier only)
+- Doug Hall messaging (Phase 6)
+- Stripe integration
+
+**Implementation Time**: ~2 hours (design spec + development + testing)
+
+**Implemented By**: THE COORDINATOR → THE DESIGNER → THE DEVELOPER
+
+---
+
 ## November 4, 2025 - COFFEE TIER DISPLAY BUG HOTFIX ✅
 
 ### Mission: Fix "Coffee tier" Still Displaying on Dashboard for Growth Tier Users

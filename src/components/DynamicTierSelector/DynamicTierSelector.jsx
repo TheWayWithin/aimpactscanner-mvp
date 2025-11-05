@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import BillingToggle from './BillingToggle';
-import TierOptionsList from './TierOptionsList';
+import TierDropdownSelector from './TierDropdownSelector';
 import TierMessagingSection from './TierMessagingSection';
 import SavingsHighlight from './SavingsHighlight';
 import { useBillingPricing } from './useBillingPricing';
@@ -23,7 +23,7 @@ const DynamicTierSelector = ({
   const tiers = [
     {
       internalId: 'free',
-      displayName: '⚠️ FREE (Limited)',
+      displayName: '⚠️ Free',
       description: 'Only 3 analyses/month',
       badge: null
     },
@@ -110,32 +110,37 @@ const DynamicTierSelector = ({
 
   return (
     <div className="dynamic-tier-selector">
-      {/* Billing Toggle */}
+      {/* Billing Toggle (Full Width) */}
       <BillingToggle
         defaultBilling={defaultBilling}
         onBillingChange={handleBillingChange}
         currentTier={selectedTier}
       />
 
-      {/* Tier Options List */}
-      <TierOptionsList
-        tiers={tiers}
-        selectedTier={selectedTier}
-        billingFrequency={billingFrequency}
-        onTierSelect={handleTierChange}
-        isTransitioning={isTransitioning}
-        onTrialSelect={handleTrialSelect}
-      />
+      {/* Two-Column Layout: Dropdown Left (40%), Benefits Right (60%) */}
+      <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-4 lg:gap-6 mt-6">
+        {/* Left Column: Tier Dropdown Selector */}
+        <div>
+          <TierDropdownSelector
+            tiers={tiers}
+            selectedTier={selectedTier}
+            billingFrequency={billingFrequency}
+            onTierSelect={handleTierChange}
+            isTransitioning={isTransitioning}
+            onTrialSelect={handleTrialSelect}
+          />
+        </div>
 
-      {/* Doug Hall Messaging: OB + RRB */}
-      <div className="mt-6">
-        <TierMessagingSection
-          selectedTier={selectedTier}
-          isTransitioning={isTransitioning}
-        />
+        {/* Right Column: Doug Hall Messaging (OB + RRB) */}
+        <div className={`transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+          <TierMessagingSection
+            selectedTier={selectedTier}
+            isTransitioning={isTransitioning}
+          />
+        </div>
       </div>
 
-      {/* Doug Hall Messaging: DD (Dramatic Demonstration) */}
+      {/* Doug Hall Messaging: DD (Dramatic Demonstration) - Full Width */}
       <SavingsHighlight
         selectedTier={selectedTier}
         billingFrequency={billingFrequency}
