@@ -55,7 +55,7 @@ const TierOptionsList = ({
 
             {/* Trial Badge (Growth tier only, top-left) */}
             {isGrowthTier && (
-              <div className="absolute -top-3 left-4 px-3 py-1 bg-gradient-to-r from-green-400 to-teal-400 text-xs font-bold rounded-full text-white shadow-md">
+              <div className="absolute -top-3 left-4 px-3 py-1 bg-gradient-to-r from-green-600 to-teal-600 text-xs font-bold rounded-full text-white shadow-md">
                 🎁 7-DAY FREE TRIAL
               </div>
             )}
@@ -94,7 +94,7 @@ const TierOptionsList = ({
                     </div>
                   )}
                   {pricing.isAnnual && pricing.displaySavings && (
-                    <div className="text-xs text-green-600 font-semibold">
+                    <div className="text-xs text-green-700 font-semibold">
                       {pricing.displaySavings}
                     </div>
                   )}
@@ -117,7 +117,7 @@ const TierOptionsList = ({
                         onTrialSelect(true, true); // Second param = auto-proceed
                       }
                     }}
-                    className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-md hover:shadow-lg"
+                    className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-md hover:shadow-lg"
                   >
                     🎁 Try Growth Free for 7 Days
                   </button>

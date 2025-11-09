@@ -2,19 +2,29 @@
 import React, { useEffect, useState } from 'react';
 import { addToHistory } from '../utils/analysisHistory';
 import LazyTierPDFButton from './LazyTierPDFButton';
+import { hasFeatureAccess, getMinimumTierForFeature } from '../lib/tierUtils';
 
 function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user }) {
   const [pdfStatus, setPdfStatus] = useState(null);
+  const [exportStatus, setExportStatus] = useState(null);
+
+  // Get user tier for feature gating
+  const userTier = user?.tier || 'free';
+  const canExportCSV = hasFeatureAccess(userTier, 'csv_export');
+  const canUseLLMSTxt = hasFeatureAccess(userTier, 'llms_txt');
 
   // Debug logging
-  console.log('📊 SimpleResultsDashboard props:', JSON.stringify({ 
-    analysisId, 
-    url, 
+  console.log('📊 SimpleResultsDashboard props:', JSON.stringify({
+    analysisId,
+    url,
     has_analysisData: !!analysisData,
     has_factors: !!analysisData?.factors,
     factors_count: analysisData?.factors?.length || 0,
     overall_score: analysisData?.overall_score,
-    first_factor_name: analysisData?.factors?.[0]?.factor_name || analysisData?.factors?.[0]?.name
+    first_factor_name: analysisData?.factors?.[0]?.factor_name || analysisData?.factors?.[0]?.name,
+    userTier,
+    canExportCSV,
+    canUseLLMSTxt
   }, null, 2));
 
   // Handle PDF generation callback
@@ -24,9 +34,82 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
       message: `Report "${reportInfo.filename}" generated successfully!`,
       details: `Analysis ID: ${reportInfo.analysisId} | Score: ${reportInfo.overallScore}/100 | Factors: ${reportInfo.factorsCount}`
     });
-    
+
     // Clear status after 5 seconds
     setTimeout(() => setPdfStatus(null), 5000);
+  };
+
+  // Handle CSV Export
+  const handleCSVExport = () => {
+    if (!canExportCSV) {
+      setExportStatus({
+        success: false,
+        message: `CSV export requires ${getMinimumTierForFeature('csv_export')} tier or higher`
+      });
+      setTimeout(() => setExportStatus(null), 3000);
+      return;
+    }
+
+    try {
+      // CSV headers
+      const headers = ['Factor Name', 'Pillar', 'Score', 'Evidence Count', 'Recommendations Count'];
+
+      // Convert factors to CSV rows
+      const rows = results.factors.map(factor => [
+        factor.factor_name || factor.name,
+        factor.pillar,
+        factor.score,
+        factor.evidence?.length || 0,
+        factor.recommendations?.length || 0
+      ]);
+
+      // Create CSV content
+      const csvContent = [
+        headers.join(','),
+        ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+      ].join('\n');
+
+      // Create download link
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `analysis-${analysisId || Date.now()}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+
+      setExportStatus({
+        success: true,
+        message: 'CSV exported successfully!'
+      });
+      setTimeout(() => setExportStatus(null), 3000);
+    } catch (error) {
+      console.error('CSV export error:', error);
+      setExportStatus({
+        success: false,
+        message: 'CSV export failed. Please try again.'
+      });
+      setTimeout(() => setExportStatus(null), 3000);
+    }
+  };
+
+  // Handle LLMS.txt Generation
+  const handleLLMSTxtGenerate = () => {
+    if (!canUseLLMSTxt) {
+      setExportStatus({
+        success: false,
+        message: `LLMS.txt generation requires ${getMinimumTierForFeature('llms_txt')} tier or higher`
+      });
+      setTimeout(() => setExportStatus(null), 3000);
+      return;
+    }
+
+    // TODO: Implement LLMS.txt Edge Function call when available
+    setExportStatus({
+      success: false,
+      message: 'LLMS.txt generation coming soon!'
+    });
+    setTimeout(() => setExportStatus(null), 3000);
   };
   
   // Generate dynamic score based on URL for more realistic demo
@@ -364,6 +447,30 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         </div>
       )}
 
+      {/* Export Status Messages */}
+      {exportStatus && (
+        <div className={`${exportStatus.success ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-200'} border rounded-lg p-4 mb-6`}>
+          <div className="flex">
+            <div className="flex-shrink-0">
+              {exportStatus.success ? (
+                <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <svg className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              )}
+            </div>
+            <div className="ml-3">
+              <p className={`text-sm font-medium ${exportStatus.success ? 'text-green-800' : 'text-yellow-800'}`}>
+                {exportStatus.message}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
@@ -373,19 +480,90 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
             </h1>
             <p className="text-gray-600 break-all mb-3">{results.url}</p>
             
-            {/* Tier-Based PDF Export Button */}
-            <div className="flex items-center gap-3">
-              <LazyTierPDFButton 
-                analysisId={analysisId}
-                url={results.url}
-                analysisData={results}
-                onReportGenerated={handlePDFGenerated}
-                userEmail={userEmail}
-                user={user}
-              />
-              <span className="text-sm text-gray-500">
-                Professional PDF report with detailed recommendations
-              </span>
+            {/* Export Buttons Section */}
+            <div className="space-y-3">
+              {/* PDF Export Button (Solo+) */}
+              <div className="flex items-center gap-3">
+                <LazyTierPDFButton
+                  analysisId={analysisId}
+                  url={results.url}
+                  analysisData={results}
+                  onReportGenerated={handlePDFGenerated}
+                  userEmail={userEmail}
+                  user={user}
+                />
+                <span className="text-sm text-gray-500">
+                  Professional PDF report with detailed recommendations
+                </span>
+              </div>
+
+              {/* CSV Export Button (Growth+) */}
+              <div className="flex items-center gap-3">
+                {canExportCSV ? (
+                  <button
+                    onClick={handleCSVExport}
+                    className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Export to CSV
+                  </button>
+                ) : (
+                  <div className="relative group">
+                    <button
+                      disabled
+                      className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed font-medium"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                      Export to CSV (Growth+ only)
+                    </button>
+                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded py-2 px-3 whitespace-nowrap z-10">
+                      Upgrade to {getMinimumTierForFeature('csv_export')} tier for CSV export
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                    </div>
+                  </div>
+                )}
+                <span className="text-sm text-gray-500">
+                  Export analysis data to CSV spreadsheet
+                </span>
+              </div>
+
+              {/* LLMS.txt Generation Button (Growth+) */}
+              <div className="flex items-center gap-3">
+                {canUseLLMSTxt ? (
+                  <button
+                    onClick={handleLLMSTxtGenerate}
+                    className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Generate LLMS.txt
+                  </button>
+                ) : (
+                  <div className="relative group">
+                    <button
+                      disabled
+                      className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed font-medium"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                      Generate LLMS.txt (Growth+ only)
+                    </button>
+                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded py-2 px-3 whitespace-nowrap z-10">
+                      Upgrade to {getMinimumTierForFeature('llms_txt')} tier for LLMS.txt generation
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                    </div>
+                  </div>
+                )}
+                <span className="text-sm text-gray-500">
+                  AI-readable site documentation (Coming soon)
+                </span>
+              </div>
             </div>
           </div>
           <div className="text-right ml-6">

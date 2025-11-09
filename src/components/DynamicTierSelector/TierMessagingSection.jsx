@@ -65,12 +65,21 @@ const TierMessagingSection = ({ selectedTier, isTransitioning = false }) => {
   const isFree = selectedTier === 'free';
   const isGrowth = selectedTier === 'growth';
 
+  // Tier display names
+  const tierNames = {
+    free: '⚠️ Free',
+    coffee: '💼 Solo',
+    growth: '🚀 Growth',
+    scale: '🏢 Scale'
+  };
+
   return (
     <div
       className={`
-        transition-all duration-500
+        transition-opacity duration-500
         ${isTransitioning ? 'opacity-0' : 'opacity-100'}
       `}
+      data-testid="tier-messaging-section"
     >
       {/* Overarching Benefit (OB) */}
       <div className={`
@@ -79,21 +88,24 @@ const TierMessagingSection = ({ selectedTier, isTransitioning = false }) => {
         ${isGrowth ? 'bg-gradient-to-r from-yellow-50 to-green-50 border-2 border-yellow-400' : ''}
         ${!isFree && !isGrowth ? 'bg-blue-50 border-2 border-blue-300' : ''}
       `}>
-        <h3 className={`
-          text-xl font-bold mb-1
-          ${isFree ? 'text-red-800' : ''}
-          ${isGrowth ? 'text-green-700' : ''}
-          ${!isFree && !isGrowth ? 'text-blue-800' : ''}
-        `}>
-          {messaging.ob}
+        <h3
+          className={`
+            text-xl font-bold mb-1
+            ${isFree ? 'text-red-900' : ''}
+            ${isGrowth ? 'text-green-900' : ''}
+            ${!isFree && !isGrowth ? 'text-blue-900' : ''}
+          `}
+          data-testid="tier-heading"
+        >
+          {tierNames[selectedTier]}
         </h3>
-        <p className="text-sm text-gray-700">
+        <p className="text-sm text-gray-900">
           {messaging.obSubtitle}
         </p>
       </div>
 
       {/* Real Reasons to Believe (RRB) */}
-      <div className="space-y-2">
+      <div className="space-y-2" data-testid="tier-benefits">
         {messaging.rrb.map((reason, index) => {
           const isUpsellNudge = reason.startsWith('💡');
           const isMissing = reason.startsWith('❌');

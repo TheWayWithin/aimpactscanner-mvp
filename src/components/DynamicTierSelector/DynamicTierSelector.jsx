@@ -1,11 +1,12 @@
 // DynamicTierSelector.jsx - Main container component for tier selection
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import BillingToggle from './BillingToggle';
 import TierDropdownSelector from './TierDropdownSelector';
 import TierMessagingSection from './TierMessagingSection';
 import SavingsHighlight from './SavingsHighlight';
 import { useBillingPricing } from './useBillingPricing';
+import { ANALYTICS_CONFIG, trackTierSelectorEvent } from '../../utils/analytics-config';
 
 const DynamicTierSelector = ({
   defaultTier = 'growth',
@@ -18,6 +19,15 @@ const DynamicTierSelector = ({
   const [selectedTier, setSelectedTier] = useState(defaultTier);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isTrial, setIsTrial] = useState(false); // Track if user selected trial option
+
+  // Event #1: Track tier selector view on component mount
+  useEffect(() => {
+    trackTierSelectorEvent(ANALYTICS_CONFIG.CUSTOM_EVENTS.TIER_SELECTOR_VIEWED, {
+      default_tier: defaultTier,
+      default_billing: defaultBilling,
+      page_path: window.location.hash
+    });
+  }, []); // Only fire once on mount
 
   // Tier data structure
   const tiers = [
@@ -52,6 +62,7 @@ const DynamicTierSelector = ({
 
   // Handle tier change with transition
   const handleTierChange = (tierId) => {
+    const previousTier = selectedTier; // Capture before change
     setIsTransitioning(true);
 
     setTimeout(() => {
@@ -59,6 +70,13 @@ const DynamicTierSelector = ({
       // Reset trial flag when switching tiers
       setIsTrial(false);
       setIsTransitioning(false);
+
+      // Event #2: Track tier selection change
+      trackTierSelectorEvent(ANALYTICS_CONFIG.CUSTOM_EVENTS.TIER_SELECTION_CHANGED, {
+        previous_tier: previousTier,
+        new_tier: tierId,
+        billing_frequency: billingFrequency
+      });
 
       if (onTierChange) {
         onTierChange(tierId);
@@ -100,6 +118,14 @@ const DynamicTierSelector = ({
 
   // Handle continue button click
   const handleContinue = () => {
+    // Event #4: Track continue button click
+    trackTierSelectorEvent(ANALYTICS_CONFIG.CUSTOM_EVENTS.TIER_CTA_CLICKED, {
+      cta_type: 'continue',
+      selected_tier: selectedTier,
+      billing_frequency: billingFrequency,
+      is_trial: isTrial
+    });
+
     if (onSelectionComplete) {
       onSelectionComplete(selectedTier, billingFrequency, isTrial);
     }
@@ -109,43 +135,43 @@ const DynamicTierSelector = ({
   const selectedTierData = tiers.find(t => t.internalId === selectedTier);
 
   return (
-    <div className="dynamic-tier-selector">
-      {/* Billing Toggle (Full Width) */}
-      <BillingToggle
-        defaultBilling={defaultBilling}
-        onBillingChange={handleBillingChange}
-        currentTier={selectedTier}
-      />
-
-      {/* Two-Column Layout: Dropdown Left (40%), Benefits Right (60%) */}
-      <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-4 lg:gap-6 mt-6">
-        {/* Left Column: Tier Dropdown Selector */}
-        <div>
-          <TierDropdownSelector
-            tiers={tiers}
-            selectedTier={selectedTier}
-            billingFrequency={billingFrequency}
-            onTierSelect={handleTierChange}
-            isTransitioning={isTransitioning}
-            onTrialSelect={handleTrialSelect}
+    <div className="dynamic-tier-selector" data-testid="tier-selector-container">
+      {/* Two-Column Layout: Left 40%, Right 60% */}
+      <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-4 lg:gap-8 items-start">
+        {/* Left Column (40%): Billing Toggle + Tier Dropdown Selector */}
+        <div className="space-y-4 w-full max-w-full">
+          <BillingToggle
+            defaultBilling={defaultBilling}
+            onBillingChange={handleBillingChange}
+            currentTier={selectedTier}
           />
+          <div className="w-full" data-testid="tier-dropdown-section">
+            <TierDropdownSelector
+              tiers={tiers}
+              selectedTier={selectedTier}
+              billingFrequency={billingFrequency}
+              onTierSelect={handleTierChange}
+              isTransitioning={isTransitioning}
+              onTrialSelect={handleTrialSelect}
+            />
+          </div>
         </div>
 
-        {/* Right Column: Doug Hall Messaging (OB + RRB) */}
-        <div className={`transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-          <TierMessagingSection
+        {/* Right Column (60%): Tier Messaging + Savings Highlight */}
+        <div className="space-y-4 w-full max-w-full" data-testid="tier-messaging-wrapper">
+          <div className={`transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+            <TierMessagingSection
+              selectedTier={selectedTier}
+              isTransitioning={isTransitioning}
+            />
+          </div>
+          <SavingsHighlight
             selectedTier={selectedTier}
+            billingFrequency={billingFrequency}
             isTransitioning={isTransitioning}
           />
         </div>
       </div>
-
-      {/* Doug Hall Messaging: DD (Dramatic Demonstration) - Full Width */}
-      <SavingsHighlight
-        selectedTier={selectedTier}
-        billingFrequency={billingFrequency}
-        isTransitioning={isTransitioning}
-      />
 
       {/* Selected Tier Summary */}
       {selectedPricing && (

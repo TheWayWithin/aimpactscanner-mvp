@@ -6,8 +6,8 @@ import { useBillingPricing } from './useBillingPricing';
 const SavingsHighlight = ({ selectedTier, billingFrequency, isTransitioning = false }) => {
   const pricing = useBillingPricing(selectedTier, billingFrequency);
 
-  if (!pricing || selectedTier === 'free') {
-    return null; // No pricing comparison for free tier
+  if (!pricing || selectedTier === 'free' || billingFrequency !== 'annual') {
+    return null; // No pricing comparison for free tier or monthly billing
   }
 
   const isAnnual = billingFrequency === 'annual';
@@ -32,6 +32,7 @@ const SavingsHighlight = ({ selectedTier, billingFrequency, isTransitioning = fa
         ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}
         ${isAnnual ? 'border-green-400 from-green-50 to-teal-50' : 'border-blue-300 from-blue-50 to-indigo-50'}
       `}
+      data-testid="savings-highlight"
     >
       <h4 className="text-lg font-bold text-gray-900 mb-3">
         {isAnnual ? '💰 Annual Savings Breakdown' : '📊 Monthly Pricing Breakdown'}
@@ -56,7 +57,7 @@ const SavingsHighlight = ({ selectedTier, billingFrequency, isTransitioning = fa
             </div>
             <div className="flex justify-between items-center bg-green-100 -mx-2 px-2 py-2 rounded">
               <span className="text-base font-bold text-green-800">You save</span>
-              <span className="text-base font-bold text-green-800">
+              <span className="text-base font-bold text-green-800" data-testid="savings-amount">
                 ${savings.toFixed(2)}/year ({Math.round((savings / (monthlyPrice * 12)) * 100)}% discount)
               </span>
             </div>

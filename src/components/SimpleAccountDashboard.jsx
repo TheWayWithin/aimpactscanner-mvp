@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useUsageTracking } from '../hooks/useUsageTracking';
+import { hasFeatureAccess } from '../lib/tierUtils';
 
 const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
   const [loading, setLoading] = useState(false);
@@ -181,7 +182,29 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Current Plan</p>
-              <p className="font-medium text-lg">{getTierDisplayName(userTier)}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-medium text-lg">{getTierDisplayName(userTier)}</p>
+                {/* API Access Badge - Show for all tiers */}
+                {hasFeatureAccess(userTier, 'api_access') ? (
+                  // Scale tier - Active badge
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                    🔌 API Access
+                  </span>
+                ) : (
+                  // Free/Solo/Growth - Locked badge with tooltip
+                  <div className="relative group">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500 cursor-help">
+                      🔒 API Access
+                    </span>
+                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-sm rounded py-3 px-4 z-10 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                      <p className="font-semibold mb-1">🔌 Automate Your Analysis</p>
+                      <p className="mb-2">Programmatic access via REST API</p>
+                      <p className="text-xs opacity-90">Upgrade to Scale to unlock API access</p>
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
             <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTierBadgeColor(userTier)}`}>
               {getSubscriptionStatus()}

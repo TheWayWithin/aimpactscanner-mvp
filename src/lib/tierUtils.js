@@ -196,9 +196,11 @@ export function getTierDisplayInfo(tier) {
 export function hasFeatureAccess(tier, feature) {
   // Map old tier names to new ones for backward compatibility
   const mappedTier = tier === 'professional' ? 'growth' : tier === 'enterprise' ? 'scale' : tier;
-  
+
   const featureMatrix = {
     'pdf_export': ['coffee', 'growth', 'scale', 'professional', 'enterprise'],
+    'csv_export': ['growth', 'scale', 'professional', 'enterprise'],
+    'llms_txt': ['growth', 'scale', 'professional', 'enterprise'],
     'planner': ['growth', 'scale', 'professional', 'enterprise'],
     'priority_support': ['growth', 'scale', 'professional', 'enterprise'],
     'api_access': ['scale', 'enterprise'],
@@ -207,6 +209,28 @@ export function hasFeatureAccess(tier, feature) {
 
   const allowedTiers = featureMatrix[feature] || [];
   return allowedTiers.includes(mappedTier) || allowedTiers.includes(tier);
+}
+
+/**
+ * Get minimum tier required for a feature
+ * @param {string} featureName - Feature to check
+ * @returns {string} - Minimum tier name (e.g., 'Solo', 'Growth', 'Scale')
+ */
+export function getMinimumTierForFeature(featureName) {
+  const tierOrder = [
+    { id: 'free', name: 'Free' },
+    { id: 'coffee', name: 'Solo' },
+    { id: 'growth', name: 'Growth' },
+    { id: 'scale', name: 'Scale' }
+  ];
+
+  for (const tier of tierOrder) {
+    if (hasFeatureAccess(tier.id, featureName)) {
+      return tier.name;
+    }
+  }
+
+  return null;
 }
 
 /**
