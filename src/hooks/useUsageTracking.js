@@ -178,7 +178,10 @@ export const useUsageTracking = (userEmail) => {
 
   // Check if user has access to PDF export (Coffee tier and above)
   const hasPDFAccess = () => {
-    return hasFeatureAccess(usageData.tier, 'pdf_export');
+    console.log('[DEBUG] hasPDFAccess called with tier:', usageData.tier);
+    const result = hasFeatureAccess(usageData.tier, 'pdf_export');
+    console.log('[DEBUG] hasFeatureAccess returned:', result);
+    return result;
   };
 
   const getMonthResetDate = () => {

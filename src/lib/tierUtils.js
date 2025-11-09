@@ -197,6 +197,8 @@ export function hasFeatureAccess(tier, feature) {
   // Map old tier names to new ones for backward compatibility
   const mappedTier = tier === 'professional' ? 'growth' : tier === 'enterprise' ? 'scale' : tier;
 
+  console.log('[DEBUG] hasFeatureAccess:', { tier, feature, mappedTier });
+
   const featureMatrix = {
     'pdf_export': ['coffee', 'growth', 'scale', 'professional', 'enterprise'],
     'csv_export': ['growth', 'scale', 'professional', 'enterprise'],
@@ -208,7 +210,9 @@ export function hasFeatureAccess(tier, feature) {
   };
 
   const allowedTiers = featureMatrix[feature] || [];
-  return allowedTiers.includes(mappedTier) || allowedTiers.includes(tier);
+  const result = allowedTiers.includes(mappedTier) || allowedTiers.includes(tier);
+  console.log('[DEBUG] hasFeatureAccess result:', { allowedTiers, result });
+  return result;
 }
 
 /**
