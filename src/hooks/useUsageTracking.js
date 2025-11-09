@@ -20,6 +20,9 @@ export const useUsageTracking = (userEmail) => {
   }, [userEmail]);
 
   const loadUsageData = async () => {
+    let syncedTier = 'free'; // Initialize with default
+    let syncedIsUnlimited = false;
+
     try {
       // Try database sync for authenticated users to get correct tier
       if (userEmail && userEmail !== 'anonymous') {
@@ -27,15 +30,17 @@ export const useUsageTracking = (userEmail) => {
           const { data: { user } } = await supabase.auth.getUser();
           if (user) {
             const tierInfo = await getActualUserTier(user.id);
-            
+
             // Update localStorage with correct tier from database
             if (tierInfo && tierInfo.tier) {
               // Don't sync 'pending_payment' as a tier - keep existing or use 'free'
               const effectiveTier = tierInfo.tier === 'pending_payment' ? 'coffee_pending' : tierInfo.tier;
+              syncedTier = effectiveTier; // Capture for use after localStorage read
               const unlimited = ['coffee', 'growth', 'scale', 'professional', 'enterprise'].includes(tierInfo.tier);
+              syncedIsUnlimited = unlimited; // Capture for use after localStorage read
               const stored = localStorage.getItem(STORAGE_KEY);
               const existingData = stored ? JSON.parse(stored) : {};
-              
+
               const syncedData = {
                 ...existingData,
                 tier: effectiveTier,
@@ -45,7 +50,7 @@ export const useUsageTracking = (userEmail) => {
                 monthlyUsed: existingData.monthlyUsed || 0,
                 lastUpdated: existingData.lastUpdated || new Date().toISOString()
               };
-              
+
               localStorage.setItem(STORAGE_KEY, JSON.stringify(syncedData));
               console.log(`Synced tier from database: ${effectiveTier} for ${userEmail}${tierInfo.tier === 'pending_payment' ? ' (pending payment)' : ''}`);
             }
@@ -54,17 +59,17 @@ export const useUsageTracking = (userEmail) => {
           console.warn('Database tier sync failed, using localStorage fallback:', dbError);
         }
       }
-      
+
       // Now load from localStorage
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const data = JSON.parse(stored);
-        
+
         // Check if we need to reset monthly usage
         const now = new Date();
         const storedDate = new Date(data.lastUpdated);
-        
-        if (now.getMonth() !== storedDate.getMonth() || 
+
+        if (now.getMonth() !== storedDate.getMonth() ||
             now.getFullYear() !== storedDate.getFullYear()) {
           // New month - reset usage
           resetMonthlyUsage();
@@ -73,8 +78,8 @@ export const useUsageTracking = (userEmail) => {
             monthlyUsed: data.monthlyUsed || 0,
             remaining: data.isUnlimited ? Infinity : Math.max(0, FREE_TIER_LIMIT - (data.monthlyUsed || 0)),
             resetDate: getMonthResetDate(),
-            isUnlimited: data.isUnlimited || false,
-            tier: data.tier || 'free'
+            isUnlimited: syncedIsUnlimited, // Use database-synced value
+            tier: syncedTier // Use database-synced tier, not localStorage fallback
           });
         }
       } else {
