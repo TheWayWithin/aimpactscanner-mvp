@@ -32,7 +32,7 @@ export const useUsageTracking = (userEmail) => {
             if (tierInfo && tierInfo.tier) {
               // Don't sync 'pending_payment' as a tier - keep existing or use 'free'
               const effectiveTier = tierInfo.tier === 'pending_payment' ? 'coffee_pending' : tierInfo.tier;
-              const unlimited = ['coffee', 'professional', 'enterprise'].includes(tierInfo.tier);
+              const unlimited = ['coffee', 'growth', 'scale', 'professional', 'enterprise'].includes(tierInfo.tier);
               const stored = localStorage.getItem(STORAGE_KEY);
               const existingData = stored ? JSON.parse(stored) : {};
               
@@ -157,7 +157,7 @@ export const useUsageTracking = (userEmail) => {
 
   // New function to update user tier
   const setUserTier = (newTier) => {
-    const unlimited = ['coffee', 'professional', 'enterprise'].includes(newTier);
+    const unlimited = ['coffee', 'growth', 'scale', 'professional', 'enterprise'].includes(newTier);
     
     const updatedData = {
       monthlyUsed: usageData.monthlyUsed,
