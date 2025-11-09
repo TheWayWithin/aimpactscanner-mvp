@@ -69,7 +69,8 @@ const AuthMethodSelector = ({ selectedTier, isTrial = false, billingFrequency = 
           },
           // Store metadata that will be available after OAuth
           data: {
-            selected_tier: selectedTier,
+            tier: selectedTier,              // Database trigger expects this key
+            selected_tier: selectedTier,     // OAuthCallback expects this key (backward compatibility)
             signup_source: 'oauth_google',
             auth_provider: 'google'
           }
@@ -116,7 +117,8 @@ const AuthMethodSelector = ({ selectedTier, isTrial = false, billingFrequency = 
           redirectTo: getRedirectUrl(),
           // Store metadata that will be available after OAuth
           data: {
-            selected_tier: selectedTier,
+            tier: selectedTier,              // Database trigger expects this key
+            selected_tier: selectedTier,     // OAuthCallback expects this key (backward compatibility)
             signup_source: 'oauth_github',
             auth_provider: 'github'
           }
@@ -159,7 +161,8 @@ const AuthMethodSelector = ({ selectedTier, isTrial = false, billingFrequency = 
         options: {
           emailRedirectTo: getRedirectUrl(),
           data: {
-            selected_tier: selectedTier,
+            tier: selectedTier,              // Database trigger expects this key
+            selected_tier: selectedTier,     // OAuthCallback expects this key (backward compatibility)
             signup_source: 'magic_link',
             auth_provider: 'magic_link'
           }
