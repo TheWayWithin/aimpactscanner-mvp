@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getActualUserTier } from '../lib/tierUtils';
+import { getActualUserTier, hasFeatureAccess } from '../lib/tierUtils';
 import { supabase } from '../lib/supabaseClient';
 
 // Custom hook for client-side usage tracking
@@ -178,7 +178,7 @@ export const useUsageTracking = (userEmail) => {
 
   // Check if user has access to PDF export (Coffee tier and above)
   const hasPDFAccess = () => {
-    return ['coffee', 'professional', 'enterprise'].includes(usageData.tier);
+    return hasFeatureAccess(usageData.tier, 'pdf_export');
   };
 
   const getMonthResetDate = () => {
@@ -239,7 +239,7 @@ export const checkUsageLimit = (userEmail) => {
       remaining: remaining,
       isUnlimited: data.isUnlimited,
       tier: data.tier || 'free',
-      hasPDFAccess: ['coffee', 'professional', 'enterprise'].includes(data.tier || 'free')
+      hasPDFAccess: hasFeatureAccess(data.tier || 'free', 'pdf_export')
     };
   } catch (error) {
     console.error('Error checking usage limit:', error);
