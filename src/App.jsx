@@ -67,10 +67,10 @@ function AppContent({ initialUrl }) {
   // Initialize performance monitoring
   usePerformanceMonitoring();
   
-  // Initialize fallback data for known users immediately
-  useEffect(() => {
-    initializeFallbackData();
-  }, []);
+  // Fallback data no longer needed - database function fixed with SECURITY DEFINER
+  // useEffect(() => {
+  //   initializeFallbackData();
+  // }, []);
 
   // Handle initial URL from static hero
   useEffect(() => {

@@ -14,8 +14,8 @@ export const useUserInitializer = (session) => {
 
   useEffect(() => {
     if (session?.user?.id) {
-      // Initialize fallback data for known users
-      initializeFallbackData();
+      // Fallback data no longer needed - database function fixed with SECURITY DEFINER
+      // initializeFallbackData();
       
       // Skip if tab was recently switched (within 1 second)
       const timeSinceLastInit = Date.now() - lastInitTime.current;
