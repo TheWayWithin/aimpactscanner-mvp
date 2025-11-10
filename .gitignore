@@ -48,3 +48,10 @@ playwright/.auth/
 # Playwright Test Results - Generated Output
 test-results/
 playwright-report/
+
+# Stripe Setup Scripts - LIVE SECRETS (NEVER COMMIT)
+STRIPE-ENV-VARS-LIVE.txt
+*-ENV-VARS-LIVE.txt
+setup-stripe-products-live.cjs
+setup-*-live.cjs
+verify-stripe-products.cjs

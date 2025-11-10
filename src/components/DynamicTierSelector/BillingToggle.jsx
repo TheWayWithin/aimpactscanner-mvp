@@ -1,6 +1,7 @@
 // BillingToggle.jsx - Toggle switch for annual/monthly billing selection
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { ANALYTICS_CONFIG, trackTierSelectorEvent } from '../../utils/analytics-config';
 
 const BillingToggle = ({
   defaultBilling = 'annual',
@@ -17,7 +18,16 @@ const BillingToggle = ({
   };
 
   const handleToggle = (frequency) => {
+    const previousFrequency = selected; // Capture before change
     setSelected(frequency);
+
+    // Event #3: Track billing toggle click
+    trackTierSelectorEvent(ANALYTICS_CONFIG.CUSTOM_EVENTS.BILLING_TOGGLE_CLICKED, {
+      previous_frequency: previousFrequency,
+      new_frequency: frequency,
+      current_tier: currentTier
+    });
+
     if (onBillingChange) {
       onBillingChange(frequency);
     }
@@ -27,7 +37,7 @@ const BillingToggle = ({
   const tierSavings = maxSavings[currentTier] || maxSavings.scale; // Default to max
 
   return (
-    <div className="billing-toggle mb-6">
+    <div className="billing-toggle mb-6" data-testid="billing-toggle">
       <label className="block text-sm font-medium text-gray-700 mb-3">
         Billing Frequency:
       </label>
@@ -38,10 +48,12 @@ const BillingToggle = ({
           type="button"
           onClick={() => handleToggle('monthly')}
           data-billing="monthly"
+          data-selected={!isAnnual ? "true" : "false"}
+          data-testid="billing-monthly"
           className={`
             flex-1 py-3 px-6 rounded-lg font-semibold text-base transition-all
             ${!isAnnual
-              ? 'bg-blue-500 text-white shadow-md'
+              ? 'bg-blue-500 text-white shadow-md selected'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}
           `}
           aria-pressed={!isAnnual}
@@ -53,10 +65,12 @@ const BillingToggle = ({
           type="button"
           onClick={() => handleToggle('annual')}
           data-billing="annual"
+          data-selected={isAnnual ? "true" : "false"}
+          data-testid="billing-annual"
           className={`
             flex-1 py-3 px-6 rounded-lg font-semibold text-base transition-all
             ${isAnnual
-              ? 'bg-yellow-400 text-gray-900 shadow-md'
+              ? 'bg-yellow-400 text-gray-900 shadow-md selected'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}
           `}
           aria-pressed={isAnnual}

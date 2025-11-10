@@ -129,9 +129,9 @@ export default defineConfig({
     // Terser configuration for better minification
     terserOptions: {
       compress: {
-        drop_console: true,
+        drop_console: false, // TEMPORARILY ENABLED for debugging trial flow
         drop_debugger: true,
-        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn']
+        // pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn'] // TEMPORARILY DISABLED
       },
       mangle: {
         safari10: true

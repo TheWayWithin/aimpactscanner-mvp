@@ -67,10 +67,10 @@ function AppContent({ initialUrl }) {
   // Initialize performance monitoring
   usePerformanceMonitoring();
   
-  // Initialize fallback data for known users immediately
-  useEffect(() => {
-    initializeFallbackData();
-  }, []);
+  // Fallback data no longer needed - database function fixed with SECURITY DEFINER
+  // useEffect(() => {
+  //   initializeFallbackData();
+  // }, []);
 
   // Handle initial URL from static hero
   useEffect(() => {
@@ -94,7 +94,8 @@ function AppContent({ initialUrl }) {
       if (isProtectedRoute(view)) {
         // CRITICAL FIX: Don't check auth if session check hasn't completed yet
         // This prevents premature redirects to landing when session state is updating
-        if (!sessionChecked) {
+        // EXCEPTION: checkout-success should never be deferred (user just completed payment)
+        if (!sessionChecked && view !== 'checkout-success') {
           console.log('⏳ SECURITY: Session check not complete - deferring navigation to:', view);
           localStorage.setItem('deferred_route', view);
           return; // Queue the navigation until session check completes
@@ -478,8 +479,15 @@ function AppContent({ initialUrl }) {
       // SECURITY FIX: Process any deferred routes now that session check is complete
       const pendingRoute = localStorage.getItem('initial_route_pending');
       const deferredRoute = localStorage.getItem('deferred_route');
+      const currentHash = window.location.hash.slice(1); // Get current URL hash without #
 
-      if (deferredRoute) {
+      // Don't override checkout-success - user just completed payment
+      if (pendingRoute === 'checkout-success' || deferredRoute === 'checkout-success' || currentHash === 'checkout-success') {
+        console.log('🔒 SECURITY: User on checkout-success, preserving route');
+        localStorage.removeItem('initial_route_pending');
+        localStorage.removeItem('deferred_route');
+        setCurrentView('checkout-success');
+      } else if (deferredRoute) {
         console.log('🔒 SECURITY: Processing deferred route after session check:', deferredRoute);
         localStorage.removeItem('deferred_route');
         setCurrentView(deferredRoute);
@@ -496,8 +504,15 @@ function AppContent({ initialUrl }) {
       // SECURITY FIX: Process any deferred routes even if session restoration failed
       const pendingRoute = localStorage.getItem('initial_route_pending');
       const deferredRoute = localStorage.getItem('deferred_route');
+      const currentHash = window.location.hash.slice(1); // Get current URL hash without #
 
-      if (deferredRoute) {
+      // Don't override checkout-success - user just completed payment
+      if (pendingRoute === 'checkout-success' || deferredRoute === 'checkout-success' || currentHash === 'checkout-success') {
+        console.log('🔒 SECURITY: User on checkout-success (error path), preserving route');
+        localStorage.removeItem('initial_route_pending');
+        localStorage.removeItem('deferred_route');
+        setCurrentView('checkout-success');
+      } else if (deferredRoute) {
         console.log('🔒 SECURITY: Processing deferred route after session error:', deferredRoute);
         localStorage.removeItem('deferred_route');
         setCurrentView(deferredRoute);
@@ -1616,9 +1631,17 @@ function AppContent({ initialUrl }) {
   // PHASE 1 FIX: Auto-checkout view for Coffee/Growth/Scale tier signups
   if (currentView === 'checkout') {
     // Get params from sessionStorage (set by OAuthCallback)
+    console.log('[App.jsx] Reading sessionStorage values for checkout');
     const autoCheckoutTier = sessionStorage.getItem('autoCheckoutTier');
-    const autoCheckoutIsTrial = sessionStorage.getItem('autoCheckoutIsTrial') === 'true';
+    const autoCheckoutIsTrialStr = sessionStorage.getItem('autoCheckoutIsTrial');
+    const autoCheckoutIsTrial = autoCheckoutIsTrialStr === 'true';
     const autoCheckoutBilling = sessionStorage.getItem('autoCheckoutBilling') || 'annual';
+
+    console.log('[App.jsx] Retrieved sessionStorage values:');
+    console.log('[App.jsx]   autoCheckoutTier:', autoCheckoutTier);
+    console.log('[App.jsx]   autoCheckoutIsTrial (raw string):', autoCheckoutIsTrialStr);
+    console.log('[App.jsx]   autoCheckoutIsTrial (boolean):', autoCheckoutIsTrial);
+    console.log('[App.jsx]   autoCheckoutBilling:', autoCheckoutBilling);
 
     if (autoCheckoutTier && session?.user) {
       console.log('💳 Auto-triggering Stripe checkout:', {
@@ -2036,7 +2059,11 @@ function AppContent({ initialUrl }) {
               </div>
           </div>
           <Suspense fallback={<ComponentLoader message="Loading analysis history..." />}>
-            <AnalysisHistory onViewAnalysis={handleViewHistoryAnalysis} />
+            <AnalysisHistory
+              onViewAnalysis={handleViewHistoryAnalysis}
+              user={dashboardData}
+              userTier={userTier}
+            />
           </Suspense>
             </div>
           </ProtectedRoute>

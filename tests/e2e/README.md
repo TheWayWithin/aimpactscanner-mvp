@@ -14,6 +14,16 @@ This comprehensive E2E testing suite validates the complete AImpactScanner user 
 - **Session Management**: Cross-page navigation and refresh testing
 - **Performance Benchmarks**: Timing validation for complete flow
 
+### 🎁 Growth Tier 7-Day Trial Tests (`growth-trial-magic-link.spec.js`)
+- **Trial Button Flow**: Click "Try Growth Free for 7 Days" and verify authContext storage
+- **Parameter Preservation**: Verify isTrial and billingFrequency survive the flow
+- **Magic Link Authentication**: Complete magic link flow with temporary email
+- **Stripe $0.00 Checkout**: Verify trial shows "$0.00 due today" in Stripe
+- **Webhook Processing**: Validate database updates after Stripe checkout
+- **Tier Assignment**: Confirm user assigned "growth" tier with 40 analyses
+- **Account Page Verification**: Validate account page displays trial status correctly
+- **Bug Fix Validation**: Confirms fixes for AuthMethodSelector parameter stripping and JWT verification
+
 ### 📊 Usage Tracking Tests (`usage-tracking-flow.spec.js`)
 - **Free Tier Progression**: 3→2→1→0 usage tracking validation
 - **Monthly Reset Simulation**: Usage limit reset functionality
@@ -37,10 +47,13 @@ This comprehensive E2E testing suite validates the complete AImpactScanner user 
 # Complete user journey with temp email
 npm run test:temp-email
 
+# Growth tier 7-day trial flow (magic link)
+npx playwright test tests/e2e/growth-trial-magic-link.spec.js
+
 # Usage tracking and tier management
 npm run test:usage-tracking
 
-# Error handling and edge cases  
+# Error handling and edge cases
 npm run test:error-handling
 
 # All E2E tests
@@ -51,6 +64,9 @@ npm run test:e2e:all
 ```bash
 # Debug specific test with UI
 npm run test:temp-email:debug
+
+# Debug Growth trial test with headed browser
+npx playwright test tests/e2e/growth-trial-magic-link.spec.js --headed --project=chromium
 
 # Open Playwright UI for all E2E tests
 npx playwright test tests/e2e/ --ui
@@ -136,6 +152,7 @@ const success = await completeEmailVerification();
 ```
 tests/e2e/
 ├── user-journey-with-temp-email.spec.js    # Main user flow
+├── growth-trial-magic-link.spec.js         # Growth tier 7-day trial flow
 ├── usage-tracking-flow.spec.js             # Tier and usage tests
 ├── error-handling-edge-cases.spec.js       # Error scenarios
 └── README.md                               # This documentation

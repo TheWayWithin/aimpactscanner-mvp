@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getActualUserTier } from '../lib/tierUtils';
+import { getActualUserTier, hasFeatureAccess } from '../lib/tierUtils';
 import { supabase } from '../lib/supabaseClient';
 
 // Custom hook for client-side usage tracking
@@ -20,6 +20,9 @@ export const useUsageTracking = (userEmail) => {
   }, [userEmail]);
 
   const loadUsageData = async () => {
+    let syncedTier = 'free'; // Initialize with default
+    let syncedIsUnlimited = false;
+
     try {
       // Try database sync for authenticated users to get correct tier
       if (userEmail && userEmail !== 'anonymous') {
@@ -27,15 +30,17 @@ export const useUsageTracking = (userEmail) => {
           const { data: { user } } = await supabase.auth.getUser();
           if (user) {
             const tierInfo = await getActualUserTier(user.id);
-            
+
             // Update localStorage with correct tier from database
             if (tierInfo && tierInfo.tier) {
               // Don't sync 'pending_payment' as a tier - keep existing or use 'free'
               const effectiveTier = tierInfo.tier === 'pending_payment' ? 'coffee_pending' : tierInfo.tier;
-              const unlimited = ['coffee', 'professional', 'enterprise'].includes(tierInfo.tier);
+              syncedTier = effectiveTier; // Capture for use after localStorage read
+              const unlimited = ['coffee', 'growth', 'scale', 'professional', 'enterprise'].includes(tierInfo.tier);
+              syncedIsUnlimited = unlimited; // Capture for use after localStorage read
               const stored = localStorage.getItem(STORAGE_KEY);
               const existingData = stored ? JSON.parse(stored) : {};
-              
+
               const syncedData = {
                 ...existingData,
                 tier: effectiveTier,
@@ -45,7 +50,7 @@ export const useUsageTracking = (userEmail) => {
                 monthlyUsed: existingData.monthlyUsed || 0,
                 lastUpdated: existingData.lastUpdated || new Date().toISOString()
               };
-              
+
               localStorage.setItem(STORAGE_KEY, JSON.stringify(syncedData));
               console.log(`Synced tier from database: ${effectiveTier} for ${userEmail}${tierInfo.tier === 'pending_payment' ? ' (pending payment)' : ''}`);
             }
@@ -54,17 +59,17 @@ export const useUsageTracking = (userEmail) => {
           console.warn('Database tier sync failed, using localStorage fallback:', dbError);
         }
       }
-      
+
       // Now load from localStorage
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const data = JSON.parse(stored);
-        
+
         // Check if we need to reset monthly usage
         const now = new Date();
         const storedDate = new Date(data.lastUpdated);
-        
-        if (now.getMonth() !== storedDate.getMonth() || 
+
+        if (now.getMonth() !== storedDate.getMonth() ||
             now.getFullYear() !== storedDate.getFullYear()) {
           // New month - reset usage
           resetMonthlyUsage();
@@ -73,8 +78,8 @@ export const useUsageTracking = (userEmail) => {
             monthlyUsed: data.monthlyUsed || 0,
             remaining: data.isUnlimited ? Infinity : Math.max(0, FREE_TIER_LIMIT - (data.monthlyUsed || 0)),
             resetDate: getMonthResetDate(),
-            isUnlimited: data.isUnlimited || false,
-            tier: data.tier || 'free'
+            isUnlimited: syncedIsUnlimited, // Use database-synced value
+            tier: syncedTier // Use database-synced tier, not localStorage fallback
           });
         }
       } else {
@@ -157,7 +162,7 @@ export const useUsageTracking = (userEmail) => {
 
   // New function to update user tier
   const setUserTier = (newTier) => {
-    const unlimited = ['coffee', 'professional', 'enterprise'].includes(newTier);
+    const unlimited = ['coffee', 'growth', 'scale', 'professional', 'enterprise'].includes(newTier);
     
     const updatedData = {
       monthlyUsed: usageData.monthlyUsed,
@@ -178,7 +183,10 @@ export const useUsageTracking = (userEmail) => {
 
   // Check if user has access to PDF export (Coffee tier and above)
   const hasPDFAccess = () => {
-    return ['coffee', 'professional', 'enterprise'].includes(usageData.tier);
+    console.log('[DEBUG] hasPDFAccess called with tier:', usageData.tier);
+    const result = hasFeatureAccess(usageData.tier, 'pdf_export');
+    console.log('[DEBUG] hasFeatureAccess returned:', result);
+    return result;
   };
 
   const getMonthResetDate = () => {
@@ -239,7 +247,7 @@ export const checkUsageLimit = (userEmail) => {
       remaining: remaining,
       isUnlimited: data.isUnlimited,
       tier: data.tier || 'free',
-      hasPDFAccess: ['coffee', 'professional', 'enterprise'].includes(data.tier || 'free')
+      hasPDFAccess: hasFeatureAccess(data.tier || 'free', 'pdf_export')
     };
   } catch (error) {
     console.error('Error checking usage limit:', error);

@@ -1,0 +1,15 @@
+{
+  "products": {
+    "solo": "prod_TIrWJJRhCf5L9M",
+    "growth": "prod_TIrWgOUJy5D7OM",
+    "scale": "prod_TIrW8Xjeee7S3o"
+  },
+  "prices": {
+    "solo_monthly": "price_1SMFnZIiC84gpR8HBsYj7vsE",
+    "solo_annual": "price_1SMFnZIiC84gpR8HD7oRJxlN",
+    "growth_monthly": "price_1SMFnaIiC84gpR8HzHaQmjYc",
+    "growth_annual": "price_1SMFnbIiC84gpR8HB3CeS1ud",
+    "scale_monthly": "price_1SMFncIiC84gpR8HbCRQwnCW",
+    "scale_annual": "price_1SMFncIiC84gpR8HaHS0RCGe"
+  }
+}

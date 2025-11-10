@@ -64,7 +64,7 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-1 sm:px-4">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-3">
@@ -90,7 +90,7 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
 
         {/* STEP 1: Tier Selection - Side-by-side layout on wider screens */}
         {!showOAuthButtons && mode === 'signup' && (
-          <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 lg:p-8">
             {/* Blue banner - full width on mobile, spans both columns on desktop */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
               <p className="text-sm text-blue-800">
@@ -111,15 +111,30 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
                   setBillingFrequency(frequency);
                   console.log('🔄 Billing frequency changed to:', frequency);
                 }}
-                onSelectionComplete={(tier, billing, isTrial = false) => {
+                onSelectionComplete={(tier, billing, isTrial) => {
+                  console.log('[Signup] onSelectionComplete called');
+                  console.log('[Signup] Received tier:', tier);
+                  console.log('[Signup] Received billing:', billing);
+                  console.log('[Signup] Received isTrial (raw):', isTrial);
+                  console.log('[Signup] isTrial type:', typeof isTrial);
+
+                  // CRITICAL FIX: Handle undefined explicitly instead of default parameter
+                  // Default parameters can cause issues if the caller passes undefined
+                  const normalizedIsTrial = isTrial === true;  // Only true if explicitly true
+                  console.log('[Signup] Normalized isTrial:', normalizedIsTrial);
+
                   // Store in authContext for OAuth callback
                   const authContext = {
                     selectedTier: tier,
                     billingFrequency: billing,
-                    isTrial: isTrial, // NEW: Track if user selected trial
+                    isTrial: normalizedIsTrial, // FIXED: Use normalized boolean value
                     mode: 'signup',
                     timestamp: Date.now()
                   };
+
+                  console.log('[Signup] authContext object:', authContext);
+                  console.log('[Signup] authContext stringified:', JSON.stringify(authContext));
+
                   localStorage.setItem('authContext', JSON.stringify(authContext));
 
                   // Set 7-day expiry
@@ -174,6 +189,8 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
 
               <AuthMethodSelector
                 selectedTier={selectedTier}
+                isTrial={selectedTier === 'growth'} // Pass trial flag to AuthMethodSelector
+                billingFrequency={billingFrequency}
                 mode={mode}
                 onSuccess={handleAuthSuccess}
                 onError={handleAuthError}

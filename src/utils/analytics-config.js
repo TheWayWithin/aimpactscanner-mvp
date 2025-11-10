@@ -18,7 +18,13 @@ export const ANALYTICS_CONFIG = {
     SIGNUP: 'sign_up',
     PURCHASE: 'purchase',
     FEATURE_USAGE: 'feature_usage',
-    ERROR_TRACKING: 'exception'
+    ERROR_TRACKING: 'exception',
+    // Tier Selector Events (Phase 8)
+    TIER_SELECTOR_VIEWED: 'tier_selector_viewed',
+    TIER_SELECTION_CHANGED: 'tier_selection_changed',
+    BILLING_TOGGLE_CLICKED: 'billing_toggle_clicked',
+    TIER_CTA_CLICKED: 'tier_cta_clicked',
+    TRIAL_DETAILS_EXPANDED: 'trial_details_expanded'
   },
   
   // Enhanced Ecommerce
@@ -49,6 +55,21 @@ export const logAnalyticsEvent = (eventName, parameters) => {
     console.log('Parameters:', parameters);
     console.log('Timestamp:', new Date().toISOString());
     console.groupEnd();
+  }
+};
+
+// Tier Selector Event Tracking Helper (Phase 8)
+export const trackTierSelectorEvent = (eventName, parameters = {}) => {
+  if (typeof window !== 'undefined' && window.dataLayer) {
+    window.dataLayer.push({
+      event: eventName,
+      ...parameters,
+      timestamp: new Date().toISOString()
+    });
+
+    if (DEBUG_ANALYTICS) {
+      logAnalyticsEvent(eventName, parameters);
+    }
   }
 };
 

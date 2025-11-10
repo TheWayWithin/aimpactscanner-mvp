@@ -165,6 +165,12 @@ serve(async (req) => {
       billing_address_collection: 'auto',
       'payment_method_types[0]': 'card'
     });
+
+    // Add 7-day trial period if user selected trial
+    if (isTrial && tier === 'growth') {
+      sessionParams.append('subscription_data[trial_period_days]', '7');
+      console.log('✅ Added 7-day trial period to checkout session');
+    }
     
     // Add customer information based on flow type
     if (isRegistrationFlow) {

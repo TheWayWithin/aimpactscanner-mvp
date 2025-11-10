@@ -97,15 +97,15 @@ export async function syncUserTier(userId, userEmail) {
       
       if (stored) {
         const data = JSON.parse(stored);
-        const unlimited = ['coffee', 'growth', 'scale', 'professional', 'enterprise'].includes(actualTier.tier);
-        
+        const tierInfo = getTierDisplayInfo(actualTier.tier);
+
         const updatedData = {
           ...data,
           tier: actualTier.tier,
-          isUnlimited: unlimited,
+          isUnlimited: tierInfo.isUnlimited,
           lastSynced: new Date().toISOString()
         };
-        
+
         localStorage.setItem(storageKey, JSON.stringify(updatedData));
       }
     }
@@ -145,27 +145,27 @@ export function getTierDisplayInfo(tier) {
       color: 'bg-gray-100 text-gray-800'
     },
     'coffee': {
-      name: 'Coffee',
+      name: 'Solo',
       icon: '☕',
-      displayName: '☕ Coffee',
-      limit: null,
-      isUnlimited: true,
+      displayName: '☕ Solo',
+      limit: 10,
+      isUnlimited: false,
       color: 'bg-yellow-100 text-yellow-800'
     },
     'growth': {
       name: 'Growth',
       icon: '🚀',
       displayName: '🚀 Growth',
-      limit: null,
-      isUnlimited: true,
+      limit: 40,
+      isUnlimited: false,
       color: 'bg-blue-100 text-blue-800'
     },
     'scale': {
       name: 'Scale',
       icon: '📈',
       displayName: '📈 Scale',
-      limit: null,
-      isUnlimited: true,
+      limit: 100,
+      isUnlimited: false,
       color: 'bg-purple-100 text-purple-800'
     },
     // Backward compatibility mappings
@@ -173,16 +173,16 @@ export function getTierDisplayInfo(tier) {
       name: 'Growth',
       icon: '🚀',
       displayName: '🚀 Growth',
-      limit: null,
-      isUnlimited: true,
+      limit: 40,
+      isUnlimited: false,
       color: 'bg-blue-100 text-blue-800'
     },
     'enterprise': {
       name: 'Scale',
       icon: '📈',
       displayName: '📈 Scale',
-      limit: null,
-      isUnlimited: true,
+      limit: 100,
+      isUnlimited: false,
       color: 'bg-purple-100 text-purple-800'
     }
   };
@@ -196,18 +196,45 @@ export function getTierDisplayInfo(tier) {
 export function hasFeatureAccess(tier, feature) {
   // Map old tier names to new ones for backward compatibility
   const mappedTier = tier === 'professional' ? 'growth' : tier === 'enterprise' ? 'scale' : tier;
-  
+
+  console.log('[DEBUG] hasFeatureAccess:', { tier, feature, mappedTier });
+
   const featureMatrix = {
     'pdf_export': ['coffee', 'growth', 'scale', 'professional', 'enterprise'],
-    'unlimited_analyses': ['coffee', 'growth', 'scale', 'professional', 'enterprise'],
+    'csv_export': ['growth', 'scale', 'professional', 'enterprise'],
+    'llms_txt': ['growth', 'scale', 'professional', 'enterprise'],
     'planner': ['growth', 'scale', 'professional', 'enterprise'],
     'priority_support': ['growth', 'scale', 'professional', 'enterprise'],
-    'api_access': ['scale', 'enterprise'], // Removed from growth tier
+    'api_access': ['scale', 'enterprise'],
     'team_management': ['scale', 'enterprise']
   };
 
   const allowedTiers = featureMatrix[feature] || [];
-  return allowedTiers.includes(mappedTier) || allowedTiers.includes(tier);
+  const result = allowedTiers.includes(mappedTier) || allowedTiers.includes(tier);
+  console.log('[DEBUG] hasFeatureAccess result:', { allowedTiers, result });
+  return result;
+}
+
+/**
+ * Get minimum tier required for a feature
+ * @param {string} featureName - Feature to check
+ * @returns {string} - Minimum tier name (e.g., 'Solo', 'Growth', 'Scale')
+ */
+export function getMinimumTierForFeature(featureName) {
+  const tierOrder = [
+    { id: 'free', name: 'Free' },
+    { id: 'coffee', name: 'Solo' },
+    { id: 'growth', name: 'Growth' },
+    { id: 'scale', name: 'Scale' }
+  ];
+
+  for (const tier of tierOrder) {
+    if (hasFeatureAccess(tier.id, featureName)) {
+      return tier.name;
+    }
+  }
+
+  return null;
 }
 
 /**

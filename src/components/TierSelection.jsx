@@ -25,17 +25,17 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
     },
     {
       id: 'coffee',
-      name: '☕ Coffee',
-      price: 4.95,
-      analyses: 'Unlimited',
+      name: 'Solo',
+      price: 5.95,
+      analyses: '10 per month',
       features: [
-        'Unlimited Phase A analyses',
         '✨ Professional PDF reports',
         'Clean, exportable results',
         'Educational content',
-        'Email support'
+        'Email support',
+        'Cancel anytime'
       ],
-      cta: showRegistrationFlow ? 'Choose Coffee Plan' : 'Buy Me a Coffee',
+      cta: showRegistrationFlow ? 'Choose Solo Plan' : 'Upgrade to Solo',
       highlight: true,
       popular: true,
       description: 'Perfect for individuals and small businesses'
@@ -43,26 +43,28 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
     {
       id: 'growth',
       name: '🚀 Growth',
-      price: 29,
-      analyses: 'Unlimited',
+      price: 17.95,
+      analyses: '40 per month',
       features: [
-        'Everything in Coffee',
-        '📊 Advanced PDF reports',
+        '🎁 7-day free trial',
+        'Everything in Solo',
+        '📊 CSV export',
         '🗺️ AI Remediation Planner',
         'Progress tracking dashboard',
         'Phase B factors (22 total)',
         'Priority support'
       ],
-      cta: showRegistrationFlow ? 'Choose Growth' : 'Go Growth',
+      cta: showRegistrationFlow ? 'Choose Growth' : 'Upgrade to Growth',
       highlight: false,
-      comingSoon: true,
+      popular: false,
+      comingSoon: false,
       description: 'Complete analysis & planning for growing businesses'
     },
     {
       id: 'scale',
       name: '📈 Scale',
-      price: 99,
-      analyses: 'Unlimited',
+      price: 34.95,
+      analyses: '100 per month',
       features: [
         'Everything in Growth',
         '🔗 API access',
@@ -74,7 +76,8 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
       ],
       cta: 'Contact Sales',
       highlight: false,
-      comingSoon: true,
+      popular: false,
+      comingSoon: false,
       description: 'Enterprise-grade solution for scaling teams'
     }
   ];
@@ -222,7 +225,7 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
             {tier.id === 'coffee' && currentTier && currentTier.toLowerCase() === 'free' && (
               <div className="mt-3 text-center">
                 <p className="text-xs text-gray-600">
-                  Start your unlimited analysis journey
+                  Professional reports for your business
                 </p>
               </div>
             )}

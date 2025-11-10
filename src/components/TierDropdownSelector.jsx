@@ -70,9 +70,9 @@ const TierDropdownSelector = ({ selectedTier, onTierChange }) => {
   const content = tierContent[currentTier];
 
   return (
-    <div className="tier-dropdown-selector">
+    <div className="tier-dropdown-selector" data-testid="tier-dropdown-section">
       {/* Dropdown Selector */}
-      <div className="mb-4">
+      <div className="mb-4" data-testid="tier-dropdown-menu">
         <label htmlFor="tier-select" className="block text-sm font-medium text-gray-700 mb-2">
           Select Your Plan
         </label>
@@ -81,9 +81,10 @@ const TierDropdownSelector = ({ selectedTier, onTierChange }) => {
           value={currentTier}
           onChange={handleChange}
           className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base font-medium"
+          data-testid="tier-dropdown-button"
         >
           {tiers.map(tier => (
-            <option key={tier.id} value={tier.id}>
+            <option key={tier.id} value={tier.id} data-testid={`tier-option-${tier.id}`}>
               {tier.label}
             </option>
           ))}

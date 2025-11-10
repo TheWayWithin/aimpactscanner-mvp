@@ -40,6 +40,12 @@
     Access-Control-Allow-Methods = "GET, POST, OPTIONS"
     Access-Control-Allow-Headers = "Content-Type, Authorization"
 
+# HTML files - NEVER cache to ensure latest JS bundles load
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
 # Caching for static assets
 [[headers]]
   for = "/assets/*"
@@ -61,8 +67,8 @@
   NODE_ENV = "production"
 
 [context.deploy-preview.environment]
-  # Use test keys for deploy previews
-  VITE_SUPABASE_URL = "https://pdmtvkcxnqysujnpcnyh.supabase.co"
+  # Use STAGING database and test keys for deploy previews
+  VITE_SUPABASE_URL = "https://isgzvwpjokcmtizstwru.supabase.co"  # STAGING (impactscanner-staging project)
   # VITE_SUPABASE_ANON_KEY = "your-test-anon-key"
   # VITE_STRIPE_PUBLISHABLE_KEY = "pk_test_your-test-publishable-key"
   # VITE_STRIPE_COFFEE_PRICE_ID = "price_your-test-coffee-price-id"

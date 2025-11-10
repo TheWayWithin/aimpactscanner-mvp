@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fix My Tier</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <h1>Fix Your Tier</h1>
+  <button onclick="fixTier()">Click to Fix Tier to Growth</button>
+  <pre id="output"></pre>
+
+  <script type="module">
+    // Load your Supabase credentials from your local env
+    const SUPABASE_URL = 'https://isgzvwpjokcmtizstwru.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzZ3p2d3Bqb2tjbXRpenN0d3J1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMzMjczMTgsImV4cCI6MjAzODkwMzMxOH0.yPEVsjER5JDpDnYZYZQUk4KLMM1uNRTjqVXFqkOYL2M';
+
+    const { createClient } = supabase;
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    window.fixTier = async function() {
+      const output = document.getElementById('output');
+      output.textContent = '🔍 Checking current user...';
+
+      // Get current user
+      const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+      if (userError || !user) {
+        output.textContent = '❌ Not logged in. Please log in at http://localhost:5173 first.';
+        return;
+      }
+
+      output.textContent = `✅ Logged in as: ${user.email}\nUser ID: ${user.id}\n\n🔧 Updating tier to Growth...`;
+
+      // Update user tier
+      const { data, error } = await supabaseClient
+        .from('users')
+        .update({
+          tier: 'growth',
+          subscription_tier: 'growth',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id)
+        .select();
+
+      if (error) {
+        output.textContent += `\n\n❌ Error: ${JSON.stringify(error, null, 2)}`;
+      } else {
+        output.textContent += `\n\n✅ SUCCESS! Tier updated to Growth\n\nUpdated data:\n${JSON.stringify(data, null, 2)}`;
+        output.textContent += '\n\n✅ Now refresh your dashboard at http://localhost:5173/#dashboard';
+        output.textContent += '\n   You should see:';
+        output.textContent += '\n   - Growth tier badge';
+        output.textContent += '\n   - 40 analyses remaining';
+      }
+    };
+  </script>
+</body>
+</html>

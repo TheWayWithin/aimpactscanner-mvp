@@ -1,0 +1,3 @@
+# Stripe webhook configuration
+# Disable JWT verification since Stripe webhooks don't send auth tokens
+verify_jwt = false

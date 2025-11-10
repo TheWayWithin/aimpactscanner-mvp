@@ -25,7 +25,7 @@ export default defineConfig({
   
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html', { outputFolder: 'test-results/playwright-report' }],
+    ['html', { outputFolder: 'playwright-report' }],
     ['json', { outputFile: 'test-results/playwright-results.json' }],
     ['line'],
   ],
@@ -110,14 +110,20 @@ export default defineConfig({
     /* Test against mobile viewports. */
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-      testMatch: ['**/phase2-auth-pricing.spec.js'], // Only run responsive tests on mobile
+      use: {
+        ...devices['Pixel 5'],
+        hasTouch: true, // Enable touch support for mobile tests
+      },
+      testMatch: ['**/phase2-auth-pricing.spec.js', '**/tier-selector-mobile.spec.js'],
     },
-    
+
     {
       name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
-      testMatch: ['**/phase2-auth-pricing.spec.js'],
+      use: {
+        ...devices['iPhone 12'],
+        hasTouch: true, // Enable touch support for mobile tests
+      },
+      testMatch: ['**/phase2-auth-pricing.spec.js', '**/tier-selector-mobile.spec.js'],
     },
 
     /* Test against branded browsers. */

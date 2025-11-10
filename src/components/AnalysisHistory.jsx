@@ -2,8 +2,9 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useTabVisibility } from '../hooks/useTabVisibility';
 import { normalizeUrl, getDomainFromUrl } from '../utils/urlUtils';
+import { hasFeatureAccess, getMinimumTierForFeature } from '../lib/tierUtils';
 
-const AnalysisHistory = ({ onViewAnalysis }) => {
+const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -17,9 +18,23 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
   const [filteredHistory, setFilteredHistory] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const lastLoadTime = useRef(0);
-  
+
   // Tab visibility tracking
   const { isTabVisible } = useTabVisibility();
+
+  // Get tier display name (matching SimpleAccountDashboard)
+  const getTierDisplayName = (tier) => {
+    const tierNames = {
+      'free': 'Free',
+      'coffee': 'Solo',
+      'coffee_pending': 'Solo (Payment Pending)',
+      'pending_payment': 'Payment Pending',
+      'pending_registration': 'Registration Incomplete',
+      'growth': 'Growth',
+      'scale': 'Scale'
+    };
+    return tierNames[tier] || tier || 'Free';
+  };
 
   useEffect(() => {
     // Get current session and listen for auth changes
@@ -373,8 +388,14 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
 
   // Export to CSV functionality
   const exportToCSV = () => {
+    // Check tier access for CSV export
+    if (!hasFeatureAccess(userTier, 'csv_export')) {
+      alert(`CSV export requires ${getMinimumTierForFeature('csv_export')} tier or higher. Please upgrade your plan.`);
+      return;
+    }
+
     const dataToExport = filteredHistory.length > 0 ? filteredHistory : history;
-    
+
     if (dataToExport.length === 0) {
       alert('No data to export');
       return;
@@ -693,22 +714,41 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h2>
             <p className="text-gray-600">
-              {statistics ? `${statistics.totalAnalyses} analyses • Coffee tier` : 'Track your website performance'}
+              {statistics ? `${statistics.totalAnalyses} analyses • ${getTierDisplayName(userTier)} tier` : 'Track your website performance'}
             </p>
           </div>
         </div>
         
         <div className="flex items-center space-x-3">
-          <button
-            onClick={exportToCSV}
-            className="inline-flex items-center px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
-            title="Export to CSV"
-          >
-            <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Export CSV
-          </button>
+          {hasFeatureAccess(userTier, 'csv_export') ? (
+            <button
+              onClick={exportToCSV}
+              className="inline-flex items-center px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+              title="Export to CSV"
+            >
+              <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Export CSV
+            </button>
+          ) : (
+            <div className="relative group">
+              <button
+                disabled
+                className="inline-flex items-center px-3 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm font-medium"
+                title={`CSV export requires ${getMinimumTierForFeature('csv_export')} tier`}
+              >
+                <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Export CSV (Growth+ only)
+              </button>
+              <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded py-2 px-3 whitespace-nowrap z-10">
+                Upgrade to {getMinimumTierForFeature('csv_export')} tier for CSV export
+                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+              </div>
+            </div>
+          )}
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={`inline-flex items-center px-3 py-2 border rounded-lg transition-colors text-sm font-medium ${
@@ -875,7 +915,7 @@ const AnalysisHistory = ({ onViewAnalysis }) => {
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Analyses</p>
                 <p className="text-2xl font-bold text-gray-900">{statistics.totalAnalyses}</p>
-                <p className="text-sm text-gray-500 mt-1">Coffee tier</p>
+                <p className="text-sm text-gray-500 mt-1">{getTierDisplayName(userTier)} tier</p>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

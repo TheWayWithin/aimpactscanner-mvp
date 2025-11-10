@@ -64,17 +64,51 @@ serve(async (req) => {
       throw new Error('Unable to access subscription information. Please try again.')
     }
 
-    if (!userData?.stripe_customer_id) {
-      console.error('No Stripe customer ID found for user:', user.id, userData)
-      throw new Error('No active subscription found. Please subscribe first.')
+    let stripeCustomerId = userData?.stripe_customer_id
+
+    // If stripe_customer_id is missing, try to find it in Stripe by email
+    if (!stripeCustomerId) {
+      console.warn('No Stripe customer ID in database for user:', user.id)
+      console.log('Attempting to find customer in Stripe by email:', user.email)
+
+      try {
+        // Search for customer by email in Stripe
+        const customers = await stripe.customers.list({
+          email: user.email,
+          limit: 1
+        })
+
+        if (customers.data.length > 0) {
+          const customer = customers.data[0]
+          stripeCustomerId = customer.id
+          console.log('✅ Found existing Stripe customer:', stripeCustomerId)
+
+          // Update database with the found customer ID
+          const { error: updateError } = await serviceSupabase
+            .from('users')
+            .update({ stripe_customer_id: stripeCustomerId })
+            .eq('id', user.id)
+
+          if (updateError) {
+            console.error('Failed to update stripe_customer_id in database:', updateError)
+            // Don't throw - we can still proceed with the portal session
+          } else {
+            console.log('✅ Updated database with stripe_customer_id')
+          }
+        } else {
+          console.error('No Stripe customer found for email:', user.email)
+          throw new Error('No active subscription found. Please subscribe to a plan first, or contact support if you believe this is an error.')
+        }
+      } catch (stripeError) {
+        console.error('Error searching Stripe for customer:', stripeError)
+        throw new Error('Unable to locate subscription information. Please contact support.')
+      }
     }
 
-    const stripeCustomerId = userData.stripe_customer_id
-
-    // Check if Stripe customer ID is truncated (should be longer than 20 chars)
+    // Check if Stripe customer ID is truncated (should be longer than 18 chars)
     if (stripeCustomerId.length < 18) {
-      console.error('Truncated Stripe customer ID detected:', stripeCustomerId)
-      throw new Error('Subscription data incomplete. Please contact support.')
+      console.error('Invalid Stripe customer ID detected:', stripeCustomerId)
+      throw new Error('Subscription data appears corrupted. Please contact support with error code: INVALID_CUSTOMER_ID')
     }
 
     console.log('Found Stripe customer:', stripeCustomerId)

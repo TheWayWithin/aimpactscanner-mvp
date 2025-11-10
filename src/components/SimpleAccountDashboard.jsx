@@ -2,11 +2,18 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useUsageTracking } from '../hooks/useUsageTracking';
+import { hasFeatureAccess } from '../lib/tierUtils';
 
 const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
   const [loading, setLoading] = useState(false);
   const [actualMonthlyCount, setActualMonthlyCount] = useState(null);
   const { usageData } = useUsageTracking(user?.email);
+
+  // DEBUG: Log tier data to diagnose display issue
+  console.log('[DEBUG Dashboard] User tier prop:', userTier);
+  console.log('[DEBUG Dashboard] User object tier:', user?.tier);
+  console.log('[DEBUG Dashboard] User subscription_tier:', user?.subscription_tier);
+  console.log('[DEBUG Dashboard] Full user object:', user);
   
   // Fetch actual analysis count from database
   useEffect(() => {
@@ -41,8 +48,8 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
   const getTierDisplayName = (tier) => {
     const tierNames = {
       'free': '🆓 Free',
-      'coffee': '☕ Coffee',
-      'coffee_pending': '☕ Coffee (Payment Pending)',
+      'coffee': '☕ Solo',
+      'coffee_pending': '☕ Solo (Payment Pending)',
       'pending_payment': '⏳ Payment Pending',
       'pending_registration': '📝 Registration Incomplete',
       'growth': '🚀 Growth',
@@ -116,6 +123,13 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
     };
 
     const limit = tierLimits[tier];
+
+    // DEBUG: Log calculation details
+    console.log('[DEBUG getRemainingAnalyses] Tier:', tier);
+    console.log('[DEBUG getRemainingAnalyses] Limit:', limit);
+    console.log('[DEBUG getRemainingAnalyses] Used:', used);
+    console.log('[DEBUG getRemainingAnalyses] Remaining:', Math.max(0, limit - used));
+
     if (!limit) return 3; // Default to free tier limit
 
     return Math.max(0, limit - used);
@@ -168,7 +182,29 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Current Plan</p>
-              <p className="font-medium text-lg">{getTierDisplayName(userTier)}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-medium text-lg">{getTierDisplayName(userTier)}</p>
+                {/* API Access Badge - Show for all tiers */}
+                {hasFeatureAccess(userTier, 'api_access') ? (
+                  // Scale tier - Active badge
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                    🔌 API Access
+                  </span>
+                ) : (
+                  // Free/Solo/Growth - Locked badge with tooltip
+                  <div className="relative group">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500 cursor-help">
+                      🔒 API Access
+                    </span>
+                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-sm rounded py-3 px-4 z-10 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                      <p className="font-semibold mb-1">🔌 Automate Your Analysis</p>
+                      <p className="mb-2">Programmatic access via REST API</p>
+                      <p className="text-xs opacity-90">Upgrade to Scale to unlock API access</p>
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
             <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTierBadgeColor(userTier)}`}>
               {getSubscriptionStatus()}
@@ -178,7 +214,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
           {showPaymentPending && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <p className="text-yellow-800">
-                ⏳ Your Coffee tier subscription is pending payment. 
+                ⏳ Your Solo tier subscription is pending payment.
                 Please complete the payment process to activate your subscription.
               </p>
             </div>
@@ -213,7 +249,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
                 href="/#pricing"
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 inline-block"
               >
-                Upgrade to Coffee ☕
+                Upgrade to Solo ☕
               </a>
             )}
           </div>
@@ -241,7 +277,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
               </div>
               {getRemainingAnalyses() === 0 && (
                 <p className="text-sm text-orange-600 mt-2 max-w-full overflow-hidden break-words">
-                  Monthly limit reached. Upgrade to Coffee for unlimited analyses!
+                  Monthly limit reached. Upgrade to Solo for 10 analyses/month!
                 </p>
               )}
             </div>

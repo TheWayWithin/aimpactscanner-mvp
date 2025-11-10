@@ -268,14 +268,21 @@ const OAuthCallback = ({ onNavigate, oauthCallbackProcessedRef }) => {
 
       // PHASE 1 FIX: For checkout flow, store tier + trial + billing in sessionStorage for auto-trigger
       if (destination.path === '/checkout' && destination.state?.tier) {
+        console.log('[OAuthCallback] Storing auto-checkout params in sessionStorage');
+        console.log('[OAuthCallback] destination.state:', destination.state);
+        console.log('[OAuthCallback] destination.state.isTrial:', destination.state.isTrial);
+        console.log('[OAuthCallback] destination.state.isTrial type:', typeof destination.state.isTrial);
+
         sessionStorage.setItem('autoCheckoutTier', destination.state.tier);
         sessionStorage.setItem('autoCheckoutIsTrial', destination.state.isTrial?.toString() || 'false');
         sessionStorage.setItem('autoCheckoutBilling', destination.state.billingFrequency || 'annual');
+
         console.log('💳 Auto-checkout params stored:', {
           tier: destination.state.tier,
           isTrial: destination.state.isTrial,
           billing: destination.state.billingFrequency
         });
+        console.log('[OAuthCallback] Stored autoCheckoutIsTrial value:', sessionStorage.getItem('autoCheckoutIsTrial'));
       }
 
       // CRITICAL FIX: Add delay to allow SIGNED_IN event handler to complete
