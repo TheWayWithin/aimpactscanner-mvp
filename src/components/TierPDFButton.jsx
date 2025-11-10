@@ -11,6 +11,7 @@
 
 import React, { useState } from 'react';
 import { useUsageTracking } from '../hooks/useUsageTracking';
+import { getTierDisplayInfo } from '../lib/tierUtils';
 import LazyPDFReportGenerator from './LazyPDFReportGenerator';
 import UpgradeToPDFModal from './UpgradeToPDFModal';
 
@@ -106,31 +107,33 @@ const TierPDFButton = ({ analysisId, url, analysisData, onReportGenerated, userE
   }
 
   // Coffee+ tiers - show professional active PDF export button
+  const tierDisplayInfo = getTierDisplayInfo(usageData.tier);
+
   return (
     <div className="relative group">
       <div className="inline-flex items-center">
-        <LazyPDFReportGenerator 
+        <LazyPDFReportGenerator
           analysisId={analysisId}
           url={url}
           analysisData={analysisData}
           onReportGenerated={onReportGenerated}
           className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 min-w-[200px] justify-center sm:min-w-0 sm:justify-start"
         />
-        
+
         {/* Premium tier indicator */}
-        <div className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-2 py-0.5 rounded-full capitalize font-medium shadow-lg">
-          <span className="hidden sm:inline">{usageData.tier} ✓</span>
+        <div className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-2 py-0.5 rounded-full font-medium shadow-lg">
+          <span className="hidden sm:inline">{tierDisplayInfo.icon} {tierDisplayInfo.name} ✓</span>
           <span className="sm:hidden">✓</span>
         </div>
       </div>
-      
+
       {/* Success indicator tooltip */}
       <div className="absolute left-0 top-full mt-2 w-56 bg-green-50 border border-green-200 rounded-lg shadow-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 hidden sm:block">
         <p className="text-xs text-green-800">
           <strong>✓ PDF Export Enabled</strong>
         </p>
         <p className="text-xs text-green-700 mt-1">
-          Generate unlimited professional reports with your {usageData.tier} tier subscription.
+          Generate unlimited professional reports with your {tierDisplayInfo.name} tier subscription.
         </p>
       </div>
     </div>
