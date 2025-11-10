@@ -277,15 +277,10 @@ export const getPostLoginDestination = async (user, session) => {
     console.log('🔄 Returning user, checking tier for routing');
     console.log('📊 User tier:', user?.tier);
 
-    // FIX BUG #8: Coffee/paid tier users should go to dashboard, not upsell
-    if (user?.tier && user.tier !== 'free') {
-      console.log('✅ Paid tier user (' + user.tier + '), routing to dashboard');
-      return { path: '/dashboard', state: {} };
-    }
-
-    // Only show upsell to FREE tier users
-    console.log('🆓 Free tier user, routing to upsell');
-    return getUpsellPage(user);
+    // FIX: Returning users (OAuth login) should ALWAYS go to dashboard
+    // Upsell is only shown during NEW USER signup flow, not on login
+    console.log('✅ Returning user login, routing to dashboard (tier: ' + user.tier + ')');
+    return { path: '/dashboard', state: {} };
 
   } catch (error) {
     console.error('❌ Error determining post-login destination:', error);
