@@ -1,5 +1,78 @@
 # AImpactScanner MVP - Progress Log
 
+## [November 10, 2025] - Phase 10: Upgrade Flow Hotfixes ✅
+
+**Context**: Fixed two critical bugs in production upgrade flow preventing Solo tier users from upgrading.
+
+**Starting State**: Phase 10 in progress, upgrade flow broken
+**Ending State**: Both bugs fixed, upgrade flow functional with monthly/annual options
+**Total Time**: ~45 minutes
+**Commit**: `031fc11` - "fix: upgrade flow now supports both monthly and annual billing"
+
+### Issues Fixed
+
+**Issue #1: Invalid Stripe Price ID Error** ✅ FIXED
+- **Symptom**: Upgrade button triggered 500 error: "No such price: 'price_growth_monthly'"
+- **Root Cause**: `UpgradeHandler.jsx` using hardcoded fallback price IDs that don't exist in Stripe
+- **Fix Applied**:
+  - Removed hardcoded `PRICE_IDS` fallback values
+  - Changed to send `tier` + `billingFrequency` to Edge Function
+  - Let Edge Function select correct Stripe price ID based on parameters
+- **Files Modified**:
+  - `src/components/UpgradeHandler.jsx`: Added `billingFrequency` parameter, removed priceId logic
+- **Impact**: Upgrade flow now creates valid Stripe checkout sessions
+
+**Issue #2: Only Monthly Billing Option Shown** ✅ FIXED
+- **Symptom**: Users could only upgrade to monthly billing ($4.95/mo), no annual option visible
+- **Root Cause**: No billing frequency selector in `UpgradeToPDFModal.jsx` UI
+- **Fix Applied**:
+  - Added billing frequency toggle (Monthly/Annual) above tier comparison
+  - Default to Annual (better value - 17% savings)
+  - Dynamic price display updates based on selection
+  - Button text reflects selected billing period
+- **Files Modified**:
+  - `src/components/UpgradeToPDFModal.jsx`: Added toggle UI and state management
+- **Impact**: Users can now choose between $4.95/month or $49/year
+
+### Technical Details
+
+**UpgradeHandler Changes**:
+```javascript
+// BEFORE: Hardcoded price IDs (invalid)
+const priceId = PRICE_IDS[targetTier]; // 'price_growth_monthly' doesn't exist
+
+// AFTER: Send tier + billing frequency
+const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+  body: {
+    userId: user.id,
+    tier: targetTier,
+    billingFrequency: billingFrequency, // NEW
+    // priceId removed - Edge Function selects it
+  }
+});
+```
+
+**UpgradeToPDFModal Changes**:
+- Added `billingFrequency` state (default: 'annual')
+- Added toggle component with Monthly/Annual buttons
+- Updated Coffee tier price display: `{billingFrequency === 'annual' ? '$49/year ($4.08/mo)' : '$4.95/month'}`
+- Updated CTA button text to reflect selected billing period
+
+### Deployment
+
+**Branch**: main (production)
+**Deployed**: November 10, 2025
+**Status**: Live on https://aimpactscanner.com
+**Verification**: Ready for user testing
+
+### Next Steps
+
+1. User testing of upgrade flow (Solo → Growth with monthly/annual options)
+2. Verify Edge Function logs show correct price ID selection
+3. Monitor Sentry for any remaining checkout errors
+
+---
+
 ## [November 9, 2025 - Evening] - Phase 9: Optional Testing Complete ✅
 
 **Context**: Completed all Phase 9 optional manual testing tasks (Stripe, OAuth, Lighthouse) after coordinator mission activation.

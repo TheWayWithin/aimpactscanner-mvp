@@ -1,9 +1,9 @@
 # AImpactScanner - Project Plan
 
-## Current Status (November 9, 2025)
+## Current Status (November 10, 2025)
 
 **ACTIVE MISSION**: Tier & Pricing Realignment + Conversion Optimization
-**Status**: Phase 9 Complete ✅ - Ready for Phase 10 (Production Deployment)
+**Status**: Phase 10 In Progress - Production Hotfixes Deployed ✅
 **Priority**: P1 HIGH - Revenue Impact via Conversion Optimization
 **Started**: October 24, 2025
 **Design Completed**: October 25, 2025
@@ -17,6 +17,7 @@
 **Phase 7 Completed**: November 6, 2025 (Mobile responsive + accessibility - Test Gate 5: 100%)
 **Phase 8 Completed**: November 9, 2025 (Analytics + feature gating - Test Gate 6: 100%)
 **Phase 9 Completed**: November 9, 2025 (Staging + manual testing + performance fix - 100%)
+**Phase 10 Hotfixes**: November 10, 2025 (Upgrade flow billing frequency + Stripe price ID fixes)
 
 **CRITICAL TASK - DEV ENVIRONMENT AUDIT**: ✅ **COMPLETE**
 - [x] Audit all .env files (.env.local, .env, .env.example)
@@ -811,15 +812,31 @@ CORE PASS RATE: 63/65 (96.9%) ✅ EXCEEDS 95% THRESHOLD
 
 ---
 
-### Phase 10: Production Deployment [ ]
+### Phase 10: Production Deployment [IN PROGRESS]
 **Objective**: Deploy to production and monitor conversion metrics
 **Environment**: https://aimpactscanner.com (production database)
 **Duration**: Ongoing
+**Started**: November 10, 2025
+
+**Hotfixes Deployed** (November 10, 2025):
+- [x] **Upgrade Flow - Billing Frequency Selector** (commit 031fc11)
+  - Fixed: Only monthly option shown for upgrades
+  - Added: Billing frequency toggle (Monthly/Annual) in UpgradeToPDFModal
+  - Default: Annual billing (better value, 17% savings)
+  - Updated: Dynamic price display based on selection
+
+- [x] **Upgrade Flow - Invalid Stripe Price ID** (commit 031fc11)
+  - Fixed: 500 error "No such price: 'price_growth_monthly'"
+  - Removed: Hardcoded fallback price IDs from UpgradeHandler.jsx
+  - Changed: Send tier + billingFrequency to Edge Function instead of priceId
+  - Impact: Edge Function now selects correct Stripe price ID automatically
 
 **Tasks**:
-- [ ] Create production Stripe products (same config as test)
-- [ ] Update environment variables for production
-- [ ] Deploy to production (main branch)
+- [x] Create production Stripe products (same config as test)
+- [x] Update environment variables for production
+- [x] Deploy to production (main branch)
+- [x] Fix upgrade flow billing frequency bug
+- [x] Fix Stripe price ID selection bug
 - [ ] Run smoke tests on production
 - [ ] Monitor error rates (Sentry)
 - [ ] Track conversion metrics:
