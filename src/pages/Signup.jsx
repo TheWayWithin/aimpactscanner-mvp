@@ -46,6 +46,12 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
       localStorage.setItem('authContextExpiry', (Date.now() + ttl).toString());
 
       console.log('✅ Login mode: authContext set, skipping tier selection');
+
+      // FIX: Update showOAuthButtons state when mode changes to 'login'
+      setShowOAuthButtons(true);
+    } else {
+      // In signup mode, hide OAuth buttons until tier is selected
+      setShowOAuthButtons(false);
     }
 
     // Note: Session detection now handled by App.jsx onAuthStateChange listener
