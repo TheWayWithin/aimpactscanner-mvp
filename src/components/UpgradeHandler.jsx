@@ -17,25 +17,21 @@ const UpgradeHandler = ({ user, onSuccess, onError }) => {
     enterprise: import.meta.env.VITE_STRIPE_SCALE_PRICE_ID || import.meta.env.VITE_STRIPE_ENTERPRISE_PRICE_ID || 'price_scale_monthly'
   };
 
-  const handleUpgrade = async (targetTier) => {
+  const handleUpgrade = async (targetTier, billingFrequency = 'monthly') => {
     if (loading || !user?.id) return;
 
     setLoading(true);
     try {
       console.log(`Initiating upgrade to ${targetTier} tier for user:`, user.id);
+      console.log(`Billing frequency: ${billingFrequency}`);
 
-      // Get the appropriate price ID
-      const priceId = PRICE_IDS[targetTier];
-      if (!priceId) {
-        throw new Error(`Price ID not configured for tier: ${targetTier}`);
-      }
-
-      // Create checkout session via Edge Function
+      // Don't send priceId - let Edge Function select based on tier and billing frequency
+      // This ensures we always use the correct Stripe price IDs from the Edge Function
       const { data, error } = await supabase.functions.invoke('create-checkout-session', {
         body: {
-          priceId,
           userId: user.id,
           tier: targetTier,
+          billingFrequency: billingFrequency,
           successUrl: `${window.location.origin}/#checkout-success`,
           cancelUrl: `${window.location.origin}/#pricing`
         }
@@ -78,33 +74,21 @@ const UpgradeHandler = ({ user, onSuccess, onError }) => {
 export const useUpgrade = (user, onSuccess, onError) => {
   const [loading, setLoading] = useState(false);
 
-  const handleUpgrade = async (targetTier) => {
+  const handleUpgrade = async (targetTier, billingFrequency = 'monthly') => {
     if (loading || !user?.id) return;
 
     setLoading(true);
     try {
       console.log(`Initiating upgrade to ${targetTier} tier for user:`, user.id);
+      console.log(`Billing frequency: ${billingFrequency}`);
 
-      // Production upgrade logic
-      const priceIds = {
-        coffee: import.meta.env.VITE_STRIPE_COFFEE_PRICE_ID || 'price_coffee_tier_monthly',
-        growth: import.meta.env.VITE_STRIPE_GROWTH_PRICE_ID || import.meta.env.VITE_STRIPE_PROFESSIONAL_PRICE_ID || 'price_growth_monthly',
-        scale: import.meta.env.VITE_STRIPE_SCALE_PRICE_ID || import.meta.env.VITE_STRIPE_ENTERPRISE_PRICE_ID || 'price_scale_monthly',
-        // Backward compatibility
-        professional: import.meta.env.VITE_STRIPE_GROWTH_PRICE_ID || import.meta.env.VITE_STRIPE_PROFESSIONAL_PRICE_ID || 'price_growth_monthly',
-        enterprise: import.meta.env.VITE_STRIPE_SCALE_PRICE_ID || import.meta.env.VITE_STRIPE_ENTERPRISE_PRICE_ID || 'price_scale_monthly'
-      };
-
-      const priceId = priceIds[targetTier];
-      if (!priceId) {
-        throw new Error(`Price ID not configured for tier: ${targetTier}`);
-      }
-
-      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+      // Don't send priceId - let Edge Function select based on tier and billing frequency
+      // This ensures we always use the correct Stripe price IDs from the Edge Function
+      const { data, error} = await supabase.functions.invoke('create-checkout-session', {
         body: {
-          priceId,
           userId: user.id,
           tier: targetTier,
+          billingFrequency: billingFrequency,
           successUrl: `${window.location.origin}/#checkout-success`,
           cancelUrl: `${window.location.origin}/#pricing`
         }
