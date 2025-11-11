@@ -2141,9 +2141,9 @@ function AppContent({ initialUrl }) {
 
         {currentView === 'pricing' && (
           <ProtectedRoute session={session} onRedirect={setCurrentView}>
-            <TierSelection 
-              currentTier={userTier} 
-              onUpgrade={handleUpgrade} 
+            <TierSelection
+              currentTier={userTier}
+              onUpgrade={(tier) => handleUpgrade(tier, 'annual')}
             />
           </ProtectedRoute>
         )}
