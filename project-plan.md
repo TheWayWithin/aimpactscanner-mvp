@@ -1,9 +1,9 @@
 # AImpactScanner - Project Plan
 
-## Current Status (November 10, 2025)
+## Current Status (November 15, 2025)
 
 **ACTIVE MISSION**: Tier & Pricing Realignment + Conversion Optimization
-**Status**: Phase 10 In Progress - Production Hotfixes Deployed ✅
+**Status**: Phase 10 In Progress - Production Smoke Tests PASSED ✅
 **Priority**: P1 HIGH - Revenue Impact via Conversion Optimization
 **Started**: October 24, 2025
 **Design Completed**: October 25, 2025
@@ -18,6 +18,8 @@
 **Phase 8 Completed**: November 9, 2025 (Analytics + feature gating - Test Gate 6: 100%)
 **Phase 9 Completed**: November 9, 2025 (Staging + manual testing + performance fix - 100%)
 **Phase 10 Hotfixes**: November 10, 2025 (Upgrade flow billing frequency + Stripe price ID fixes)
+**Phase 10 Smoke Tests**: November 15, 2025 (LIVE MODE price IDs + billing transparency fixes)
+**Phase 11 Spec Complete**: November 15, 2025 (Pricing page redesign spec created)
 
 **CRITICAL TASK - DEV ENVIRONMENT AUDIT**: ✅ **COMPLETE**
 - [x] Audit all .env files (.env.local, .env, .env.example)
@@ -831,13 +833,34 @@ CORE PASS RATE: 63/65 (96.9%) ✅ EXCEEDS 95% THRESHOLD
   - Changed: Send tier + billingFrequency to Edge Function instead of priceId
   - Impact: Edge Function now selects correct Stripe price ID automatically
 
+**Hotfixes Deployed** (November 15, 2025):
+- [x] **Edge Function LIVE MODE Price IDs** (commit adea5af)
+  - Fixed: Edge Function using TEST MODE price IDs in production
+  - Updated: All 6 price IDs to LIVE MODE (Solo/Growth/Scale × Monthly/Annual)
+  - Deployed: To production Supabase (`pdmtvkcxnqysujnpcnyh`)
+  - Impact: Upgrade flow now creates valid Stripe checkout sessions
+
+- [x] **Pricing Page Billing Frequency Bug** (commit 36e7468)
+  - Fixed: App.jsx hardcoding 'annual' billing while displaying monthly prices
+  - Issue: Users saw $17.95/month but were charged $149.50/year
+  - Changed: Pricing page now charges monthly to match displayed prices
+  - Impact: Price transparency restored, no surprise charges
+
+**Production Smoke Tests** (November 15, 2025): ✅ PASSED
+- [x] Signup page tier selector loads correctly (Growth default, annual billing, trial CTA)
+- [x] Tier dropdown functional (all 4 tiers, keyboard navigation)
+- [x] Console logs clean (no errors)
+- [x] Upgrade flow creates valid Stripe checkout
+- [x] Stripe charges match displayed prices ($17.95/month)
+- [x] Edge Function selects correct LIVE MODE price IDs
+
 **Tasks**:
 - [x] Create production Stripe products (same config as test)
 - [x] Update environment variables for production
 - [x] Deploy to production (main branch)
 - [x] Fix upgrade flow billing frequency bug
 - [x] Fix Stripe price ID selection bug
-- [ ] Run smoke tests on production
+- [x] Run smoke tests on production ✅ PASSED (Nov 15)
 - [ ] Monitor error rates (Sentry)
 - [ ] Track conversion metrics:
   - [ ] Signup conversion rate (target: 25-35%)
@@ -891,6 +914,48 @@ CORE PASS RATE: 63/65 (96.9%) ✅ EXCEEDS 95% THRESHOLD
 - `/DYNAMIC-TIER-SELECTOR-UX-SPEC.md` (59KB) - Complete UX specification with Section 10: Annual Pricing
 - `/TIER-SELECTOR-VISUAL-MOCKUP.md` (37KB+) - Visual mockups including billing toggle states
 - `/handoff-notes.md` - Updated with annual pricing requirements and developer handoff
+- `/docs/PRICING-PAGE-REDESIGN-SPEC.md` - Spec for adding billing toggle to pricing page (NEW Nov 15)
+
+---
+
+### Phase 11: Pricing Page Redesign [QUEUED]
+**Objective**: Add billing frequency toggle to pricing/upgrade page for annual savings option
+**Environment**: Production
+**Duration**: 1-2 days
+**Status**: ⏳ QUEUED (spec complete, implementation pending)
+**Priority**: P1 - Revenue Impact (enables annual billing adoption)
+
+**Problem Statement**:
+- Current pricing page shows monthly prices only
+- No option to choose annual billing (30% savings)
+- Users can't access annual savings from upgrade flow
+- Missed revenue opportunity (annual = better LTV, lower churn)
+
+**Tasks**:
+- [ ] Add prominent billing frequency toggle to TierSelection component
+- [ ] Update price display to show both monthly equivalent and total annual cost
+- [ ] Update CTA button text to include actual charge amount
+- [ ] Add confirmation step before Stripe redirect
+- [ ] Ensure billing choice is passed correctly to Edge Function
+- [ ] Test annual upgrade flow end-to-end
+- [ ] Deploy to production
+
+**Success Criteria**:
+- [ ] Billing toggle prominently displayed on pricing page
+- [ ] Users can choose between monthly and annual billing
+- [ ] Price display matches actual Stripe charge
+- [ ] No surprise charges (transparency first)
+- [ ] Annual billing adoption tracking enabled
+
+**Spec Document**: `/docs/PRICING-PAGE-REDESIGN-SPEC.md`
+
+**Expected Impact**:
+- Enable 30-40% annual billing adoption target
+- Increase average revenue per user
+- Reduce churn (annual plans = 50% lower churn)
+- Improve cash flow (annual payments upfront)
+
+---
 
 **See**:
 - `/docs/Documents/foundations/prds/AImpactScanner Pricing & Value Ladder PRD (1).md` - Source PRD

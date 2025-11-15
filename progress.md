@@ -1,5 +1,98 @@
 # AImpactScanner MVP - Progress Log
 
+## [November 15, 2025] - Phase 10: Production Smoke Tests + Critical Hotfixes ✅
+
+**Context**: Conducted production smoke tests to verify upgrade flow, discovered and fixed two critical bugs.
+
+**Starting State**: Phase 10 in progress, smoke tests pending
+**Ending State**: Smoke tests passed, all critical issues fixed, Phase 11 spec created
+**Total Time**: ~90 minutes
+**Commits**:
+- `adea5af` - "fix: update Edge Function to use LIVE MODE Stripe price IDs"
+- `36e7468` - "fix: pricing page now charges monthly to match displayed prices"
+
+### Production Smoke Test Results ✅ PASSED
+
+**1. Signup Page Tier Selector** ✅
+- Default tier: Growth (with ⭐ RECOMMENDED badge)
+- Default billing: Annual
+- Trial CTA: "Try Growth Free for 7 Days"
+- Savings displayed: $65.90/year
+- Dropdown functional (all 4 tiers, keyboard navigation)
+- Console logs clean (no errors)
+
+**2. Upgrade Flow Testing** ❌ → ✅ FIXED
+- **Issue #1**: Edge Function returned 500 error
+  - **Root Cause**: Using TEST MODE Stripe price IDs in production
+  - **Fix**: Updated to LIVE MODE price IDs (6 prices)
+  - **Deployed**: To production Supabase (`pdmtvkcxnqysujnpcnyh`)
+
+- **Issue #2**: Price mismatch (showed $17.95/mo, charged $149.50/yr)
+  - **Root Cause**: App.jsx line 2146 hardcoded `'annual'` billing
+  - **Fix**: Changed to `'monthly'` to match displayed prices
+  - **Commit**: `36e7468`
+
+**3. Final Verification** ✅
+- Upgrade flow creates valid Stripe checkout session
+- Stripe charges $17.95/month (matches display)
+- Edge Function logs show correct LIVE MODE price ID selection
+- No console errors
+
+### Critical Issue Analysis
+
+**Issue #1: LIVE MODE vs TEST MODE Price IDs**
+- **Files Modified**: `supabase/functions/create-checkout-session/index.ts` (lines 30-44)
+- **Before**: TEST MODE IDs (e.g., `price_1SMFnZIiC84gpR8HBsYj7vsE`)
+- **After**: LIVE MODE IDs (e.g., `price_1SMGZ2IiC84gpR8H0dShUU0z`)
+- **Lesson**: Edge Functions need separate TEST and LIVE configurations
+
+**Issue #2: Hardcoded Billing Frequency**
+- **File Modified**: `src/App.jsx` (line 2146)
+- **Before**: `onUpgrade={(tier) => handleUpgrade(tier, 'annual')}`
+- **After**: `onUpgrade={(tier) => handleUpgrade(tier, 'monthly')}`
+- **Root Cause**: TierSelection component has no billing toggle, App.jsx was forcing annual
+- **Lesson**: Never hardcode billing frequency without user choice
+
+### Deliverables Created
+
+1. **Pricing Page Redesign Spec**: `/docs/PRICING-PAGE-REDESIGN-SPEC.md`
+   - Problem statement and current state analysis
+   - Proposed UX improvements (prominent billing toggle, clear pricing)
+   - Technical implementation plan (4 phases)
+   - Success criteria and testing checklist
+   - P0 priority (trust issue with surprise charges)
+
+### Remaining Work Identified
+
+**Phase 11: Pricing Page Redesign** (P1 - Revenue Impact)
+- Add billing frequency toggle to TierSelection component
+- Show both monthly and annual pricing options
+- Update CTA button text with actual charge amount
+- Add confirmation modal before Stripe redirect
+- Estimated time: 1-2 days
+
+**Monitoring** (Ongoing)
+- Check Sentry for errors
+- Track conversion metrics
+- Monitor annual billing adoption (currently blocked by Phase 11)
+
+### Lessons Learned
+
+1. **TEST vs LIVE MODE**: Edge Functions must have correct price IDs for each environment
+2. **Transparency**: Display must match actual charge to maintain user trust
+3. **User Control**: Never force billing frequency without user choice
+4. **Root Cause Analysis**: Console logs + code inspection revealed hardcoded value
+5. **Incremental Testing**: Fix one issue, verify, then move to next
+
+### Next Steps
+
+1. Monitor Sentry for any remaining errors
+2. Implement Phase 11 (pricing page redesign) to enable annual billing
+3. Track conversion metrics once Phase 11 is complete
+4. Consider environment-specific Edge Function deployment strategy
+
+---
+
 ## [November 10, 2025] - Phase 10: Upgrade Flow Hotfixes ✅
 
 **Context**: Fixed two critical bugs in production upgrade flow preventing Solo tier users from upgrading.
