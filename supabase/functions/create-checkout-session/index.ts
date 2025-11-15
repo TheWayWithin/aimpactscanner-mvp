@@ -27,19 +27,19 @@ serve(async (req) => {
       console.log('Mapped starter tier to coffee');
     }
 
-    // Price ID mapping (Test Mode) - matches STRIPE-PRICE-IDS.md
+    // Price ID mapping (Live Mode) - matches STRIPE-PRICE-IDS-LIVE.md
     const STRIPE_PRICE_IDS = {
       coffee: {
-        monthly: 'price_1SMFnZIiC84gpR8HBsYj7vsE',
-        annual: 'price_1SMFnZIiC84gpR8HD7oRJxlN'
+        monthly: 'price_1SMGZ2IiC84gpR8H0dShUU0z',
+        annual: 'price_1SMGZ2IiC84gpR8HQtENjbRm'
       },
       growth: {
-        monthly: 'price_1SMFnaIiC84gpR8HzHaQmjYc',
-        annual: 'price_1SMFnbIiC84gpR8HB3CeS1ud' // Has 7-day trial configured in Stripe
+        monthly: 'price_1SMGZ3IiC84gpR8HQvEjhBv5',
+        annual: 'price_1SMGZ3IiC84gpR8Hk0aMTjB2' // Has 7-day trial configured in Stripe
       },
       scale: {
-        monthly: 'price_1SMFncIiC84gpR8HbCRQwnCW',
-        annual: 'price_1SMFncIiC84gpR8HaHS0RCGe'
+        monthly: 'price_1SMGZ4IiC84gpR8H30pVuKqm',
+        annual: 'price_1SMGZ5IiC84gpR8HTP46tTjj'
       }
     };
 
