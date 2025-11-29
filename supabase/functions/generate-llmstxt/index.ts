@@ -124,13 +124,19 @@ serve(async (req: Request) => {
       );
     }
 
-    // Parse request URL and action
-    const requestUrl = new URL(req.url);
-    const action = requestUrl.searchParams.get('action');
+    // Parse request body for action and params
+    let requestBody: any = {};
+    try {
+      requestBody = await req.json();
+    } catch (e) {
+      // Body may be empty for some requests
+    }
+
+    const action = requestBody.action;
 
     if (!action) {
       return new Response(
-        JSON.stringify({ error: 'Missing action parameter. Valid actions: analyze, status, generate, download' }),
+        JSON.stringify({ error: 'Missing action parameter. Valid actions: analyze, status, generate, download, usage' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -169,8 +175,7 @@ serve(async (req: Request) => {
           }
         }
 
-        const body = await req.json() as LLMTxtAnalyzeRequest;
-        const targetUrl = body.url;
+        const targetUrl = requestBody.url;
 
         if (!targetUrl || !isValidUrl(targetUrl)) {
           return new Response(
@@ -208,7 +213,7 @@ serve(async (req: Request) => {
       }
 
       case 'status': {
-        const analysisId = requestUrl.searchParams.get('id');
+        const analysisId = requestBody.id;
         if (!analysisId) {
           return new Response(
             JSON.stringify({ error: 'Missing analysis ID' }),
@@ -241,8 +246,7 @@ serve(async (req: Request) => {
       }
 
       case 'generate': {
-        const body = await req.json() as LLMTxtGenerateRequest;
-        const analysisId = body.analysisId;
+        const analysisId = requestBody.analysisId;
 
         if (!analysisId) {
           return new Response(
@@ -276,7 +280,7 @@ serve(async (req: Request) => {
       }
 
       case 'download': {
-        const downloadId = requestUrl.searchParams.get('id');
+        const downloadId = requestBody.id;
         if (!downloadId) {
           return new Response(
             JSON.stringify({ error: 'Missing download ID' }),
