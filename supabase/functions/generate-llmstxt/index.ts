@@ -70,18 +70,14 @@ serve(async (req: Request) => {
     // Create admin client for database operations
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Create user client for auth verification
-    const supabaseUser = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY') ?? '', {
-      global: {
-        headers: { Authorization: authHeader },
-      },
-    });
+    // Extract JWT token from Authorization header
+    const jwt = authHeader.replace('Bearer ', '');
 
-    // Get authenticated user
+    // Verify the JWT and get user
     const {
       data: { user },
       error: userError,
-    } = await supabaseUser.auth.getUser();
+    } = await supabaseAdmin.auth.getUser(jwt);
 
     if (userError || !user) {
       console.error('Auth error:', userError);
