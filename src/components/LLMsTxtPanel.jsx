@@ -34,8 +34,8 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
 
   const fetchUsageStats = useCallback(async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('generate-llmstxt?action=usage', {
-        method: 'GET',
+      const { data, error } = await supabase.functions.invoke('generate-llmstxt', {
+        body: { action: 'usage' },
       });
 
       if (error) {
@@ -70,8 +70,8 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
       setErrorMessage('');
 
       // Start analysis
-      const { data: analyzeData, error: analyzeError } = await supabase.functions.invoke('generate-llmstxt?action=analyze', {
-        body: { url: analysisUrl },
+      const { data: analyzeData, error: analyzeError } = await supabase.functions.invoke('generate-llmstxt', {
+        body: { action: 'analyze', url: analysisUrl },
       });
 
       if (analyzeError) {
@@ -116,8 +116,8 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
 
     const checkStatus = async () => {
       try {
-        const { data, error } = await supabase.functions.invoke(`generate-llmstxt?action=status&id=${id}`, {
-          method: 'GET',
+        const { data, error } = await supabase.functions.invoke('generate-llmstxt', {
+          body: { action: 'status', id },
         });
 
         if (error) throw error;
@@ -153,8 +153,8 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
 
   const generateFile = async (id) => {
     try {
-      const { data, error } = await supabase.functions.invoke('generate-llmstxt?action=generate', {
-        body: { analysisId: id },
+      const { data, error } = await supabase.functions.invoke('generate-llmstxt', {
+        body: { action: 'generate', analysisId: id },
       });
 
       if (error) throw error;
@@ -182,8 +182,8 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
     if (!downloadData?.id) return;
 
     try {
-      const { data, error } = await supabase.functions.invoke(`generate-llmstxt?action=download&id=${downloadData.id}`, {
-        method: 'GET',
+      const { data, error } = await supabase.functions.invoke('generate-llmstxt', {
+        body: { action: 'download', id: downloadData.id },
       });
 
       if (error) throw error;
