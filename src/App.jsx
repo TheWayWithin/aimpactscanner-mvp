@@ -2130,11 +2130,12 @@ function AppContent({ initialUrl }) {
 
         {currentView === 'results' && currentAnalysisId && (
           <ProtectedRoute session={session} onRedirect={setCurrentView}>
-            <SimpleResultsDashboard 
-              analysisId={currentAnalysisId} 
+            <SimpleResultsDashboard
+              analysisId={currentAnalysisId}
               url={currentUrl}
               analysisData={analysisResults}
               userEmail={session?.user?.email}
+              user={{ tier: userTier }}
             />
           </ProtectedRoute>
         )}
