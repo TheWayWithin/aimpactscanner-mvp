@@ -2130,20 +2130,21 @@ function AppContent({ initialUrl }) {
 
         {currentView === 'results' && currentAnalysisId && (
           <ProtectedRoute session={session} onRedirect={setCurrentView}>
-            <SimpleResultsDashboard 
-              analysisId={currentAnalysisId} 
+            <SimpleResultsDashboard
+              analysisId={currentAnalysisId}
               url={currentUrl}
               analysisData={analysisResults}
               userEmail={session?.user?.email}
+              user={{ tier: userTier }}
             />
           </ProtectedRoute>
         )}
 
         {currentView === 'pricing' && (
           <ProtectedRoute session={session} onRedirect={setCurrentView}>
-            <TierSelection 
-              currentTier={userTier} 
-              onUpgrade={handleUpgrade} 
+            <TierSelection
+              currentTier={userTier}
+              onUpgrade={(tier, billing) => handleUpgrade(tier, billing)}
             />
           </ProtectedRoute>
         )}

@@ -5,12 +5,29 @@ import React, { useState } from 'react';
 
 const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistrationFlow = false }) => {
   const [loading, setLoading] = useState(false);
+  const [billingCycle, setBillingCycle] = useState('annual'); // Default to annual to show savings
+
+  // Annual pricing (per year)
+  const annualPrices = {
+    coffee: 49.50,
+    growth: 149.50,
+    scale: 299.50
+  };
+
+  // Monthly savings compared to annual
+  const yearSavings = {
+    coffee: 21.90,  // (5.95*12) - 49.50
+    growth: 65.90,  // (17.95*12) - 149.50
+    scale: 119.90   // (34.95*12) - 299.50
+  };
 
   const tiers = [
     {
       id: 'free',
       name: 'Free',
       price: 0,
+      monthlyPrice: 0,
+      annualPrice: 0,
       analyses: '3 per month',
       features: [
         'Basic recommendations',
@@ -27,6 +44,8 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
       id: 'coffee',
       name: 'Solo',
       price: 5.95,
+      monthlyPrice: 5.95,
+      annualPrice: 49.50,
       analyses: '10 per month',
       features: [
         '✨ Professional PDF reports',
@@ -44,6 +63,8 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
       id: 'growth',
       name: '🚀 Growth',
       price: 17.95,
+      monthlyPrice: 17.95,
+      annualPrice: 149.50,
       analyses: '40 per month',
       features: [
         '🎁 7-day free trial',
@@ -64,6 +85,8 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
       id: 'scale',
       name: '📈 Scale',
       price: 34.95,
+      monthlyPrice: 34.95,
+      annualPrice: 299.50,
       analyses: '100 per month',
       features: [
         'Everything in Growth',
@@ -86,14 +109,33 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
     // Check if this tier matches the current tier (case-insensitive)
     const isCurrentTier = currentTier && (currentTier.toLowerCase() === tierId.toLowerCase());
     if (loading || isCurrentTier) return;
-    
+
     setLoading(true);
     try {
-      await onUpgrade(tierId);
+      console.log(`[TierSelection] Upgrading to ${tierId} with ${billingCycle} billing`);
+      await onUpgrade(tierId, billingCycle);
     } catch (error) {
       console.error('Upgrade error:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Helper function to get display price based on billing cycle
+  const getDisplayPrice = (tier) => {
+    if (tier.price === 0) return { main: '$0', subtitle: null };
+
+    if (billingCycle === 'annual') {
+      const monthlyEquivalent = (tier.annualPrice / 12).toFixed(2);
+      return {
+        main: `$${monthlyEquivalent}`,
+        subtitle: `billed $${tier.annualPrice.toFixed(2)}/year`
+      };
+    } else {
+      return {
+        main: `$${tier.monthlyPrice.toFixed(2)}`,
+        subtitle: null
+      };
     }
   };
 
@@ -148,6 +190,37 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
         </p>
       </div>
 
+      {/* Billing Frequency Toggle */}
+      <div className="flex justify-center mb-8">
+        <div className="bg-gray-100 p-1 rounded-lg inline-flex">
+          <button
+            type="button"
+            onClick={() => setBillingCycle('monthly')}
+            className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
+              billingCycle === 'monthly'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Monthly
+          </button>
+          <button
+            type="button"
+            onClick={() => setBillingCycle('annual')}
+            className={`px-6 py-2 rounded-md text-sm font-medium transition-all relative ${
+              billingCycle === 'annual'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Annual
+            <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full font-semibold">
+              Save 30%
+            </span>
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {tiers.map((tier) => (
           <div
@@ -170,20 +243,34 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 {tier.name}
               </h3>
-              
+
               <div className="mb-2">
                 <span className="text-4xl font-bold text-gray-900">
-                  ${tier.price}
+                  {getDisplayPrice(tier).main}
                 </span>
                 {tier.price > 0 && (
-                  <span className="text-gray-500 text-sm">/month</span>
+                  <span className="text-gray-500 text-sm">/mo</span>
                 )}
               </div>
-              
+
+              {/* Show billing details for annual */}
+              {getDisplayPrice(tier).subtitle && (
+                <p className="text-xs text-gray-500 mb-1">
+                  {getDisplayPrice(tier).subtitle}
+                </p>
+              )}
+
+              {/* Show savings badge for annual billing on paid tiers */}
+              {billingCycle === 'annual' && tier.price > 0 && yearSavings[tier.id] && (
+                <p className="text-xs font-medium text-green-600 mb-1">
+                  Save ${yearSavings[tier.id].toFixed(2)}/year
+                </p>
+              )}
+
               <p className="text-sm font-medium text-blue-600 mb-1">
                 {tier.analyses} analyses
               </p>
-              
+
               {tier.description && (
                 <p className="text-xs text-gray-500">
                   {tier.description}

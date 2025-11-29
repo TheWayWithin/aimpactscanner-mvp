@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { addToHistory } from '../utils/analysisHistory';
 import LazyTierPDFButton from './LazyTierPDFButton';
+import LLMsTxtPanel from './LLMsTxtPanel';
 import { hasFeatureAccess, getMinimumTierForFeature } from '../lib/tierUtils';
 
 function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user }) {
@@ -93,24 +94,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
     }
   };
 
-  // Handle LLMS.txt Generation
-  const handleLLMSTxtGenerate = () => {
-    if (!canUseLLMSTxt) {
-      setExportStatus({
-        success: false,
-        message: `LLMS.txt generation requires ${getMinimumTierForFeature('llms_txt')} tier or higher`
-      });
-      setTimeout(() => setExportStatus(null), 3000);
-      return;
-    }
-
-    // TODO: Implement LLMS.txt Edge Function call when available
-    setExportStatus({
-      success: false,
-      message: 'LLMS.txt generation coming soon!'
-    });
-    setTimeout(() => setExportStatus(null), 3000);
-  };
+  // LLMS.txt Generation is now handled by LLMsTxtPanel component
   
   // Generate dynamic score based on URL for more realistic demo
   const generateScore = (url) => {
@@ -531,39 +515,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
                 </span>
               </div>
 
-              {/* LLMS.txt Generation Button (Growth+) */}
-              <div className="flex items-center gap-3">
-                {canUseLLMSTxt ? (
-                  <button
-                    onClick={handleLLMSTxtGenerate}
-                    className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
-                  >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    Generate LLMS.txt
-                  </button>
-                ) : (
-                  <div className="relative group">
-                    <button
-                      disabled
-                      className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed font-medium"
-                    >
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                      Generate LLMS.txt (Growth+ only)
-                    </button>
-                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded py-2 px-3 whitespace-nowrap z-10">
-                      Upgrade to {getMinimumTierForFeature('llms_txt')} tier for LLMS.txt generation
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
-                    </div>
-                  </div>
-                )}
-                <span className="text-sm text-gray-500">
-                  AI-readable site documentation (Coming soon)
-                </span>
-              </div>
+              {/* LLMS.txt Generation - See LLMsTxtPanel below */}
             </div>
           </div>
           <div className="text-right ml-6">
@@ -584,6 +536,18 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
             }
           </p>
         </div>
+      </div>
+
+      {/* LLMs.txt Generation Panel */}
+      <div className="mb-6">
+        <LLMsTxtPanel
+          analysisUrl={results.url}
+          userTier={userTier}
+          onUpgrade={() => {
+            // Navigate to pricing or show upgrade modal
+            window.location.hash = '#pricing';
+          }}
+        />
       </div>
 
       {/* Pillar Scores */}

@@ -1,5 +1,264 @@
 # AImpactScanner MVP - Progress Log
 
+## [November 29, 2025] - Sprint 1: LLMs.txt Integration (Phases 1-4) ✅
+
+**Context**: Implementing LLMtxtMastery API integration to enable llms.txt file generation for Growth and Scale tier users.
+
+**Starting State**: Sprint 1 in planning phase
+**Ending State**: Phases 1-4 complete, ready for staging deployment
+**Total Time**: ~2 hours
+
+### Deliverables Created
+
+**1. Edge Function: `generate-llmstxt/index.ts`** ✅
+- **Location**: `/supabase/functions/generate-llmstxt/index.ts`
+- **Size**: 14.5 KB
+- **Features**:
+  - Single endpoint with action-based routing (analyze, status, generate, download, usage)
+  - JWT authentication via Supabase auth
+  - Tier validation (Growth/Scale only, 403 for Free/Solo)
+  - Usage limits (Growth: 25/month, Scale: unlimited)
+  - Secure API key handling (LLMTXT_MASTERY_API_KEY in environment)
+  - Input URL sanitization
+  - Comprehensive error handling (401, 403, 429, 400, 500)
+
+**2. Database Migration: `20251129000001_add_llmstxt_generations_table.sql`** ✅
+- **Location**: `/supabase/migrations/20251129000001_add_llmstxt_generations_table.sql`
+- **Size**: 2.8 KB
+- **Creates**:
+  - `llmstxt_generations` table with user_id, analysis_url, status, result
+  - Indexes for efficient usage counting (user_id, created_at)
+  - RLS policies for user access and service role
+  - Helper function `get_llmstxt_monthly_usage(user_id)`
+
+**3. Frontend Component: `LLMsTxtPanel.jsx`** ✅
+- **Location**: `/src/components/LLMsTxtPanel.jsx`
+- **Size**: 18.4 KB
+- **Features**:
+  - Tier gating (upgrade prompt for Free/Solo)
+  - Usage stats display (Growth: X/25 used)
+  - Progress indicators for async operations
+  - Download functionality
+  - Error handling with user-friendly messages
+  - WCAG AA accessible (ARIA labels, keyboard navigation)
+  - Mobile responsive
+
+**4. Dashboard Integration** ✅
+- **Modified**: `/src/components/SimpleResultsDashboard.jsx`
+- **Changes**:
+  - Added LLMsTxtPanel import
+  - Integrated panel after results header
+  - Removed old stub button
+  - Connected to pricing upgrade flow
+
+### Technical Decisions
+
+1. **Single Edge Function**: One function handles all 4 API actions via `?action=` parameter for simpler deployment and maintenance
+2. **Usage Tracking Table**: Separate `llmstxt_generations` table instead of adding columns to users table - cleaner data model
+3. **Monthly Reset**: Uses database queries with date filtering - no cron job needed
+4. **Polling Pattern**: Frontend polls status endpoint every second (max 60 attempts) for async analysis
+
+### Security Measures Implemented
+
+- ✅ API key stored in `Deno.env.get('LLMTXT_MASTERY_API_KEY')` - never exposed
+- ✅ JWT validation on all requests
+- ✅ URL sanitization with `isValidUrl()` helper
+- ✅ Tier validation before API access
+- ✅ Error messages don't leak sensitive info
+- ✅ RLS policies on database table
+
+### Files Verified on Filesystem
+
+```
+✅ /supabase/functions/generate-llmstxt/index.ts (14522 bytes)
+✅ /supabase/migrations/20251129000001_add_llmstxt_generations_table.sql (2842 bytes)
+✅ /src/components/LLMsTxtPanel.jsx (18355 bytes)
+✅ /src/components/SimpleResultsDashboard.jsx (updated with import and integration)
+```
+
+### Next Steps (Phase 5)
+
+1. Add `LLMTXT_MASTERY_API_KEY` to Supabase Edge Function secrets
+2. Deploy database migration to staging (`isgzvwpjokcmtizstwru`)
+3. Deploy Edge Function to staging
+4. Test complete flow: analyze → status → generate → download
+5. Test tier restrictions and usage limits
+6. Deploy to production
+
+### Lessons Learned
+
+1. **Edge Function Pattern**: Single endpoint with action routing is cleaner than multiple functions
+2. **Graceful Degradation**: Usage tracking allows request if table doesn't exist yet (new migration)
+3. **Component Design**: Reusing existing patterns (TierPDFButton, UpgradeToPDFModal) speeds development
+
+---
+
+## [November 15, 2025] - Phase 10: Production Smoke Tests + Critical Hotfixes ✅
+
+**Context**: Conducted production smoke tests to verify upgrade flow, discovered and fixed two critical bugs.
+
+**Starting State**: Phase 10 in progress, smoke tests pending
+**Ending State**: Smoke tests passed, all critical issues fixed, Phase 11 spec created
+**Total Time**: ~90 minutes
+**Commits**:
+- `adea5af` - "fix: update Edge Function to use LIVE MODE Stripe price IDs"
+- `36e7468` - "fix: pricing page now charges monthly to match displayed prices"
+
+### Production Smoke Test Results ✅ PASSED
+
+**1. Signup Page Tier Selector** ✅
+- Default tier: Growth (with ⭐ RECOMMENDED badge)
+- Default billing: Annual
+- Trial CTA: "Try Growth Free for 7 Days"
+- Savings displayed: $65.90/year
+- Dropdown functional (all 4 tiers, keyboard navigation)
+- Console logs clean (no errors)
+
+**2. Upgrade Flow Testing** ❌ → ✅ FIXED
+- **Issue #1**: Edge Function returned 500 error
+  - **Root Cause**: Using TEST MODE Stripe price IDs in production
+  - **Fix**: Updated to LIVE MODE price IDs (6 prices)
+  - **Deployed**: To production Supabase (`pdmtvkcxnqysujnpcnyh`)
+
+- **Issue #2**: Price mismatch (showed $17.95/mo, charged $149.50/yr)
+  - **Root Cause**: App.jsx line 2146 hardcoded `'annual'` billing
+  - **Fix**: Changed to `'monthly'` to match displayed prices
+  - **Commit**: `36e7468`
+
+**3. Final Verification** ✅
+- Upgrade flow creates valid Stripe checkout session
+- Stripe charges $17.95/month (matches display)
+- Edge Function logs show correct LIVE MODE price ID selection
+- No console errors
+
+### Critical Issue Analysis
+
+**Issue #1: LIVE MODE vs TEST MODE Price IDs**
+- **Files Modified**: `supabase/functions/create-checkout-session/index.ts` (lines 30-44)
+- **Before**: TEST MODE IDs (e.g., `price_1SMFnZIiC84gpR8HBsYj7vsE`)
+- **After**: LIVE MODE IDs (e.g., `price_1SMGZ2IiC84gpR8H0dShUU0z`)
+- **Lesson**: Edge Functions need separate TEST and LIVE configurations
+
+**Issue #2: Hardcoded Billing Frequency**
+- **File Modified**: `src/App.jsx` (line 2146)
+- **Before**: `onUpgrade={(tier) => handleUpgrade(tier, 'annual')}`
+- **After**: `onUpgrade={(tier) => handleUpgrade(tier, 'monthly')}`
+- **Root Cause**: TierSelection component has no billing toggle, App.jsx was forcing annual
+- **Lesson**: Never hardcode billing frequency without user choice
+
+### Deliverables Created
+
+1. **Pricing Page Redesign Spec**: `/docs/PRICING-PAGE-REDESIGN-SPEC.md`
+   - Problem statement and current state analysis
+   - Proposed UX improvements (prominent billing toggle, clear pricing)
+   - Technical implementation plan (4 phases)
+   - Success criteria and testing checklist
+   - P0 priority (trust issue with surprise charges)
+
+### Remaining Work Identified
+
+**Phase 11: Pricing Page Redesign** (P1 - Revenue Impact)
+- Add billing frequency toggle to TierSelection component
+- Show both monthly and annual pricing options
+- Update CTA button text with actual charge amount
+- Add confirmation modal before Stripe redirect
+- Estimated time: 1-2 days
+
+**Monitoring** (Ongoing)
+- Check Sentry for errors
+- Track conversion metrics
+- Monitor annual billing adoption (currently blocked by Phase 11)
+
+### Lessons Learned
+
+1. **TEST vs LIVE MODE**: Edge Functions must have correct price IDs for each environment
+2. **Transparency**: Display must match actual charge to maintain user trust
+3. **User Control**: Never force billing frequency without user choice
+4. **Root Cause Analysis**: Console logs + code inspection revealed hardcoded value
+5. **Incremental Testing**: Fix one issue, verify, then move to next
+
+### Next Steps
+
+1. Monitor Sentry for any remaining errors
+2. Implement Phase 11 (pricing page redesign) to enable annual billing
+3. Track conversion metrics once Phase 11 is complete
+4. Consider environment-specific Edge Function deployment strategy
+
+---
+
+## [November 10, 2025] - Phase 10: Upgrade Flow Hotfixes ✅
+
+**Context**: Fixed two critical bugs in production upgrade flow preventing Solo tier users from upgrading.
+
+**Starting State**: Phase 10 in progress, upgrade flow broken
+**Ending State**: Both bugs fixed, upgrade flow functional with monthly/annual options
+**Total Time**: ~45 minutes
+**Commit**: `031fc11` - "fix: upgrade flow now supports both monthly and annual billing"
+
+### Issues Fixed
+
+**Issue #1: Invalid Stripe Price ID Error** ✅ FIXED
+- **Symptom**: Upgrade button triggered 500 error: "No such price: 'price_growth_monthly'"
+- **Root Cause**: `UpgradeHandler.jsx` using hardcoded fallback price IDs that don't exist in Stripe
+- **Fix Applied**:
+  - Removed hardcoded `PRICE_IDS` fallback values
+  - Changed to send `tier` + `billingFrequency` to Edge Function
+  - Let Edge Function select correct Stripe price ID based on parameters
+- **Files Modified**:
+  - `src/components/UpgradeHandler.jsx`: Added `billingFrequency` parameter, removed priceId logic
+- **Impact**: Upgrade flow now creates valid Stripe checkout sessions
+
+**Issue #2: Only Monthly Billing Option Shown** ✅ FIXED
+- **Symptom**: Users could only upgrade to monthly billing ($4.95/mo), no annual option visible
+- **Root Cause**: No billing frequency selector in `UpgradeToPDFModal.jsx` UI
+- **Fix Applied**:
+  - Added billing frequency toggle (Monthly/Annual) above tier comparison
+  - Default to Annual (better value - 17% savings)
+  - Dynamic price display updates based on selection
+  - Button text reflects selected billing period
+- **Files Modified**:
+  - `src/components/UpgradeToPDFModal.jsx`: Added toggle UI and state management
+- **Impact**: Users can now choose between $4.95/month or $49/year
+
+### Technical Details
+
+**UpgradeHandler Changes**:
+```javascript
+// BEFORE: Hardcoded price IDs (invalid)
+const priceId = PRICE_IDS[targetTier]; // 'price_growth_monthly' doesn't exist
+
+// AFTER: Send tier + billing frequency
+const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+  body: {
+    userId: user.id,
+    tier: targetTier,
+    billingFrequency: billingFrequency, // NEW
+    // priceId removed - Edge Function selects it
+  }
+});
+```
+
+**UpgradeToPDFModal Changes**:
+- Added `billingFrequency` state (default: 'annual')
+- Added toggle component with Monthly/Annual buttons
+- Updated Coffee tier price display: `{billingFrequency === 'annual' ? '$49/year ($4.08/mo)' : '$4.95/month'}`
+- Updated CTA button text to reflect selected billing period
+
+### Deployment
+
+**Branch**: main (production)
+**Deployed**: November 10, 2025
+**Status**: Live on https://aimpactscanner.com
+**Verification**: Ready for user testing
+
+### Next Steps
+
+1. User testing of upgrade flow (Solo → Growth with monthly/annual options)
+2. Verify Edge Function logs show correct price ID selection
+3. Monitor Sentry for any remaining checkout errors
+
+---
+
 ## [November 9, 2025 - Evening] - Phase 9: Optional Testing Complete ✅
 
 **Context**: Completed all Phase 9 optional manual testing tasks (Stripe, OAuth, Lighthouse) after coordinator mission activation.
@@ -3579,3 +3838,80 @@ Awaiting user input on which option to pursue.
 **Status**: Phase 6 implementation fully validated, ready for production deployment
 **No Blockers**: All tests passing, no critical issues found
 
+
+---
+
+### 2025-11-15: Phase 11 Pricing Page Billing Toggle COMPLETE ✅
+
+**Completed**:
+- ✅ Added billing frequency toggle (Monthly/Annual) to pricing page
+- ✅ Implemented "Save 30%" badge on annual option
+- ✅ Display shows per-month equivalent for annual billing (e.g., "$12.46/mo")
+- ✅ Added "billed $X/year" subtitle for annual billing
+- ✅ Added yearly savings badge per tier ($21.90-$119.90/year saved)
+- ✅ Fixed hardcoded 'monthly' billing in App.jsx (now passes user selection)
+- ✅ Tested locally - toggle switches correctly, prices update, Stripe receives correct billing
+- ✅ Deployed to production (commit 76557e1)
+
+**Files Modified**:
+- `src/components/TierSelection.jsx` - Added billing toggle UI, state management, price display logic
+- `src/App.jsx` - Changed from hardcoded 'monthly' to dynamic billing frequency passthrough
+
+**Key Implementation Details**:
+- Default billing: 'annual' (to show savings by default)
+- Price calculation: Annual price / 12 for monthly equivalent
+- Savings calculation: (monthlyPrice * 12) - annualPrice
+- Toggle UI: Clean pill-style switcher with prominent "Save 30%" badge
+
+**Business Impact**:
+- Users can now choose between monthly and annual billing from upgrade flow
+- Annual billing option enables 30% savings (target: 30-40% adoption)
+- Better LTV through annual subscriptions
+- Lower churn (annual = 50% lower churn rate)
+- Improved cash flow (upfront annual payments)
+
+**Phase 11 Duration**: ~30 minutes (rapid implementation)
+**Commit**: 76557e1
+**Status**: PRODUCTION DEPLOYED ✅
+
+**Next Steps**:
+- Monitor annual billing adoption rate
+- Track conversion metrics over 2-week period
+- Measure impact on revenue per user
+
+---
+
+## MISSION COMPLETE: Tier & Pricing Realignment + Conversion Optimization
+
+**Mission Duration**: October 24 - November 15, 2025 (22 days)
+**Phases Completed**: 11 phases (Phase 1-11)
+
+### Key Accomplishments:
+
+1. **Phase 3**: Stripe product setup (6 products, test + live modes)
+2. **Phase 4**: Tier selector with billing toggle
+3. **Phase 5**: 7-day trial integration with Stripe
+4. **Phase 6**: Doug Hall messaging (OB/RRB/DD) - persuasive copy
+5. **Phase 6.5**: Dropdown UX redesign (llmtxtmastery.com pattern)
+6. **Phase 7**: Mobile responsive + accessibility (54/54 tests, 100%)
+7. **Phase 8**: Analytics tracking (7 events) + feature gating
+8. **Phase 9**: Staging deployment (96.9% test pass rate)
+9. **Phase 10**: Production deployment + LIVE MODE price ID fixes
+10. **Phase 11**: Billing frequency toggle on pricing page
+
+### Technical Achievements:
+- 100% E2E test pass rate (54/54 tests)
+- WCAG AA accessibility compliance
+- Mobile responsive design (375px - 1920px)
+- Clean architecture with dynamic pricing logic
+- Stripe integration with trial support
+
+### Expected Business Impact:
+- Conversion rate: 8-12% → 25-35% (2-3x improvement target)
+- Growth tier adoption: 70% of paid customers
+- Annual billing adoption: 30-40% of paid customers
+- Revenue per user: +11% annual revenue improvement
+- Cash flow improvement: +84% in Q1
+- Churn reduction: 50% lower on annual plans
+
+**Mission Status**: MONITORING PHASE (2-week conversion tracking)

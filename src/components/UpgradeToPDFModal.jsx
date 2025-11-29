@@ -14,7 +14,8 @@ import { useUpgrade } from './UpgradeHandler';
 const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) => {
   const [upgradeStatus, setUpgradeStatus] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  
+  const [billingFrequency, setBillingFrequency] = useState('annual'); // Default to annual (better value)
+
   const { handleUpgrade, loading } = useUpgrade(
     user,
     (result) => {
@@ -31,12 +32,12 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
 
   const handleUpgradeClick = async () => {
     if (loading || isProcessing) return;
-    
+
     setIsProcessing(true);
     setUpgradeStatus({ type: 'processing', message: 'Preparing secure checkout...' });
-    
+
     try {
-      await handleUpgrade('coffee');
+      await handleUpgrade('coffee', billingFrequency);
     } catch (error) {
       console.error('Upgrade error:', error);
       setUpgradeStatus({ type: 'error', message: 'Payment setup failed. Please try again.' });
@@ -191,6 +192,37 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
             </div>
           </div>
 
+          {/* Billing Frequency Toggle */}
+          <div className="flex justify-center mb-6">
+            <div className="inline-flex rounded-lg border border-gray-200 p-1 bg-gray-50">
+              <button
+                onClick={() => setBillingFrequency('monthly')}
+                className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
+                  billingFrequency === 'monthly'
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Monthly
+                <div className="text-xs mt-0.5">$4.95/mo</div>
+              </button>
+              <button
+                onClick={() => setBillingFrequency('annual')}
+                className={`px-6 py-2 rounded-md text-sm font-medium transition-all relative ${
+                  billingFrequency === 'annual'
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Annual
+                <div className="text-xs mt-0.5">$49/year</div>
+                <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                  Save 17%
+                </span>
+              </button>
+            </div>
+          </div>
+
           {/* Tier Comparison */}
           <div className="grid md:grid-cols-2 gap-4 mb-6">
             {/* Free Tier */}
@@ -245,7 +277,9 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
                 </div>
                 <div>
                   <h5 className="font-semibold text-blue-900">Coffee Tier</h5>
-                  <p className="text-sm text-blue-600">$4.95/month</p>
+                  <p className="text-sm text-blue-600">
+                    {billingFrequency === 'annual' ? '$49/year ($4.08/mo)' : '$4.95/month'}
+                  </p>
                 </div>
               </div>
               <ul className="space-y-2 text-sm text-blue-800">
@@ -348,7 +382,7 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
                   <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
-                  Get Coffee Tier - $4.95/month
+                  Get Coffee Tier - {billingFrequency === 'annual' ? '$49/year' : '$4.95/month'}
                   <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
