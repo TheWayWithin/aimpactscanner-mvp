@@ -1,12 +1,18 @@
 # AImpactScanner MVP - Progress Log
 
-## [November 29, 2025] - Sprint 1: LLMs.txt Integration (Phases 1-4) ✅
+## [November 29, 2025] - Sprint 1: LLMs.txt Integration (Phases 1-5) 🧪
 
 **Context**: Implementing LLMtxtMastery API integration to enable llms.txt file generation for Growth and Scale tier users.
 
 **Starting State**: Sprint 1 in planning phase
-**Ending State**: Phases 1-4 complete, ready for staging deployment
-**Total Time**: ~2 hours
+**Ending State**: Phases 1-5 deployed, smoke testing in progress with bug fixes
+**Total Time**: ~4 hours (including testing and bug fixes)
+
+**Commits**:
+- `5e92590` - feat: add LLMs.txt generation integration (Sprint 1)
+- `fa298f8` - fix: pass userTier to SimpleResultsDashboard for LLMs.txt panel
+- `e35ba76` - fix: pass action in body instead of query params for Edge Function
+- `aaa7cfe` - fix: use getUser(jwt) for Edge Function auth verification
 
 ### Deliverables Created
 
@@ -85,11 +91,31 @@
 5. Test tier restrictions and usage limits
 6. Deploy to production
 
+### Issues Encountered During Testing
+
+**Issue 1: userTier always showing 'free' in LLMsTxtPanel**
+- **Symptom**: LLMsTxtPanel showing upgrade prompt for Growth tier user
+- **Root Cause**: App.jsx was not passing `user` prop to SimpleResultsDashboard
+- **Fix**: Added `user={{ tier: userTier }}` prop to SimpleResultsDashboard (`fa298f8`)
+
+**Issue 2: Edge Function returning 400 Bad Request**
+- **Symptom**: Supabase functions.invoke() calls failing with 400
+- **Root Cause**: Frontend passing action as query parameter (`generate-llmstxt?action=analyze`) but Supabase SDK doesn't support query params in function name
+- **Fix**: Updated frontend to pass action in body, updated Edge Function to read from body (`e35ba76`)
+
+**Issue 3: Edge Function returning 401 Unauthorized**
+- **Symptom**: All Edge Function calls failing with 401 after previous fix
+- **Root Cause**: Auth pattern using client with headers was not verifying JWT correctly
+- **Fix**: Changed to `supabaseAdmin.auth.getUser(jwt)` pattern with extracted Bearer token (`aaa7cfe`)
+
 ### Lessons Learned
 
 1. **Edge Function Pattern**: Single endpoint with action routing is cleaner than multiple functions
 2. **Graceful Degradation**: Usage tracking allows request if table doesn't exist yet (new migration)
 3. **Component Design**: Reusing existing patterns (TierPDFButton, UpgradeToPDFModal) speeds development
+4. **Supabase SDK**: functions.invoke() doesn't support query params in function name - pass data in body
+5. **Edge Function Auth**: Use `supabaseAdmin.auth.getUser(jwt)` not client with headers for JWT verification
+6. **Branch Management**: Remember to merge to `develop` branch for staging deploys, not just `main`
 
 ---
 
