@@ -164,7 +164,7 @@ All 11 phases completed. Production deployed with full feature set:
 
 ## Sprint 1: LLMs.txt Integration (LLMtxtMastery API)
 
-**Status**: 🚀 IN PROGRESS - Phase 5
+**Status**: 🧪 TESTING - Smoke tests in progress
 **Priority**: P1 HIGH - Feature Differentiation
 **Started**: November 29, 2025
 **Target**: December 13, 2025 (2 weeks)
@@ -219,16 +219,26 @@ Integrate LLMtxtMastery API to enable llms.txt file generation within AImpactSca
 
 **Deliverable**: Updated `/src/components/SimpleResultsDashboard.jsx`
 
-### Phase 5: Deployment & Testing [ ]
-**Target**: 1-2 days
+### Phase 5: Deployment & Testing 🧪
+**Status**: In Progress - Smoke testing
 
-- [ ] Add `LLMTXT_MASTERY_API_KEY` to Supabase Edge Function secrets
-- [ ] Deploy database migration to staging
-- [ ] Deploy Edge Function to staging
+- [x] Add `LLMTXT_MASTERY_API_KEY` to Supabase Edge Function secrets (both environments)
+- [x] Deploy database migration to staging
+- [x] Deploy database migration to production
+- [x] Deploy Edge Function to staging
+- [x] Deploy Edge Function to production
+- [x] Push frontend code to trigger Netlify deploy
+- [x] Fix: App.jsx not passing userTier prop to SimpleResultsDashboard (`fa298f8`)
+- [x] Fix: Edge Function - pass action in body instead of query params (`e35ba76`)
+- [x] Fix: Edge Function - use getUser(jwt) for proper auth verification (`aaa7cfe`)
 - [ ] Test tier restriction enforcement (Growth vs Scale)
-- [ ] Test usage limit tracking and reset
-- [ ] Conduct staging smoke tests
-- [ ] Deploy to production
+- [ ] Conduct smoke tests
+
+**Commits**:
+- `5e92590` - feat: add LLMs.txt generation integration (Sprint 1)
+- `fa298f8` - fix: pass userTier to SimpleResultsDashboard for LLMs.txt panel
+- `e35ba76` - fix: pass action in body instead of query params for Edge Function
+- `aaa7cfe` - fix: use getUser(jwt) for Edge Function auth verification
 
 ### Phase 6: Monitoring & Documentation [ ]
 **Target**: 1 day
