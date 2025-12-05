@@ -7,7 +7,11 @@
  */
 export class SupabaseFacade {
   constructor() {
-    this.sessionKey = 'sb-pdmtvkcxnqysujnpcnyh-auth-token';
+    // CRITICAL FIX: Dynamic session key based on environment
+    // Previously hardcoded to production, causing 401 errors on staging
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+    const projectRef = supabaseUrl.split('//')[1]?.split('.')[0] || 'pdmtvkcxnqysujnpcnyh';
+    this.sessionKey = `sb-${projectRef}-auth-token`;
     this._session = null;
     this._user = null;
     this._realSupabase = null;
