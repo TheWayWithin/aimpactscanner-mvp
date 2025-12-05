@@ -34,6 +34,14 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
 
   const fetchUsageStats = useCallback(async () => {
     try {
+      // CRITICAL FIX: Ensure session is loaded before making function calls
+      // This prevents 401 errors from race conditions during initial page load
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        console.log('No session available, skipping usage stats fetch');
+        return;
+      }
+
       const { data, error } = await supabase.functions.invoke('generate-llmstxt', {
         body: { action: 'usage' },
       });
@@ -65,6 +73,14 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
     }
 
     try {
+      // CRITICAL FIX: Ensure session is loaded before making function calls
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setStatus('error');
+        setErrorMessage('Please sign in to generate LLMs.txt files.');
+        return;
+      }
+
       setStatus('analyzing');
       setProgressMessage('Analyzing website structure...');
       setErrorMessage('');

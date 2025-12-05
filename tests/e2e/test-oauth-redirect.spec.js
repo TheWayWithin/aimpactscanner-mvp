@@ -38,15 +38,25 @@ test.describe('OAuth Redirect Fix', () => {
 
     // Fill email
     await page.locator('input[type="email"]').fill(GOOGLE_EMAIL);
-    // Click the button (not the div)
-    await page.locator('button:text("Next")').first().click();
+    // Click Next button (Google changed their UI)
+    await page.getByRole('button', { name: 'Next' }).click();
     console.log('✅ Entered email');
 
     // Wait for password field and fill
     await page.waitForSelector('input[type="password"]', { timeout: 15000 });
     await page.locator('input[type="password"]').fill(GOOGLE_PASSWORD);
-    await page.locator('button:text("Next")').first().click();
+    await page.getByRole('button', { name: 'Next' }).click();
     console.log('✅ Entered password');
+
+    // Handle Google consent screen (may show "Continue" button)
+    try {
+      const continueButton = page.getByRole('button', { name: 'Continue' });
+      await continueButton.waitFor({ state: 'visible', timeout: 10000 });
+      await continueButton.click();
+      console.log('✅ Clicked Continue on consent screen');
+    } catch (e) {
+      console.log('ℹ️  No consent screen - continuing');
+    }
 
     // Wait for redirect back to app (60 second timeout for OAuth)
     await page.waitForURL(new RegExp(STAGING_URL), { timeout: 60000 });
