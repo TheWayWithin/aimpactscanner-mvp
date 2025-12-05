@@ -109,11 +109,13 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
         throw new Error(analyzeData.error);
       }
 
-      if (!analyzeData?.id) {
+      // The API returns { success: true, analysis: { id: ... } } or { id: ... }
+      const analysisIdFromResponse = analyzeData?.analysis?.id || analyzeData?.id;
+      if (!analysisIdFromResponse) {
         throw new Error('No analysis ID returned');
       }
 
-      const newAnalysisId = analyzeData.id;
+      const newAnalysisId = analysisIdFromResponse;
       setAnalysisId(newAnalysisId);
 
       // Poll for analysis completion
