@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { addToHistory } from '../utils/analysisHistory';
 import LazyTierPDFButton from './LazyTierPDFButton';
 import LLMsTxtPanel from './LLMsTxtPanel';
+import CriticalIssuesBanner from './CriticalIssuesBanner';
 import { hasFeatureAccess, getMinimumTierForFeature } from '../lib/tierUtils';
 
 function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user }) {
@@ -586,6 +587,9 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
           </div>
         ))}
       </div>
+
+      {/* Critical Issues Banner */}
+      <CriticalIssuesBanner factors={results.factors} />
 
       {/* Factor Details Grouped by Pillar */}
       <div className="space-y-8">

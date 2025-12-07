@@ -8,6 +8,47 @@
  * - Includes timing metrics for performance monitoring
  */
 
+// Severity levels for SEO factors
+type FactorSeverity = 'blocker' | 'warning' | 'info' | 'ok';
+
+/**
+ * Determine severity based on score and factor criticality
+ * - blocker: Critical issues that completely block SEO
+ * - warning: Important issues that significantly impact SEO
+ * - info: Minor issues or informational
+ * - ok: No issues
+ */
+function getSeverity(score: number, factorType: 'indexability' | 'mobile' | 'speed' | 'links' | 'sitemap'): FactorSeverity {
+  switch (factorType) {
+    case 'indexability':
+      // Most critical - noindex blocks everything
+      if (score < 30) return 'blocker';
+      if (score < 70) return 'warning';
+      return 'ok';
+    case 'mobile':
+      // Important for mobile-first indexing
+      if (score < 40) return 'warning';
+      if (score < 70) return 'info';
+      return 'ok';
+    case 'speed':
+      // Impacts user experience and rankings
+      if (score < 30) return 'warning';
+      if (score < 60) return 'info';
+      return 'ok';
+    case 'links':
+      // Broken links hurt credibility
+      if (score < 50) return 'warning';
+      if (score < 80) return 'info';
+      return 'ok';
+    case 'sitemap':
+      // Helpful but not critical
+      if (score < 50) return 'info';
+      return 'ok';
+    default:
+      return 'ok';
+  }
+}
+
 // FactorResult interface (matches main index.ts)
 interface FactorResult {
   factor_id: string;
@@ -20,6 +61,7 @@ interface FactorResult {
   evidence: string[];
   recommendations: string[];
   processing_time_ms: number;
+  severity?: FactorSeverity; // New: indicates issue severity
 }
 
 /**
@@ -125,6 +167,7 @@ export function analyzeIndexability(
     evidence,
     recommendations,
     processing_time_ms: processingTimeMs,
+    severity: getSeverity(score, 'indexability'),
   };
 }
 
@@ -231,6 +274,7 @@ export function analyzeMobileFriendly(content: string): FactorResult {
     evidence,
     recommendations,
     processing_time_ms: processingTimeMs,
+    severity: getSeverity(score, 'mobile'),
   };
 }
 
@@ -368,6 +412,7 @@ export function analyzePageSpeedStub(content: string): FactorResult {
     evidence,
     recommendations,
     processing_time_ms: processingTimeMs,
+    severity: getSeverity(score, 'speed'),
   };
 }
 
@@ -541,6 +586,7 @@ export function analyzeBrokenLinksBasic(
     evidence,
     recommendations,
     processing_time_ms: processingTimeMs,
+    severity: getSeverity(score, 'links'),
   };
 }
 
@@ -678,6 +724,7 @@ export function analyzeSitemapPresence(
     evidence,
     recommendations,
     processing_time_ms: processingTimeMs,
+    severity: getSeverity(score, 'sitemap'),
   };
 }
 
