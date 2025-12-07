@@ -1,9 +1,16 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { corsHeaders } from '../_shared/cors.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import {
+  analyzeIndexability,
+  analyzeMobileFriendly,
+  analyzePageSpeedStub,
+  analyzeBrokenLinksBasic,
+  analyzeSitemapPresence
+} from './lib/traditionalSeoFactors.ts';
 
-// Complete 15-factor analysis implementation for AImpactScanner MVP
-// MASTERY-AI Framework v3.1.1 compliant
+// Complete 23-factor analysis implementation for AImpactScanner MVP
+// MASTERY-AI Framework v3.1.1 compliant + Traditional SEO Foundation (Sprint 2)
 
 // Factor types
 interface FactorResult {
@@ -1606,7 +1613,7 @@ async function analyzeAllFactors(url: string, pageContent: string, title: string
   // Helper function for progress updates
   const updateProgress = async (factorNumber: number, factorName: string, educationalContent: string) => {
     if (progressCallback) {
-      const progress = Math.round((factorNumber / 18) * 80) + 10; // 10% start + 80% for 18 factors
+      const progress = Math.round((factorNumber / 23) * 80) + 10; // 10% start + 80% for 23 factors
       await progressCallback(
         `analyzing_${factorName.toLowerCase().replace(/\s+/g, '_')}`,
         progress,
@@ -1690,7 +1697,32 @@ async function analyzeAllFactors(url: string, pageContent: string, title: string
     // Factor 18: Comprehensive Metrics Collection (NEW - Y.1.1)
     await updateProgress(18, 'Metrics Collection', 'Checking for analytics, tracking, and performance monitoring infrastructure for optimization insights.');
     factors.push(analyzeMetricsCollection(pageContent));
-    
+
+    // ============================================================================
+    // Traditional SEO Factors (Sprint 2) - Factors 19-23
+    // These establish the technical foundation that AI SEO depends upon
+    // ============================================================================
+
+    // Factor 19: Indexability Status (T.1.1) - FREE TIER
+    await updateProgress(19, 'Indexability Status', 'Checking if search engines can index this page - the foundation of all SEO.');
+    factors.push(analyzeIndexability(pageContent, url));
+
+    // Factor 20: Mobile Friendliness (T.1.2) - SOLO+ TIER
+    await updateProgress(20, 'Mobile Friendliness', 'Evaluating mobile-first design and viewport configuration for Google mobile-first indexing.');
+    factors.push(analyzeMobileFriendly(pageContent));
+
+    // Factor 21: Page Speed (P.1.1) - SOLO+ TIER
+    await updateProgress(21, 'Page Speed (Mobile)', 'Estimating mobile page speed based on page size, scripts, and optimization signals.');
+    factors.push(analyzePageSpeedStub(pageContent));
+
+    // Factor 22: Broken Links (T.1.3) - SOLO+ TIER
+    await updateProgress(22, 'Broken Links Check', 'Scanning for malformed URLs and problematic link patterns.');
+    factors.push(analyzeBrokenLinksBasic(pageContent, url));
+
+    // Factor 23: Sitemap Presence (T.1.4) - SOLO+ TIER
+    await updateProgress(23, 'Sitemap Presence', 'Checking for XML sitemap references that help search engines discover pages.');
+    factors.push(analyzeSitemapPresence(pageContent, url));
+
     // Calculate overall score
     const overall_score = calculateOverallScore(factors);
     const processing_time_ms = Date.now() - startTime;
@@ -1961,9 +1993,10 @@ serve(async (req) => {
       M: { score: 0, weight: 14.6, factors: 0, totalWeight: 0, name: "Machine Readability & Technical Infrastructure" },
       S: { score: 0, weight: 13.9, factors: 0, totalWeight: 0, name: "Semantic Content Quality" },
       E: { score: 0, weight: 10.9, factors: 0, totalWeight: 0, name: "Engagement & User Experience" },
-      T: { score: 0, weight: 8.9, factors: 0, totalWeight: 0, name: "Topical Expertise & Experience" },
+      T: { score: 0, weight: 8.9, factors: 0, totalWeight: 0, name: "Technical SEO & Foundation" },
       R: { score: 0, weight: 5.9, factors: 0, totalWeight: 0, name: "Reference Networks & Citations" },
-      Y: { score: 0, weight: 4.1, factors: 0, totalWeight: 0, name: "Yield Optimization & Freshness" }
+      Y: { score: 0, weight: 4.1, factors: 0, totalWeight: 0, name: "Yield Optimization & Freshness" },
+      P: { score: 0, weight: 7.5, factors: 0, totalWeight: 0, name: "Performance & Speed" }
     };
     
     // Calculate weighted scores per pillar
