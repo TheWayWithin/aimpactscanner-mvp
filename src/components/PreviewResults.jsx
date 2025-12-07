@@ -225,7 +225,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                     </div>
                     <div className="text-right">
                       <div className={`text-xl font-bold px-4 py-2 rounded border ${getScoreColor(factor.score)}`}>
-                        {factor.score}
+                        {Math.round(factor.score)}
                       </div>
                       <div className="text-xs text-gray-600 mt-1">
                         {getScoreLabel(factor.score)}
@@ -297,7 +297,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                     </div>
                     <div className="text-right">
                       <div className={`text-xl font-bold px-4 py-2 rounded border ${getScoreColor(factor.score)}`}>
-                        {factor.score}
+                        {Math.round(factor.score)}
                       </div>
                       <div className="text-xs text-gray-600 mt-1">
                         {getScoreLabel(factor.score)}

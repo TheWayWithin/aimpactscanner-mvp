@@ -91,11 +91,11 @@ function FactorCard({ factor, pillarColor }) {
           <div className="flex items-center space-x-3">
             {/* Score Display */}
             <div className="text-right">
-              <div 
+              <div
                 className="text-2xl font-bold"
                 style={{ color: getScoreColor(factor.score) }}
               >
-                {factor.score}
+                {Math.round(factor.score)}
               </div>
               <div 
                 className="text-xs font-medium"
