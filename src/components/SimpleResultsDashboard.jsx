@@ -542,7 +542,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-blue-800 text-sm">
-            <strong>Framework:</strong> MASTERY-AI v3.1.1 with 148 factors across all 8 pillars. 
+            <strong>Framework:</strong> MASTERY-AI v3.1.1 with 23 factors across all 9 pillars. 
             {isRealAnalysis 
               ? 'Phase A implementation with complete coverage - quality over quantity, every factor matters.'
               : 'Sample shows strategic factors from analyzing FreeCalcHub, Evolve-7, Agent-11, and 4 other client sites.'
@@ -562,6 +562,9 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
           }}
         />
       </div>
+
+      {/* Critical Issues Banner - Show blockers/warnings prominently */}
+      <CriticalIssuesBanner factors={results.factors} />
 
       {/* Pillar Scores */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" data-testid="pillar-grid">
@@ -587,9 +590,6 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
           </div>
         ))}
       </div>
-
-      {/* Critical Issues Banner */}
-      <CriticalIssuesBanner factors={results.factors} />
 
       {/* Factor Details Grouped by Pillar */}
       <div className="space-y-8">
