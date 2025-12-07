@@ -157,9 +157,9 @@ export function analyzeIndexability(
   const processingTimeMs = Date.now() - startTime;
 
   return {
-    factor_id: 'T.1.1',
+    factor_id: 'TS.1.1',
     factor_name: 'Indexability Status',
-    pillar: 'T',
+    pillar: 'TS',
     phase: 'instant',
     score,
     confidence,
@@ -264,9 +264,9 @@ export function analyzeMobileFriendly(content: string): FactorResult {
   const processingTimeMs = Date.now() - startTime;
 
   return {
-    factor_id: 'T.1.2',
+    factor_id: 'TS.1.2',
     factor_name: 'Mobile Friendliness',
-    pillar: 'T',
+    pillar: 'TS',
     phase: 'instant',
     score,
     confidence,
@@ -444,9 +444,9 @@ export function analyzeBrokenLinksBasic(
       );
       confidence = 100;
       return {
-        factor_id: 'T.1.3',
+        factor_id: 'TS.1.3',
         factor_name: 'Broken Links Check',
-        pillar: 'T',
+        pillar: 'TS',
         phase: 'instant',
         score: 100,
         confidence,
@@ -576,9 +576,9 @@ export function analyzeBrokenLinksBasic(
   const processingTimeMs = Date.now() - startTime;
 
   return {
-    factor_id: 'T.1.3',
+    factor_id: 'TS.1.3',
     factor_name: 'Broken Links Check',
-    pillar: 'T',
+    pillar: 'TS',
     phase: 'instant',
     score,
     confidence,
@@ -714,9 +714,9 @@ export function analyzeSitemapPresence(
   const processingTimeMs = Date.now() - startTime;
 
   return {
-    factor_id: 'T.1.4',
+    factor_id: 'TS.1.4',
     factor_name: 'Sitemap Presence',
-    pillar: 'T',
+    pillar: 'TS',
     phase: 'instant',
     score,
     confidence,

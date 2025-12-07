@@ -289,6 +289,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
       'S': { bg: 'bg-orange-50', border: 'border-orange-500', text: 'text-orange-700', badge: 'bg-orange-100' },
       'E': { bg: 'bg-yellow-50', border: 'border-yellow-500', text: 'text-yellow-700', badge: 'bg-yellow-100' },
       'T': { bg: 'bg-indigo-50', border: 'border-indigo-500', text: 'text-indigo-700', badge: 'bg-indigo-100' },
+      'TS': { bg: 'bg-indigo-50', border: 'border-indigo-500', text: 'text-indigo-700', badge: 'bg-indigo-100' }, // Same as T
       'R': { bg: 'bg-gray-50', border: 'border-gray-500', text: 'text-gray-700', badge: 'bg-gray-100' },
       'Y': { bg: 'bg-teal-50', border: 'border-teal-500', text: 'text-teal-700', badge: 'bg-teal-100' },
       'P': { bg: 'bg-rose-50', border: 'border-rose-500', text: 'text-rose-700', badge: 'bg-rose-100' }
@@ -332,6 +333,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         'S': 'Semantic Content Quality',
         'E': 'Engagement & User Experience',
         'T': 'Technical SEO & Foundation',
+        'TS': 'Technical SEO & Foundation', // Traditional SEO factors
         'R': 'Reference Networks & Citations',
         'Y': 'Yield Optimization & Freshness',
         'P': 'Performance & Speed'
