@@ -1,5 +1,23 @@
 # AImpactScanner MVP - Progress Log
 
+## [December 8, 2025] - Error Handling UX Fix ✅
+
+**Context**: User testing revealed that scanning non-existent domains (e.g., fakesitexyz123.com) left users stuck on progress screen.
+
+### Bug Fix
+
+1. **Invalid URL Error Display** (commit: 2153a03)
+   - Issue: Scanning non-existent domains showed "Mock analysis completed, waiting for real analysis..." and hung
+   - Root cause: Edge Function returned 500 error but frontend didn't display error to user
+   - Fixed:
+     - Added `error` and `onRetry` props to `SimpleAnalysisProgress` component
+     - Component now shows user-friendly error state when analysis fails
+     - Error messages parsed for specific cases (Website Not Found, Request Timeout, etc.)
+     - Added "Try Another URL" button to retry
+     - Timeouts cleared when error occurs to stop mock animation
+
+---
+
 ## [December 7, 2025] - Sprint 2 Bug Fixes & Enhancements ✅
 
 **Context**: Post-deployment testing revealed several issues, all fixed and deployed.
