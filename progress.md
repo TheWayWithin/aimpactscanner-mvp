@@ -1,5 +1,52 @@
 # AImpactScanner MVP - Progress Log
 
+## [December 7, 2025] - Sprint 2 Bug Fixes & Enhancements ✅
+
+**Context**: Post-deployment testing revealed several issues, all fixed and deployed.
+
+### Bug Fixes
+
+1. **Score Rounding** (commit: previous session)
+   - Issue: Factor scores showing long decimals (95.95959595... instead of 96)
+   - Fixed: Added `Math.round()` in FactorCard, SimpleResultsDashboard, PreviewResults, TeaserResults
+
+2. **Duplicate Factor IDs** (commit: 42e2ad0)
+   - Issue: Traditional SEO factors used `T.1.1` which conflicted with "Topic Knowledge Depth"
+   - Result: Dashboard showed 22 factors instead of 23
+   - Fixed: Changed traditional SEO factor IDs to `TS.x.x` prefix (TS.1.1, TS.1.2, TS.1.3, TS.1.4)
+
+3. **Progress Popup Text** (commit: c1a5f1c)
+   - Issue: Showed outdated "Phase A" and "148 factors" text
+   - Fixed: Updated to "23 factors", removed Phase A line
+
+4. **Non-existent Domain Handling** (commit: c677663)
+   - Issue: Scanning non-existent domains (e.g., agent-111.com) ran full analysis on empty content
+   - Fixed: Added URL validation to throw proper errors for unreachable domains
+
+5. **Severity Thresholds Too Lenient** (commit: 8bd7be3)
+   - Issue: Sites scoring 47 (Needs Improvement) showed "No Critical SEO Issues"
+   - Fixed: Increased thresholds to trigger warnings more appropriately:
+     - Indexability: blocker < 50, warning < 90
+     - Mobile: warning < 60
+     - Speed: warning < 50
+     - Links: warning < 70
+     - Sitemap: warning < 60
+
+### New Features
+
+1. **Critical Issues Banner** (commit: eefb9c4, 7347be9)
+   - Added `CriticalIssuesBanner.jsx` component
+   - Shows blockers (red), warnings (orange), or success (green) message
+   - Displays before pillar cards for visibility
+   - Shows factor ID, score, and first recommendation
+
+### Verification
+- Tested on production: agent-11.com (green - no issues), example.com (orange - sitemap warning)
+- Factor count confirmed: 23 factors across 9 pillars
+- Severity banner working correctly
+
+---
+
 ## [December 7, 2025] - Sprint 2: DEPLOYED TO PRODUCTION ✅
 
 **Context**: Traditional SEO Foundation Integration - Deployed and Verified Live
