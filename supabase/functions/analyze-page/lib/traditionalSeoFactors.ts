@@ -22,27 +22,28 @@ function getSeverity(score: number, factorType: 'indexability' | 'mobile' | 'spe
   switch (factorType) {
     case 'indexability':
       // Most critical - noindex blocks everything
-      if (score < 30) return 'blocker';
-      if (score < 70) return 'warning';
+      if (score < 50) return 'blocker';
+      if (score < 90) return 'warning';
       return 'ok';
     case 'mobile':
       // Important for mobile-first indexing
-      if (score < 40) return 'warning';
-      if (score < 70) return 'info';
+      if (score < 60) return 'warning';
+      if (score < 85) return 'info';
       return 'ok';
     case 'speed':
       // Impacts user experience and rankings
-      if (score < 30) return 'warning';
-      if (score < 60) return 'info';
+      if (score < 50) return 'warning';
+      if (score < 75) return 'info';
       return 'ok';
     case 'links':
       // Broken links hurt credibility
-      if (score < 50) return 'warning';
-      if (score < 80) return 'info';
+      if (score < 70) return 'warning';
+      if (score < 90) return 'info';
       return 'ok';
     case 'sitemap':
-      // Helpful but not critical
-      if (score < 50) return 'info';
+      // Important for discovery - most sites should have one
+      if (score < 60) return 'warning';
+      if (score < 80) return 'info';
       return 'ok';
     default:
       return 'ok';
