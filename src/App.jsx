@@ -1418,14 +1418,30 @@ function AppContent({ initialUrl }) {
       if (invokeError) {
         console.error('❌ Edge Function error:', invokeError);
         trackError('edge_function', invokeError.message || invokeError, 'analysis');
-        
-        // Set error state for display
+
+        // Parse error message for user-friendly display
+        let errorMessage = invokeError.message || 'The analysis service is temporarily unavailable. Please try again.';
+        let errorTitle = 'Analysis Failed';
+
+        // Check for specific error types
+        if (errorMessage.includes('DOMAIN_NOT_FOUND') || errorMessage.includes('URL_UNREACHABLE')) {
+          errorTitle = 'Website Not Found';
+          errorMessage = 'The website could not be reached. Please check the URL is correct and the site is online.';
+        } else if (errorMessage.includes('FETCH_TIMEOUT')) {
+          errorTitle = 'Request Timeout';
+          errorMessage = 'The website took too long to respond. Please try again later.';
+        } else if (errorMessage.includes('non-2xx status')) {
+          errorTitle = 'Analysis Error';
+          errorMessage = 'We couldn\'t analyze this website. It may be blocking our scanner or have an invalid URL.';
+        }
+
+        // Set error state for display in progress component
         setAnalysisError({
-          title: 'Analysis Failed',
-          message: invokeError.message || 'The analysis service is temporarily unavailable. Please try again.',
+          title: errorTitle,
+          message: errorMessage,
           action: 'retry'
         });
-        setCurrentView('input'); // Go back to input on error
+        // Stay in analysis view - SimpleAnalysisProgress will show error state
       } else {
         console.log('✅ Analysis completed:', data);
         // Store the real analysis results
@@ -2120,10 +2136,15 @@ function AppContent({ initialUrl }) {
 
         {currentView === 'analysis' && currentAnalysisId && (
           <ProtectedRoute session={session} onRedirect={setCurrentView}>
-            <SimpleAnalysisProgress 
+            <SimpleAnalysisProgress
               analysisId={currentAnalysisId}
               url={currentUrl}
               onAnalysisComplete={handleAnalysisComplete}
+              error={analysisError}
+              onRetry={() => {
+                setAnalysisError(null);
+                setCurrentView('input');
+              }}
             />
           </ProtectedRoute>
         )}
