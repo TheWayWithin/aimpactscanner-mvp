@@ -1832,7 +1832,18 @@ async function fetchPageData(url: string): Promise<{title: string, metaDescripti
     
   } catch (error) {
     console.error(`Failed to fetch page data: ${error.message}`);
-    return { title: '', metaDescription: '', content: '' };
+    // Distinguish between network errors and other errors
+    if (error.name === 'AbortError') {
+      throw new Error('FETCH_TIMEOUT: The website took too long to respond. Please try again.');
+    }
+    if (error.message.includes('network') || error.message.includes('DNS') || error.message.includes('ENOTFOUND') || error.message.includes('getaddrinfo')) {
+      throw new Error(`DOMAIN_NOT_FOUND: The domain could not be reached. Please check the URL is correct.`);
+    }
+    if (error.message.startsWith('HTTP')) {
+      throw new Error(`FETCH_ERROR: ${error.message}`);
+    }
+    // For any other fetch error, assume domain doesn't exist
+    throw new Error(`URL_UNREACHABLE: Could not connect to ${url}. Please verify the URL exists and is accessible.`);
   }
 }
 
