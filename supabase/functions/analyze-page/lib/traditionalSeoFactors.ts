@@ -945,21 +945,43 @@ export function analyzeInternalLinking(
     const baseUrl = new URL(url);
     const domain = baseUrl.hostname;
 
-    // Extract all anchor tags with href and text
-    const linkRegex = /<a\s+[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+    // OPTIMIZED: Use simpler, non-backtracking regex patterns
+    // Step 1: Find all anchor tags (simple greedy match)
+    const anchorTags = content.match(/<a\b[^>]*>[\s\S]*?<\/a>/gi) || [];
+
+    // Limit processing to prevent timeout on pages with thousands of links
+    const MAX_LINKS = 500;
+    const tagsToProcess = anchorTags.slice(0, MAX_LINKS);
+
     const allLinks: Array<{ href: string; text: string; isNofollow: boolean }> = [];
-    let match;
 
-    while ((match = linkRegex.exec(content)) !== null) {
-      const href = match[1];
-      // Strip HTML tags from anchor text
-      const text = match[2].replace(/<[^>]*>/g, '').trim();
-      const fullTag = match[0];
-      const isNofollow = /rel=["'][^"']*nofollow[^"']*["']/i.test(fullTag);
+    // Step 2: Extract href and text from each tag
+    for (const tag of tagsToProcess) {
+      // Extract href with a simple pattern
+      const hrefMatch = tag.match(/href=["']([^"']+)["']/i);
+      if (!hrefMatch) continue;
 
-      if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
-        allLinks.push({ href, text, isNofollow });
+      const href = hrefMatch[1];
+
+      // Skip non-navigational links
+      if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) {
+        continue;
       }
+
+      // Extract text content (everything between > and </a>)
+      const textMatch = tag.match(/>([^]*?)<\/a>/i);
+      const rawText = textMatch ? textMatch[1] : '';
+      // Strip any nested HTML tags
+      const text = rawText.replace(/<[^>]*>/g, '').trim();
+
+      // Check for nofollow
+      const isNofollow = /rel=["'][^"']*nofollow/i.test(tag);
+
+      allLinks.push({ href, text, isNofollow });
+    }
+
+    if (anchorTags.length > MAX_LINKS) {
+      evidence.push(`Analyzed ${MAX_LINKS} of ${anchorTags.length} links (sampled for performance)`);
     }
 
     // Separate internal and external links

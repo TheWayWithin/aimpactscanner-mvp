@@ -1731,7 +1731,7 @@ async function analyzeAllFactors(url: string, pageContent: string, title: string
     await updateProgress(24, 'Canonical Tag Configuration', 'Analyzing canonical tag setup to prevent duplicate content issues.');
     factors.push(analyzeCanonicalTags(pageContent, url));
 
-    // Factor 25: Internal Linking (TS.2.2) - SOLO+ TIER - Sprint 3 Phase 2
+    // Factor 25: Internal Linking (TS.2.2) - SOLO+ TIER - Sprint 3 Phase 2 (OPTIMIZED)
     await updateProgress(25, 'Internal Linking Structure', 'Analyzing internal link patterns, anchor text quality, and navigation structure.');
     factors.push(analyzeInternalLinking(pageContent, url));
 
