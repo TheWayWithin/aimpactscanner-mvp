@@ -6,11 +6,15 @@ import {
   analyzeMobileFriendly,
   analyzePageSpeedStub,
   analyzeBrokenLinksBasic,
-  analyzeSitemapPresence
+  analyzeSitemapPresence,
+  analyzeCanonicalTags,
+  analyzeInternalLinking,
+  analyzeDuplicateVersions,
+  analyzeRobotsTxt
 } from './lib/traditionalSeoFactors.ts';
 
-// Complete 23-factor analysis implementation for AImpactScanner MVP
-// MASTERY-AI Framework v3.1.1 compliant + Traditional SEO Foundation (Sprint 2)
+// Complete 27-factor analysis implementation for AImpactScanner MVP
+// MASTERY-AI Framework v3.1.1 compliant + Traditional SEO Foundation (Sprint 2 + Sprint 3)
 
 // Factor types
 interface FactorResult {
@@ -1722,6 +1726,22 @@ async function analyzeAllFactors(url: string, pageContent: string, title: string
     // Factor 23: Sitemap Presence (T.1.4) - SOLO+ TIER
     await updateProgress(23, 'Sitemap Presence', 'Checking for XML sitemap references that help search engines discover pages.');
     factors.push(analyzeSitemapPresence(pageContent, url));
+
+    // Factor 24: Canonical Tags (TS.2.1) - SOLO+ TIER - Sprint 3 Phase 1
+    await updateProgress(24, 'Canonical Tag Configuration', 'Analyzing canonical tag setup to prevent duplicate content issues.');
+    factors.push(analyzeCanonicalTags(pageContent, url));
+
+    // Factor 25: Internal Linking (TS.2.2) - SOLO+ TIER - Sprint 3 Phase 2
+    await updateProgress(25, 'Internal Linking Structure', 'Analyzing internal link patterns, anchor text quality, and navigation structure.');
+    factors.push(analyzeInternalLinking(pageContent, url));
+
+    // Factor 26: Duplicate Site Versions (TS.2.3) - SOLO+ TIER - Sprint 3 Phase 3
+    await updateProgress(26, 'Duplicate Site Versions', 'Checking for HTTP/HTTPS and www/non-www consistency issues.');
+    factors.push(analyzeDuplicateVersions(pageContent, url));
+
+    // Factor 27: Robots.txt Configuration (TS.2.4) - SOLO+ TIER - Sprint 3 Phase 4
+    await updateProgress(27, 'Robots.txt Configuration', 'Analyzing robot directives and crawl permissions from meta tags.');
+    factors.push(analyzeRobotsTxt(pageContent, url));
 
     // Calculate overall score
     const overall_score = calculateOverallScore(factors);
