@@ -1,5 +1,44 @@
 # AImpactScanner MVP - Progress Log
 
+## [December 9, 2025] - Sprint 3 Performance Fix: Internal Linking Timeout ✅
+
+**Context**: After Sprint 3 deployment, all analyses timed out. Root cause identified and fixed.
+
+### Issue Analysis
+
+**Symptom**: All website analyses timing out with "Analysis timeout - please try again" after Sprint 3 deployment.
+
+**Debugging Process**:
+1. Reverted Edge Function to pre-Sprint 3 code → Works (23 factors)
+2. Re-enabled Factor 24 (Canonical Tags) only → Works
+3. Enabled Factor 24 + Factor 25 (Internal Linking) → **Times out**
+4. Identified `analyzeInternalLinking` (TS.2.2) as culprit
+
+**Root Cause**: Catastrophic regex backtracking in the original link extraction pattern:
+```javascript
+// PROBLEMATIC: [^>]* can cause exponential backtracking
+const linkRegex = /<a\s+[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+```
+
+### Fix Applied
+
+**Optimization**: Split complex regex into two-step approach with safety limits:
+1. Find all anchor tags with simple pattern: `/<a\b[^>]*>[\s\S]*?<\/a>/gi`
+2. Extract href and text from each tag individually
+3. Added MAX_LINKS=500 limit to prevent timeout on pages with thousands of links
+
+### Verification
+- ✅ Deployed to staging and production
+- ✅ All 27 factors now enabled (24-27 are Sprint 3 factors)
+- ✅ Commit f8ccf96 pushed to GitHub
+
+### Lessons Learned
+- Complex regex patterns can cause catastrophic backtracking on real-world HTML
+- Two-step regex approach is more predictable for large content
+- Always add safety limits for iterative processing on user-provided content
+
+---
+
 ## [December 8, 2025] - Sprint 3: High-Priority Traditional SEO Factors ✅
 
 **Context**: Completed Sprint 3 implementation - 4 new SEO factors increasing coverage from 50% to 75%.
