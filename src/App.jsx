@@ -1394,8 +1394,8 @@ function AppContent({ initialUrl }) {
           }
         });
 
-        const edgeTimeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Analysis timeout - please try again')), 30000) // 30 second timeout
+        const edgeTimeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Analysis timeout - please try again')), 45000) // 45 second timeout (increased for 27 factors)
         );
 
         const result = await Promise.race([

@@ -1624,8 +1624,8 @@ async function analyzeAllFactors(url: string, pageContent: string, title: string
         `Analyzing: ${factorName}`,
         educationalContent
       );
-      // Delay to ensure progress update is visible
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Brief delay to ensure progress update is visible (100ms to keep total time reasonable)
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
   };
   
