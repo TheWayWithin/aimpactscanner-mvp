@@ -1617,7 +1617,7 @@ async function analyzeAllFactors(url: string, pageContent: string, title: string
   // Helper function for progress updates
   const updateProgress = async (factorNumber: number, factorName: string, educationalContent: string) => {
     if (progressCallback) {
-      const progress = Math.round((factorNumber / 23) * 80) + 10; // 10% start + 80% for 23 factors
+      const progress = Math.round((factorNumber / 27) * 80) + 10; // 10% start + 80% for 27 factors
       await progressCallback(
         `analyzing_${factorName.toLowerCase().replace(/\s+/g, '_')}`,
         progress,

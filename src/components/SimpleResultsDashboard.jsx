@@ -544,7 +544,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-blue-800 text-sm">
-            <strong>Framework:</strong> MASTERY-AI v3.1.1 with 23 factors across all 9 pillars. 
+            <strong>Framework:</strong> MASTERY-AI v3.1.1 with 27 factors across all 9 pillars. 
             {isRealAnalysis 
               ? 'Phase A implementation with complete coverage - quality over quantity, every factor matters.'
               : 'Sample shows strategic factors from analyzing FreeCalcHub, Evolve-7, Agent-11, and 4 other client sites.'
