@@ -18,20 +18,20 @@ const UpsellCoffee = () => {
     getUser();
   }, []);
 
-  // Free tier limitations (exact messaging from spec)
+  // Free tier limitations
   const freeLimitations = [
     'Only 3 analyses per month',
     'Basic recommendations only',
-    'Phase A factors only',
+    'Limited factor analysis',
     'Web-only results (no PDF export)',
     'Community support only',
     'No advanced AI insights'
   ];
 
-  // Coffee tier benefits (exact messaging from spec)
+  // Coffee tier benefits
   const coffeeBenefits = [
     'Unlimited AI-powered analyses per month',
-    '10 MASTERY-AI Framework factors (Phase A)',
+    '27 critical factors (AI readiness + SEO foundation)',
     'Professional PDF reports (no watermarks)',
     'Clean, exportable results dashboard',
     'Educational content & recommendations',

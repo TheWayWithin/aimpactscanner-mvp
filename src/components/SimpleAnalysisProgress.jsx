@@ -164,7 +164,7 @@ function SimpleAnalysisProgress({ analysisId, url, onAnalysisComplete, error, on
           <p className="text-blue-800 text-sm break-all">{url}</p>
 
           <div className="mt-3 text-xs text-blue-700">
-            <p className="mb-1">• Framework: MASTERY-AI v3.1.1 (27 factors)</p>
+            <p className="mb-1">• 27 critical factors: AI readiness + SEO foundation</p>
             <p>• Real-time evidence collection and scoring</p>
           </div>
         </div>

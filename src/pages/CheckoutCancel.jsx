@@ -86,7 +86,7 @@ const CheckoutCancel = () => {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-green-500">✓</span>
-              <span><strong>10 MASTERY-AI Framework factors</strong> (Phase A)</span>
+              <span><strong>27 critical factors</strong> (AI readiness + SEO foundation)</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-green-500">✓</span>

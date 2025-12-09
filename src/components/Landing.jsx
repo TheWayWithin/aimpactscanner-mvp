@@ -178,14 +178,16 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
             Is AI Stealing Your
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"> Traffic?</span>
+            <br className="hidden sm:block" />
+            <span className="text-3xl md:text-4xl lg:text-5xl">Or Is Your Website Invisible to Everyone?</span>
           </h1>
-          
+
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            ChatGPT, Claude, and Perplexity are answering questions about your business 
-            without sending visitors to your site. See exactly what you're losing and how to fix it.
+            The only scanner that checks <strong>both</strong> AI visibility AND your SEO foundation in 15 seconds.
+            Because you can't win with AI if Google can't even find you.
           </p>
 
           {/* Social Proof - Real Clients */}
@@ -263,37 +265,90 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
         </div>
       </div>
 
-      {/* What You'll Discover */}
+      {/* What We Check - 2-in-1 Value */}
       <div className="max-w-7xl mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-center mb-12">What You'll Discover</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-            <div className="h-32 flex items-center justify-center mb-4">
-              <svg className="w-24 h-24 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
+        <h2 className="text-3xl font-bold text-center mb-4">One Scan. Two Critical Audits.</h2>
+        <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+          Most tools check one thing. We check 27 factors across AI readiness AND traditional SEO -
+          because both determine your visibility.
+        </p>
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
+          {/* AI Readiness */}
+          <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-purple-100">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-14 h-14 bg-purple-600 rounded-xl flex items-center justify-center">
+                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-xl text-purple-900">AI Readiness Check</h3>
+                <p className="text-purple-700 text-sm">18 factors for ChatGPT, Claude & Perplexity</p>
+              </div>
             </div>
-            <h3 className="font-semibold text-lg mb-2">Traffic Loss Analysis</h3>
-            <p className="text-gray-600">See exactly how much traffic AI is stealing and which queries you're losing</p>
+            <ul className="space-y-3 text-gray-700">
+              <li className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>Structured data AI engines can understand</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>Content clarity for LLM comprehension</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>Authority signals AI uses for citations</span>
+              </li>
+            </ul>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-            <div className="h-32 flex items-center justify-center mb-4">
-              <svg className="w-24 h-24 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
+
+          {/* SEO Foundation */}
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-green-100">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-14 h-14 bg-green-600 rounded-xl flex items-center justify-center">
+                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-xl text-green-900">SEO Foundation Audit</h3>
+                <p className="text-green-700 text-sm">9 factors for Google & traditional search</p>
+              </div>
             </div>
-            <h3 className="font-semibold text-lg mb-2">Competitor Comparison</h3>
-            <p className="text-gray-600">Know where you rank vs competitors in AI search results</p>
+            <ul className="space-y-3 text-gray-700">
+              <li className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>Meta tags, titles & descriptions</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>Internal linking & URL structure</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>Mobile-friendliness & HTTPS security</span>
+              </li>
+            </ul>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-            <div className="h-32 flex items-center justify-center mb-4">
-              <svg className="w-24 h-24 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-            </div>
-            <h3 className="font-semibold text-lg mb-2">Recovery Roadmap</h3>
-            <p className="text-gray-600">Get specific actions to reclaim your traffic and protect your business</p>
-          </div>
+        </div>
+
+        {/* Bottom value prop */}
+        <div className="bg-blue-600 text-white rounded-xl p-6 text-center">
+          <p className="text-lg font-medium">
+            Why pay for two separate tools? Get both audits in one free scan.
+          </p>
         </div>
       </div>
 
