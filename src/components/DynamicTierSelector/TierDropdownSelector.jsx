@@ -190,7 +190,12 @@ const TierDropdownSelector = ({
                 </span>
               )}
             </div>
-            <div className="text-sm text-gray-900 mt-1">
+            {selectedTierData?.tagline && (
+              <div className="text-sm font-medium text-gray-700 mt-0.5 italic">
+                "{selectedTierData.tagline}"
+              </div>
+            )}
+            <div className="text-sm text-gray-600 mt-1">
               {selectedTierData?.description}
             </div>
           </div>
@@ -246,7 +251,12 @@ const TierDropdownSelector = ({
                       </span>
                     )}
                   </div>
-                  <div className="text-sm text-gray-900 mt-0.5">
+                  {tier.tagline && (
+                    <div className="text-sm font-medium text-gray-700 mt-0.5 italic">
+                      "{tier.tagline}"
+                    </div>
+                  )}
+                  <div className="text-sm text-gray-600 mt-0.5">
                     {tier.description}
                   </div>
                 </div>
@@ -381,6 +391,7 @@ TierDropdownSelector.propTypes = {
   tiers: PropTypes.arrayOf(PropTypes.shape({
     internalId: PropTypes.string.isRequired,
     displayName: PropTypes.string.isRequired,
+    tagline: PropTypes.string,
     description: PropTypes.string.isRequired,
     badge: PropTypes.string
   })).isRequired,

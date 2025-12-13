@@ -29,30 +29,34 @@ const DynamicTierSelector = ({
     });
   }, []); // Only fire once on mount
 
-  // Tier data structure
+  // Tier data structure with OB taglines and volume lines
   const tiers = [
     {
       internalId: 'free',
-      displayName: '⚠️ Free',
-      description: 'Only 3 analyses/month',
+      displayName: 'Starter (Free)',
+      tagline: 'Am I losing customers?',
+      description: '3 free analyses per month',
       badge: null
     },
     {
       internalId: 'coffee',
-      displayName: '💼 Solo',
-      description: '10 analyses/month, 30-day tracking',
+      displayName: 'Solo ($4.95/mo)',
+      tagline: 'Stop losing customers',
+      description: '10 analyses per month',
       badge: null
     },
     {
       internalId: 'growth',
-      displayName: '🚀 Growth',
-      description: '40 analyses/month, 90-day tracking, CSV + LLMS.txt',
+      displayName: 'Growth ($14.95/mo)',
+      tagline: 'Never lose a customer to AI',
+      description: '40 analyses per month',
       badge: '⭐ RECOMMENDED'
     },
     {
       internalId: 'scale',
-      displayName: '🏢 Scale',
-      description: '100 analyses/month, unlimited history, API access',
+      displayName: 'Scale ($29.95/mo)',
+      tagline: 'Never say no to a client',
+      description: '100 analyses per month',
       badge: null
     }
   ];
@@ -136,9 +140,9 @@ const DynamicTierSelector = ({
 
   return (
     <div className="dynamic-tier-selector" data-testid="tier-selector-container">
-      {/* Two-Column Layout: Left 40%, Right 60% */}
-      <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-4 lg:gap-8 items-start">
-        {/* Left Column (40%): Billing Toggle + Tier Dropdown Selector */}
+      {/* Single-Column Layout */}
+      <div className="grid grid-cols-1 gap-4 items-start">
+        {/* Billing Toggle + Tier Dropdown Selector */}
         <div className="space-y-4 w-full max-w-full">
           <BillingToggle
             defaultBilling={defaultBilling}
@@ -157,7 +161,7 @@ const DynamicTierSelector = ({
           </div>
         </div>
 
-        {/* Right Column (60%): Tier Messaging + Savings Highlight */}
+        {/* Tier Messaging + Savings Highlight */}
         <div className="space-y-4 w-full max-w-full" data-testid="tier-messaging-wrapper">
           <div className={`transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
             <TierMessagingSection

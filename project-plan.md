@@ -635,21 +635,155 @@ These factors require paid APIs and will only be considered after reaching reven
 
 ---
 
+## Sprint 5: Signup Value Ladder Optimization
+
+**Status**: ✅ COMPLETE - Deployed to Local Dev
+**Priority**: P1 HIGH - Conversion Rate Optimization
+**Started**: December 10, 2025
+**Value Ladder Defined**: December 13, 2025
+**Completed**: December 13, 2025
+**Target Duration**: 1 week
+
+### Sprint Overview
+
+Transform signup page into clear value ladder that drives higher-tier conversions using Doug Hall's Marketing Physics framework. Based on LLMtxtMastery pattern + "So What?" test.
+
+**Key Insight**: Customers don't care about AI - they care about losing customers and revenue. All messaging reframed around real customer outcomes.
+
+**Success Metrics**:
+- [ ] Solo → Growth upgrade conversion: Target 30%+
+- [ ] Growth tier selection: Maintain 70%+ default selection rate
+- [ ] Signup completion rate: Maintain or improve current rate
+
+---
+
+### Phase 1: Layout Fixes ✅
+
+#### [x] Task 1.1: Force single-column layout always
+**File**: `src/components/DynamicTierSelector/DynamicTierSelector.jsx` (Line 140)
+**Issue**: `grid-cols-1 lg:grid-cols-[40%_60%]` causes two-column on wide screens
+**Fix**: Removed `lg:grid-cols-[40%_60%]`, kept `grid-cols-1` only
+**Priority**: High
+**Completed**: December 13, 2025
+
+#### [x] Task 1.2: Fix text width on Solo tier messaging
+**File**: `src/components/DynamicTierSelector/TierMessagingSection.jsx`
+**Issue**: Text doesn't expand to full container width in narrow column
+**Fix**: Complete rewrite with new messaging structure handles this
+**Priority**: High
+**Completed**: December 13, 2025
+
+#### [~] Task 1.3: Improve mobile/narrow screen padding
+**File**: `src/pages/Signup.jsx` (Line 99)
+**Issue**: Padding inconsistent (`p-3 sm:p-4 lg:p-8`)
+**Status**: Deferred - single-column layout resolves main issue
+**Priority**: Medium
+
+---
+
+### Phase 2: Value Ladder Messaging ✅
+
+**Full spec**: See `sprint5-handover-notes.md` for complete messaging details.
+
+#### Finalized Value Ladder
+
+| Tier | OB Tagline | OB Headline |
+|------|-----------|-------------|
+| **Free** | "Am I losing customers?" | "Discover where you're losing customers to AI" |
+| **Solo** | "Stop losing customers" | "Fix the problems that are costing you customers" |
+| **Growth** | "Never lose a customer to AI" | "The complete system: scan, plan, track, get found" |
+| **Scale** | "Never say no to a client" | "100 scans, unlimited LLMS.txt, unlimited history - take on any project" |
+
+#### FOMO Structure (Each tier → Next tier)
+
+| Tier | FOMO Headline | Key Message |
+|------|---------------|-------------|
+| **Free → Solo** | "What you're missing:" | "Free finds the problem - but then you're stuck. Fix something? That's scan 2. Verify it worked? Scan 3. You're done." |
+| **Solo → Growth** | "More than a side project?" | "You'll need to work across pages and sites, track your progress, and keep AI finding you after every change." |
+| **Growth → Scale** | "Working with clients?" | "40 scans won't cover their sites plus yours. Scale gives you 100 scans, unlimited LLMS.txt, and unlimited history - never say no to a project." |
+| **Scale** | "No limits" | "Take on any project. Cover any site. Never run out of scans or history." |
+
+#### [x] Task 2.1: Implement tier messaging in TierMessagingSection.jsx
+**Completed**: December 13, 2025
+
+#### [x] Task 2.2: Update dropdown descriptions in DynamicTierSelector.jsx
+**Completed**: December 13, 2025
+
+---
+
+### Phase 3: Implementation Tasks ✅
+
+#### [x] Task 3.1: Update TierMessagingSection.jsx
+- Implemented new TIER_MESSAGING structure with OB, FOMO, and benefits
+- Added FOMO boxes with next-tier-up comparison
+- Styled FOMO boxes (yellow/amber for upgrades, green for Scale confirmation)
+**Completed**: December 13, 2025
+
+#### [x] Task 3.2: Update DynamicTierSelector.jsx dropdown options
+- Updated dropdown text with OB taglines
+- Updated volume lines per tier
+- Added tagline display in dropdown trigger and menu options
+**Completed**: December 13, 2025
+
+#### [x] Task 3.3: Update "What You Get" benefits sections
+- Implemented highlighted first benefit per tier (★ icon with yellow background)
+- Added tier-specific benefit bullets with checkmarks
+**Completed**: December 13, 2025
+
+---
+
+### Phase 4: Testing & Validation ✅
+
+#### [x] Task 4.1: Visual review at all screen widths
+- Tested via Playwright browser automation
+- Verified: Single column layout working
+- Full-width text confirmed
+**Completed**: December 13, 2025
+
+#### [x] Task 4.2: Test tier switching behavior
+- ✅ Messaging updates immediately on tier change
+- ✅ FOMO callouts appear correctly per tier (Free→Solo, Solo→Growth, Growth→Scale, Scale=confirmation)
+- ✅ Next-tier comparison is correct (not skipping)
+- ✅ All 4 tiers display correct OB headlines, bullets, FOMO boxes, and "What You Get" sections
+**Completed**: December 13, 2025
+
+---
+
+### Files to Modify
+
+| File | Changes |
+|------|---------|
+| `src/components/DynamicTierSelector/TierMessagingSection.jsx` | Complete messaging overhaul with new value ladder |
+| `src/components/DynamicTierSelector/DynamicTierSelector.jsx` | Update dropdown text and layout |
+
+---
+
+### Success Criteria ✅
+
+- [x] Single-column layout at ALL screen widths
+- [x] Each tier shows correct OB headline and bullets
+- [x] Each tier compares to NEXT tier only (not skip)
+- [x] FOMO messaging creates urgency to upgrade
+- [x] "What You Get" sections show tier-specific benefits
+- [x] Scale tier shows confirmation message (not upgrade prompt)
+
+---
+
 ## Next Mission Planning
 
-With Sprint 1 (LLMs.txt) complete and Sprints 2-4 (Traditional SEO) planned, potential future priorities:
+With Sprints 1-4 complete/planned and Sprint 5 in review:
 
-1. **Sprint 5: AI + Traditional SEO Correlation** - Show how traditional SEO issues impact AI SEO scores
+1. **Sprint 5: Signup Value Ladder** - Current sprint (conversion optimization)
 2. **Growth Marketing** - Content, SEO, social proof
 3. **Feature Development** - AI Remediation Planner, Progress Tracking
 4. **Technical Debt** - Code cleanup, performance optimization
 
-*Sprint 2 takes priority. Execute Sprints 2-4 sequentially to complete Traditional SEO foundation.*
+*Sprint 5 addresses immediate conversion optimization. Review messaging changes before implementation.*
 
 ---
 
-**Document Version**: 4.0 (Mission Complete)
-**Last Updated**: November 15, 2025
+**Document Version**: 5.2 (Sprint 5 Complete)
+**Last Updated**: December 13, 2025
 **Previous Version**: See git history
 
 *Document maintained by THE COORDINATOR (AGENT-11)*
