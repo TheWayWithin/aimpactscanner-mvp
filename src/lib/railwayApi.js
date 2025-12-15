@@ -202,8 +202,8 @@ export async function runAnalysis(url, userId, analysisId, userTier = 'free', on
     throw new Error(jobResponse.error || 'Failed to start analysis');
   }
 
-  // Poll for completion
-  const result = await pollJobCompletion(jobResponse.jobId, {
+  // Poll for completion (API returns snake_case job_id)
+  const result = await pollJobCompletion(jobResponse.job_id, {
     onProgress,
     maxAttempts: 90, // ~3 minutes with backoff
   });
