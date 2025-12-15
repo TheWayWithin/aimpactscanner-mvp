@@ -202,7 +202,17 @@ export async function runAnalysis(url, userId, analysisId, userTier = 'free', on
  * Controlled by VITE_USE_RAILWAY_BACKEND env var
  */
 export function useRailwayBackend() {
-  return import.meta.env.VITE_USE_RAILWAY_BACKEND === 'true';
+  const envValue = import.meta.env.VITE_USE_RAILWAY_BACKEND;
+  const isEnabled = envValue === 'true';
+
+  // Debug logging to help diagnose env var issues
+  console.log('🔧 Railway Backend Check:', {
+    VITE_USE_RAILWAY_BACKEND: envValue,
+    isEnabled,
+    RAILWAY_API_URL: import.meta.env.VITE_RAILWAY_API_URL || RAILWAY_API_URL,
+  });
+
+  return isEnabled;
 }
 
 /**
