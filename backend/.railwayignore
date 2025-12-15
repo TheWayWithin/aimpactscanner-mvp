@@ -1,0 +1,12 @@
+# Ignore parent directory files
+../*
+../node_modules
+../dist
+../src
+../public
+../supabase
+
+# Ignore dev files
+*.md
+.env*
+!.env.example

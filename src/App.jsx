@@ -37,6 +37,7 @@ import UserInitializer from './components/UserInitializer';
 import { useUpgrade } from './components/UpgradeHandler';
 import { useUsageTracking } from './hooks/useUsageTracking';
 import { useTabVisibility } from './hooks/useTabVisibility';
+import { runAnalysis, useRailwayBackend, getRailwayApiUrl } from './lib/railwayApi';
 import { usePDFPreloader, usePDFPreloadTrigger } from './hooks/usePDFPreloader';
 import AuthenticatedHeader from './components/AuthenticatedHeader';
 import AILogo from './components/AILogo';
@@ -1383,49 +1384,89 @@ function AppContent({ initialUrl }) {
       // Switch to analysis view to show progress
       setCurrentView('analysis');
 
-      // Call Edge Function with timeout
+      // Choose backend: Railway (new) or Edge Functions (legacy)
+      const useRailway = useRailwayBackend();
       let data, invokeError;
-      try {
-        const edgeFunctionPromise = supabase.functions.invoke('analyze-page', {
-          body: {
-            url: url,
-            analysisId: analysisId,
-            userId: userId
-          }
-        });
 
-        const edgeTimeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Analysis timeout - please try again')), 30000) // 30 second timeout
-        );
-
-        const result = await Promise.race([
-          edgeFunctionPromise,
-          edgeTimeoutPromise
-        ]).catch(err => ({ error: err }));
-
-        if (result.error) {
-          invokeError = result.error;
-        } else {
-          data = result.data;
-          invokeError = result.error;
+      if (useRailway) {
+        // NEW: Railway backend with async job queue
+        console.log(`🚂 Using Railway backend: ${getRailwayApiUrl()}`);
+        try {
+          const result = await runAnalysis(
+            url,
+            userId,
+            analysisId,
+            userTier,
+            (progress) => {
+              console.log(`📊 Analysis progress: ${progress.status} (attempt ${progress.attempts})`);
+            }
+          );
+          data = result;
+        } catch (error) {
+          invokeError = error;
         }
-      } catch (error) {
-        invokeError = error;
+      } else {
+        // LEGACY: Edge Function with timeout
+        console.log('⚡ Using Edge Function backend');
+        try {
+          const edgeFunctionPromise = supabase.functions.invoke('analyze-page', {
+            body: {
+              url: url,
+              analysisId: analysisId,
+              userId: userId
+            }
+          });
+
+          const edgeTimeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Analysis timeout - please try again')), 45000)
+          );
+
+          const result = await Promise.race([
+            edgeFunctionPromise,
+            edgeTimeoutPromise
+          ]).catch(err => ({ error: err }));
+
+          if (result.error) {
+            invokeError = result.error;
+          } else {
+            data = result.data;
+            invokeError = result.error;
+          }
+        } catch (error) {
+          invokeError = error;
+        }
       }
       
       const duration = Math.round((Date.now() - startTime) / 1000);
       
       if (invokeError) {
-        console.error('❌ Edge Function error:', invokeError);
-        trackError('edge_function', invokeError.message || invokeError, 'analysis');
-        
-        // Set error state for display
+        const backendType = useRailway ? 'railway_backend' : 'edge_function';
+        console.error(`❌ ${useRailway ? 'Railway' : 'Edge Function'} error:`, invokeError);
+        trackError(backendType, invokeError.message || invokeError, 'analysis');
+
+        // Parse error message for user-friendly display
+        let errorMessage = invokeError.message || 'The analysis service is temporarily unavailable. Please try again.';
+        let errorTitle = 'Analysis Failed';
+
+        // Check for specific error types
+        if (errorMessage.includes('DOMAIN_NOT_FOUND') || errorMessage.includes('URL_UNREACHABLE')) {
+          errorTitle = 'Website Not Found';
+          errorMessage = 'The website could not be reached. Please check the URL is correct and the site is online.';
+        } else if (errorMessage.includes('FETCH_TIMEOUT')) {
+          errorTitle = 'Request Timeout';
+          errorMessage = 'The website took too long to respond. Please try again later.';
+        } else if (errorMessage.includes('non-2xx status')) {
+          errorTitle = 'Analysis Error';
+          errorMessage = 'We couldn\'t analyze this website. It may be blocking our scanner or have an invalid URL.';
+        }
+
+        // Set error state for display in progress component
         setAnalysisError({
-          title: 'Analysis Failed',
-          message: invokeError.message || 'The analysis service is temporarily unavailable. Please try again.',
+          title: errorTitle,
+          message: errorMessage,
           action: 'retry'
         });
-        setCurrentView('input'); // Go back to input on error
+        // Stay in analysis view - SimpleAnalysisProgress will show error state
       } else {
         console.log('✅ Analysis completed:', data);
         // Store the real analysis results
@@ -2120,10 +2161,15 @@ function AppContent({ initialUrl }) {
 
         {currentView === 'analysis' && currentAnalysisId && (
           <ProtectedRoute session={session} onRedirect={setCurrentView}>
-            <SimpleAnalysisProgress 
+            <SimpleAnalysisProgress
               analysisId={currentAnalysisId}
               url={currentUrl}
               onAnalysisComplete={handleAnalysisComplete}
+              error={analysisError}
+              onRetry={() => {
+                setAnalysisError(null);
+                setCurrentView('input');
+              }}
             />
           </ProtectedRoute>
         )}

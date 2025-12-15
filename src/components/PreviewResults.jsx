@@ -66,12 +66,13 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
       const pillarMapping = {
         'AI': 'AI Response Optimization',
         'A': 'Authority & Trust',
-        'M': 'Machine Readability', 
+        'M': 'Machine Readability',
         'S': 'Semantic Content',
         'E': 'Engagement',
-        'T': 'Topical Expertise',
+        'T': 'Technical SEO',
         'R': 'Reference Networks',
-        'Y': 'Yield Optimization'
+        'Y': 'Yield Optimization',
+        'P': 'Performance'
       };
       
       const result = {};
@@ -99,7 +100,10 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
         'Machine Readability': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 5)),
         'Semantic Content': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 2)),
         'Engagement': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 6)),
-        'Topical Expertise': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 1))
+        'Technical SEO': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 1)),
+        'Reference Networks': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 2)),
+        'Yield Optimization': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 4)),
+        'Performance': Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 3))
       };
     }
 
@@ -125,13 +129,14 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
   const getPillarDisplayName = (pillar) => {
     const mapping = {
       'AI': 'AI Response Optimization',
-      'A': 'Authority & Trust', 
+      'A': 'Authority & Trust',
       'M': 'Machine Readability',
       'S': 'Semantic Content',
       'E': 'Engagement',
-      'T': 'Topical Expertise',
+      'T': 'Technical SEO',
       'R': 'Reference Networks',
-      'Y': 'Yield Optimization'
+      'Y': 'Yield Optimization',
+      'P': 'Performance'
     };
     return mapping[pillar] || pillar;
   };
@@ -220,7 +225,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                     </div>
                     <div className="text-right">
                       <div className={`text-xl font-bold px-4 py-2 rounded border ${getScoreColor(factor.score)}`}>
-                        {factor.score}
+                        {Math.round(factor.score)}
                       </div>
                       <div className="text-xs text-gray-600 mt-1">
                         {getScoreLabel(factor.score)}
@@ -292,7 +297,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                     </div>
                     <div className="text-right">
                       <div className={`text-xl font-bold px-4 py-2 rounded border ${getScoreColor(factor.score)}`}>
-                        {factor.score}
+                        {Math.round(factor.score)}
                       </div>
                       <div className="text-xs text-gray-600 mt-1">
                         {getScoreLabel(factor.score)}

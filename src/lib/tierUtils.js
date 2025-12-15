@@ -206,7 +206,13 @@ export function hasFeatureAccess(tier, feature) {
     'planner': ['growth', 'scale', 'professional', 'enterprise'],
     'priority_support': ['growth', 'scale', 'professional', 'enterprise'],
     'api_access': ['scale', 'enterprise'],
-    'team_management': ['scale', 'enterprise']
+    'team_management': ['scale', 'enterprise'],
+    // Traditional SEO factors (Sprint 2)
+    'seo_indexability': ['free', 'coffee', 'growth', 'scale', 'professional', 'enterprise'], // Free tier gets this
+    'seo_mobile_friendly': ['coffee', 'growth', 'scale', 'professional', 'enterprise'],
+    'seo_page_speed': ['coffee', 'growth', 'scale', 'professional', 'enterprise'],
+    'seo_broken_links': ['coffee', 'growth', 'scale', 'professional', 'enterprise'],
+    'seo_sitemap': ['coffee', 'growth', 'scale', 'professional', 'enterprise']
   };
 
   const allowedTiers = featureMatrix[feature] || [];

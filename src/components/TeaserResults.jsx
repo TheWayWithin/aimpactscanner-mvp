@@ -311,7 +311,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                           <span className="text-red-600 font-bold mr-3">{index + 1}.</span>
                           <h4 className="font-semibold">{factor.factor_name || factor.name}</h4>
                           <span className="ml-auto text-sm bg-red-100 text-red-700 px-2 py-1 rounded">
-                            Score: {factor.score}/100
+                            Score: {Math.round(factor.score)}/100
                           </span>
                         </div>
                         <p className="text-gray-600 text-sm">{factor.description}</p>
@@ -351,7 +351,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                     <p className="text-gray-600 text-sm mb-2">{factor.description}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-sm bg-yellow-100 text-yellow-700 px-2 py-1 rounded">
-                        Current: {factor.score}/100
+                        Current: {Math.round(factor.score)}/100
                       </span>
                       <span className="text-sm text-green-600 font-semibold">
                         {factor.potentialGain}

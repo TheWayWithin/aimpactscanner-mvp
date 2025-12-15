@@ -1,11 +1,499 @@
 # AImpactScanner MVP - Progress Log
 
-## [November 29, 2025] - Sprint 1: LLMs.txt Integration (Phases 1-5) 🧪
+## [December 15, 2025] - Sprint 6 Phase 3: Async Job Processing Complete ✅
+
+**Context**: Implemented background job queue system for async analysis processing.
+
+### Phase 3 Deliverables
+
+1. **Database Migration** ✅
+   - Created `analysis_jobs` table with job queue schema
+   - Added `job_status` ENUM: pending, processing, completed, failed
+   - Created indexes for efficient queue polling
+   - Added `claim_next_job()` RPC function with FOR UPDATE SKIP LOCKED
+   - Applied to staging database (isgzvwpjokcmtizstwru)
+   - File: `supabase/migrations/20251215000001_add_analysis_jobs_table.sql`
+
+2. **Job Queue Service** ✅
+   - `backend/src/services/jobQueue.ts`
+   - Functions: createJob, claimNextJob, completeJob, failJob
+   - Features: priority-based processing, retry logic, stale job release
+
+3. **Background Worker** ✅
+   - `backend/src/worker.ts`
+   - Standalone process for processing queued jobs
+   - Exponential backoff when queue empty
+   - Graceful shutdown (SIGTERM/SIGINT)
+   - Worker scripts added to package.json
+
+4. **API Endpoints** ✅
+   - `POST /api/analyze/async` - Queue job (returns immediately)
+   - `GET /api/analyze/jobs` - User's job history
+   - `GET /api/analyze/jobs/:jobId` - Job status with results
+
+5. **Deployment** ✅
+   - Backend deployed to Railway
+   - Health check passing
+   - All endpoints returning 401 (auth working)
+
+### Files Created/Modified
+
+```
+backend/src/services/jobQueue.ts (NEW)
+backend/src/worker.ts (NEW)
+backend/src/routes/analyze.ts (MODIFIED - added async endpoints)
+backend/src/types/database.types.ts (MODIFIED - added job types)
+backend/package.json (MODIFIED - added worker scripts)
+supabase/migrations/20251215000001_add_analysis_jobs_table.sql (NEW)
+```
+
+### Next Steps
+
+- Phase 4: Headless Browser Integration (Puppeteer)
+- Phase 5: Production Migration
+- Phase 6: LLMs.txt Migration & Cleanup
+
+---
+
+## [December 14, 2025] - Sprint 6 Phase 1: Railway Infrastructure Setup 🚀
+
+**Context**: Implementing backend migration from Supabase Edge Functions to Railway Node.js.
+
+### Phase 1 Progress
+
+**Status**: ✅ IN PROGRESS - Backend structure created, deploying to Railway
+
+#### Completed Tasks
+
+1. **Railway Project Created** ✅
+   - Project: `aimpactscanner-backend`
+   - URL: https://railway.com/project/4199ce0c-2506-4f71-847d-e495dc69dfff
+   - Environment: production (linked)
+
+2. **Backend Directory Structure Created** ✅
+   - `/backend/package.json` - Express, Supabase, TypeScript dependencies
+   - `/backend/tsconfig.json` - Strict TypeScript config (ES2022, CommonJS)
+   - `/backend/src/index.ts` - Express server with health check
+   - `/backend/src/lib/supabase.ts` - Admin + user client pattern
+   - `/backend/src/middleware/cors.ts` - Environment-based CORS
+   - `/backend/src/middleware/auth.ts` - JWT validation + tier fetching
+   - `/backend/src/middleware/error-handler.ts` - Custom error classes
+   - `/backend/src/middleware/logger.ts` - Request logging
+   - `/backend/src/middleware/rate-limit.ts` - Tier-based rate limiting
+   - `/backend/src/types/database.types.ts` - Supabase schema types
+   - `/backend/.env.example` - Environment template
+   - `/backend/.gitignore` - Node.js ignore patterns
+   - `/backend/railway.json` - Railway deployment config
+
+3. **Dependencies Installed** ✅
+   - 257 packages installed
+   - 0 vulnerabilities
+
+4. **TypeScript Build Verified** ✅
+   - `npm run type-check` - passes
+   - `npm run build` - compiles to `/dist/`
+
+### Architecture Alignment
+
+**Tier naming aligned with existing codebase**:
+- `free`, `coffee`, `growth`, `scale` (not `Free`, `Pro`, `Enterprise`)
+- Legacy mappings: `professional` → `growth`, `enterprise` → `scale`
+- Aligned with `tierUtils.js` patterns
+
+**Supabase client pattern aligned**:
+- Admin client (service role) for privileged operations
+- User client factory for JWT-scoped operations
+- PKCE flow consistent with frontend
+
+**Security patterns aligned**:
+- JWT validation via Supabase `auth.getUser()`
+- Tier-based rate limiting (Free: 5/hr, Coffee: 20/hr, Growth: 50/hr, Scale: 100/hr)
+- CORS whitelist (production, staging, localhost)
+
+### Files Created (14 total)
+
+```
+backend/
+├── package.json
+├── tsconfig.json
+├── railway.json
+├── .env.example
+├── .gitignore
+└── src/
+    ├── index.ts
+    ├── lib/
+    │   └── supabase.ts
+    ├── middleware/
+    │   ├── auth.ts
+    │   ├── cors.ts
+    │   ├── error-handler.ts
+    │   ├── logger.ts
+    │   └── rate-limit.ts
+    └── types/
+        └── database.types.ts
+```
+
+### Next Steps
+
+- [ ] Deploy to Railway staging
+- [ ] Configure Railway environment variables
+- [ ] Test health check endpoint
+- [ ] Begin Phase 2: Lift & Shift Analysis Engine
+
+---
+
+## [December 14, 2025] - Sprint 6 Planning: Backend Migration & Dynamic Site Analysis 📋
+
+**Context**: Strategic planning for backend migration from Supabase Edge Functions to Railway Node.js to enable CSR website analysis.
+
+### Sprint Planning Summary
+
+**Sprint 6 Added to project-plan.md** (v6.0)
+- 6 phases planned over 6-8 weeks
+- Follows dev-staging-production workflow
+- Maintains backwards compatibility during migration
+
+### Phase Overview
+
+| Phase | Name | Duration | Key Deliverable |
+|-------|------|----------|-----------------|
+| 1 | Railway Infrastructure Setup | 1 week | Railway staging deployed |
+| 2 | Lift & Shift Analysis Engine | 2 weeks | 27 factors ported to Node.js |
+| 3 | Async Job Processing | 1.5 weeks | Job queue for long-running tasks |
+| 4 | Headless Browser Integration | 2 weeks | Puppeteer for CSR analysis |
+| 5 | Production Migration | 1 week | Traffic migrated to Railway |
+| 6 | LLMs.txt Migration & Cleanup | 0.5 weeks | Full migration complete |
+
+### Key Architecture Decisions
+
+1. **What Stays on Supabase**:
+   - PostgreSQL database (users, analyses, factors)
+   - Authentication (OAuth, Magic Links)
+   - Real-time subscriptions (progress WebSocket)
+   - Non-analysis Edge Functions (Stripe, portal)
+
+2. **What Moves to Railway**:
+   - analyze-page Edge Function → Railway `/api/analyze`
+   - generate-llmstxt Edge Function → Railway `/api/generate-llmstxt`
+   - Analysis engine (AnalysisEngine.ts, traditionalSeoFactors.ts)
+
+3. **Environment Strategy**:
+   - Dev/Staging Railway → Staging Supabase (isgzvwpjokcmtizstwru)
+   - Production Railway → Production Supabase (pdmtvkcxnqysujnpcnyh)
+   - Never mix environments
+
+### Business Impact
+
+- **Unblocks**: Analysis of CSR/JavaScript-rendered websites
+- **Target Market**: SaaS builders, React/Vue/Angular SPAs, modern web apps
+- **Technical Debt**: Removes 60-second Edge Function timeout constraint
+- **Future-Proofs**: Enables batch processing, competitor analysis features
+
+### Risk Mitigation Strategy
+
+1. Run Railway parallel to Edge Functions during validation
+2. Keep Edge Functions deployable for 30-day grace period
+3. Gradual traffic migration (10% → 50% → 100%)
+4. Feature flag controls routing between old/new backends
+
+---
+
+## [December 9, 2025] - Sprint 3 Performance Fix: Internal Linking Timeout ✅
+
+**Context**: After Sprint 3 deployment, all analyses timed out. Root cause identified and fixed.
+
+### Issue Analysis
+
+**Symptom**: All website analyses timing out with "Analysis timeout - please try again" after Sprint 3 deployment.
+
+**Debugging Process**:
+1. Reverted Edge Function to pre-Sprint 3 code → Works (23 factors)
+2. Re-enabled Factor 24 (Canonical Tags) only → Works
+3. Enabled Factor 24 + Factor 25 (Internal Linking) → **Times out**
+4. Identified `analyzeInternalLinking` (TS.2.2) as culprit
+
+**Root Cause**: Catastrophic regex backtracking in the original link extraction pattern:
+```javascript
+// PROBLEMATIC: [^>]* can cause exponential backtracking
+const linkRegex = /<a\s+[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+```
+
+### Fix Applied
+
+**Optimization**: Split complex regex into two-step approach with safety limits:
+1. Find all anchor tags with simple pattern: `/<a\b[^>]*>[\s\S]*?<\/a>/gi`
+2. Extract href and text from each tag individually
+3. Added MAX_LINKS=500 limit to prevent timeout on pages with thousands of links
+
+### Verification
+- ✅ Deployed to staging and production
+- ✅ All 27 factors now enabled (24-27 are Sprint 3 factors)
+- ✅ Commit f8ccf96 pushed to GitHub
+
+### Lessons Learned
+- Complex regex patterns can cause catastrophic backtracking on real-world HTML
+- Two-step regex approach is more predictable for large content
+- Always add safety limits for iterative processing on user-provided content
+
+---
+
+## [December 8, 2025] - Sprint 3: High-Priority Traditional SEO Factors ✅
+
+**Context**: Completed Sprint 3 implementation - 4 new SEO factors increasing coverage from 50% to 75%.
+
+### Implementation Summary
+
+**Files Modified**:
+- `supabase/functions/analyze-page/lib/traditionalSeoFactors.ts` - Added 4 new factor functions
+- `supabase/functions/analyze-page/index.ts` - Integrated factors 24-27
+- `tests/playwright/sprint3-traditional-seo.spec.js` - New test suite
+
+**New Factors Added (Solo+ Tier)**:
+1. **TS.2.1 - Canonical Tags** (Factor 24, Weight: 0.75)
+   - Detects `<link rel="canonical">` presence
+   - Validates self-referencing canonicals
+   - Detects cross-domain canonical issues
+   - Checks for conflicting canonical signals
+
+2. **TS.2.2 - Internal Linking** (Factor 25, Weight: 0.70)
+   - Counts internal vs external links
+   - Analyzes anchor text quality (descriptive vs generic)
+   - Detects navigation vs content links
+   - Provides link-to-text ratio analysis
+
+3. **TS.2.3 - Duplicate Site Versions** (Factor 26, Weight: 0.65)
+   - Checks HTTP vs HTTPS protocol
+   - Analyzes www vs non-www consistency
+   - Validates canonical URL format
+   - Detects trailing slash issues
+
+4. **TS.2.4 - Robots.txt Configuration** (Factor 27, Weight: 0.60)
+   - Parses robots.txt meta tags
+   - Checks for overly restrictive directives
+   - Validates X-Robots-Tag headers
+   - Verifies sitemap references
+
+### Technical Details
+
+- All factors use **instant phase** analysis (no external HTTP requests)
+- Regex-based HTML content parsing (Deno Edge Function compatible)
+- Consistent FactorResult interface with Sprint 2 factors
+- Integrated into `analyzeAllTraditionalSeoFactors()` convenience function
+
+### Verification
+- ✅ Files verified on filesystem: December 8, 2025
+- ✅ traditionalSeoFactors.ts: 1472 lines, 10 exported functions
+- ✅ index.ts: Factors 24-27 added at lines 1730-1744
+- ✅ Test suite created: sprint3-traditional-seo.spec.js
+
+### Next Steps
+- Deploy Edge Function to staging for E2E testing
+- Deploy to production after verification
+- Update user documentation for new factors
+
+---
+
+## [December 8, 2025] - Error Handling UX Fix ✅
+
+**Context**: User testing revealed that scanning non-existent domains (e.g., fakesitexyz123.com) left users stuck on progress screen.
+
+### Bug Fix
+
+1. **Invalid URL Error Display** (commit: 2153a03)
+   - Issue: Scanning non-existent domains showed "Mock analysis completed, waiting for real analysis..." and hung
+   - Root cause: Edge Function returned 500 error but frontend didn't display error to user
+   - Fixed:
+     - Added `error` and `onRetry` props to `SimpleAnalysisProgress` component
+     - Component now shows user-friendly error state when analysis fails
+     - Error messages parsed for specific cases (Website Not Found, Request Timeout, etc.)
+     - Added "Try Another URL" button to retry
+     - Timeouts cleared when error occurs to stop mock animation
+
+---
+
+## [December 7, 2025] - Sprint 2 Bug Fixes & Enhancements ✅
+
+**Context**: Post-deployment testing revealed several issues, all fixed and deployed.
+
+### Bug Fixes
+
+1. **Score Rounding** (commit: previous session)
+   - Issue: Factor scores showing long decimals (95.95959595... instead of 96)
+   - Fixed: Added `Math.round()` in FactorCard, SimpleResultsDashboard, PreviewResults, TeaserResults
+
+2. **Duplicate Factor IDs** (commit: 42e2ad0)
+   - Issue: Traditional SEO factors used `T.1.1` which conflicted with "Topic Knowledge Depth"
+   - Result: Dashboard showed 22 factors instead of 23
+   - Fixed: Changed traditional SEO factor IDs to `TS.x.x` prefix (TS.1.1, TS.1.2, TS.1.3, TS.1.4)
+
+3. **Progress Popup Text** (commit: c1a5f1c)
+   - Issue: Showed outdated "Phase A" and "148 factors" text
+   - Fixed: Updated to "23 factors", removed Phase A line
+
+4. **Non-existent Domain Handling** (commit: c677663)
+   - Issue: Scanning non-existent domains (e.g., agent-111.com) ran full analysis on empty content
+   - Fixed: Added URL validation to throw proper errors for unreachable domains
+
+5. **Severity Thresholds Too Lenient** (commit: 8bd7be3)
+   - Issue: Sites scoring 47 (Needs Improvement) showed "No Critical SEO Issues"
+   - Fixed: Increased thresholds to trigger warnings more appropriately:
+     - Indexability: blocker < 50, warning < 90
+     - Mobile: warning < 60
+     - Speed: warning < 50
+     - Links: warning < 70
+     - Sitemap: warning < 60
+
+### New Features
+
+1. **Critical Issues Banner** (commit: eefb9c4, 7347be9)
+   - Added `CriticalIssuesBanner.jsx` component
+   - Shows blockers (red), warnings (orange), or success (green) message
+   - Displays before pillar cards for visibility
+   - Shows factor ID, score, and first recommendation
+
+### Verification
+- Tested on production: agent-11.com (green - no issues), example.com (orange - sitemap warning)
+- Factor count confirmed: 23 factors across 9 pillars
+- Severity banner working correctly
+
+---
+
+## [December 7, 2025] - Sprint 2: DEPLOYED TO PRODUCTION ✅
+
+**Context**: Traditional SEO Foundation Integration - Deployed and Verified Live
+
+### Production Deployment
+
+**Deployment Steps Completed**:
+1. ✅ Git commit: `feat: Sprint 2 - Traditional SEO Foundation Integration` (dd4ccf2)
+2. ✅ Pushed to main branch (triggers Netlify frontend deploy)
+3. ✅ Edge Function deployed to production Supabase: `analyze-page`
+4. ✅ Production verification: anthropic.com analyzed successfully
+
+**Production Verification Results**:
+- URL tested: https://anthropic.com
+- Factors returned: **23** ✅
+- Overall score: **58**
+- All 9 pillars present with scores:
+  - AI Response Optimization: 58
+  - Authority & Trust: 70
+  - Machine Readability: 52
+  - Semantic Content: 75
+  - Engagement: 90
+  - Technical SEO: 53
+  - Reference Networks: 80
+  - Yield Optimization: 85
+  - **Performance: 70** (new P pillar) ✅
+
+**Note**: Cache table migration (seo_external_cache) pending - Edge Function has graceful fallback.
+
+---
+
+## [December 7, 2025] - Sprint 2: COMPLETE ✅
+
+**Context**: Traditional SEO Foundation Integration - All 6 Phases Complete
+
+### Phase 6: Documentation & Launch Prep
+
+**Documentation Updated**:
+1. **architecture.md** → v2.3
+   - Updated factor count: 18 → 23
+   - Updated pillar count: 8 → 9 (new P pillar)
+   - Added Sprint 2 section to Recent Production Enhancements
+   - Documented all 5 new traditional SEO factors
+
+2. **product-description.md** → v2.3
+   - Added Traditional SEO Foundation section
+   - Updated framework specs (23 factors, 9 pillars)
+   - Added P (Performance) pillar to pillar list
+
+**Sprint 2 Summary**:
+- Duration: December 5-7, 2025 (3 days)
+- New factors: T.5.1, T.5.2, P.1.1, T.5.3, T.5.4
+- New pillar: P (Performance)
+- Total factors: 23 (was 18)
+- Staging verified: ✅
+- **Production verified: ✅**
+
+---
+
+## [December 7, 2025] - Sprint 2: Phase 5 Testing Complete ✅
+
+**Context**: Testing & Edge Cases for Traditional SEO Foundation Integration
+
+**Sprint 2 Implementation Verified**:
+- 23 factors total (18 original + 5 new traditional SEO)
+- 9 pillars including new P (Performance) pillar
+- New factors: T.5.1 (Indexability), T.5.2 (Mobile-Friendly), P.1.1 (Page Speed), T.5.3 (Broken Links), T.5.4 (Sitemap)
+
+**Manual Browser Testing**: ✅ PASSED
+- Analyzed google.com via staging frontend
+- API returned: 23 factors, score: 59
+- All 9 MASTERY-AI pillars present (AI, A, M, S, E, T, R, Y, P)
+- P pillar showing Performance data
+- T pillar showing Technical SEO factors
+
+**Playwright Test Suite**: ✅ PASSED (with skips)
+- Test file: `tests/playwright/sprint2-traditional-seo.spec.js`
+- Results: 1 passed, 7 skipped (API tests skipped due to rate limiting)
+- tierUtils feature gating test: ✅ PASSED
+- API tests skipped (verified manually via browser - Edge Function works correctly)
+- Landing page test skipped (covered by UAT tests)
+
+**Files Created/Modified**:
+- `tests/playwright/sprint2-traditional-seo.spec.js` - Sprint 2 specific test suite
+
+**Sprint 2 Status**: All 5 phases complete, ready for Phase 6 (Documentation & Launch Prep)
+
+---
+
+## [December 5, 2025] - Sprint 1: Phase 6 Documentation Complete ✅
+
+**Context**: Final documentation updates for Sprint 1 completion
+
+**Documentation Updated**:
+1. **architecture.md** → v2.2
+   - ADR-015 status changed from "Proposed" to "Accepted"
+   - Version header updated to reflect Sprint 1 completion
+   - Footer updated with Sprint 1 completion timestamp
+2. **product-description.md** → v2.2
+   - Version/date updated to December 5, 2025
+   - Status updated to reflect Sprint 1 LLMs.txt integration complete
+
+**Monitoring Verified**:
+- Edge Function logs checked (no errors logged)
+- LLMs.txt generation working in production
+
+---
+
+## [December 5, 2025] - Sprint 1: Smoke Tests Complete ✅
+
+**Context**: Final testing and bug fixes for LLMs.txt integration
+
+**Starting State**: Smoke testing in progress, 401 errors from API
+**Ending State**: All smoke tests passing, Sprint 1 complete
+
+**Bugs Fixed**:
+1. **P1 - Staging API Key Invalid**: Set correct production API key in staging Supabase secrets
+2. **P1 - Response Parsing Bug**: Frontend expected `analyzeData.id` but API returns `analyzeData.analysis.id`
+
+**Commits**:
+- `5e330d4` - fix: handle nested analysis.id in LLMs.txt API response
+
+**Smoke Test Results**:
+- Usage stats display: ✅ Working (10/25)
+- Analysis start: ✅ Working
+- Progress polling: ✅ Working (22% → 63%)
+- Tier restrictions: ✅ Verified (Growth/Scale only)
+
+---
+
+## [November 29, 2025] - Sprint 1: LLMs.txt Integration (Phases 1-5) ✅
 
 **Context**: Implementing LLMtxtMastery API integration to enable llms.txt file generation for Growth and Scale tier users.
 
 **Starting State**: Sprint 1 in planning phase
-**Ending State**: Phases 1-5 deployed, smoke testing in progress with bug fixes
+**Ending State**: Phases 1-5 deployed, testing continues December 5
 **Total Time**: ~4 hours (including testing and bug fixes)
 
 **Commits**:

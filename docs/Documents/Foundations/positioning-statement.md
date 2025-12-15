@@ -1,7 +1,7 @@
 # AImpactScanner Positioning Statement
 
-**Version:** 2.0
-**Date:** October 18, 2025
+**Version:** 2.1
+**Date:** December 13, 2025
 **Status:** Active
 
 ---
@@ -118,6 +118,162 @@ Automated analysis of individual web pages against the comprehensive 18-factor M
 
 ---
 
+## Value Ladder Messaging
+
+*Based on LLMtxtMastery pattern + Doug Hall Marketing Physics + "So What?" test*
+*Implemented: December 13, 2025 (Sprint 5)*
+
+**Key Insight**: Customers don't care about AI - they care about losing customers and revenue. All messaging reframed around real customer outcomes.
+
+### Tier Taglines (Overarching Benefit)
+
+| Tier | Tagline | Customer Question Answered |
+|------|---------|---------------------------|
+| **Free** | "Am I losing customers?" | Discovery - find out if there's a problem |
+| **Solo** | "Stop losing customers" | Action - fix the problems you found |
+| **Growth** | "Never lose a customer to AI" | System - complete optimization workflow |
+| **Scale** | "Never say no to a client" | Agency - handle any project, any client |
+
+### Tier-by-Tier Value Ladder
+
+---
+
+#### FREE TIER (Starter)
+
+**OB Headline**: "Discover where you're losing customers to AI"
+
+**OB Bullets**:
+- 27-factor scan across 9 AI visibility pillars
+- No credit card required
+
+**FOMO Box** (Yellow - Upgrade Prompt → Solo):
+> **What you're missing:**
+> Free finds the problem - but then you're stuck. Fix something? That's scan 2. Verify it worked? Scan 3. You're done. No more pages, no more progress. Solo gives you 10 scans to actually move forward.
+>
+> → Upgrade to Solo for just $4.95/month
+
+**What You Get with FREE**:
+1. ★ **Find out if you're losing customers right now** (highlighted)
+2. See what AI sees (and what it misses)
+3. Pinpoint your biggest visibility gap
+4. No commitment - just answers
+
+**Volume**: 3 free analyses per month
+
+---
+
+#### SOLO TIER ($4.95/month)
+
+**OB Headline**: "Fix the problems that are costing you customers"
+
+**OB Bullets**:
+- Scan → Fix → Verify → Move to next page
+- Keep your results for 30 days
+
+**FOMO Box** (Yellow - Upgrade Prompt → Growth):
+> **More than a side project?**
+> You'll need to work across pages and sites, track your progress, and keep AI finding you after every change. Growth is built for that.
+>
+> → Upgrade to Growth for $14.95/month
+
+**What You Get with SOLO**:
+1. ★ **10 scans to fix your key pages** (highlighted)
+2. 30-day history proves your fixes worked
+3. PDF reports to share with clients or your team
+4. Email support when you get stuck
+
+**Volume**: 10 analyses per month
+
+---
+
+#### GROWTH TIER ($14.95/month) ⭐ PRIMARY
+
+**OB Headline**: "The complete system: scan, plan, track, get found"
+
+**OB Bullets**:
+- Know exactly what to fix, in what order
+- Track your progress across 90 days
+
+**FOMO Box** (Yellow - Upgrade Prompt → Scale):
+> **Working with clients?**
+> 40 scans won't cover their sites plus yours. Scale gives you 100 scans, unlimited LLMS.txt, and unlimited history - never say no to a project.
+>
+> → Upgrade to Scale for $29.95/month
+
+**What You Get with GROWTH**:
+1. ★ **Know exactly what to fix, in what order** (highlighted)
+2. 40 scans to cover everything
+3. Track your progress over 90 days
+4. Generate LLMS.txt after every change
+5. Priority support when you need help
+
+**Volume**: 40 analyses per month
+
+---
+
+#### SCALE TIER ($29.95/month)
+
+**OB Headline**: "100 scans, unlimited LLMS.txt, unlimited history - take on any project"
+
+**OB Bullets**:
+- Cover every client site from one account
+- Regenerate LLMS.txt after every change, on every site
+
+**FOMO Box** (Green - Top Tier Confirmation):
+> **No limits**
+> Take on any project. Cover any site. Never run out of scans or history.
+
+**What You Get with SCALE**:
+1. ★ **Never say no to a project** (highlighted)
+2. 100 scans to cover every client site
+3. Unlimited LLMS.txt after every change
+4. Unlimited history - your data forever
+5. 5-page comparisons for client reports
+
+**Volume**: 100 analyses per month
+
+---
+
+### Real Reasons to Believe (All Tiers)
+
+Trust indicators displayed on every tier:
+
+| RTB | Purpose |
+|-----|---------|
+| **30-Day Money Back Guarantee** | Risk reversal - try with confidence |
+| **Cancel in 10 Seconds** | No lock-in anxiety |
+| **Built by Solopreneur for Solopreneurs** | Authenticity - we understand you |
+
+### Feature Comparison Matrix
+
+| Feature | Free | Solo | Growth | Scale |
+|---------|------|------|--------|-------|
+| **Analyses/month** | 3 | 10 | 40 | 100 |
+| **27-factor analysis** | ✓ | ✓ | ✓ | ✓ |
+| **History** | 7 days | 30 days | 90 days | Unlimited |
+| **PDF export** | - | ✓ | ✓ | ✓ |
+| **CSV export** | - | - | ✓ | ✓ |
+| **Comparison reports** | - | - | 2 pages | 5 pages |
+| **LLMS.txt generation** | - | - | 25/month | Unlimited |
+| **Remediation planner** | - | - | ✓ | ✓ |
+| **Progress tracking** | - | - | ✓ | ✓ |
+| **Support** | Docs | 48hr email | 24hr priority | 24hr priority |
+
+### Value Ladder Progression Logic
+
+Each tier comparison points ONLY to the next tier up (not skipping):
+
+```
+Free → Solo: "You found 3 problems but can only verify 3 fixes total"
+Solo → Growth: "You need to work across pages and track progress"
+Growth → Scale: "40 scans won't cover clients plus your own sites"
+Scale → (none): "No limits - take on any project" (confirmation, not upgrade)
+```
+
+This creates a natural progression where each tier solves the limitation of the previous tier.
+
+---
+
 ## Key Differentiators
 
 1. **MASTERY-AI Framework Authority**
@@ -194,8 +350,9 @@ Automated analysis of individual web pages against the comprehensive 18-factor M
 **Version History:**
 - v1.0 (2024-10-16): INCORRECT - Described as competitive intelligence platform
 - v2.0 (2025-10-18): CORRECTED - Page-level diagnostic analysis platform
+- v2.1 (2025-12-13): Added Value Ladder Messaging section (Sprint 5) with tier taglines, OB headlines, FOMO boxes, RTBs
 
-**Next Review:** January 18, 2026 (Quarterly)
+**Next Review:** March 13, 2026 (Quarterly)
 
 **Related Documents:**
 - `/documents/foundation/Vision and Mission.md` - Strategic foundation

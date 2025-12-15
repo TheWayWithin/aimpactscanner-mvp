@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { addToHistory } from '../utils/analysisHistory';
 import LazyTierPDFButton from './LazyTierPDFButton';
 import LLMsTxtPanel from './LLMsTxtPanel';
+import CriticalIssuesBanner from './CriticalIssuesBanner';
 import { hasFeatureAccess, getMinimumTierForFeature } from '../lib/tierUtils';
 
 function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user }) {
@@ -133,22 +134,24 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
       machine_readability: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 5)),
       semantic: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 2)),
       engagement: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 6)),
-      topical: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 1)),
+      technical: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 1)),
       reference: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 2)),
-      yield: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 4))
+      yield: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 - 4)),
+      performance: Math.min(95, Math.max(30, baseScore + Math.floor(Math.random() * variation) - variation/2 + 3))
     };
   };
   
-  const pillarScores = isRealAnalysis && analysisData.pillars ? 
+  const pillarScores = isRealAnalysis && analysisData.pillars ?
     {
       ai: analysisData.pillars.ai?.score || analysisData.pillars.AI?.score || 0,
       authority: analysisData.pillars.authority?.score || analysisData.pillars.A?.score || 0,
       machine_readability: analysisData.pillars.machine_readability?.score || analysisData.pillars.M?.score || 0,
       semantic: analysisData.pillars.semantic?.score || analysisData.pillars.S?.score || 0,
       engagement: analysisData.pillars.engagement?.score || analysisData.pillars.E?.score || 0,
-      topical: analysisData.pillars.topical?.score || analysisData.pillars.T?.score || 0,
+      technical: analysisData.pillars.technical?.score || analysisData.pillars.T?.score || 0,
       reference: analysisData.pillars.reference?.score || analysisData.pillars.R?.score || 0,
-      yield: analysisData.pillars.yield?.score || analysisData.pillars.Y?.score || 0
+      yield: analysisData.pillars.yield?.score || analysisData.pillars.Y?.score || 0,
+      performance: analysisData.pillars.performance?.score || analysisData.pillars.P?.score || 0
     } : generatePillarScores(overallScore);
   
   // Use real results if available, otherwise use mock data
@@ -168,9 +171,10 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
       machine_readability: pillarsData.M || { score: pillarScores.machine_readability, weight: 14.6, factors: 4, name: "Machine Readability & Technical Infrastructure" },
       semantic: pillarsData.S || { score: pillarScores.semantic, weight: 13.9, factors: 2, name: "Semantic Content Quality" },
       engagement: pillarsData.E || { score: pillarScores.engagement, weight: 10.9, factors: 1, name: "Engagement & User Experience" },
-      topical: pillarsData.T || { score: pillarScores.topical, weight: 8.9, factors: 0, name: "Topical Expertise & Experience" },
+      technical: pillarsData.T || { score: pillarScores.technical, weight: 8.9, factors: 4, name: "Technical SEO & Foundation" },
       reference: pillarsData.R || { score: pillarScores.reference, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
-      yield: pillarsData.Y || { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" }
+      yield: pillarsData.Y || { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" },
+      performance: pillarsData.P || { score: pillarScores.performance, weight: 5.0, factors: 1, name: "Performance & Speed" }
     };
   };
   
@@ -184,9 +188,10 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
       machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 4, name: "Machine Readability & Technical Infrastructure" },
       semantic: { score: pillarScores.semantic, weight: 13.9, factors: 2, name: "Semantic Content Quality" },
       engagement: { score: pillarScores.engagement, weight: 10.9, factors: 1, name: "Engagement & User Experience" },
-      topical: { score: pillarScores.topical, weight: 8.9, factors: 0, name: "Topical Expertise & Experience" },
+      technical: { score: pillarScores.technical, weight: 8.9, factors: 4, name: "Technical SEO & Foundation" },
       reference: { score: pillarScores.reference, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
-      yield: { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" }
+      yield: { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" },
+      performance: { score: pillarScores.performance, weight: 5.0, factors: 1, name: "Performance & Speed" }
     },
     factors: analysisData?.factors || []
   } : {
@@ -199,9 +204,10 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
       machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 4, name: "Machine Readability & Technical Infrastructure" },
       semantic: { score: pillarScores.semantic, weight: 13.9, factors: 2, name: "Semantic Content Quality" },
       engagement: { score: pillarScores.engagement, weight: 10.9, factors: 1, name: "Engagement & User Experience" },
-      topical: { score: pillarScores.topical, weight: 8.9, factors: 0, name: "Topical Expertise & Experience" },
+      technical: { score: pillarScores.technical, weight: 8.9, factors: 4, name: "Technical SEO & Foundation" },
       reference: { score: pillarScores.reference, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
-      yield: { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" }
+      yield: { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" },
+      performance: { score: pillarScores.performance, weight: 5.0, factors: 1, name: "Performance & Speed" }
     },
     factors: [
       {
@@ -283,8 +289,10 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
       'S': { bg: 'bg-orange-50', border: 'border-orange-500', text: 'text-orange-700', badge: 'bg-orange-100' },
       'E': { bg: 'bg-yellow-50', border: 'border-yellow-500', text: 'text-yellow-700', badge: 'bg-yellow-100' },
       'T': { bg: 'bg-indigo-50', border: 'border-indigo-500', text: 'text-indigo-700', badge: 'bg-indigo-100' },
+      'TS': { bg: 'bg-indigo-50', border: 'border-indigo-500', text: 'text-indigo-700', badge: 'bg-indigo-100' }, // Same as T
       'R': { bg: 'bg-gray-50', border: 'border-gray-500', text: 'text-gray-700', badge: 'bg-gray-100' },
-      'Y': { bg: 'bg-teal-50', border: 'border-teal-500', text: 'text-teal-700', badge: 'bg-teal-100' }
+      'Y': { bg: 'bg-teal-50', border: 'border-teal-500', text: 'text-teal-700', badge: 'bg-teal-100' },
+      'P': { bg: 'bg-rose-50', border: 'border-rose-500', text: 'text-rose-700', badge: 'bg-rose-100' }
     };
     return styles[key] || styles['M'];
   };
@@ -300,9 +308,10 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
       { key: 'M', name: 'Machine Readability & Technical Infrastructure', icon: '⚙️' },
       { key: 'S', name: 'Semantic Content Quality', icon: '📝' },
       { key: 'E', name: 'Engagement & User Experience', icon: '👥' },
-      { key: 'T', name: 'Topical Expertise & Experience', icon: '🎯' },
+      { key: 'T', name: 'Technical SEO & Foundation', icon: '🔧' },
       { key: 'R', name: 'Reference Networks & Citations', icon: '🔗' },
-      { key: 'Y', name: 'Yield Optimization & Freshness', icon: '📈' }
+      { key: 'Y', name: 'Yield Optimization & Freshness', icon: '📈' },
+      { key: 'P', name: 'Performance & Speed', icon: '⚡' }
     ];
     
     // Initialize groups
@@ -323,9 +332,11 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         'M': 'Machine Readability & Technical Infrastructure',
         'S': 'Semantic Content Quality',
         'E': 'Engagement & User Experience',
-        'T': 'Topical Expertise & Experience',
+        'T': 'Technical SEO & Foundation',
+        'TS': 'Technical SEO & Foundation', // Traditional SEO factors
         'R': 'Reference Networks & Citations',
-        'Y': 'Yield Optimization & Freshness'
+        'Y': 'Yield Optimization & Freshness',
+        'P': 'Performance & Speed'
       };
       
       // Also support legacy full names for mock data
@@ -335,9 +346,12 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         'Machine Readability': 'Machine Readability & Technical Infrastructure',
         'Semantic Content': 'Semantic Content Quality',
         'Engagement': 'Engagement & User Experience',
-        'Topical Expertise': 'Topical Expertise & Experience',
+        'Topical Expertise': 'Technical SEO & Foundation',
+        'Topical Expertise & Experience': 'Technical SEO & Foundation',
+        'Technical SEO': 'Technical SEO & Foundation',
         'Reference Networks': 'Reference Networks & Citations',
-        'Yield Optimization': 'Yield Optimization & Freshness'
+        'Yield Optimization': 'Yield Optimization & Freshness',
+        'Performance': 'Performance & Speed'
       };
       
       // Try to map from code first (real data), then from name (mock data)
@@ -360,9 +374,10 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
           'M': 'machine_readability',
           'S': 'semantic',
           'E': 'engagement',
-          'T': 'topical',
+          'T': 'technical',
           'R': 'reference',
-          'Y': 'yield'
+          'Y': 'yield',
+          'P': 'performance'
         }[p.key] || p.key.toLowerCase();
         
         const pillarData = results.pillars[pillarKey] || {};
@@ -529,7 +544,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-blue-800 text-sm">
-            <strong>Framework:</strong> MASTERY-AI v3.1.1 with 148 factors across all 8 pillars. 
+            <strong>Framework:</strong> MASTERY-AI v3.1.1 with 27 factors across all 9 pillars. 
             {isRealAnalysis 
               ? 'Phase A implementation with complete coverage - quality over quantity, every factor matters.'
               : 'Sample shows strategic factors from analyzing FreeCalcHub, Evolve-7, Agent-11, and 4 other client sites.'
@@ -549,6 +564,9 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
           }}
         />
       </div>
+
+      {/* Critical Issues Banner - Show blockers/warnings prominently */}
+      <CriticalIssuesBanner factors={results.factors} />
 
       {/* Pillar Scores */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" data-testid="pillar-grid">
@@ -621,7 +639,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
                       </div>
                     <div className="text-right">
                       <div className={`text-lg font-bold px-3 py-1 rounded border ${getScoreColor(factor.score)}`}>
-                        {factor.score}
+                        {Math.round(factor.score)}
                       </div>
                       <div className="text-xs text-gray-600 mt-1">
                         {getScoreLabel(factor.score)}

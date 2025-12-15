@@ -1,5 +1,5 @@
 # AImpactScanner Architecture Documentation
-*Version: 2.0 | Date: October 22, 2025 | Status: Production Enhanced*
+*Version: 2.4 | Date: December 9, 2025 | Status: Production Enhanced + Sprint 3 Complete*
 
 ## Table of Contents
 1. [Executive Summary](#executive-summary)
@@ -18,7 +18,7 @@
 ## Executive Summary
 
 ### System Purpose
-AImpactScanner is a SaaS web application that analyzes websites for AI optimization compliance based on the MASTERY-AI Framework v3.1.1. The system provides evidence-based scoring across 10 high-impact factors, delivering actionable insights for website owners to improve their AI discoverability and optimization.
+AImpactScanner is a SaaS web application that analyzes websites for AI optimization compliance based on the MASTERY-AI Framework v3.1.1. The system provides evidence-based scoring across 27 factors (18 AI-focused + 9 traditional SEO) organized into 9 pillars, delivering actionable insights for website owners to improve their AI discoverability and technical SEO foundation.
 
 ### Key Business Metrics
 - **Target Users**: Website owners, SEO professionals, digital marketers
@@ -120,6 +120,7 @@ AImpactScanner is a SaaS web application that analyzes websites for AI optimizat
 - **PageSpeed Insights**: Performance factor analysis
 - **MASTERY-AI Framework**: Evidence-based scoring algorithms
 - **OAuth Providers**: Google and GitHub for modern authentication
+- **LLMtxtMastery API**: LLMs.txt file generation for AI discoverability (Growth/Scale tiers)
 
 ---
 
@@ -190,6 +191,7 @@ STAGING ENVIRONMENT:
 - **PageSpeed Insights API**: Performance analysis integration
 - **DNS**: Custom domain management
 - **OAuth Providers**: Google and GitHub authentication services
+- **LLMtxtMastery API**: External API for LLMs.txt file generation (Railway-hosted)
 
 ### Security Architecture
 
@@ -920,6 +922,39 @@ CREATE POLICY "Users respect tier limits" ON analyses
 - **Override**: Users can manually collapse/expand any factor
 - **Rationale**: Focus attention on areas needing improvement
 
+#### ADR-015: LLMtxtMastery API Integration (NEW)
+**Status**: Accepted
+**Date**: November 2025 (Implemented December 2025)
+**Context**: Users need a way to generate LLMs.txt files to improve AI discoverability of their websites. LLMtxtMastery provides this capability via API.
+**Decision**: Integrate LLMtxtMastery API as an external service, accessed through a Supabase Edge Function proxy, with tier-based usage limits.
+
+**Consequences**:
+- ✅ Added value for Growth/Scale tier users
+- ✅ Feature differentiation from competitors
+- ✅ No need to build LLMs.txt generation in-house
+- ✅ Clear monetization path (tier-gated feature)
+- ⚠️ External dependency on LLMtxtMastery API availability
+- ⚠️ API costs need monitoring
+- ⚠️ Network latency for API calls (~1-30 seconds for generation)
+- 🔄 Usage limits enforced per tier (Growth: 25/month, Scale: unlimited)
+
+**Implementation Details**:
+- **Edge Function**: `generate-llmstxt` proxies requests to LLMtxtMastery API
+- **API Key Storage**: Supabase secrets (never exposed to frontend)
+- **Authentication**: X-API-Key header for LLMtxtMastery API
+- **Base URL**: `https://llm-txt-mastery-production.up.railway.app`
+- **Endpoints Used**:
+  - `POST /api/v1/analyze` - Start website analysis
+  - `GET /api/v1/analysis/:id` - Get analysis status
+  - `POST /api/v1/generate` - Generate llms.txt file
+  - `GET /api/v1/download/:id` - Download generated file
+- **Tier Limits**:
+  - Free/Solo: Feature not available (upgrade prompt)
+  - Growth: 25 generations/month
+  - Scale: Unlimited generations
+- **Database**: New columns `llmstxt_generations_this_month`, `llmstxt_monthly_limit`
+- **Security**: All API calls server-side, user tier validated before generation
+
 ### Architecture Principles
 
 #### 1. Simplicity Over Complexity
@@ -961,6 +996,51 @@ CREATE POLICY "Users respect tier limits" ON analyses
 ---
 
 ## Recent Production Enhancements
+
+### December 7, 2025 - Sprint 2: Traditional SEO Foundation
+
+**Status**: ✅ DEPLOYED TO STAGING
+**Type**: Feature Enhancement - Traditional SEO Factor Integration
+**Priority**: HIGH - Addresses 88% coverage gap
+
+#### New Factors Added (5)
+
+**T.5.1 - Indexability Status** ✅
+- **Description**: Checks if page is indexable by search engines
+- **Tier Access**: Free+
+- **Assessment**: robots meta tag, X-Robots-Tag header analysis
+
+**T.5.2 - Mobile-Friendly** ✅
+- **Description**: Validates mobile viewport and responsive design
+- **Tier Access**: Solo+
+- **Assessment**: viewport meta tag, mobile CSS detection
+
+**P.1.1 - Page Speed** ✅
+- **Description**: Performance scoring (new P pillar)
+- **Tier Access**: Solo+
+- **Assessment**: Resource count, external resource detection
+
+**T.5.3 - Broken Links** ✅
+- **Description**: Detects potentially broken internal/external links
+- **Tier Access**: Solo+
+- **Assessment**: URL pattern analysis, common error patterns
+
+**T.5.4 - Sitemap Presence** ✅
+- **Description**: Verifies XML sitemap availability
+- **Tier Access**: Solo+
+- **Assessment**: robots.txt sitemap directives, common sitemap URLs
+
+#### Framework Changes
+
+**Pillars**: 8 → 9 (new P - Performance pillar)
+**Factors**: 18 → 23 (+5 traditional SEO)
+**Files Modified**:
+- `supabase/functions/analyze-page/lib/traditionalSeoFactors.ts` (new, 719 lines)
+- `supabase/functions/analyze-page/index.ts` (integration)
+- `src/lib/tierUtils.js` (feature gating)
+- `supabase/migrations/20251205000001_traditional_seo_factors.sql` (caching table)
+
+---
 
 ### October 22, 2025 Deployment
 
@@ -1198,7 +1278,7 @@ npx playwright show-report
 ### 💡 Feature Limitations
 
 #### Analysis Depth
-**Current Scope**: 10 high-impact factors from 148-factor framework
+**Current Scope**: 27 factors across 9 pillars (18 AI-focused + 9 traditional SEO foundation)
 **Missing Features**: Advanced factors requiring specialized tools/APIs
 **Competitive Gap**: Less comprehensive than enterprise SEO tools
 **Future Enhancement**: Gradual expansion of factor coverage
@@ -1464,6 +1544,6 @@ npx playwright show-report
 
 ---
 
-*This architecture document is maintained as a living document and should be updated as the system evolves. Last updated: October 22, 2025*
+*This architecture document is maintained as a living document and should be updated as the system evolves. Last updated: December 5, 2025*
 
-*Next Review: After Phase 2 signup optimizations (December 2025)*
+*Sprint 1 LLMs.txt Integration: ✅ COMPLETE - Smoke tests passed December 5, 2025*

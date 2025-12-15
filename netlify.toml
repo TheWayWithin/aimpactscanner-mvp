@@ -65,6 +65,9 @@
 # Environment-specific configuration
 [context.production.environment]
   NODE_ENV = "production"
+  # Railway backend - uncomment to enable in production
+  # VITE_USE_RAILWAY_BACKEND = "true"
+  # VITE_RAILWAY_API_URL = "https://aimpactscanner-backend-production.up.railway.app"
 
 [context.deploy-preview.environment]
   # Use STAGING database and test keys for deploy previews
@@ -72,6 +75,22 @@
   # VITE_SUPABASE_ANON_KEY = "your-test-anon-key"
   # VITE_STRIPE_PUBLISHABLE_KEY = "pk_test_your-test-publishable-key"
   # VITE_STRIPE_COFFEE_PRICE_ID = "price_your-test-coffee-price-id"
+
+  # Railway backend - enabled for staging/deploy previews
+  VITE_USE_RAILWAY_BACKEND = "true"
+  VITE_RAILWAY_API_URL = "https://aimpactscanner-backend-production.up.railway.app"
+
+# Branch deploys (e.g., develop branch → develop--aimpactscanner.netlify.app)
+[context.branch-deploy.environment]
+  VITE_SUPABASE_URL = "https://isgzvwpjokcmtizstwru.supabase.co"  # STAGING
+  VITE_USE_RAILWAY_BACKEND = "true"
+  VITE_RAILWAY_API_URL = "https://aimpactscanner-backend-production.up.railway.app"
+
+# Specific branch: develop
+[context.develop.environment]
+  VITE_SUPABASE_URL = "https://isgzvwpjokcmtizstwru.supabase.co"  # STAGING
+  VITE_USE_RAILWAY_BACKEND = "true"
+  VITE_RAILWAY_API_URL = "https://aimpactscanner-backend-production.up.railway.app"
 
 # Form handling (if needed for future contact forms)
 [build.processing]
