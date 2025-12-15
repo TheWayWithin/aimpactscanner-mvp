@@ -1,5 +1,203 @@
 # AImpactScanner MVP - Progress Log
 
+## [December 15, 2025] - Sprint 6 Phase 3: Async Job Processing Complete ✅
+
+**Context**: Implemented background job queue system for async analysis processing.
+
+### Phase 3 Deliverables
+
+1. **Database Migration** ✅
+   - Created `analysis_jobs` table with job queue schema
+   - Added `job_status` ENUM: pending, processing, completed, failed
+   - Created indexes for efficient queue polling
+   - Added `claim_next_job()` RPC function with FOR UPDATE SKIP LOCKED
+   - Applied to staging database (isgzvwpjokcmtizstwru)
+   - File: `supabase/migrations/20251215000001_add_analysis_jobs_table.sql`
+
+2. **Job Queue Service** ✅
+   - `backend/src/services/jobQueue.ts`
+   - Functions: createJob, claimNextJob, completeJob, failJob
+   - Features: priority-based processing, retry logic, stale job release
+
+3. **Background Worker** ✅
+   - `backend/src/worker.ts`
+   - Standalone process for processing queued jobs
+   - Exponential backoff when queue empty
+   - Graceful shutdown (SIGTERM/SIGINT)
+   - Worker scripts added to package.json
+
+4. **API Endpoints** ✅
+   - `POST /api/analyze/async` - Queue job (returns immediately)
+   - `GET /api/analyze/jobs` - User's job history
+   - `GET /api/analyze/jobs/:jobId` - Job status with results
+
+5. **Deployment** ✅
+   - Backend deployed to Railway
+   - Health check passing
+   - All endpoints returning 401 (auth working)
+
+### Files Created/Modified
+
+```
+backend/src/services/jobQueue.ts (NEW)
+backend/src/worker.ts (NEW)
+backend/src/routes/analyze.ts (MODIFIED - added async endpoints)
+backend/src/types/database.types.ts (MODIFIED - added job types)
+backend/package.json (MODIFIED - added worker scripts)
+supabase/migrations/20251215000001_add_analysis_jobs_table.sql (NEW)
+```
+
+### Next Steps
+
+- Phase 4: Headless Browser Integration (Puppeteer)
+- Phase 5: Production Migration
+- Phase 6: LLMs.txt Migration & Cleanup
+
+---
+
+## [December 14, 2025] - Sprint 6 Phase 1: Railway Infrastructure Setup 🚀
+
+**Context**: Implementing backend migration from Supabase Edge Functions to Railway Node.js.
+
+### Phase 1 Progress
+
+**Status**: ✅ IN PROGRESS - Backend structure created, deploying to Railway
+
+#### Completed Tasks
+
+1. **Railway Project Created** ✅
+   - Project: `aimpactscanner-backend`
+   - URL: https://railway.com/project/4199ce0c-2506-4f71-847d-e495dc69dfff
+   - Environment: production (linked)
+
+2. **Backend Directory Structure Created** ✅
+   - `/backend/package.json` - Express, Supabase, TypeScript dependencies
+   - `/backend/tsconfig.json` - Strict TypeScript config (ES2022, CommonJS)
+   - `/backend/src/index.ts` - Express server with health check
+   - `/backend/src/lib/supabase.ts` - Admin + user client pattern
+   - `/backend/src/middleware/cors.ts` - Environment-based CORS
+   - `/backend/src/middleware/auth.ts` - JWT validation + tier fetching
+   - `/backend/src/middleware/error-handler.ts` - Custom error classes
+   - `/backend/src/middleware/logger.ts` - Request logging
+   - `/backend/src/middleware/rate-limit.ts` - Tier-based rate limiting
+   - `/backend/src/types/database.types.ts` - Supabase schema types
+   - `/backend/.env.example` - Environment template
+   - `/backend/.gitignore` - Node.js ignore patterns
+   - `/backend/railway.json` - Railway deployment config
+
+3. **Dependencies Installed** ✅
+   - 257 packages installed
+   - 0 vulnerabilities
+
+4. **TypeScript Build Verified** ✅
+   - `npm run type-check` - passes
+   - `npm run build` - compiles to `/dist/`
+
+### Architecture Alignment
+
+**Tier naming aligned with existing codebase**:
+- `free`, `coffee`, `growth`, `scale` (not `Free`, `Pro`, `Enterprise`)
+- Legacy mappings: `professional` → `growth`, `enterprise` → `scale`
+- Aligned with `tierUtils.js` patterns
+
+**Supabase client pattern aligned**:
+- Admin client (service role) for privileged operations
+- User client factory for JWT-scoped operations
+- PKCE flow consistent with frontend
+
+**Security patterns aligned**:
+- JWT validation via Supabase `auth.getUser()`
+- Tier-based rate limiting (Free: 5/hr, Coffee: 20/hr, Growth: 50/hr, Scale: 100/hr)
+- CORS whitelist (production, staging, localhost)
+
+### Files Created (14 total)
+
+```
+backend/
+├── package.json
+├── tsconfig.json
+├── railway.json
+├── .env.example
+├── .gitignore
+└── src/
+    ├── index.ts
+    ├── lib/
+    │   └── supabase.ts
+    ├── middleware/
+    │   ├── auth.ts
+    │   ├── cors.ts
+    │   ├── error-handler.ts
+    │   ├── logger.ts
+    │   └── rate-limit.ts
+    └── types/
+        └── database.types.ts
+```
+
+### Next Steps
+
+- [ ] Deploy to Railway staging
+- [ ] Configure Railway environment variables
+- [ ] Test health check endpoint
+- [ ] Begin Phase 2: Lift & Shift Analysis Engine
+
+---
+
+## [December 14, 2025] - Sprint 6 Planning: Backend Migration & Dynamic Site Analysis 📋
+
+**Context**: Strategic planning for backend migration from Supabase Edge Functions to Railway Node.js to enable CSR website analysis.
+
+### Sprint Planning Summary
+
+**Sprint 6 Added to project-plan.md** (v6.0)
+- 6 phases planned over 6-8 weeks
+- Follows dev-staging-production workflow
+- Maintains backwards compatibility during migration
+
+### Phase Overview
+
+| Phase | Name | Duration | Key Deliverable |
+|-------|------|----------|-----------------|
+| 1 | Railway Infrastructure Setup | 1 week | Railway staging deployed |
+| 2 | Lift & Shift Analysis Engine | 2 weeks | 27 factors ported to Node.js |
+| 3 | Async Job Processing | 1.5 weeks | Job queue for long-running tasks |
+| 4 | Headless Browser Integration | 2 weeks | Puppeteer for CSR analysis |
+| 5 | Production Migration | 1 week | Traffic migrated to Railway |
+| 6 | LLMs.txt Migration & Cleanup | 0.5 weeks | Full migration complete |
+
+### Key Architecture Decisions
+
+1. **What Stays on Supabase**:
+   - PostgreSQL database (users, analyses, factors)
+   - Authentication (OAuth, Magic Links)
+   - Real-time subscriptions (progress WebSocket)
+   - Non-analysis Edge Functions (Stripe, portal)
+
+2. **What Moves to Railway**:
+   - analyze-page Edge Function → Railway `/api/analyze`
+   - generate-llmstxt Edge Function → Railway `/api/generate-llmstxt`
+   - Analysis engine (AnalysisEngine.ts, traditionalSeoFactors.ts)
+
+3. **Environment Strategy**:
+   - Dev/Staging Railway → Staging Supabase (isgzvwpjokcmtizstwru)
+   - Production Railway → Production Supabase (pdmtvkcxnqysujnpcnyh)
+   - Never mix environments
+
+### Business Impact
+
+- **Unblocks**: Analysis of CSR/JavaScript-rendered websites
+- **Target Market**: SaaS builders, React/Vue/Angular SPAs, modern web apps
+- **Technical Debt**: Removes 60-second Edge Function timeout constraint
+- **Future-Proofs**: Enables batch processing, competitor analysis features
+
+### Risk Mitigation Strategy
+
+1. Run Railway parallel to Edge Functions during validation
+2. Keep Edge Functions deployable for 30-day grace period
+3. Gradual traffic migration (10% → 50% → 100%)
+4. Feature flag controls routing between old/new backends
+
+---
+
 ## [December 9, 2025] - Sprint 3 Performance Fix: Internal Linking Timeout ✅
 
 **Context**: After Sprint 3 deployment, all analyses timed out. Root cause identified and fixed.
