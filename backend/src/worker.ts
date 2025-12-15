@@ -22,6 +22,8 @@ import {
   getPendingJobCount,
 } from './services/jobQueue';
 import { analyzeAllFactors, getAnalysisSummary } from './services/analyzer';
+import { fetchPageContent, isPuppeteerEnabledForTier } from './services/pageFetcher';
+import { closeBrowser } from './services/browserRenderer';
 import { Database } from './types/database.types';
 
 // Type aliases
@@ -39,40 +41,6 @@ let currentPollInterval = POLL_INTERVAL_MS;
 let isShuttingDown = false;
 let currentJobId: string | null = null;
 let lastStaleCheck = 0;
-
-/**
- * Fetch page content from URL
- */
-async function fetchPageContent(url: string): Promise<{ content: string; statusCode: number }> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30000);
-
-  try {
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'AImpactScanner/1.0 (https://aimpactscanner.com)',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Cache-Control': 'no-cache',
-      },
-      signal: controller.signal,
-      redirect: 'follow',
-    });
-
-    clearTimeout(timeout);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
-    }
-
-    const content = await response.text();
-    return { content, statusCode: response.status };
-  } catch (error) {
-    clearTimeout(timeout);
-    throw error;
-  }
-}
 
 /**
  * Process a single job
@@ -106,11 +74,7 @@ async function processJob(): Promise<boolean> {
     console.log(`[Worker ${WORKER_ID}] Processing job ${job.id} for URL: ${job.url}`);
 
     try {
-      // Fetch page content
-      const { content, statusCode } = await fetchPageContent(job.url);
-      console.log(`[Worker ${WORKER_ID}] Fetched ${job.url} (${statusCode}, ${content.length} bytes)`);
-
-      // Get user tier for factor access control
+      // Get user tier for factor access control and Puppeteer eligibility
       const { data: userData } = await supabaseAdmin
         .from('users')
         .select('tier, subscription_tier')
@@ -119,6 +83,33 @@ async function processJob(): Promise<boolean> {
 
       const user = userData as { tier: string | null; subscription_tier: string | null } | null;
       const userTier = user?.subscription_tier || user?.tier || 'free';
+
+      // Determine if Puppeteer should be used based on tier
+      const canUsePuppeteer = isPuppeteerEnabledForTier(userTier);
+
+      // Fetch page content with intelligent CSR detection
+      console.log(`[Worker ${WORKER_ID}] Fetching ${job.url} (Puppeteer: ${canUsePuppeteer ? 'enabled' : 'disabled'})`);
+      const fetchResult = await fetchPageContent(job.url, {
+        skipPuppeteer: !canUsePuppeteer,
+      });
+
+      if (!fetchResult.success) {
+        throw new Error(fetchResult.error || 'Failed to fetch page content');
+      }
+
+      const content = fetchResult.html;
+      console.log(
+        `[Worker ${WORKER_ID}] Fetched ${job.url} via ${fetchResult.method} ` +
+        `(${content.length} bytes, ${fetchResult.fetchTimeMs}ms)`
+      );
+
+      // Log CSR detection results if available
+      if (fetchResult.csrDetection) {
+        console.log(
+          `[Worker ${WORKER_ID}] CSR Detection: ${fetchResult.csrDetection.isCSR ? 'CSR' : 'SSR'} ` +
+          `(confidence: ${fetchResult.csrDetection.confidence}%)`
+        );
+      }
 
       // Run analysis
       const result = await analyzeAllFactors(job.url, content, userTier);
@@ -246,6 +237,10 @@ async function shutdown(signal: string): Promise<void> {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
   }
+
+  // Close browser instance if running
+  console.log(`[Worker ${WORKER_ID}] Closing browser...`);
+  await closeBrowser();
 
   clearTimeout(shutdownTimeout);
   console.log(`[Worker ${WORKER_ID}] Graceful shutdown completed`);
