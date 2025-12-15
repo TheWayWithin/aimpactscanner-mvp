@@ -5,7 +5,25 @@
  * Supports both synchronous and asynchronous analysis modes.
  */
 
+import { supabaseFacade as supabase } from './supabaseFacade';
+
 const RAILWAY_API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'https://aimpactscanner-backend-production.up.railway.app';
+
+/**
+ * Get auth headers with Supabase JWT token
+ */
+async function getAuthHeaders() {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session?.access_token) {
+    throw new Error('Not authenticated - please sign in');
+  }
+
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${session.access_token}`,
+  };
+}
 
 /**
  * Run analysis synchronously (waits for completion)
@@ -17,11 +35,11 @@ const RAILWAY_API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'https://aimpact
  * @returns {Promise<{success: boolean, overall_score?: number, factors?: Array, error?: string}>}
  */
 export async function analyzeSync(url, userId, userTier = 'free') {
+  const headers = await getAuthHeaders();
+
   const response = await fetch(`${RAILWAY_API_URL}/api/analyze`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify({
       url,
       userId,
@@ -48,11 +66,11 @@ export async function analyzeSync(url, userId, userTier = 'free') {
  * @returns {Promise<{success: boolean, jobId: string, analysisId: string}>}
  */
 export async function analyzeAsync(url, userId, analysisId, userTier = 'free') {
+  const headers = await getAuthHeaders();
+
   const response = await fetch(`${RAILWAY_API_URL}/api/analyze/async`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify({
       url,
       userId,
@@ -76,11 +94,11 @@ export async function analyzeAsync(url, userId, analysisId, userTier = 'free') {
  * @returns {Promise<{status: string, result?: object, error?: string}>}
  */
 export async function getJobStatus(jobId) {
+  const headers = await getAuthHeaders();
+
   const response = await fetch(`${RAILWAY_API_URL}/api/analyze/jobs/${jobId}`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
   });
 
   if (!response.ok) {
