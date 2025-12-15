@@ -14,6 +14,9 @@ config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust Railway's reverse proxy for accurate client IP detection
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet());
 app.use(compression());
