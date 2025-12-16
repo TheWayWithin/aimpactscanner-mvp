@@ -140,9 +140,10 @@ async function processJob(): Promise<boolean> {
         factor_name: factor.factor_name,
         pillar: factor.pillar,
         score: factor.score,
-        reasoning: factor.evidence.join(' | '),
-        recommendations: factor.recommendations.join(' | '),
+        confidence: 80, // Default confidence level
         weight: factor.weight,
+        evidence: factor.evidence, // JSONB column expects array
+        recommendations: factor.recommendations, // JSONB column expects array
       }));
 
       await supabaseAdmin
