@@ -311,7 +311,7 @@ router.post('/', async (req: Request, res: Response) => {
       grade: summary.grade,
       factor_count: summary.factorCount,
       factors: result.factors,
-      pillar_breakdown: summary.pillarBreakdown,
+      pillars: summary.pillarBreakdown,
       top_issues: summary.topIssues,
       processing_time_ms: totalTime,
       success: true,

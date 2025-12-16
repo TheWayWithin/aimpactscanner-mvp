@@ -29,7 +29,7 @@ const TIER_MESSAGING = {
   },
   coffee: {
     tagline: "Stop losing customers",
-    obHeadline: "Fix the problems that are costing you customers",
+    obHeadline: "Fix the problems that are costing your customers",
     obBullets: [
       "All 27 factors including SEO visibility",
       "Scan → Fix → Verify → Move to next page"
@@ -43,6 +43,7 @@ const TIER_MESSAGING = {
     whatYouGet: {
       highlighted: "10 scans to fix your key pages",
       bullets: [
+        "All 27 factors including SEO visibility (Free tier skips 8 SEO factors)",
         "30-day history proves your fixes worked",
         "PDF reports to share with clients or your team",
         "Email support when you get stuck"
