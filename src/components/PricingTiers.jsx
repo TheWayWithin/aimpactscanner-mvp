@@ -49,9 +49,9 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
       price: 0,
       analyses: '3 analyses',
       features: [
-        'See your actual AI readiness score',
+        'See your AI readiness score (SEO not included)',
         'Identify your 3 biggest AI visibility gaps',
-        '3 analyses per month to track progress',
+        '3 analyses per month to try it out',
         'Perfect for testing the waters',
         'No credit card required'
       ],
@@ -72,9 +72,9 @@ const PricingTiers = ({ currentTier = 'free', onUpgrade, className = '' }) => {
       price: billingCycle === 'annual' ? 4.13 : 5.95,
       analyses: '10 analyses/month',
       features: [
-        '✨ Professional PDF reports',
+        '✨ All 27 factors including SEO visibility',
+        'Professional PDF reports',
         'Clean, exportable results',
-        'Educational content',
         'Email support',
         'Cancel anytime'
       ],

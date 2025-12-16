@@ -8,13 +8,13 @@ const TIER_MESSAGING = {
     tagline: "Am I losing customers?",
     obHeadline: "Discover where you're losing customers to AI",
     obBullets: [
-      "27-factor scan across 9 AI visibility pillars",
+      "19-factor AI visibility scan",
       "No credit card required"
     ],
     fomo: {
       style: 'yellow', // Upgrade prompt
       headline: "What you're missing:",
-      message: "Free finds the problem - but then you're stuck. Fix something? That's scan 2. Verify it worked? Scan 3. You're done. No more pages, no more progress. Solo gives you 10 scans to actually move forward.",
+      message: "Free scans 19 AI factors - but skips the 8 SEO factors blocking Google (and the AIs scraping it) from finding you. Fix something? That's scan 2. Verify it worked? Scan 3. You're done. Solo unlocks all 27 factors plus 10 scans to actually move forward.",
       upgradeNudge: "Upgrade to Solo for just $4.95/month"
     },
     whatYouGet: {
@@ -31,8 +31,8 @@ const TIER_MESSAGING = {
     tagline: "Stop losing customers",
     obHeadline: "Fix the problems that are costing you customers",
     obBullets: [
-      "Scan → Fix → Verify → Move to next page",
-      "Keep your results for 30 days"
+      "All 27 factors including SEO visibility",
+      "Scan → Fix → Verify → Move to next page"
     ],
     fomo: {
       style: 'yellow', // Upgrade prompt
