@@ -2182,6 +2182,7 @@ function AppContent({ initialUrl }) {
               analysisData={analysisResults}
               userEmail={session?.user?.email}
               user={{ tier: userTier }}
+              onNavigate={setCurrentView}
             />
           </ProtectedRoute>
         )}

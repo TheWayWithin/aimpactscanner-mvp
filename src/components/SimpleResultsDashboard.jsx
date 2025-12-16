@@ -6,7 +6,7 @@ import LLMsTxtPanel from './LLMsTxtPanel';
 import CriticalIssuesBanner from './CriticalIssuesBanner';
 import { hasFeatureAccess, getMinimumTierForFeature } from '../lib/tierUtils';
 
-function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user }) {
+function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user, onNavigate }) {
   const [pdfStatus, setPdfStatus] = useState(null);
   const [exportStatus, setExportStatus] = useState(null);
 
@@ -509,24 +509,18 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
                     Export to CSV
                   </button>
                 ) : (
-                  <div className="relative group">
-                    <button
-                      disabled
-                      className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed font-medium"
-                    >
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                      Export to CSV (Growth+ only)
-                    </button>
-                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded py-2 px-3 whitespace-nowrap z-10">
-                      Upgrade to {getMinimumTierForFeature('csv_export')} tier for CSV export
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
-                    </div>
-                  </div>
+                  <button
+                    onClick={() => onNavigate && onNavigate('pricing')}
+                    className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Export to CSV - Upgrade
+                  </button>
                 )}
                 <span className="text-sm text-gray-500">
-                  Export analysis data to CSV spreadsheet
+                  {canExportCSV ? 'Export analysis data to CSV spreadsheet' : `Requires ${getMinimumTierForFeature('csv_export')} tier`}
                 </span>
               </div>
 
@@ -559,8 +553,10 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
           analysisUrl={results.url}
           userTier={userTier}
           onUpgrade={() => {
-            // Navigate to pricing or show upgrade modal
-            window.location.hash = '#pricing';
+            // Navigate to pricing page
+            if (onNavigate) {
+              onNavigate('pricing');
+            }
           }}
         />
       </div>
