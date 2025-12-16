@@ -130,7 +130,7 @@ function PreviewAnalysis({ analysisId, url, onAnalysisComplete }) {
             </h3>
             <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
               <div>
-                <strong>✓ 11 Core Factors:</strong> Fast analysis covering the most critical optimization elements
+                <strong>✓ 19 AI Visibility Factors:</strong> Comprehensive analysis of how AI systems see your site
               </div>
               <div>
                 <strong>✓ Framework Compliant:</strong> Official MASTERY-AI factor mappings and weights

@@ -1108,11 +1108,11 @@ function AppContent({ initialUrl }) {
     }
   };
 
-  // Handle free trial click from teaser - now goes to unified registration
+  // Handle free trial click from teaser - goes to signup with Growth tier default
   const handleFreeTrialFromTeaser = () => {
     if (!session) {
-      // Show unified registration with Coffee tier pre-selected
-      setCurrentView('unified-registration');
+      // Show signup page with tier selection (defaults to Growth with 7-day trial)
+      setCurrentView('signup');
     } else {
       // Already logged in, show full results
       setCurrentView('results');
