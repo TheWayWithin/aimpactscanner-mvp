@@ -54,8 +54,8 @@ function ClientCaseStudies() {
       metric: '3x improvement in technical query visibility'
     },
     {
-      name: 'AgentMarket',
-      url: 'agentmarket.com',
+      name: 'SoloMarket',
+      url: 'solomarket.com',
       industry: 'Multi-Agent Systems',
       before: 41,
       after: 63,
@@ -102,8 +102,8 @@ function ClientCaseStudies() {
       metric: 'Top result for "AI search optimization"'
     },
     {
-      name: 'MCP-7',
-      url: 'mcp-7.com',
+      name: 'ISOTracker',
+      url: 'isotracker.com',
       industry: 'Protocol Development',
       before: 43,
       after: 65,
