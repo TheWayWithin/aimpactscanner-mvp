@@ -32,19 +32,27 @@ async function getAuthHeaders() {
  * @param {string} url - URL to analyze
  * @param {string} userId - User ID for tracking
  * @param {string} userTier - User's subscription tier
+ * @param {string} analysisId - Optional pre-created analysis record ID
  * @returns {Promise<{success: boolean, overall_score?: number, factors?: Array, error?: string}>}
  */
-export async function analyzeSync(url, userId, userTier = 'free') {
+export async function analyzeSync(url, userId, userTier = 'free', analysisId = null) {
   const headers = await getAuthHeaders();
+
+  const body = {
+    url,
+    userId,
+    userTier,
+  };
+
+  // Include analysisId if provided (to use existing record)
+  if (analysisId) {
+    body.analysisId = analysisId;
+  }
 
   const response = await fetch(`${RAILWAY_API_URL}/api/analyze`, {
     method: 'POST',
     headers,
-    body: JSON.stringify({
-      url,
-      userId,
-      userTier,
-    }),
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {
@@ -184,35 +192,32 @@ export async function pollJobCompletion(jobId, options = {}) {
 }
 
 /**
- * Run full analysis with async job queue (recommended for production)
- * Creates job, polls for completion, returns results
+ * Run full analysis using synchronous endpoint
+ * Processes analysis immediately without job queue
  *
  * @param {string} url - URL to analyze
  * @param {string} userId - User ID
- * @param {string} analysisId - Pre-created analysis record ID
+ * @param {string} analysisId - Pre-created analysis record ID (passed to backend to update existing record)
  * @param {string} userTier - User's subscription tier
- * @param {function} onProgress - Progress callback
+ * @param {function} onProgress - Progress callback (limited support in sync mode)
  * @returns {Promise<{success: boolean, overall_score?: number, factors?: Array, error?: string}>}
  */
 export async function runAnalysis(url, userId, analysisId, userTier = 'free', onProgress = null) {
-  // Start async job
-  const jobResponse = await analyzeAsync(url, userId, analysisId, userTier);
+  // Use synchronous endpoint - processes immediately without job queue
+  // This avoids the need for a background worker to process jobs
 
-  if (!jobResponse.success) {
-    throw new Error(jobResponse.error || 'Failed to start analysis');
+  if (onProgress) {
+    onProgress({ status: 'processing', message: 'Analyzing website...' });
   }
 
-  // Poll for completion (API returns snake_case job_id)
-  const result = await pollJobCompletion(jobResponse.job_id, {
-    onProgress,
-    maxAttempts: 90, // ~3 minutes with backoff
-  });
+  // Pass analysisId to backend so it updates the existing record
+  const result = await analyzeSync(url, userId, userTier, analysisId);
 
   if (!result.success) {
     throw new Error(result.error || 'Analysis failed');
   }
 
-  return result.result;
+  return result;
 }
 
 /**
