@@ -1,0 +1,247 @@
+8:37:14 AM: Netlify Build                                                 
+8:37:14 AM: ────────────────────────────────────────────────────────────────
+8:37:14 AM: ​
+8:37:14 AM: ❯ Version
+8:37:14 AM:   @netlify/build 35.5.5
+8:37:14 AM: ​
+8:37:14 AM: ❯ Flags
+8:37:14 AM:   accountId: 680d32c96497359ec8062dbe
+8:37:14 AM:   baseRelDir: true
+8:37:14 AM:   buildId: 6942b1de96b3660008aa21dc
+8:37:14 AM:   deployId: 6942b1de96b3660008aa21de
+8:37:14 AM: ​
+8:37:14 AM: ❯ Current directory
+8:37:14 AM:   /opt/build/repo
+8:37:14 AM: ​
+8:37:14 AM: ❯ Config file
+8:37:14 AM:   /opt/build/repo/netlify.toml
+8:37:14 AM: ​
+8:37:14 AM: ❯ Context
+8:37:14 AM:   production
+8:37:14 AM: ​
+8:37:14 AM: ❯ Loading plugins
+8:37:14 AM:    - @netlify/plugin-lighthouse@6.0.1 from netlify.toml
+8:37:16 AM: ​
+8:37:16 AM: build.command from netlify.toml                               
+8:37:16 AM: ────────────────────────────────────────────────────────────────
+8:37:16 AM: ​
+8:37:16 AM: $ npm ci --include=dev && npm run build
+8:37:26 AM: added 563 packages, and audited 564 packages in 10s
+8:37:26 AM: 93 packages are looking for funding
+8:37:26 AM:   run `npm fund` for details
+8:37:26 AM: 7 vulnerabilities (3 moderate, 4 high)
+8:37:26 AM: To address all issues, run:
+8:37:26 AM:   npm audit fix
+8:37:26 AM: Run `npm audit` for details.
+8:37:26 AM: > aimpactscanner-mvp@0.0.0 build
+8:37:26 AM: > node scripts/generate-sitemap.js && vite build && ./scripts/fix-production-build.sh && node scripts/verify-infrastructure.js
+8:37:26 AM: ✅ Sitemap generated: 2025-12-17
+8:37:26 AM:    Location: /opt/build/repo/public/sitemap.xml
+8:37:26 AM:    Routes: 4
+8:37:26 AM: vite v7.0.0 building for production...
+8:37:26 AM: transforming...
+8:37:29 AM: ✓ 408 modules transformed.
+8:37:31 AM: rendering chunks...
+8:37:40 AM: 🚀 Removing 3 vendor preloads for performance
+8:37:40 AM: 📄 Removing 1 PDF-related preloads
+8:37:40 AM: 💤 Removing 0 lazy component preloads
+8:37:40 AM: ⚡ Removing 0 .jsx references (MIME type fix)
+8:37:40 AM: computing gzip size...
+8:37:40 AM: dist/assets/URLInput-DP9T2ABm.jsx                  5.54 kB
+8:37:40 AM: dist/assets/SimpleAnalysisProgress-DL5lgn-G.jsx    7.39 kB
+8:37:40 AM: dist/assets/Landing-Db_VsHeU.jsx                  19.14 kB
+8:37:40 AM: dist/index.html                                   21.45 kB │ gzip:   6.14 kB
+8:37:40 AM: dist/assets/App-Dy9QDE4w.jsx                      90.25 kB
+8:37:40 AM: dist/assets/index-D5VXQbMM.css                    89.69 kB │ gzip:  14.61 kB
+8:37:40 AM: dist/assets/index-DHg2EmIx.js                      1.47 kB │ gzip:   0.71 kB
+8:37:40 AM: dist/assets/ComparisonGrid-gzOBjZKk.js             2.54 kB │ gzip:   0.91 kB
+8:37:40 AM: dist/assets/UpsellGrowth-ZazL-_xH.js               3.96 kB │ gzip:   1.69 kB
+8:37:40 AM: dist/assets/WaitlistCTA-XMWjnE16.js                4.07 kB │ gzip:   1.58 kB
+8:37:40 AM: dist/assets/CheckoutCancel-B42saJG7.js             5.11 kB │ gzip:   1.69 kB
+8:37:40 AM: dist/assets/WelcomeScale-C_54SnPR.js               6.58 kB │ gzip:   2.13 kB
+8:37:40 AM: dist/assets/CheckoutSuccess-BzvWh2Zm.js            7.25 kB │ gzip:   2.67 kB
+8:37:40 AM: dist/assets/UpsellScale-BzXXH2KP.js                7.34 kB │ gzip:   2.37 kB
+8:37:40 AM: dist/assets/RegistrationFlow-QSEk8Hfc.js           7.86 kB │ gzip:   2.85 kB
+8:37:40 AM: dist/assets/SimpleAccountDashboard-Bv9q-dXM.js     8.03 kB │ gzip:   2.62 kB
+8:37:40 AM: dist/assets/OAuthCallback-DxUXP71n.js              8.33 kB │ gzip:   3.16 kB
+8:37:40 AM: dist/assets/UpsellCoffee-DexNreQD.js               8.44 kB │ gzip:   3.17 kB
+8:37:40 AM: dist/assets/UnifiedRegistration-B9zrsR2G.js        8.75 kB │ gzip:   2.74 kB
+8:37:40 AM: dist/assets/AuthMethodSelector-CDMVIweF.js         9.40 kB │ gzip:   3.41 kB
+8:37:40 AM: dist/assets/DiagnosticSignup-ACSoujlK.js          12.24 kB │ gzip:   3.72 kB
+8:37:40 AM: dist/assets/AuthWithPassword-BVHLW52K.js          14.51 kB │ gzip:   3.68 kB
+8:37:40 AM: dist/assets/PDFReportGenerator-CNBc-Y61.js        14.61 kB │ gzip:   4.98 kB
+8:37:40 AM: dist/assets/CoffeeTierSignup-CAyPHuUk.js          15.11 kB │ gzip:   4.72 kB
+8:37:40 AM: dist/assets/purify.es-BOcia5MP.js                 22.01 kB │ gzip:   8.49 kB
+8:37:40 AM: dist/assets/TierPDFButton-BIBdFBKg.js             27.86 kB │ gzip:   5.69 kB
+8:37:40 AM: dist/assets/Signup-CZ2rlBYI.js                    31.45 kB │ gzip:   8.98 kB
+8:37:40 AM: dist/assets/AnalysisHistory-Bz4b68eo.js           34.86 kB │ gzip:   8.51 kB
+8:37:40 AM: dist/assets/vendor-polyfills-C6SHlIbz.js          44.38 kB │ gzip:  17.65 kB
+8:37:40 AM: dist/assets/vendor-supabase-YOZNOpgP.js          121.53 kB │ gzip:  32.46 kB
+8:37:40 AM: dist/assets/vendor-misc-Clvgq_NA.js              126.69 kB │ gzip:  40.57 kB
+8:37:40 AM: dist/assets/vendor-react-DECgAQG2.js             179.61 kB │ gzip:  56.54 kB
+8:37:40 AM: dist/assets/html2canvas.esm-BTH0Ap93.js          200.05 kB │ gzip:  46.50 kB
+8:37:40 AM: dist/assets/main-Ctb0evkT.js                     226.78 kB │ gzip:  55.90 kB
+8:37:40 AM: dist/assets/vendor-jspdf-h60MXu4b.js             348.14 kB │ gzip: 111.80 kB
+8:37:40 AM: 
+8:37:40 AM: (!) Some chunks are larger than 250 kB after minification. Consider:
+8:37:40 AM: - Using dynamic import() to code-split the application
+8:37:40 AM: - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+8:37:40 AM: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+8:37:40 AM: ✓ built in 14.36s
+8:37:41 AM: 🔧 Fixing production build issues...
+8:37:41 AM: ✅ Removed 2 base64 modules
+8:37:41 AM: ✅ Removed 4 .jsx references
+8:37:41 AM: ✅ Production build fixed!
+8:37:41 AM: 🔍 Infrastructure File Verification
+8:37:41 AM: ✅ public/robots.txt
+8:37:41 AM: ✅ public/sitemap.xml
+8:37:41 AM: ✅ public/.well-known/security.txt
+8:37:41 AM: ✅ public/humans.txt
+8:37:41 AM: ✅ public/manifest.json
+8:37:41 AM: ⚠️  Large file: public/social-preview.png (957KB, recommended <500KB)
+8:37:41 AM: ✅ All required files present (1 warnings)
+8:37:41 AM: ​
+8:37:41 AM: (build.command completed in 24.9s)
+8:37:41 AM: ​
+8:37:41 AM: Functions bundling                                            
+8:37:41 AM: ────────────────────────────────────────────────────────────────
+8:37:41 AM: ​
+8:37:41 AM: The Netlify Functions setting targets a non-existing directory: netlify/functions
+8:37:41 AM: ​
+8:37:41 AM: (Functions bundling completed in 2ms)
+8:37:43 AM: Failed during stage 'building site': Build script returned non-zero exit code: 2 (https://ntl.fyi/exit-code-2)
+8:37:43 AM: ​
+8:37:43 AM: Scanning for secrets in code and build output.                
+8:37:43 AM: ────────────────────────────────────────────────────────────────
+8:37:43 AM: ​
+8:37:43 AM: ​
+8:37:43 AM: ❯ Scanning complete. 1828 file(s) scanned. Secrets scanning found 0 instance(s) of secrets and 1 instance(s) of likely secrets in build output or repo code.
+8:37:43 AM: ​
+8:37:43 AM: "ghp_***" detected as a likely secret:
+8:37:43 AM:   found value at line 14 in .mcp-profiles/fullstack.json
+8:37:43 AM:   found value at line 14 in .mcp.json
+8:37:43 AM: ​
+8:37:43 AM: To prevent exposing secrets, the build will fail until these likely secret values are not found in build output or repo files.
+8:37:43 AM: ​
+8:37:43 AM: If these are expected, use SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES, or SECRETS_SCAN_SMART_DETECTION_ENABLED to prevent detecting.
+8:37:43 AM: ​
+8:37:43 AM: For more information on secrets scanning, see the Netlify Docs: https://ntl.fyi/configure-secrets-scanning
+8:37:43 AM: ​
+8:37:43 AM: Secrets scanning detected secrets in files during build.      
+8:37:43 AM: ────────────────────────────────────────────────────────────────
+8:37:43 AM: ​
+8:37:43 AM:   Error message
+8:37:43 AM:   Secrets scanning found secrets in build.
+8:37:43 AM: ​
+8:37:43 AM:   Resolved config
+8:37:43 AM:   build:
+8:37:43 AM:     base: /opt/build/repo
+8:37:43 AM:     command: npm ci --include=dev && npm run build
+8:37:43 AM:     commandOrigin: config
+8:37:43 AM:     environment:
+8:37:43 AM:       - STRIPE_SECRET_KEY
+8:37:43 AM:       - SUPABASE_SERVICE_ROLE_KEY
+8:37:43 AM:       - VITE_STRIPE_COFFEE_PRICE_ID
+8:37:43 AM:       - VITE_STRIPE_PUBLISHABLE_KEY
+8:37:43 AM:       - VITE_SUPABASE_ANON_KEY
+8:37:43 AM:       - VITE_SUPABASE_URL
+8:37:43 AM:       - VITE_USE_RAILWAY_BACKEND
+8:37:43 AM:       - NODE_VERSION
+8:37:43 AM:       - NODE_ENV
+8:37:43 AM:     processing:
+8:37:43 AM:       css:
+8:37:43 AM:         bundle: true
+8:37:43 AM:         minify: true
+8:37:43 AM:       html:
+8:37:43 AM:         pretty_urls: true
+8:37:43 AM:       js:
+8:37:43 AM:         bundle: true
+8:37:43 AM:         minify: true
+8:37:43 AM:       skip_processing: false
+8:37:43 AM:     publish: /opt/build/repo/dist
+8:37:43 AM:     publishOrigin: config
+8:37:43 AM:   functions:
+8:37:43 AM:     "*":
+8:37:43 AM:       included_files:
+8:37:43 AM:         - node_modules/**
+  functionsDirectory: /opt/build/repo/netlify/functions
+  headers:
+    - for: /*
+      values:
+        Access-Control-Allow-Headers: Content-Type, Authorization
+        Access-Control-Allow-Methods: GET, POST, OPTIONS
+        Access-Control-Allow-Origin: https://aimpactscanner.com
+        Content-Security-Policy-Report-Only: "default-src 'self'; script-src 'self'
+          'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com
+          https://www.google-analytics.com; connect-src 'self'
+          https://*.supabase.co https://api.stripe.com
+          https://www.google-analytics.com; img-src 'self' data: https:; style-src
+          'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self'
+          https://fonts.gstatic.com data:; frame-src https://js.stripe.com;
+          worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action
+          'self' https://checkout.stripe.com; frame-ancestors 'none'"
+        Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(self
+          "https://js.stripe.com"), usb=(), interest-cohort=()
+        Referrer-Policy: strict-origin-when-cross-origin
+        Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+        X-Content-Type-Options: nosniff
+        X-DNS-Prefetch-Control: on
+        X-Frame-Options: DENY
+        X-XSS-Protection: 1; mode=block
+    - for: /index.html
+      values:
+        Cache-Control: no-cache, must-revalidate
+    - for: /*.js
+      values:
+        Cache-Control: public, max-age=31536000, immutable
+    - for: /*.css
+      values:
+        Cache-Control: public, max-age=31536000, immutable
+    - for: /*
+      values:
+        Access-Control-Allow-Headers: Content-Type, Authorization
+        Access-Control-Allow-Methods: GET, POST, OPTIONS
+        Access-Control-Allow-Origin: https://aimpactscanner.com
+        Content-Security-Policy-Report-Only: "default-src 'self'; script-src 'self'
+          'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com
+          https://www.google-analytics.com; connect-src 'self'
+          https://*.supabase.co https://api.stripe.com
+          https://www.google-analytics.com https://*.up.railway.app; img-src
+          'self' data: https:; style-src 'self' 'unsafe-inline'
+          https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com
+          data:; frame-src https://js.stripe.com; worker-src 'self' blob:;
+          object-src 'none'; base-uri 'self'; form-action 'self'
+          https://checkout.stripe.com; frame-ancestors 'none'"
+        Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(self
+          'https://js.stripe.com'), usb=(), interest-cohort=()
+        Referrer-Policy: strict-origin-when-cross-origin
+        Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+        X-Content-Type-Options: nosniff
+        X-DNS-Prefetch-Control: on
+        X-Frame-Options: DENY
+        X-XSS-Protection: 1; mode=block
+    - for: /index.html
+      values:
+        Cache-Control: no-cache, no-store, must-revalidate
+    - for: /assets/*
+      values:
+        Cache-Control: public, max-age=31536000, immutable
+    - for: "*.js"
+      values:
+        Cache-Control: public, max-age=31536000, immutable
+    - for: "*.css"
+      values:
+        Cache-Control: public, max-age=31536000, immutable
+  headersOrigin: config
+  plugins:
+    - inputs: {}
+      origin: config
+      package: "@netlify/plugin-lighthouse"
+  redirects:
+    - from: /*
+      status: 200
+      to: /index.html
+  redirectsOrigin: config
+8:37:43 AM: Build failed due to a user error: Build script returned non-zero exit code: 2
+8:37:43 AM: Failing build: Failed to build site
+8:37:44 AM: Finished processing build request in 1m12.107s
