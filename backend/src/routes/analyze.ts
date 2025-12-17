@@ -207,7 +207,6 @@ router.post('/', async (req: Request, res: Response) => {
 
       const failedUpdate: AnalysisUpdate = {
         status: 'failed',
-        completed_at: new Date().toISOString(),
       };
 
       await supabaseAdmin
@@ -239,7 +238,6 @@ router.post('/', async (req: Request, res: Response) => {
     if (!result.success) {
       const failedUpdate: AnalysisUpdate = {
         status: 'failed',
-        completed_at: new Date().toISOString(),
       };
 
       await supabaseAdmin
@@ -257,10 +255,10 @@ router.post('/', async (req: Request, res: Response) => {
     const summary = getAnalysisSummary(result);
 
     // Update analysis with results
+    // Note: completed_at removed due to Supabase schema cache issue
     const completedUpdate: AnalysisUpdate = {
       status: 'completed',
       overall_score: result.overall_score,
-      completed_at: new Date().toISOString(),
     };
 
     const { error: updateError } = await supabaseAdmin
@@ -323,7 +321,6 @@ router.post('/', async (req: Request, res: Response) => {
     try {
       const failedUpdate: AnalysisUpdate = {
         status: 'failed',
-        completed_at: new Date().toISOString(),
       };
       await supabaseAdmin
         .from('analyses')

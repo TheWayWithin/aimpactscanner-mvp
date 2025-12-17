@@ -121,10 +121,10 @@ async function processJob(): Promise<boolean> {
       const summary = getAnalysisSummary(result);
 
       // Update analysis record with results
+      // Note: completed_at removed due to Supabase schema cache issue
       const completedUpdate: AnalysisUpdate = {
         status: 'completed',
         overall_score: result.overall_score,
-        completed_at: new Date().toISOString(),
       };
 
       await supabaseAdmin
@@ -177,7 +177,6 @@ async function processJob(): Promise<boolean> {
         .from('analyses')
         .update({
           status: 'failed',
-          completed_at: new Date().toISOString(),
         } as never)
         .eq('id', job.analysis_id);
 
