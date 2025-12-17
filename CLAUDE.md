@@ -150,6 +150,110 @@ Before ANY testing (local or staging):
 - [ ] Never copy credentials from `.env.production.template`
 - [ ] Never test OAuth/Stripe on production database
 
+---
+
+## Infrastructure Operations
+
+### Branch → Deployment Mapping
+
+| Branch | Deploys To | URL | Database |
+|--------|-----------|-----|----------|
+| `main` | **Production** (Netlify) | https://aimpactscanner.com | `pdmtvkcxnqysujnpcnyh` (PROD) |
+| `develop` | **Staging** (Netlify Deploy Preview) | https://develop--aimpactscanner.netlify.app | `isgzvwpjokcmtizstwru` (STAGING) |
+| `main` | **Railway Backend** (auto-deploy) | https://aimpactscanner-backend-production.up.railway.app | `pdmtvkcxnqysujnpcnyh` (PROD) |
+
+⚠️ **CRITICAL**: Keep `develop` in sync with `main` or staging will be outdated!
+```bash
+git checkout develop && git merge main && git push origin develop
+```
+
+### Environment Variables Checklist
+
+#### Railway Backend (Production)
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SUPABASE_URL` | ✅ | `https://pdmtvkcxnqysujnpcnyh.supabase.co` |
+| `SUPABASE_ANON_KEY` | ✅ | Production anon key |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Production service role key |
+| `ALLOWED_ORIGINS` | ✅ | `https://aimpactscanner.com,https://develop--aimpactscanner.netlify.app,http://localhost:5173` |
+| `LLMTXT_MASTERY_API_KEY` | ✅ | API key for LLMs.txt generation |
+| `NODE_ENV` | ✅ | `production` |
+| `PORT` | ✅ | `3001` |
+
+#### Netlify Frontend (Production)
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_SUPABASE_URL` | ✅ | `https://pdmtvkcxnqysujnpcnyh.supabase.co` |
+| `VITE_SUPABASE_ANON_KEY` | ✅ | Production anon key |
+| `VITE_USE_RAILWAY_BACKEND` | ✅ | `true` |
+| `VITE_RAILWAY_API_URL` | ✅ | `https://aimpactscanner-backend-production.up.railway.app` |
+| `VITE_STRIPE_PUBLISHABLE_KEY` | ✅ | Stripe live publishable key |
+
+#### Netlify Frontend (Staging - in netlify.toml)
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_SUPABASE_URL` | ✅ | `https://isgzvwpjokcmtizstwru.supabase.co` |
+| `VITE_SUPABASE_ANON_KEY` | ✅ | Staging anon key |
+| `VITE_USE_RAILWAY_BACKEND` | ✅ | `true` |
+
+#### Supabase Edge Function Secrets (Production)
+| Secret | Required | Description |
+|--------|----------|-------------|
+| `STRIPE_SECRET_KEY` | ✅ | Stripe live secret key |
+| `STRIPE_WEBHOOK_SECRET` | ✅ | Stripe webhook signing secret |
+| `LLMTXT_MASTERY_API_KEY` | ✅ | API key for LLMs.txt (if using Edge Function) |
+
+#### Supabase Edge Function Secrets (Staging)
+| Secret | Required | Description |
+|--------|----------|-------------|
+| `STRIPE_SECRET_KEY` | ✅ | Stripe test secret key |
+| `STRIPE_WEBHOOK_SECRET` | ✅ | Stripe test webhook signing secret |
+| `LLMTXT_MASTERY_API_KEY` | ✅ | Same API key as production |
+
+### OAuth Redirect URLs
+
+**Must be configured in Supabase Dashboard → Authentication → URL Configuration**
+
+#### Production Supabase (`pdmtvkcxnqysujnpcnyh`)
+```
+https://aimpactscanner.com
+https://aimpactscanner.com/**
+```
+
+#### Staging Supabase (`isgzvwpjokcmtizstwru`)
+```
+https://develop--aimpactscanner.netlify.app
+https://develop--aimpactscanner.netlify.app/**
+http://localhost:5173
+http://localhost:5173/**
+http://localhost:5174
+http://localhost:5174/**
+```
+
+### Pre-Deploy Checklist
+
+Before deploying to production:
+
+- [ ] All tests pass locally
+- [ ] Changes committed to `main`
+- [ ] `develop` branch synced with `main`
+- [ ] Railway env vars complete (check with `railway variables`)
+- [ ] Netlify env vars complete (check dashboard)
+- [ ] OAuth redirect URLs configured in Supabase
+- [ ] Database migrations applied (if any)
+
+### Post-Deploy Verification
+
+After deploying:
+
+- [ ] Production site loads: https://aimpactscanner.com
+- [ ] OAuth login works (test Google sign-in)
+- [ ] Analysis runs successfully
+- [ ] Railway health check passes: https://aimpactscanner-backend-production.up.railway.app/health
+- [ ] Check browser console for errors
+
+---
+
 #### Netlify Configuration
 
 **Deploy Previews** (staging):
