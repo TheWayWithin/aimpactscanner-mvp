@@ -1230,10 +1230,70 @@ function AppContent({ initialUrl }) {
     console.log('🔄 Mock analysis progress completed, waiting for real analysis...');
   };
 
+  // Calculate pillar scores from factor data
+  const calculatePillarScoresFromFactors = (factors) => {
+    if (!factors || factors.length === 0) return {};
+
+    const pillarDefinitions = {
+      'AI': { name: 'AI Response Optimization & Citation', weight: 23.8 },
+      'A': { name: 'Authority & Trust Signals', weight: 17.9 },
+      'M': { name: 'Machine Readability & Technical Infrastructure', weight: 14.6 },
+      'S': { name: 'Semantic Content Quality', weight: 13.9 },
+      'E': { name: 'Engagement & User Experience', weight: 10.9 },
+      'T': { name: 'Technical SEO & Foundation', weight: 8.9 },
+      'R': { name: 'Reference Networks & Citations', weight: 5.9 },
+      'Y': { name: 'Yield Optimization & Freshness', weight: 4.1 },
+      'P': { name: 'Performance & Speed', weight: 5.0 }
+    };
+
+    const pillarGroups = {};
+
+    // Group factors by pillar
+    factors.forEach(factor => {
+      const pillarId = factor.pillar;
+      if (!pillarId) return;
+
+      if (!pillarGroups[pillarId]) {
+        pillarGroups[pillarId] = {
+          factors: [],
+          totalScore: 0
+        };
+      }
+      pillarGroups[pillarId].factors.push(factor);
+      pillarGroups[pillarId].totalScore += factor.score || 0;
+    });
+
+    // Calculate pillar scores
+    const pillars = {};
+    Object.keys(pillarDefinitions).forEach(pillarId => {
+      const def = pillarDefinitions[pillarId];
+      const group = pillarGroups[pillarId];
+
+      if (group && group.factors.length > 0) {
+        const avgScore = Math.round(group.totalScore / group.factors.length);
+        pillars[pillarId] = {
+          score: avgScore,
+          weight: def.weight,
+          factors: group.factors.length,
+          name: def.name
+        };
+      } else {
+        pillars[pillarId] = {
+          score: 0,
+          weight: def.weight,
+          factors: 0,
+          name: def.name
+        };
+      }
+    });
+
+    return pillars;
+  };
+
   // Handle viewing an analysis from history
   const handleViewHistoryAnalysis = async (analysisId, url) => {
     console.log('📊 Viewing analysis from history:', { analysisId, url });
-    
+
     try {
       // First try to fetch the analysis from database
       const { data: analysis, error } = await supabase
@@ -1241,20 +1301,31 @@ function AppContent({ initialUrl }) {
         .select('*')
         .eq('id', analysisId)
         .single();
-      
+
       if (!error && analysis) {
         // Fetch the analysis factors
         const { data: factors, error: factorsError } = await supabase
           .from('analysis_factors')
           .select('*')
           .eq('analysis_id', analysisId);
-        
+
         if (!factorsError && factors) {
+          // Calculate pillar scores from factors if not stored in analysis.scores
+          const storedPillars = analysis.scores?.pillars;
+          const hasPillarScores = storedPillars && Object.keys(storedPillars).length > 0 &&
+            Object.values(storedPillars).some(p => p?.score > 0);
+
+          const pillars = hasPillarScores
+            ? storedPillars
+            : calculatePillarScoresFromFactors(factors);
+
+          console.log('📊 Pillar scores:', { hasPillarScores, pillars, factorCount: factors.length });
+
           // Format the results to match expected structure
           const results = {
-            overall_score: analysis.scores?.overall_score || 0,
+            overall_score: analysis.scores?.overall_score || analysis.overall_score || 0,
             factors: factors || [],
-            pillars: analysis.scores?.pillars || {},
+            pillars: pillars,
             url: analysis.url,
             analysisId: analysisId,
             created_at: analysis.created_at
