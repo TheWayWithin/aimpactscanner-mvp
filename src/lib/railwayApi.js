@@ -244,3 +244,79 @@ export function useRailwayBackend() {
 export function getRailwayApiUrl() {
   return RAILWAY_API_URL;
 }
+
+// ============================================
+// LLMs.txt Generation API
+// ============================================
+
+/**
+ * Call LLMs.txt API endpoint
+ * @param {object} body - Request body with action and params
+ * @returns {Promise<object>} Response data
+ */
+async function callLlmstxtApi(body) {
+  const headers = await getAuthHeaders();
+
+  const response = await fetch(`${RAILWAY_API_URL}/api/llmstxt`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || `HTTP ${response.status}: LLMs.txt operation failed`);
+  }
+
+  // Handle text responses (for download action)
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('text/plain')) {
+    return response.text();
+  }
+
+  return response.json();
+}
+
+/**
+ * Get LLMs.txt usage stats
+ * @returns {Promise<{used: number, limit: number, remaining: number, resetDate: string}>}
+ */
+export async function getLlmstxtUsage() {
+  return callLlmstxtApi({ action: 'usage' });
+}
+
+/**
+ * Start LLMs.txt analysis for a URL
+ * @param {string} url - URL to analyze
+ * @returns {Promise<{id: string}>}
+ */
+export async function startLlmstxtAnalysis(url) {
+  return callLlmstxtApi({ action: 'analyze', url });
+}
+
+/**
+ * Check LLMs.txt analysis status
+ * @param {string} id - Analysis ID
+ * @returns {Promise<{status: string, error?: string}>}
+ */
+export async function getLlmstxtStatus(id) {
+  return callLlmstxtApi({ action: 'status', id });
+}
+
+/**
+ * Generate LLMs.txt file from completed analysis
+ * @param {string} analysisId - Analysis ID
+ * @returns {Promise<{id: string, content?: string}>}
+ */
+export async function generateLlmstxt(analysisId) {
+  return callLlmstxtApi({ action: 'generate', analysisId });
+}
+
+/**
+ * Download LLMs.txt file
+ * @param {string} id - Download ID
+ * @returns {Promise<string>} File content
+ */
+export async function downloadLlmstxt(id) {
+  return callLlmstxtApi({ action: 'download', id });
+}

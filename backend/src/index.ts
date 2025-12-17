@@ -7,6 +7,7 @@ import { errorHandler } from './middleware/error-handler';
 import { requestLogger } from './middleware/logger';
 import { globalRateLimiter } from './middleware/rate-limit';
 import analyzeRoutes from './routes/analyze';
+import llmstxtRoutes from './routes/llmstxt';
 
 // Load environment variables
 config();
@@ -39,7 +40,7 @@ app.get('/health', (_req: Request, res: Response) => {
 
 // API routes
 app.use('/api/analyze', analyzeRoutes);
-// app.use('/api/generate-llmstxt', llmstxtRoutes); // Phase 6
+app.use('/api/llmstxt', llmstxtRoutes);
 
 // Error handling (must be last)
 app.use(errorHandler);
