@@ -27,7 +27,6 @@ import { closeBrowser } from './services/browserRenderer';
 import { Database } from './types/database.types';
 
 // Type aliases
-type AnalysisUpdate = Database['public']['Tables']['analyses']['Update'];
 type AnalysisFactorInsert = Database['public']['Tables']['analysis_factors']['Insert'];
 
 // Configuration
@@ -125,6 +124,7 @@ async function processJob(): Promise<boolean> {
 
       try {
         // Use raw SQL via RPC to bypass schema cache
+        // @ts-expect-error - Custom RPC function not in generated types
         const { error: updateError } = await supabaseAdmin.rpc('update_analysis_score', {
           p_analysis_id: job.analysis_id,
           p_score: roundedScore,

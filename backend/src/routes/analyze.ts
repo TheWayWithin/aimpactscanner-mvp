@@ -259,6 +259,7 @@ router.post('/', async (req: Request, res: Response) => {
 
     try {
       // Use raw SQL via RPC to bypass schema cache
+      // @ts-expect-error - Custom RPC function not in generated types
       const { error: updateError } = await supabaseAdmin.rpc('update_analysis_score', {
         p_analysis_id: analysisId,
         p_score: roundedScore,
