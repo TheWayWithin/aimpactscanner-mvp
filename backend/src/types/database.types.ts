@@ -159,9 +159,11 @@ export interface Database {
           factor_name: string;
           pillar: string;
           score: number;
-          reasoning: string | null;
-          recommendations: string | null;
+          confidence: number;
           weight: number;
+          evidence: Json | null;
+          recommendations: Json | null;
+          created_at: string;
         };
         Insert: {
           id?: string;
@@ -170,9 +172,11 @@ export interface Database {
           factor_name: string;
           pillar: string;
           score: number;
-          reasoning?: string | null;
-          recommendations?: string | null;
+          confidence?: number;
           weight?: number;
+          evidence?: Json | null;
+          recommendations?: Json | null;
+          created_at?: string;
         };
         Update: {
           id?: string;
@@ -181,9 +185,11 @@ export interface Database {
           factor_name?: string;
           pillar?: string;
           score?: number;
-          reasoning?: string | null;
-          recommendations?: string | null;
+          confidence?: number;
           weight?: number;
+          evidence?: Json | null;
+          recommendations?: Json | null;
+          created_at?: string;
         };
       };
       analysis_jobs: {

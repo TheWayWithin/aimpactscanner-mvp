@@ -1,0 +1,170 @@
+(index):130 🍪 GDPR consent stub initialized
+(index):173 Consent handling delegated to React component
+(index):179 Analytics initialized after LCP
+vendor-supabase-YOZNOpgP.js:1 AI Search Mastery: Supabase client initialized. Connecting to the powerful MASTERY-AI Framework backend.
+index-D_vWtNg6.js:2 🚀 React application loaded
+main-DDHyHnGO.js:2 🔍 APP INIT - Full URL: https://aimpactscanner.com/#dashboard
+main-DDHyHnGO.js:2 🔍 APP INIT - Hash: dashboard
+main-DDHyHnGO.js:2 🔍 APP INIT - Query params: 
+main-DDHyHnGO.js:2 📍 INITIAL HASH DETECTED: dashboard
+main-DDHyHnGO.js:2 🔒 SECURITY: Deferring route navigation until session check completes
+main-DDHyHnGO.js:2 🚀 App initializing with session persistence...
+main-DDHyHnGO.js:2 🔍 App mounted - Full URL: https://aimpactscanner.com/#dashboard
+main-DDHyHnGO.js:2 🔍 App mounted - Hash: #dashboard
+main-DDHyHnGO.js:2 🔍 App mounted - Query params: 
+main-DDHyHnGO.js:2 ⏳ Checking for existing session before rendering...
+main-DDHyHnGO.js:2 🔄 Starting session restoration check...
+main-DDHyHnGO.js:2 🔧 Setting up enhanced onAuthStateChange listener...
+main-DDHyHnGO.js:2 📦 Loading full Supabase SDK...
+main-DDHyHnGO.js:2 ✅ Supabase SDK loaded
+main-DDHyHnGO.js:2 🔐 Auth state changed: INITIAL_SESSION jamie.watters.mail@gmail.com sessionChecked: false
+main-DDHyHnGO.js:2 🔄 INITIAL_SESSION detected: {hasSession: true, sessionChecked: false, userEmail: 'jamie.watters.mail@gmail.com'}
+main-DDHyHnGO.js:2 ✅ Session restored from storage on app load
+main-DDHyHnGO.js:2 📱 Found local tier data: coffee for user: jamie.watters.mail@gmail.com
+main-DDHyHnGO.js:2 🔍 Fetching user tier for: 2e8915de-245b-4872-9bb3-5724cc21ecab
+main-DDHyHnGO.js:2 ⏳ SECURITY: Session check not complete - deferring navigation to: dashboard
+main-DDHyHnGO.js:2 🔧 useUserInitializer: Starting initialization for user: 2e8915de-245b-4872-9bb3-5724cc21ecab jamie.watters.mail@gmail.com 
+main-DDHyHnGO.js:2 📱 Using cached tier data for quick initialization: coffee
+main-DDHyHnGO.js:2 📊 Setting user tier from UserInitializer: coffee
+main-DDHyHnGO.js:2 CLS: 0.00002705875272560566
+main-DDHyHnGO.js:2 LCP: 1156
+vendor-supabase-YOZNOpgP.js:1  POST https://pdmtvkcxnqysujnpcnyh.supabase.co/rest/v1/rpc/get_user_data 404 (Not Found)
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+o @ vendor-supabase-YOZNOpgP.js:1
+Promise.then
+l @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+ot @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+then @ vendor-supabase-YOZNOpgP.js:1
+main-DDHyHnGO.js:2 ⚠️ RPC function failed, trying direct query: {code: 'PGRST202', details: 'Searched for the function public.get_user_data wit…r, but no matches were found in the schema cache.', hint: 'Perhaps you meant to call the function public.get_user_dashboard_data', message: 'Could not find the function public.get_user_data(user_id) in the schema cache'}
+Be @ main-DDHyHnGO.js:2
+await in Be
+(anonymous) @ main-DDHyHnGO.js:2
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+_useSession @ vendor-supabase-YOZNOpgP.js:1
+await in _useSession
+_emitInitialSession @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+main-DDHyHnGO.js:2 🔍 Session restoration result: {hasSession: true, hasUser: true, userEmail: 'jamie.watters.mail@gmail.com', expiresAt: 1765997767, error: undefined}
+main-DDHyHnGO.js:2 ✅ Valid session restored, setting auth state
+main-DDHyHnGO.js:2 🔄 Already fetching user tier for: 2e8915de-245b-4872-9bb3-5724cc21ecab - skipping duplicate call
+main-DDHyHnGO.js:2 ⏳ Waiting for session state to propagate before navigation...
+main-DDHyHnGO.js:2 🔒 SECURITY: Processing deferred route after session check: dashboard
+main-DDHyHnGO.js:2 ⏳ SECURITY: Session check not complete - deferring navigation to: dashboard
+main-DDHyHnGO.js:2 🔄 useUserInitializer: Skipping - too soon after last init: 729ms
+main-DDHyHnGO.js:2 ⏳ SECURITY: Session check not complete - deferring navigation to: dashboard
+main-DDHyHnGO.js:2 Synced tier from database: coffee for jamie.watters.mail@gmail.com
+main-DDHyHnGO.js:2 ✅ User data fetched successfully: {id: '2e8915de-245b-4872-9bb3-5724cc21ecab', email: 'jamie.watters.mail@gmail.com', full_name: null, avatar_url: null, subscription_tier: 'free', …}
+main-DDHyHnGO.js:2 ✅ SECURITY: Authenticated user accessing protected route: dashboard
+main-DDHyHnGO.js:2 FID: 13.899999856948853
+AnalysisHistory-CEYoNP45.js:1 📊 Loading analysis history from database for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+AnalysisHistory-CEYoNP45.js:1 📊 Loading analysis history from database for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+AnalysisHistory-CEYoNP45.js:1 ✅ Loaded 10 analyses from database
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+AnalysisHistory-CEYoNP45.js:1 ✅ Loaded 10 analyses from database
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-DDHyHnGO.js:2 📡 Full GTM script loaded (107KB)
+main-DDHyHnGO.js:2 🚀 Preloading PDF libraries in background...
+main-DDHyHnGO.js:2 ✅ PDF libraries preloaded successfully
+main-DDHyHnGO.js:2 📊 Viewing analysis from history: {analysisId: '91777f27-257b-4135-adc4-c8399a36adb2', url: 'http://jamiewatters.work'}
+main-DDHyHnGO.js:2 ✅ SECURITY: Authenticated user accessing protected route: results
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'llms_txt', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "91777f27-257b-4135-adc4-c8399a36adb2",
+  "url": "http://jamiewatters.work",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 0,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "coffee",
+  "canExportCSV": false,
+  "canUseLLMSTxt": false
+}
+main-DDHyHnGO.js:2 🔍 Real analysis check: {isRealAnalysis: true, hasFactors: true, factorsCount: 27, factors: Array(27)}
+main-DDHyHnGO.js:2 📦 Grouped factors result: {totalFactors: 27, groupedCount: 9, groups: Array(9)}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-DDHyHnGO.js:2 📝 Adding analysis to localStorage history (fallback): http://jamiewatters.work
+main-DDHyHnGO.js:2 📝 Analysis already exists in history, updating entry
+main-DDHyHnGO.js:2 ✅ Analysis added to localStorage history
+main-DDHyHnGO.js:2 [DEBUG] hasPDFAccess called with tier: free
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'pdf_export', mappedTier: 'free'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(5), result: false}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess returned: false
+main-DDHyHnGO.js:2 CLS: 0.008499080721894089
+main-DDHyHnGO.js:2 Synced tier from database: coffee for jamie.watters.mail@gmail.com
+main-DDHyHnGO.js:2 [DEBUG] hasPDFAccess called with tier: coffee
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'pdf_export', mappedTier: 'coffee'}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(5), result: true}
+main-DDHyHnGO.js:2 [DEBUG] hasFeatureAccess returned: true
+main-DDHyHnGO.js:2 CLS: 0.01275168324281062
+main-DDHyHnGO.js:2 CLS: 0.01883220063109361
+main-DDHyHnGO.js:2 💨 Window lost focus
+main-DDHyHnGO.js:2 🎯 Window gained focus
+main-DDHyHnGO.js:2 💨 Window lost focus

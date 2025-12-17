@@ -1,5 +1,85 @@
 # AImpactScanner MVP - Progress Log
 
+## [December 17, 2025] - Sprint 6 Status Update: Phases 1-4 Complete ✅
+
+**Context**: Updated project-plan.md to reflect actual Sprint 6 completion status. Documentation was outdated.
+
+### Sprint 6 Actual Status
+
+| Phase | Description | Status | Completed |
+|-------|-------------|--------|-----------|
+| Phase 1 | Railway Infrastructure Setup | ✅ COMPLETE | Dec 14, 2025 |
+| Phase 2 | Lift & Shift Analysis Engine | ✅ COMPLETE | Dec 14, 2025 |
+| Phase 3 | Async Job Processing | ✅ COMPLETE | Dec 15, 2025 |
+| Phase 4 | Headless Browser (Puppeteer) | ✅ COMPLETE | Dec 15, 2025 |
+| Phase 5 | Production Migration | ⏳ READY | Pending |
+| Phase 6 | LLMs.txt Migration | ❌ Not Started | - |
+
+### Key Deliverables Completed
+
+**Backend Infrastructure** (`/backend/`):
+- `src/index.ts` - Express server with health check
+- `src/lib/supabase.ts` - Supabase client configuration
+- `src/middleware/` - Auth, CORS, rate limiting, error handling
+- `src/routes/analyze.ts` - Analysis API endpoints
+- `src/services/analyzer/` - Full 27-factor analysis engine
+- `src/services/jobQueue.ts` - Async job queue
+- `src/services/browserRenderer.ts` - Puppeteer rendering
+- `src/services/csrDetector.ts` - CSR detection logic
+- `src/services/pageFetcher.ts` - Hybrid fetch strategy
+- `src/worker.ts` - Background job processor
+
+**Frontend Integration**:
+- `src/lib/railwayApi.js` - Railway API client
+- Feature flag: `VITE_USE_RAILWAY_BACKEND` controls routing
+
+**Database**:
+- `analysis_jobs` table with job queue schema
+- `claim_next_job()` RPC function
+
+### Next Steps
+
+1. **Phase 5**: Enable Railway on production (flip feature flag)
+2. **Phase 5**: Validate and monitor production
+3. **Phase 6**: Migrate LLMs.txt generation to Railway
+
+---
+
+## [December 15, 2025] - Sprint 6 Phase 3: Bug Fixes & Testing ✅
+
+**Context**: Fixed bugs discovered during async job processing testing.
+
+### Bug Fixes Applied
+
+1. **Trust Proxy Configuration** ✅
+   - **Issue**: Rate limiter warning `X-Forwarded-For header is set but trust proxy is false`
+   - **Fix**: Added `app.set('trust proxy', 1)` in `backend/src/index.ts`
+   - **Deployed**: Railway backend
+
+2. **job_id Snake Case Mismatch** ✅
+   - **Issue**: Backend returns `job_id` (snake_case) but frontend expected `jobId` (camelCase)
+   - **Symptom**: Console showed `Connecting to '/api/analyze/jobs/undefined'`
+   - **Fix**: Changed `jobResponse.jobId` to `jobResponse.job_id` in `src/lib/railwayApi.js:206`
+   - **Deployed**: Both main (production) and develop (staging) branches
+
+### Testing Results
+
+| Environment | Backend | Status |
+|------------|---------|--------|
+| Production (aimpactscanner.com) | Edge Function | ✅ Works end-to-end |
+| Staging (develop--aimpactscanner) | Railway | ✅ Fix deployed, verified via console logs |
+
+**Evidence fix works**: Before fix showed `jobs/undefined`, after fix shows correct `/api/analyze/async` calls.
+
+**Note**: Full Railway end-to-end test blocked by rate limit from earlier failed polling attempts. Console logs confirm fix is correct.
+
+### Next Steps
+
+- Enable Railway backend on production (set VITE_USE_RAILWAY_BACKEND=true)
+- Continue with Phase 4: Headless Browser Integration (Puppeteer)
+
+---
+
 ## [December 15, 2025] - Sprint 6 Phase 3: Async Job Processing Complete ✅
 
 **Context**: Implemented background job queue system for async analysis processing.

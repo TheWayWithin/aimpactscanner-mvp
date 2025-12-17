@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import {
+  useRailwayBackend,
+  getLlmstxtUsage,
+  startLlmstxtAnalysis,
+  getLlmstxtStatus,
+  generateLlmstxt,
+  downloadLlmstxt,
+} from '../lib/railwayApi';
 
 /**
  * LLMsTxtPanel - Generate LLMs.txt files for AI search engine optimization
@@ -42,16 +50,23 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
         return;
       }
 
-      const { data, error } = await supabase.functions.invoke('generate-llmstxt', {
-        body: { action: 'usage' },
-      });
+      // Use Railway backend if enabled, otherwise fall back to Edge Function
+      if (useRailwayBackend()) {
+        console.log('📡 LLMs.txt: Using Railway backend for usage stats');
+        const data = await getLlmstxtUsage();
+        setUsageStats(data);
+      } else {
+        const { data, error } = await supabase.functions.invoke('generate-llmstxt', {
+          body: { action: 'usage' },
+        });
 
-      if (error) {
-        console.error('Error fetching usage stats:', error);
-        return;
+        if (error) {
+          console.error('Error fetching usage stats:', error);
+          return;
+        }
+
+        setUsageStats(data);
       }
-
-      setUsageStats(data);
     } catch (error) {
       console.error('Error fetching usage stats:', error);
     }
@@ -85,28 +100,53 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
       setProgressMessage('Analyzing website structure...');
       setErrorMessage('');
 
-      // Start analysis
-      const { data: analyzeData, error: analyzeError } = await supabase.functions.invoke('generate-llmstxt', {
-        body: { action: 'analyze', url: analysisUrl },
-      });
+      let analyzeData;
 
-      if (analyzeError) {
-        throw new Error(analyzeError.message || 'Failed to start analysis');
-      }
+      // Use Railway backend if enabled
+      if (useRailwayBackend()) {
+        console.log('📡 LLMs.txt: Using Railway backend for analysis');
+        try {
+          analyzeData = await startLlmstxtAnalysis(analysisUrl);
+        } catch (err) {
+          // Handle specific error responses
+          if (err.message.includes('Usage limit exceeded')) {
+            setStatus('limit_exceeded');
+            setErrorMessage(err.message);
+            return;
+          }
+          if (err.message.includes('Upgrade required')) {
+            setStatus('idle');
+            if (onUpgrade) onUpgrade();
+            return;
+          }
+          throw err;
+        }
+      } else {
+        // Fall back to Edge Function
+        const { data, error: analyzeError } = await supabase.functions.invoke('generate-llmstxt', {
+          body: { action: 'analyze', url: analysisUrl },
+        });
 
-      // Check for error response
-      if (analyzeData?.error) {
-        if (analyzeData.error === 'Usage limit exceeded') {
-          setStatus('limit_exceeded');
-          setErrorMessage(analyzeData.message);
-          return;
+        if (analyzeError) {
+          throw new Error(analyzeError.message || 'Failed to start analysis');
         }
-        if (analyzeData.error === 'Upgrade required') {
-          setStatus('idle');
-          if (onUpgrade) onUpgrade();
-          return;
+
+        analyzeData = data;
+
+        // Check for error response
+        if (analyzeData?.error) {
+          if (analyzeData.error === 'Usage limit exceeded') {
+            setStatus('limit_exceeded');
+            setErrorMessage(analyzeData.message);
+            return;
+          }
+          if (analyzeData.error === 'Upgrade required') {
+            setStatus('idle');
+            if (onUpgrade) onUpgrade();
+            return;
+          }
+          throw new Error(analyzeData.error);
         }
-        throw new Error(analyzeData.error);
       }
 
       // The API returns { success: true, analysis: { id: ... } } or { id: ... }
@@ -131,14 +171,21 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
   const pollAnalysisStatus = async (id) => {
     const maxAttempts = 60; // 60 seconds max (polling every second)
     let attempts = 0;
+    const isRailway = useRailwayBackend();
 
     const checkStatus = async () => {
       try {
-        const { data, error } = await supabase.functions.invoke('generate-llmstxt', {
-          body: { action: 'status', id },
-        });
+        let data;
 
-        if (error) throw error;
+        if (isRailway) {
+          data = await getLlmstxtStatus(id);
+        } else {
+          const result = await supabase.functions.invoke('generate-llmstxt', {
+            body: { action: 'status', id },
+          });
+          if (result.error) throw result.error;
+          data = result.data;
+        }
 
         setProgressMessage(`Analyzing website... ${Math.round((attempts / maxAttempts) * 100)}%`);
 
@@ -171,12 +218,19 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
 
   const generateFile = async (id) => {
     try {
-      const { data, error } = await supabase.functions.invoke('generate-llmstxt', {
-        body: { action: 'generate', analysisId: id },
-      });
+      let data;
 
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
+      if (useRailwayBackend()) {
+        data = await generateLlmstxt(id);
+      } else {
+        const result = await supabase.functions.invoke('generate-llmstxt', {
+          body: { action: 'generate', analysisId: id },
+        });
+
+        if (result.error) throw result.error;
+        data = result.data;
+        if (data?.error) throw new Error(data.error);
+      }
 
       // Store the download data
       setDownloadData({
@@ -200,14 +254,21 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
     if (!downloadData?.id) return;
 
     try {
-      const { data, error } = await supabase.functions.invoke('generate-llmstxt', {
-        body: { action: 'download', id: downloadData.id },
-      });
+      let fileContent;
 
-      if (error) throw error;
+      if (useRailwayBackend()) {
+        fileContent = await downloadLlmstxt(downloadData.id);
+      } else {
+        const { data, error } = await supabase.functions.invoke('generate-llmstxt', {
+          body: { action: 'download', id: downloadData.id },
+        });
+
+        if (error) throw error;
+        fileContent = data;
+      }
 
       // Create blob and download
-      const blob = new Blob([data], { type: 'text/plain' });
+      const blob = new Blob([fileContent], { type: 'text/plain' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -280,7 +341,7 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
       </div>
       <h3 className="text-lg font-medium mb-2" style={{ color: '#0F172A' }}>Upgrade to Generate LLMs.txt</h3>
       <p className="text-sm mb-4" style={{ color: '#64748B' }}>
-        Generate SEO-optimized LLMs.txt files for better AI discovery. Available on Growth ($17.95/mo) and Scale ($29.95/mo) tiers.
+        Generate SEO-optimized LLMs.txt files for better AI discovery. Available on Growth ($12.46/mo) and Scale ($24.96/mo) tiers.
       </p>
       <button
         onClick={() => onUpgrade && onUpgrade()}

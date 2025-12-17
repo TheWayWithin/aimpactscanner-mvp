@@ -32,19 +32,27 @@ async function getAuthHeaders() {
  * @param {string} url - URL to analyze
  * @param {string} userId - User ID for tracking
  * @param {string} userTier - User's subscription tier
+ * @param {string} analysisId - Optional pre-created analysis record ID
  * @returns {Promise<{success: boolean, overall_score?: number, factors?: Array, error?: string}>}
  */
-export async function analyzeSync(url, userId, userTier = 'free') {
+export async function analyzeSync(url, userId, userTier = 'free', analysisId = null) {
   const headers = await getAuthHeaders();
+
+  const body = {
+    url,
+    userId,
+    userTier,
+  };
+
+  // Include analysisId if provided (to use existing record)
+  if (analysisId) {
+    body.analysisId = analysisId;
+  }
 
   const response = await fetch(`${RAILWAY_API_URL}/api/analyze`, {
     method: 'POST',
     headers,
-    body: JSON.stringify({
-      url,
-      userId,
-      userTier,
-    }),
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {
@@ -184,35 +192,32 @@ export async function pollJobCompletion(jobId, options = {}) {
 }
 
 /**
- * Run full analysis with async job queue (recommended for production)
- * Creates job, polls for completion, returns results
+ * Run full analysis using synchronous endpoint
+ * Processes analysis immediately without job queue
  *
  * @param {string} url - URL to analyze
  * @param {string} userId - User ID
- * @param {string} analysisId - Pre-created analysis record ID
+ * @param {string} analysisId - Pre-created analysis record ID (passed to backend to update existing record)
  * @param {string} userTier - User's subscription tier
- * @param {function} onProgress - Progress callback
+ * @param {function} onProgress - Progress callback (limited support in sync mode)
  * @returns {Promise<{success: boolean, overall_score?: number, factors?: Array, error?: string}>}
  */
 export async function runAnalysis(url, userId, analysisId, userTier = 'free', onProgress = null) {
-  // Start async job
-  const jobResponse = await analyzeAsync(url, userId, analysisId, userTier);
+  // Use synchronous endpoint - processes immediately without job queue
+  // This avoids the need for a background worker to process jobs
 
-  if (!jobResponse.success) {
-    throw new Error(jobResponse.error || 'Failed to start analysis');
+  if (onProgress) {
+    onProgress({ status: 'processing', message: 'Analyzing website...' });
   }
 
-  // Poll for completion (API returns snake_case job_id)
-  const result = await pollJobCompletion(jobResponse.job_id, {
-    onProgress,
-    maxAttempts: 90, // ~3 minutes with backoff
-  });
+  // Pass analysisId to backend so it updates the existing record
+  const result = await analyzeSync(url, userId, userTier, analysisId);
 
   if (!result.success) {
     throw new Error(result.error || 'Analysis failed');
   }
 
-  return result.result;
+  return result;
 }
 
 /**
@@ -238,4 +243,80 @@ export function useRailwayBackend() {
  */
 export function getRailwayApiUrl() {
   return RAILWAY_API_URL;
+}
+
+// ============================================
+// LLMs.txt Generation API
+// ============================================
+
+/**
+ * Call LLMs.txt API endpoint
+ * @param {object} body - Request body with action and params
+ * @returns {Promise<object>} Response data
+ */
+async function callLlmstxtApi(body) {
+  const headers = await getAuthHeaders();
+
+  const response = await fetch(`${RAILWAY_API_URL}/api/llmstxt`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || `HTTP ${response.status}: LLMs.txt operation failed`);
+  }
+
+  // Handle text responses (for download action)
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('text/plain')) {
+    return response.text();
+  }
+
+  return response.json();
+}
+
+/**
+ * Get LLMs.txt usage stats
+ * @returns {Promise<{used: number, limit: number, remaining: number, resetDate: string}>}
+ */
+export async function getLlmstxtUsage() {
+  return callLlmstxtApi({ action: 'usage' });
+}
+
+/**
+ * Start LLMs.txt analysis for a URL
+ * @param {string} url - URL to analyze
+ * @returns {Promise<{id: string}>}
+ */
+export async function startLlmstxtAnalysis(url) {
+  return callLlmstxtApi({ action: 'analyze', url });
+}
+
+/**
+ * Check LLMs.txt analysis status
+ * @param {string} id - Analysis ID
+ * @returns {Promise<{status: string, error?: string}>}
+ */
+export async function getLlmstxtStatus(id) {
+  return callLlmstxtApi({ action: 'status', id });
+}
+
+/**
+ * Generate LLMs.txt file from completed analysis
+ * @param {string} analysisId - Analysis ID
+ * @returns {Promise<{id: string, content?: string}>}
+ */
+export async function generateLlmstxt(analysisId) {
+  return callLlmstxtApi({ action: 'generate', analysisId });
+}
+
+/**
+ * Download LLMs.txt file
+ * @param {string} id - Download ID
+ * @returns {Promise<string>} File content
+ */
+export async function downloadLlmstxt(id) {
+  return callLlmstxtApi({ action: 'download', id });
 }

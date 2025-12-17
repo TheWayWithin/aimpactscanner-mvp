@@ -1,0 +1,361 @@
+?code=ab92bd4f-6a03-4a1d-900d-5c5ad2e7ecd0:130 🍪 GDPR consent stub initialized
+?code=ab92bd4f-6a03-4a1d-900d-5c5ad2e7ecd0:173 Consent handling delegated to React component
+?code=ab92bd4f-6a03-4a1d-900d-5c5ad2e7ecd0:179 Analytics initialized after LCP
+vendor-supabase-YOZNOpgP.js:1 AI Search Mastery: Supabase client initialized. Connecting to the powerful MASTERY-AI Framework backend.
+index-t1kmdq2r.js:2 🚀 React application loaded
+main-jZ4qOEbc.js:2 🍪 Applied stored consent to GTM: {necessary: true, analytics: true, marketing: true, timestamp: '2025-12-17T03:12:58.588Z'}
+main-jZ4qOEbc.js:2 🔍 APP INIT - Full URL: https://aimpactscanner.com/?code=ab92bd4f-6a03-4a1d-900d-5c5ad2e7ecd0#oauth-callback
+main-jZ4qOEbc.js:2 🔍 APP INIT - Hash: oauth-callback
+main-jZ4qOEbc.js:2 🔍 APP INIT - Query params: ?code=ab92bd4f-6a03-4a1d-900d-5c5ad2e7ecd0
+main-jZ4qOEbc.js:2 📍 INITIAL HASH DETECTED: oauth-callback
+main-jZ4qOEbc.js:2 🔒 SECURITY: Deferring route navigation until session check completes
+main-jZ4qOEbc.js:2 🚀 App initializing with session persistence...
+main-jZ4qOEbc.js:2 🔍 App mounted - Full URL: https://aimpactscanner.com/?code=ab92bd4f-6a03-4a1d-900d-5c5ad2e7ecd0#oauth-callback
+main-jZ4qOEbc.js:2 🔍 App mounted - Hash: #oauth-callback
+main-jZ4qOEbc.js:2 🔍 App mounted - Query params: ?code=ab92bd4f-6a03-4a1d-900d-5c5ad2e7ecd0
+main-jZ4qOEbc.js:2 ⏳ Checking for existing session before rendering...
+main-jZ4qOEbc.js:2 🔄 Starting session restoration check...
+main-jZ4qOEbc.js:2 🔧 Setting up enhanced onAuthStateChange listener...
+main-jZ4qOEbc.js:2 📦 Loading full Supabase SDK...
+main-jZ4qOEbc.js:2 ✅ Supabase SDK loaded
+main-jZ4qOEbc.js:2 LCP: 1724
+main-jZ4qOEbc.js:2 🔐 Auth state changed: SIGNED_IN jamie.watters.mail@gmail.com sessionChecked: false
+main-jZ4qOEbc.js:2 ✅ SIGNED_IN event detected
+main-jZ4qOEbc.js:2 📍 Current view: landing
+main-jZ4qOEbc.js:2 📍 oauthCallbackProcessed: false
+main-jZ4qOEbc.js:2 ✅ SIGNED_IN event - routing to oauth-callback
+main-jZ4qOEbc.js:2 📍 Set view to oauth-callback, forcing hash update...
+main-jZ4qOEbc.js:2 🔐 Auth state changed: SIGNED_IN jamie.watters.mail@gmail.com sessionChecked: false
+main-jZ4qOEbc.js:2 ✅ SIGNED_IN event detected
+main-jZ4qOEbc.js:2 📍 Current view: landing
+main-jZ4qOEbc.js:2 📍 oauthCallbackProcessed: false
+main-jZ4qOEbc.js:2 ✅ SIGNED_IN event - routing to oauth-callback
+main-jZ4qOEbc.js:2 📍 Set view to oauth-callback, forcing hash update...
+main-jZ4qOEbc.js:2 🔐 Auth state changed: INITIAL_SESSION jamie.watters.mail@gmail.com sessionChecked: false
+main-jZ4qOEbc.js:2 🔄 INITIAL_SESSION detected: {hasSession: true, sessionChecked: false, userEmail: 'jamie.watters.mail@gmail.com'}
+main-jZ4qOEbc.js:2 ✅ Session restored from storage on app load
+main-jZ4qOEbc.js:2 🔍 Fetching user tier for: 2e8915de-245b-4872-9bb3-5724cc21ecab
+main-jZ4qOEbc.js:2 📍 OAuth callback in URL - skipping auto-navigation, let OAuthCallback component handle it
+main-jZ4qOEbc.js:2 🔍 Session restoration result: {hasSession: true, hasUser: true, userEmail: 'jamie.watters.mail@gmail.com', expiresAt: 1765944834, error: undefined}
+main-jZ4qOEbc.js:2 ✅ Valid session restored, setting auth state
+main-jZ4qOEbc.js:2 🔄 Already fetching user tier for: 2e8915de-245b-4872-9bb3-5724cc21ecab - skipping duplicate call
+main-jZ4qOEbc.js:2 ⏳ Waiting for session state to propagate before navigation...
+main-jZ4qOEbc.js:2 🔒 SECURITY: Processing initial pending route: oauth-callback
+main-jZ4qOEbc.js:2 ✅ Initial session: Found pending analysis, redirecting to results
+main-jZ4qOEbc.js:2 ⏳ SECURITY: Session check not complete - deferring navigation to: results
+OAuthCallback-DxUXP71n.js:1 🔄 OAuthCallback component mounted - Processing OAuth callback...
+OAuthCallback-DxUXP71n.js:1 🔍 Current URL: https://aimpactscanner.com/#oauth-callback
+OAuthCallback-DxUXP71n.js:1 🔍 Current hash: #oauth-callback
+OAuthCallback-DxUXP71n.js:1 🔄 Attempt 1 to retrieve OAuth session...
+OAuthCallback-DxUXP71n.js:1 ✅ Session retrieved: 2e8915de-245b-4872-9bb3-5724cc21ecab
+OAuthCallback-DxUXP71n.js:1 🔍 User account age: 14744527491ms (EXISTING USER)
+vendor-supabase-YOZNOpgP.js:1 📦 Retrieved auth context: {selectedTier: 'growth', billingFrequency: 'annual', isTrial: true, timestamp: 1765941216592, mode: 'login', …}
+OAuthCallback-DxUXP71n.js:1 📦 Auth context: {selectedTier: 'growth', billingFrequency: 'annual', isTrial: true, timestamp: 1765941216592, mode: 'login', …}
+main-jZ4qOEbc.js:2 LCP: 2572
+main-jZ4qOEbc.js:2 Synced tier from database: coffee for jamie.watters.mail@gmail.com
+vendor-supabase-YOZNOpgP.js:1  POST https://pdmtvkcxnqysujnpcnyh.supabase.co/rest/v1/rpc/get_user_data 404 (Not Found)
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+o @ vendor-supabase-YOZNOpgP.js:1
+Promise.then
+l @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+ot @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+then @ vendor-supabase-YOZNOpgP.js:1
+main-jZ4qOEbc.js:2 ⚠️ RPC function failed, trying direct query: {code: 'PGRST202', details: 'Searched for the function public.get_user_data wit…r, but no matches were found in the schema cache.', hint: 'Perhaps you meant to call the function public.get_user_dashboard_data', message: 'Could not find the function public.get_user_data(user_id) in the schema cache'}
+Be @ main-jZ4qOEbc.js:2
+await in Be
+(anonymous) @ main-jZ4qOEbc.js:2
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+_useSession @ vendor-supabase-YOZNOpgP.js:1
+await in _useSession
+_emitInitialSession @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+main-jZ4qOEbc.js:2 🍪 Applied stored consent to GTM: {necessary: true, analytics: true, marketing: true, timestamp: '2025-12-17T03:12:58.588Z'}
+vendor-supabase-YOZNOpgP.js:1 ✅ Retrieved user data: {id: '2e8915de-245b-4872-9bb3-5724cc21ecab', email: 'jamie.watters.mail@gmail.com', tier: 'coffee', is_first_login: false, subscription_status: 'active', …}
+OAuthCallback-DxUXP71n.js:1 👋 Existing user login, userData found
+OAuthCallback-DxUXP71n.js:1 🔄 routeUser CALLED
+OAuthCallback-DxUXP71n.js:1 📊 userData: {id: '2e8915de-245b-4872-9bb3-5724cc21ecab', email: 'jamie.watters.mail@gmail.com', tier: 'coffee', is_first_login: false, subscription_status: 'active', …}
+OAuthCallback-DxUXP71n.js:1 📊 is_first_login: false
+OAuthCallback-DxUXP71n.js:1 📊 authContext: {selectedTier: 'growth', billingFrequency: 'annual', isTrial: true, timestamp: 1765941216592, mode: 'login', …}
+OAuthCallback-DxUXP71n.js:1 🔄 Returning user, routing to post-login destination
+vendor-supabase-YOZNOpgP.js:1 🧭 Determining post-login destination for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+vendor-supabase-YOZNOpgP.js:1 📦 Retrieved auth context: {selectedTier: 'growth', billingFrequency: 'annual', isTrial: true, timestamp: 1765941216592, mode: 'login', …}
+vendor-supabase-YOZNOpgP.js:1 🔄 Returning user, checking tier for routing
+vendor-supabase-YOZNOpgP.js:1 📊 User tier: coffee
+vendor-supabase-YOZNOpgP.js:1 ✅ Returning user login, routing to dashboard (tier: coffee)
+OAuthCallback-DxUXP71n.js:1 📍 getPostLoginDestination returned: {path: '/dashboard', state: {…}}
+vendor-supabase-YOZNOpgP.js:1 🧹 Cleared auth context
+OAuthCallback-DxUXP71n.js:1 🚀 Final destination object: {
+  "path": "/dashboard",
+  "state": {}
+}
+OAuthCallback-DxUXP71n.js:1 🚀 Destination path: /dashboard
+OAuthCallback-DxUXP71n.js:1 🗺️ Path mapping: /dashboard → dashboard
+OAuthCallback-DxUXP71n.js:1 🗺️ Final viewName to navigate to: dashboard
+OAuthCallback-DxUXP71n.js:1 💾 Stored routeState in sessionStorage: {}
+OAuthCallback-DxUXP71n.js:1 ⏳ Waiting 500ms for session state to update...
+OAuthCallback-DxUXP71n.js:1 🔄 OAuthCallback component mounted - Processing OAuth callback...
+OAuthCallback-DxUXP71n.js:1 🔍 Current URL: https://aimpactscanner.com/#oauth-callback
+OAuthCallback-DxUXP71n.js:1 🔍 Current hash: #oauth-callback
+OAuthCallback-DxUXP71n.js:1 🔄 Attempt 1 to retrieve OAuth session...
+OAuthCallback-DxUXP71n.js:1 ✅ Session retrieved: 2e8915de-245b-4872-9bb3-5724cc21ecab
+OAuthCallback-DxUXP71n.js:1 🔍 User account age: 14744527684ms (EXISTING USER)
+vendor-supabase-YOZNOpgP.js:1 📭 No auth context found
+OAuthCallback-DxUXP71n.js:1 📦 Auth context: null
+main-jZ4qOEbc.js:2 ✅ User data fetched successfully: {id: '2e8915de-245b-4872-9bb3-5724cc21ecab', email: 'jamie.watters.mail@gmail.com', full_name: null, avatar_url: null, subscription_tier: 'free', …}
+vendor-supabase-YOZNOpgP.js:1 ✅ Retrieved user data: {id: '2e8915de-245b-4872-9bb3-5724cc21ecab', email: 'jamie.watters.mail@gmail.com', tier: 'coffee', is_first_login: false, subscription_status: 'active', …}
+OAuthCallback-DxUXP71n.js:1 👋 Existing user login, userData found
+OAuthCallback-DxUXP71n.js:1 🔄 routeUser CALLED
+OAuthCallback-DxUXP71n.js:1 📊 userData: {id: '2e8915de-245b-4872-9bb3-5724cc21ecab', email: 'jamie.watters.mail@gmail.com', tier: 'coffee', is_first_login: false, subscription_status: 'active', …}
+OAuthCallback-DxUXP71n.js:1 📊 is_first_login: false
+OAuthCallback-DxUXP71n.js:1 📊 authContext: null
+OAuthCallback-DxUXP71n.js:1 🔄 Returning user, routing to post-login destination
+vendor-supabase-YOZNOpgP.js:1 🧭 Determining post-login destination for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+vendor-supabase-YOZNOpgP.js:1 📭 No auth context found
+vendor-supabase-YOZNOpgP.js:1 🔄 Returning user, checking tier for routing
+vendor-supabase-YOZNOpgP.js:1 📊 User tier: coffee
+vendor-supabase-YOZNOpgP.js:1 ✅ Returning user login, routing to dashboard (tier: coffee)
+OAuthCallback-DxUXP71n.js:1 📍 getPostLoginDestination returned: {path: '/dashboard', state: {…}}
+vendor-supabase-YOZNOpgP.js:1 🧹 Cleared auth context
+OAuthCallback-DxUXP71n.js:1 🚀 Final destination object: {
+  "path": "/dashboard",
+  "state": {}
+}
+OAuthCallback-DxUXP71n.js:1 🚀 Destination path: /dashboard
+OAuthCallback-DxUXP71n.js:1 🗺️ Path mapping: /dashboard → dashboard
+OAuthCallback-DxUXP71n.js:1 🗺️ Final viewName to navigate to: dashboard
+OAuthCallback-DxUXP71n.js:1 💾 Stored routeState in sessionStorage: {}
+OAuthCallback-DxUXP71n.js:1 ⏳ Waiting 500ms for session state to update...
+OAuthCallback-DxUXP71n.js:1 🔄 OAuthCallback component mounted - Processing OAuth callback...
+OAuthCallback-DxUXP71n.js:1 🔍 Current URL: https://aimpactscanner.com/#oauth-callback
+OAuthCallback-DxUXP71n.js:1 🔍 Current hash: #oauth-callback
+OAuthCallback-DxUXP71n.js:1 🔄 Attempt 1 to retrieve OAuth session...
+OAuthCallback-DxUXP71n.js:1 ✅ Session retrieved: 2e8915de-245b-4872-9bb3-5724cc21ecab
+OAuthCallback-DxUXP71n.js:1 🔍 User account age: 14744528075ms (EXISTING USER)
+vendor-supabase-YOZNOpgP.js:1 📭 No auth context found
+OAuthCallback-DxUXP71n.js:1 📦 Auth context: null
+OAuthCallback-DxUXP71n.js:1 ✅ FIX 2: Set oauthCallbackProcessed flag to prevent race condition
+OAuthCallback-DxUXP71n.js:1 🔒 SECURITY: Using onNavigate callback for protected route navigation
+OAuthCallback-DxUXP71n.js:1 🔒 Calling onNavigate with viewName: dashboard
+OAuthCallback-DxUXP71n.js:1 🔒 onNavigate is typeof: function
+main-jZ4qOEbc.js:2 ✅ SECURITY: Authenticated user accessing protected route: dashboard
+OAuthCallback-DxUXP71n.js:1 ✅ onNavigate completed, should now be at view: dashboard
+main-jZ4qOEbc.js:2 🔧 useUserInitializer: Starting initialization for user: 2e8915de-245b-4872-9bb3-5724cc21ecab jamie.watters.mail@gmail.com 
+main-jZ4qOEbc.js:2 📱 Using cached tier data for quick initialization: coffee
+main-jZ4qOEbc.js:2 📊 Setting user tier from UserInitializer: coffee
+main-jZ4qOEbc.js:2 CLS: 0.00002705875272560566
+main-jZ4qOEbc.js:2 LCP: 3292
+vendor-supabase-YOZNOpgP.js:1 ✅ Retrieved user data: {id: '2e8915de-245b-4872-9bb3-5724cc21ecab', email: 'jamie.watters.mail@gmail.com', tier: 'coffee', is_first_login: false, subscription_status: 'active', …}
+OAuthCallback-DxUXP71n.js:1 👋 Existing user login, userData found
+OAuthCallback-DxUXP71n.js:1 🔄 routeUser CALLED
+OAuthCallback-DxUXP71n.js:1 📊 userData: {id: '2e8915de-245b-4872-9bb3-5724cc21ecab', email: 'jamie.watters.mail@gmail.com', tier: 'coffee', is_first_login: false, subscription_status: 'active', …}
+OAuthCallback-DxUXP71n.js:1 📊 is_first_login: false
+OAuthCallback-DxUXP71n.js:1 📊 authContext: null
+OAuthCallback-DxUXP71n.js:1 🔄 Returning user, routing to post-login destination
+vendor-supabase-YOZNOpgP.js:1 🧭 Determining post-login destination for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+vendor-supabase-YOZNOpgP.js:1 📭 No auth context found
+vendor-supabase-YOZNOpgP.js:1 🔄 Returning user, checking tier for routing
+vendor-supabase-YOZNOpgP.js:1 📊 User tier: coffee
+vendor-supabase-YOZNOpgP.js:1 ✅ Returning user login, routing to dashboard (tier: coffee)
+OAuthCallback-DxUXP71n.js:1 📍 getPostLoginDestination returned: {path: '/dashboard', state: {…}}
+vendor-supabase-YOZNOpgP.js:1 🧹 Cleared auth context
+OAuthCallback-DxUXP71n.js:1 🚀 Final destination object: {
+  "path": "/dashboard",
+  "state": {}
+}
+OAuthCallback-DxUXP71n.js:1 🚀 Destination path: /dashboard
+OAuthCallback-DxUXP71n.js:1 🗺️ Path mapping: /dashboard → dashboard
+OAuthCallback-DxUXP71n.js:1 🗺️ Final viewName to navigate to: dashboard
+OAuthCallback-DxUXP71n.js:1 💾 Stored routeState in sessionStorage: {}
+OAuthCallback-DxUXP71n.js:1 ⏳ Waiting 500ms for session state to update...
+OAuthCallback-DxUXP71n.js:1 ✅ FIX 2: Set oauthCallbackProcessed flag to prevent race condition
+OAuthCallback-DxUXP71n.js:1 🔒 SECURITY: Using onNavigate callback for protected route navigation
+OAuthCallback-DxUXP71n.js:1 🔒 Calling onNavigate with viewName: dashboard
+OAuthCallback-DxUXP71n.js:1 🔒 onNavigate is typeof: function
+main-jZ4qOEbc.js:2 ✅ SECURITY: Authenticated user accessing protected route: dashboard
+OAuthCallback-DxUXP71n.js:1 ✅ onNavigate completed, should now be at view: dashboard
+AnalysisHistory-DrArmmfq.js:1 📊 Loading analysis history from database for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+AnalysisHistory-DrArmmfq.js:1 📊 Loading analysis history from database for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+main-jZ4qOEbc.js:2 CLS: 0.13956934958007036
+AnalysisHistory-DrArmmfq.js:1 ✅ Loaded 10 analyses from database
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 CLS: 0.06864841822634722
+OAuthCallback-DxUXP71n.js:1 ✅ FIX 2: Set oauthCallbackProcessed flag to prevent race condition
+OAuthCallback-DxUXP71n.js:1 🔒 SECURITY: Using onNavigate callback for protected route navigation
+OAuthCallback-DxUXP71n.js:1 🔒 Calling onNavigate with viewName: dashboard
+OAuthCallback-DxUXP71n.js:1 🔒 onNavigate is typeof: function
+main-jZ4qOEbc.js:2 ✅ SECURITY: Authenticated user accessing protected route: dashboard
+OAuthCallback-DxUXP71n.js:1 ✅ onNavigate completed, should now be at view: dashboard
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+AnalysisHistory-DrArmmfq.js:1 ✅ Loaded 10 analyses from database
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 📡 Full GTM script loaded (107KB)
+main-jZ4qOEbc.js:2 🚀 Preloading PDF libraries in background...
+main-jZ4qOEbc.js:2 ✅ PDF libraries preloaded successfully
+main-jZ4qOEbc.js:2 ✅ SECURITY: Authenticated user accessing protected route: input
+main-jZ4qOEbc.js:2 FID: 1.7999999523162842
+main-jZ4qOEbc.js:2 🚀 Starting analysis for URL: https://freecalchub.com
+main-jZ4qOEbc.js:2 ✅ SECURITY: Authenticated user accessing protected route: analysis
+main-jZ4qOEbc.js:2 🔧 Railway Backend Check: {VITE_USE_RAILWAY_BACKEND: 'true', isEnabled: true, RAILWAY_API_URL: 'https://aimpactscanner-backend-production.up.railway.app'}
+main-jZ4qOEbc.js:2 🚂 Using Railway backend: https://aimpactscanner-backend-production.up.railway.app
+main-jZ4qOEbc.js:2 📊 Analysis progress: processing (attempt undefined)
+main-jZ4qOEbc.js:2 ✅ Valid session found in localStorage
+main-jZ4qOEbc.js:2 Connecting to 'https://aimpactscanner-backend-production.up.railway.app/api/analyze' violates the following Content Security Policy directive: "connect-src 'self' https://*.supabase.co https://api.stripe.com https://www.google-analytics.com". The policy is report-only, so the violation has been logged but no further action has been taken.
+main-jZ4qOEbc.js:2 Connecting to 'https://aimpactscanner-backend-production.up.railway.app/api/analyze' violates the following Content Security Policy directive: "connect-src 'self' https://*.supabase.co https://api.stripe.com https://www.google-analytics.com". The policy is report-only, so the violation has been logged but no further action has been taken.
+main-jZ4qOEbc.js:2 🔄 SimpleAnalysisProgress: Starting mock progress for ff41d2af-89e0-465b-a1a3-3d891fe3c31b
+main-jZ4qOEbc.js:2 CLS: 0.0000030869165319764037
+main-jZ4qOEbc.js:2 ✅ Analysis completed: {id: 'ff41d2af-89e0-465b-a1a3-3d891fe3c31b', url: 'https://freecalchub.com', overall_score: 77, grade: 'B+', factor_count: 27, …}
+main-jZ4qOEbc.js:2 ✅ SECURITY: Authenticated user accessing protected route: results
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'llms_txt', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "ff41d2af-89e0-465b-a1a3-3d891fe3c31b",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "coffee",
+  "canExportCSV": false,
+  "canUseLLMSTxt": false
+}
+main-jZ4qOEbc.js:2 🔍 Real analysis check: {isRealAnalysis: true, hasFactors: true, factorsCount: 27, factors: Array(27)}
+main-jZ4qOEbc.js:2 📦 Grouped factors result: {totalFactors: 27, groupedCount: 9, groups: Array(9)}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 📝 Adding analysis to localStorage history (fallback): https://freecalchub.com
+main-jZ4qOEbc.js:2 ✅ Analysis added to localStorage history
+main-jZ4qOEbc.js:2 CLS: 0.43634496919917864
+main-jZ4qOEbc.js:2 [DEBUG] hasPDFAccess called with tier: free
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'pdf_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(5), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess returned: false
+main-jZ4qOEbc.js:2 CLS: 0.008582635561141742
+main-jZ4qOEbc.js:2 Synced tier from database: coffee for jamie.watters.mail@gmail.com
+main-jZ4qOEbc.js:2 [DEBUG] hasPDFAccess called with tier: coffee
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'pdf_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(5), result: true}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess returned: true
+main-jZ4qOEbc.js:2 CLS: 0.012433761355420753
+main-jZ4qOEbc.js:2 CLS: 0.018365102981247397
+main-jZ4qOEbc.js:2 ✅ SECURITY: Authenticated user accessing protected route: dashboard
+main-jZ4qOEbc.js:2 🔧 useUserInitializer: Starting initialization for user: 2e8915de-245b-4872-9bb3-5724cc21ecab jamie.watters.mail@gmail.com 
+main-jZ4qOEbc.js:2 📱 Using cached tier data for quick initialization: coffee
+main-jZ4qOEbc.js:2 📊 Setting user tier from UserInitializer: coffee
+AnalysisHistory-DrArmmfq.js:1 📊 Loading analysis history from database for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+AnalysisHistory-DrArmmfq.js:1 📊 Loading analysis history from database for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+AnalysisHistory-DrArmmfq.js:1 ✅ Loaded 10 analyses from database
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+AnalysisHistory-DrArmmfq.js:1 ✅ Loaded 10 analyses from database
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 CLS: 0.06864841822634722
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'csv_export', mappedTier: 'free'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'coffee', feature: 'csv_export', mappedTier: 'coffee'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: false}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-jZ4qOEbc.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-jZ4qOEbc.js:2 💨 Window lost focus
+main-jZ4qOEbc.js:2 💨 Window lost focus
+main-jZ4qOEbc.js:2 🎯 Window gained focus
+main-jZ4qOEbc.js:2 🎯 Window gained focus
+main-jZ4qOEbc.js:2 💨 Window lost focus
+main-jZ4qOEbc.js:2 💨 Window lost focus

@@ -769,21 +769,580 @@ Transform signup page into clear value ladder that drives higher-tier conversion
 
 ---
 
-## Next Mission Planning
+## Sprint 6: Backend Migration & Dynamic Site Analysis
 
-With Sprints 1-4 complete/planned and Sprint 5 in review:
+**Status**: ⏳ IN PROGRESS (Phases 1-4 Complete, Phase 5 Ready)
+**Priority**: P0 CRITICAL - Unblocks CSR website analysis (core feature gap)
+**Target Duration**: 6-8 weeks
+**Started**: December 14, 2025
+**Requirements Doc**: `/docs/Ideation/AImpactScanner_ Backend Migration Strategy.md`
 
-1. **Sprint 5: Signup Value Ladder** - Current sprint (conversion optimization)
-2. **Growth Marketing** - Content, SEO, social proof
-3. **Feature Development** - AI Remediation Planner, Progress Tracking
-4. **Technical Debt** - Code cleanup, performance optimization
+### Sprint Progress Summary
 
-*Sprint 5 addresses immediate conversion optimization. Review messaging changes before implementation.*
+| Phase | Status | Completed |
+|-------|--------|-----------|
+| Phase 1: Railway Infrastructure | ✅ COMPLETE | Dec 14, 2025 |
+| Phase 2: Lift & Shift Analysis | ✅ COMPLETE | Dec 14, 2025 |
+| Phase 3: Async Job Processing | ✅ COMPLETE | Dec 15, 2025 |
+| Phase 4: Headless Browser (Puppeteer) | ✅ COMPLETE | Dec 15, 2025 |
+| Phase 5: Production Migration | ⏳ READY | Pending |
+| Phase 6: LLMs.txt Migration | ❌ Not Started | - |
+
+**Key Commits**:
+- `eab3cad` - feat: add Railway backend with async job processing (Phase 3)
+- `3385f28` - feat: add Puppeteer support for CSR website analysis (Phase 4)
+- `de30874` - feat: add Railway backend integration with feature flag
+- `67416c0` - fix: Railway backend job_id and trust proxy issues
+
+### Sprint Overview
+
+Migrate the analysis backend from Supabase Edge Functions to Railway Node.js to eliminate the 60-second timeout constraint and enable dynamic (CSR/JavaScript-rendered) website analysis. This migration unlocks the ability to analyze modern SaaS websites, React SPAs, and other JavaScript-heavy sites that currently return empty or incomplete results.
+
+**Business Impact**:
+- Removes #1 technical blocker for target market (SaaS builders, modern web apps)
+- Enables analysis of CSR websites (React, Vue, Next.js client-side apps)
+- Supports long-running analysis jobs (minutes instead of 60-second max)
+- Future-proofs architecture for advanced features (competitor analysis, batch processing)
+
+**Migration Strategy**: Phased approach maintaining backwards compatibility
+- Phase 1: Lift & Shift (existing logic to Railway)
+- Phase 2: Async Job Processing (job queue for better UX)
+- Phase 3: Headless Browser Integration (Puppeteer for CSR)
+
+### Architecture Changes
+
+**Current Architecture**:
+```
+┌─────────────────┐      HTTPS      ┌──────────────────┐
+│ React Frontend  │───────────────▶│ Supabase Edge    │
+│   (Netlify)     │◀───────────────│ Functions (Deno) │
+└─────────────────┘                └────────┬─────────┘
+                                            │
+                                   ┌────────▼────────┐
+                                   │   PostgreSQL    │
+                                   │   (Supabase)    │
+                                   └─────────────────┘
+```
+
+**Target Architecture**:
+```
+┌─────────────────┐      HTTPS      ┌──────────────────┐
+│ React Frontend  │───────────────▶│  Railway Service │
+│   (Netlify)     │◀───────────────│ (Node.js/Express)│
+└─────────────────┘      (API)     └─────────┬────────┘
+                                             │
+                                   ┌─────────▼────────┐
+                                   │  Analysis Worker │
+                                   │   (Puppeteer)    │
+                                   └─────────┬────────┘
+                                             │
+                                   ┌─────────▼────────┐
+                                   │   PostgreSQL     │
+                                   │   (Supabase)     │
+                                   └──────────────────┘
+```
+
+**What Stays on Supabase**:
+- PostgreSQL database (users, analyses, factors, progress)
+- Authentication (OAuth, Magic Links)
+- Real-time subscriptions (WebSocket for progress updates)
+- Non-analysis Edge Functions (create-checkout-session, create-portal-session, stripe-webhook)
+
+**What Moves to Railway**:
+- analyze-page Edge Function → Railway API endpoint
+- generate-llmstxt Edge Function → Railway API endpoint
+- Analysis engine logic (AnalysisEngine.ts, traditionalSeoFactors.ts)
+
+### Environment Strategy
+
+| Environment | Frontend | Backend (Railway) | Database (Supabase) |
+|-------------|----------|-------------------|---------------------|
+| **Development** | localhost:5173 | Railway Dev instance | Staging (isgzvwpjokcmtizstwru) |
+| **Staging** | develop--aimpactscanner.netlify.app | Railway Staging instance | Staging (isgzvwpjokcmtizstwru) |
+| **Production** | aimpactscanner.com | Railway Production instance | Production (pdmtvkcxnqysujnpcnyh) |
+
+**CRITICAL**: Railway environments MUST connect to the correct Supabase database:
+- Dev/Staging Railway → Staging Supabase (NEVER production)
+- Production Railway → Production Supabase (ONLY after full validation)
 
 ---
 
-**Document Version**: 5.2 (Sprint 5 Complete)
-**Last Updated**: December 13, 2025
+### Phase 1: Railway Infrastructure Setup ✅
+**Target Duration**: 1 week
+**Status**: ✅ COMPLETE (December 14, 2025)
+
+**Objective**: Set up Railway project with Node.js/Express API that can connect to Supabase.
+
+#### Tasks
+
+- [x] **1.1 Railway Project Setup**
+  - Created Railway project `aimpactscanner-backend`
+  - Configured GitHub repository integration for auto-deploys
+  - Set up environment variables structure
+  - Created staging environment
+
+- [x] **1.2 Node.js/Express Boilerplate**
+  - Initialized Node.js project with TypeScript
+  - Set up Express server with health check endpoint
+  - Configured CORS for Netlify origins
+  - Implemented request logging and error handling middleware
+
+- [x] **1.3 Supabase Client Integration**
+  - Installed `@supabase/supabase-js` package
+  - Configured Supabase client with environment variables
+  - Tested database read/write operations
+  - Implemented service role authentication
+
+- [x] **1.4 Environment Configuration**
+  - Set up `.env.example` with all required variables
+  - Configured Railway environment variables for staging
+  - Documented environment variable requirements
+  - Verified staging database connectivity
+
+**Deliverables** (All Complete):
+- `/backend/` directory with Node.js/Express project ✅
+- `/backend/src/index.ts` - Express server entry point ✅
+- `/backend/src/lib/supabase.ts` - Supabase client configuration ✅
+- `/backend/.env.example` - Environment variable template ✅
+- Railway staging environment deployed and accessible ✅
+
+**Success Criteria** (All Met):
+- [x] Railway staging service responds to health check
+- [x] Service can read/write to staging Supabase database
+- [x] CORS allows requests from staging Netlify frontend
+- [x] Environment variables properly configured
+
+---
+
+### Phase 2: Lift & Shift Analysis Engine ✅
+**Target Duration**: 2 weeks
+**Status**: ✅ COMPLETE (December 14, 2025)
+
+**Objective**: Port existing analysis logic from Deno Edge Functions to Node.js, achieving feature parity.
+
+#### Tasks
+
+- [x] **2.1 Port Core Analysis Engine**
+  - Converted analysis engine from Deno to Node.js
+  - Adapted imports (Deno → Node.js module system)
+  - Maintained all 27 factor analysis functions
+  - Preserved scoring algorithms and weighting
+
+- [x] **2.2 Port Traditional SEO Factors**
+  - Converted `traditionalSeoFactors.ts` to Node.js
+  - Updated regex patterns for Node.js compatibility
+  - Maintained safety limits (MAX_LINKS, etc.)
+  - Preserved factor result interfaces
+
+- [x] **2.3 Create API Endpoints**
+  - `POST /api/analyze` - Start website analysis
+  - `GET /api/analysis/:id` - Get analysis status/results
+  - Implemented request validation (URL format, tier limits)
+
+- [x] **2.4 Progress Tracking Integration**
+  - Implemented progress updates to Supabase `analysis_progress` table
+  - Maintained WebSocket compatibility (Supabase real-time)
+  - Ported educational content during analysis stages
+  - Added configurable timeout handling
+
+- [x] **2.5 Tier Management Integration**
+  - Ported tier management to Node.js
+  - Validated user tier before analysis
+  - Enforced monthly limits per tier
+  - Returned appropriate error codes for limit exceeded
+
+- [x] **2.6 Staging Integration Testing**
+  - Updated frontend API calls to use Railway staging URL
+  - Created feature flag for Railway vs Edge Function (`VITE_USE_RAILWAY_BACKEND`)
+  - Tested all 27 factors
+  - Verified progress tracking works end-to-end
+
+**Deliverables** (All Complete):
+- `/backend/src/services/analyzer/index.ts` - Ported analysis engine ✅
+- `/backend/src/services/analyzer/factors/traditionalSeoFactors.ts` - Ported SEO factors ✅
+- `/backend/src/services/analyzer/factors/coreFactors.ts` - Core AI factors ✅
+- `/backend/src/routes/analyze.ts` - Analysis API routes ✅
+- `/backend/src/middleware/auth.ts` - JWT/Supabase auth middleware ✅
+
+**Success Criteria** (All Met):
+- [x] All 27 factors working on Railway
+- [x] Progress tracking works via Supabase real-time
+- [x] Tier restrictions enforced correctly
+- [x] Feature flag enables Railway/Edge Function switching
+
+---
+
+### Phase 3: Async Job Processing ✅
+**Target Duration**: 1.5 weeks
+**Status**: ✅ COMPLETE (December 15, 2025)
+
+**Objective**: Implement job queue for analysis tasks, enabling long-running operations and better UX.
+
+#### Tasks
+
+- [x] **3.1 Jobs Database Schema**
+  - Created `analysis_jobs` table in Supabase
+  - Added RLS policies for job visibility
+  - Created index on status for efficient polling
+  - Migration: `supabase/migrations/20251215000001_add_analysis_jobs_table.sql`
+
+- [x] **3.2 Job Queue Implementation**
+  - Implemented job producer (API creates job record)
+  - Implemented job consumer (worker polls for pending jobs)
+  - Added job status transitions with timestamps
+  - Implemented retry logic with exponential backoff
+
+- [x] **3.3 Worker Process**
+  - Created background worker that processes jobs
+  - Implemented graceful shutdown handling (SIGTERM/SIGINT)
+  - Implemented job timeout handling
+  - Added `claim_next_job()` RPC with FOR UPDATE SKIP LOCKED
+
+- [x] **3.4 API Changes**
+  - `POST /api/analyze/async` - Returns jobId immediately
+  - `GET /api/analyze/jobs/:jobId` - Job status with results
+  - `GET /api/analyze/jobs` - User's job history
+
+- [x] **3.5 Frontend Updates**
+  - Created `src/lib/railwayApi.js` for Railway API calls
+  - Updated analysis flow to poll job status
+  - Handle job failures gracefully
+
+**Deliverables** (All Complete):
+- `/backend/src/services/jobQueue.ts` - Job queue logic ✅
+- `/backend/src/worker.ts` - Background worker ✅
+- `/supabase/migrations/20251215000001_add_analysis_jobs_table.sql` ✅
+- `/src/lib/railwayApi.js` - Frontend API integration ✅
+
+**Success Criteria** (All Met):
+- [x] Analysis requests return immediately with jobId
+- [x] Failed jobs retry automatically (up to 3 times)
+- [x] Frontend shows accurate job status
+- [x] Queue processes jobs correctly
+
+---
+
+### Phase 4: Headless Browser Integration ✅
+**Target Duration**: 2 weeks
+**Status**: ✅ COMPLETE (December 15, 2025)
+
+**Objective**: Add Puppeteer for CSR website analysis, detecting and rendering JavaScript-heavy sites.
+
+#### Tasks
+
+- [x] **4.1 Puppeteer Setup**
+  - Installed `puppeteer` package
+  - Configured Railway for headless browser support
+  - Set up browser instance management
+  - Implemented browser crash recovery
+
+- [x] **4.2 CSR Detection Logic**
+  - Fetch initial HTML with standard `fetch()`
+  - Detect CSR indicators:
+    - Empty/minimal `<body>` content
+    - React/Vue/Angular root elements
+    - Large JavaScript bundles
+    - `<noscript>` fallback content
+  - Score content "richness" with confidence percentage
+
+- [x] **4.3 Hybrid Analysis Strategy**
+  - If content is rich (SSR/SSG): Use fast direct parsing
+  - If content is sparse (CSR): Launch Puppeteer render
+  - Implement timeout for Puppeteer (90 seconds max)
+  - Cache rendered content for factor analysis
+
+- [x] **4.4 Puppeteer Analysis Integration**
+  - Wait for page fully loaded (`networkidle0`)
+  - Extract rendered HTML after JavaScript execution
+  - Pass rendered content to existing analysis engine
+  - Handle SPAs with client-side routing
+
+- [x] **4.5 Performance Optimization**
+  - Implemented browser instance reuse
+  - Added request interception (block ads, tracking, large media)
+  - Configured viewport and user agent for consistency
+  - Added resource limits (memory, timeout)
+
+- [x] **4.6 Testing & Validation**
+  - Tested against CSR websites
+  - Compared results: Puppeteer vs direct fetch
+  - Verified hybrid strategy works
+
+**Deliverables** (All Complete):
+- `/backend/src/services/browserRenderer.ts` - Puppeteer rendering service ✅
+- `/backend/src/services/csrDetector.ts` - CSR detection logic ✅
+- `/backend/src/services/pageFetcher.ts` - Hybrid fetch strategy ✅
+- Updated analysis engine with hybrid rendering strategy ✅
+
+**Success Criteria** (All Met):
+- [x] CSR detection implemented with confidence scoring
+- [x] Puppeteer rendering integrated
+- [x] Direct fetch used for SSR sites (no regression)
+- [x] Hybrid strategy working on staging
+
+---
+
+### Phase 5: Production Migration ⏳
+**Target Duration**: 1 week
+**Status**: ⏳ READY TO DEPLOY
+
+**Objective**: Migrate production traffic from Edge Functions to Railway backend.
+
+**Current State**:
+- Railway backend fully functional on staging
+- Feature flag (`VITE_USE_RAILWAY_BACKEND`) controls routing
+- Production currently uses Edge Functions (stable)
+- Ready to enable Railway on production
+
+#### Tasks
+
+- [x] **5.1 Production Railway Environment**
+  - Railway production environment exists
+  - Production Supabase credentials configured
+  - SSL/TLS configured via Railway
+
+- [ ] **5.2 Enable Production Traffic**
+  - Set `VITE_USE_RAILWAY_BACKEND=true` in Netlify production env vars
+  - Monitor error rates during migration
+  - Keep Edge Function as instant fallback (set flag back to false)
+
+- [ ] **5.3 Production Validation**
+  - Run production smoke tests
+  - Monitor analysis success rates
+  - Track response times
+  - Verify tier limits working correctly
+
+- [ ] **5.4 Edge Function Deprecation** (After 30 days stable)
+  - Document Edge Function deprecation plan
+  - Update CLAUDE.md with new architecture
+  - Archive Edge Function code (don't delete)
+  - Update architecture.md documentation
+
+- [ ] **5.5 Monitoring & Alerting**
+  - Set up Railway monitoring dashboard
+  - Add performance monitoring
+  - Create runbook for common issues
+
+**Deliverables**:
+- Production Railway service deployed ✅ (exists)
+- Feature flag for instant rollback ✅
+- Updated frontend API configuration ✅
+- Migration runbook documentation (pending)
+- Updated architecture documentation (pending)
+
+**Success Criteria**:
+- [ ] 100% traffic on Railway (Edge Functions as backup)
+- [ ] Analysis success rate >95%
+- [ ] Error rate <1%
+- [ ] Zero data loss during migration
+
+**Risk Mitigation**:
+- Feature flag allows instant rollback to Edge Functions
+- Keep Edge Functions deployable for 30 days post-migration
+- Railway staging validated - production uses same code
+
+---
+
+### Phase 6: LLMs.txt Migration & Cleanup
+**Target Duration**: 0.5 weeks
+**Status**: [ ] Not Started
+
+**Objective**: Migrate generate-llmstxt to Railway and clean up.
+
+#### Tasks
+
+- [ ] **6.1 Port generate-llmstxt to Railway**
+  - Create `/api/generate-llmstxt` endpoint
+  - Port LLMtxtMastery API integration
+  - Maintain tier restrictions (Growth: 25/mo, Scale: unlimited)
+  - Update frontend API calls
+
+- [ ] **6.2 Final Documentation**
+  - Update architecture.md to v3.0
+  - Create ADR-016 for Railway migration
+  - Update CLAUDE.md with new backend structure
+  - Archive Edge Function documentation
+
+- [ ] **6.3 Cleanup**
+  - Remove unused Edge Function code (after 30-day grace period)
+  - Clean up environment variables
+  - Update CI/CD documentation
+  - Close related GitHub issues
+
+**Deliverables**:
+- LLMs.txt generation working on Railway
+- Updated architecture documentation (v3.0)
+- ADR-016: Railway Backend Migration
+- Clean repository with archived Edge Functions
+
+**Success Criteria**:
+- [ ] LLMs.txt generation works identically on Railway
+- [ ] Documentation fully updated
+- [ ] No orphaned code or configuration
+- [ ] Clean audit of environment variables
+
+---
+
+### Technical Requirements
+
+**Railway Configuration**:
+- Node.js 20.x LTS
+- TypeScript 5.x
+- Express 4.x
+- Puppeteer (latest stable)
+- Memory: 512MB minimum, 2GB recommended for Puppeteer
+- Auto-sleep: Disabled for production
+
+**Dependencies (New)**:
+```json
+{
+  "dependencies": {
+    "express": "^4.18.2",
+    "@supabase/supabase-js": "^2.38.0",
+    "puppeteer": "^21.0.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.15",
+    "tsx": "^4.0.0"
+  }
+}
+```
+
+**Environment Variables (Railway)**:
+```
+SUPABASE_URL=https://[project].supabase.co
+SUPABASE_SERVICE_KEY=service_role_key
+SUPABASE_ANON_KEY=anon_key
+LLMTXT_MASTERY_API_KEY=api_key
+PORT=3000
+NODE_ENV=production|staging
+ALLOWED_ORIGINS=https://aimpactscanner.com,https://develop--aimpactscanner.netlify.app
+```
+
+### Tier Restrictions
+
+No tier restriction changes. All existing tier limits maintained:
+
+| Feature | Free | Solo | Growth | Scale |
+|---------|------|------|--------|-------|
+| Analyses/month | 5 lifetime | 10 | 40 | 100 |
+| LLMs.txt/month | 0 | 0 | 25 | Unlimited |
+| CSR Analysis | ❌ | ✅ | ✅ | ✅ |
+
+**New**: CSR (Puppeteer) analysis requires paid tier (Solo+).
+
+### Success Criteria (Sprint Level)
+
+- [ ] Railway backend deployed to production
+- [ ] All 27 factors working on Railway
+- [ ] CSR websites analyze correctly (React, Vue, Angular SPAs)
+- [ ] Analysis time <90 seconds for CSR, <30 seconds for SSR
+- [ ] Job queue handles concurrent requests
+- [ ] Edge Functions deprecated (kept as archive)
+- [ ] Zero data loss or service interruption during migration
+- [ ] Architecture documentation updated to v3.0
+
+### Risk Mitigation (Sprint Level)
+
+1. **Service Continuity**: Run Railway parallel to Edge Functions until validated
+2. **Rollback Ready**: Keep Edge Functions deployable for 30 days post-migration
+3. **Gradual Migration**: Traffic split (10% → 50% → 100%) with monitoring
+4. **Database Safety**: Never point staging Railway at production Supabase
+5. **Cost Monitoring**: Track Railway usage and Puppeteer resource consumption
+6. **Performance Baseline**: Compare response times before/after migration
+
+### Dependencies & Blockers
+
+**Dependencies**:
+- Railway account with appropriate plan (Starter or higher)
+- LLMtxtMastery API key (already have)
+- Supabase service role keys for both environments
+
+**Potential Blockers**:
+- Railway Puppeteer support (verify during Phase 1)
+- CORS configuration for Netlify → Railway
+- Supabase connection limits with persistent server
+
+---
+
+## Sprint 7: Tier Factor Messaging Clarity
+
+**Status**: ✅ COMPLETE
+**Priority**: P1 HIGH - Conversion Accuracy & FOMO Optimization
+**Started**: December 15, 2025
+**Completed**: December 15, 2025
+
+### Sprint Overview
+
+Update signup and pricing page messaging to accurately reflect tier-based factor differences. Free tier gets 19 AI factors (no SEO), Solo+ gets all 27 factors including SEO visibility. Creates FOMO by making Free users aware of what they're missing.
+
+**Key Insight**: Free tier was incorrectly claiming "27-factor scan" when it only provides 19 factors. The 8 Traditional SEO factors (mobile-friendly, page speed, broken links, sitemap, canonical tags, internal linking, duplicate versions, robots.txt) are gated behind paid tiers.
+
+### Changes Made
+
+#### Signup Page (TierMessagingSection.jsx)
+
+**Free Tier OB Box**:
+- [x] Changed "27-factor scan across 9 AI visibility pillars" → "19-factor AI visibility scan"
+
+**Free Tier FOMO Box**:
+- [x] Updated message to: "Free scans 19 AI factors - but skips the 8 SEO factors blocking Google (and the AIs scraping it) from finding you. Fix something? That's scan 2. Verify it worked? Scan 3. You're done. Solo unlocks all 27 factors plus 10 scans to actually move forward."
+
+**Solo Tier OB Box**:
+- [x] Changed first bullet from "Scan → Fix → Verify → Move to next page" to "All 27 factors including SEO visibility"
+- [x] Removed "Keep your results for 30 days" (covered in What You Get section)
+
+#### Pricing Page (PricingTiers.jsx)
+
+**Free Tier Features**:
+- [x] Changed "See your actual AI readiness score" → "See your AI readiness score (SEO not included)"
+- [x] Changed "3 analyses per month to track progress" → "3 analyses per month to try it out"
+
+**Solo Tier Features**:
+- [x] Added "✨ All 27 factors including SEO visibility" as first feature
+- [x] Removed "Educational content" (weak value prop)
+
+### Files Modified
+
+| File | Changes |
+|------|---------|
+| `src/components/DynamicTierSelector/TierMessagingSection.jsx` | Free OB bullets, Free FOMO message, Solo OB bullets |
+| `src/components/PricingTiers.jsx` | Free features, Solo features |
+
+### Success Criteria
+
+- [x] Free tier accurately shows 19 factors (not 27)
+- [x] FOMO messaging highlights missing SEO factors
+- [x] Solo tier emphasizes "All 27 factors including SEO"
+- [x] Pricing page creates clear tier differentiation
+- [x] No broken functionality
+
+---
+
+## Next Mission Planning
+
+**Sprint 6 Status**: Phases 1-4 COMPLETE, Phase 5 READY, Phase 6 pending
+
+**Immediate Next Steps**:
+1. **Phase 5: Enable Railway on Production** - Flip feature flag, validate, monitor
+2. **Phase 6: LLMs.txt Migration** - Port to Railway after Phase 5 stable
+
+**After Sprint 6 Complete**:
+1. **Growth Marketing** - Content, SEO, social proof
+2. **Feature Development** - AI Remediation Planner, Progress Tracking
+3. **Technical Debt** - Code cleanup, performance optimization
+
+*Sprint 6 unlocks CSR website analysis via Puppeteer on Railway backend.*
+
+---
+
+**Document Version**: 7.1 (Sprint 6 Progress Update)
+**Last Updated**: December 17, 2025
 **Previous Version**: See git history
 
 *Document maintained by THE COORDINATOR (AGENT-11)*

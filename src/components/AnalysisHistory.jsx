@@ -162,7 +162,7 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
       // Fetch analyses from Supabase with pagination
       const { data: analyses, error: fetchError } = await supabase
         .from('analyses')
-        .select('id, url, created_at, scores, page_title, page_description, framework_version, analysis_duration')
+        .select('id, url, created_at, overall_score, scores, page_title, page_description, framework_version, analysis_duration')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
@@ -918,7 +918,7 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
                 <p className="text-sm text-gray-500 mt-1">{getTierDisplayName(userTier)} tier</p>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg style={{ width: '24px', height: '24px', minWidth: '24px' }} className="text-blue-600" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
@@ -933,7 +933,7 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
                 <p className="text-sm text-gray-500 mt-1">Out of 100</p>
               </div>
               <div className={`w-12 h-12 ${statistics.averageScore >= 75 ? 'bg-green-100' : statistics.averageScore >= 50 ? 'bg-yellow-100' : 'bg-red-100'} rounded-lg flex items-center justify-center`}>
-                <svg className={`w-6 h-6 ${statistics.averageScore >= 75 ? 'text-green-600' : statistics.averageScore >= 50 ? 'text-yellow-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg style={{ width: '24px', height: '24px', minWidth: '24px' }} className={`${statistics.averageScore >= 75 ? 'text-green-600' : statistics.averageScore >= 50 ? 'text-yellow-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
               </div>
@@ -949,7 +949,7 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
                     {statistics.trend > 0 ? '+' : ''}{statistics.trend}
                   </p>
                   {statistics.trend !== 0 && (
-                    <svg className={`w-4 h-4 ${statistics.trend > 0 ? 'text-green-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg style={{ width: '16px', height: '16px', minWidth: '16px' }} className={`${statistics.trend > 0 ? 'text-green-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={statistics.trend > 0 ? "M5 10l7-7m0 0l7 7m-7-7v18" : "M19 14l-7 7m0 0l-7-7m7 7V4"} />
                     </svg>
                   )}
@@ -957,7 +957,7 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
                 <p className="text-sm text-gray-500 mt-1">Recent vs previous</p>
               </div>
               <div className={`w-12 h-12 ${statistics.trend > 0 ? 'bg-green-100' : statistics.trend < 0 ? 'bg-red-100' : 'bg-gray-100'} rounded-lg flex items-center justify-center`}>
-                <svg className={`w-6 h-6 ${statistics.trend > 0 ? 'text-green-600' : statistics.trend < 0 ? 'text-red-600' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg style={{ width: '24px', height: '24px', minWidth: '24px' }} className={`${statistics.trend > 0 ? 'text-green-600' : statistics.trend < 0 ? 'text-red-600' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
@@ -1002,7 +1002,7 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
                 </div>
               </div>
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg style={{ width: '24px', height: '24px', minWidth: '24px' }} className="text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
                 </svg>
@@ -1023,9 +1023,9 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-3 mb-2">
-                    <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                      <svg className="w-4 h-4 text-gray-600 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
+                    <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors shrink-0">
+                      <svg style={{ width: '16px', height: '16px', minWidth: '16px' }} className="text-gray-500" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
                       </svg>
                     </div>
                     <a 

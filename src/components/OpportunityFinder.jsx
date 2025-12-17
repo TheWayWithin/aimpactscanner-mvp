@@ -106,7 +106,7 @@ function OpportunityFinder({ currentScore, monthlyTraffic = 5000 }) {
               visitors who find you through AI already have their questions answered and arrive ready to convert.
             </p>
             <p className="text-xs text-gray-500 italic">
-              Based on average results from: FreeCalcHub, Evolve-7, Agent-11, AgentMarket, LLMtxt Mastery, AI Search Mastery, MCP-7
+              Based on average results from: FreeCalcHub, Evolve-7, Agent-11, SoloMarket, LLMtxt Mastery, AI Search Mastery, ISOTracker
             </p>
           </div>
 
