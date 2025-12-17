@@ -120,28 +120,43 @@ async function processJob(): Promise<boolean> {
 
       const summary = getAnalysisSummary(result);
 
-      // Update analysis record with results
-      // Note: completed_at removed due to Supabase schema cache issue
-      const completedUpdate: AnalysisUpdate = {
-        status: 'completed',
-        overall_score: result.overall_score,
-      };
+      // Update analysis record with results using raw SQL to bypass PostgREST schema cache issues
+      const roundedScore = Math.round(result.overall_score);
 
-      await supabaseAdmin
-        .from('analyses')
-        .update(completedUpdate as never)
-        .eq('id', job.analysis_id);
+      try {
+        // Use raw SQL via RPC to bypass schema cache
+        const { error: updateError } = await supabaseAdmin.rpc('update_analysis_score', {
+          p_analysis_id: job.analysis_id,
+          p_score: roundedScore,
+        });
 
-      // Store factor results
+        if (updateError) {
+          console.error(`[Worker ${WORKER_ID}] Failed to update analysis via RPC:`, updateError);
+          // Fallback: try direct update
+          await supabaseAdmin
+            .from('analyses')
+            .update({ status: 'completed', overall_score: roundedScore } as never)
+            .eq('id', job.analysis_id);
+        }
+      } catch (rpcError) {
+        console.error(`[Worker ${WORKER_ID}] RPC call failed:`, rpcError);
+        // Fallback: try direct update
+        await supabaseAdmin
+          .from('analyses')
+          .update({ status: 'completed', overall_score: roundedScore } as never)
+          .eq('id', job.analysis_id);
+      }
+
+      // Store factor results with rounded scores
       const factorInserts: AnalysisFactorInsert[] = result.factors.map(factor => ({
         id: uuidv4(),
         analysis_id: job.analysis_id,
         factor_id: factor.factor_id,
         factor_name: factor.factor_name,
         pillar: factor.pillar,
-        score: factor.score,
+        score: Math.round(factor.score), // Round to integer for database
         confidence: 80, // Default confidence level
-        weight: factor.weight,
+        weight: Math.round(factor.weight * 100) / 100, // Round weight to 2 decimal places
         evidence: factor.evidence, // JSONB column expects array
         recommendations: factor.recommendations, // JSONB column expects array
       }));

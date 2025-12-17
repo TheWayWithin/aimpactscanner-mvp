@@ -254,32 +254,51 @@ router.post('/', async (req: Request, res: Response) => {
 
     const summary = getAnalysisSummary(result);
 
-    // Update analysis with results
-    // Note: completed_at removed due to Supabase schema cache issue
-    const completedUpdate: AnalysisUpdate = {
-      status: 'completed',
-      overall_score: result.overall_score,
-    };
+    // Update analysis with results using raw SQL to bypass PostgREST schema cache issues
+    const roundedScore = Math.round(result.overall_score);
 
-    const { error: updateError } = await supabaseAdmin
-      .from('analyses')
-      .update(completedUpdate as never)
-      .eq('id', analysisId);
+    try {
+      // Use raw SQL via RPC to bypass schema cache
+      const { error: updateError } = await supabaseAdmin.rpc('update_analysis_score', {
+        p_analysis_id: analysisId,
+        p_score: roundedScore,
+      });
 
-    if (updateError) {
-      console.error('Failed to update analysis:', updateError);
+      if (updateError) {
+        console.error('Failed to update analysis via RPC:', updateError);
+        // Fallback: try direct update
+        const { error: fallbackError } = await supabaseAdmin
+          .from('analyses')
+          .update({ status: 'completed', overall_score: roundedScore } as never)
+          .eq('id', analysisId);
+
+        if (fallbackError) {
+          console.error('Fallback update also failed:', fallbackError);
+        }
+      }
+    } catch (rpcError) {
+      console.error('RPC call failed:', rpcError);
+      // Fallback: try direct update
+      const { error: fallbackError } = await supabaseAdmin
+        .from('analyses')
+        .update({ status: 'completed', overall_score: roundedScore } as never)
+        .eq('id', analysisId);
+
+      if (fallbackError) {
+        console.error('Fallback update also failed:', fallbackError);
+      }
     }
 
-    // Store factor results
+    // Store factor results with rounded scores
     const factorInserts: AnalysisFactorInsert[] = result.factors.map(factor => ({
       id: uuidv4(),
       analysis_id: analysisId,
       factor_id: factor.factor_id,
       factor_name: factor.factor_name,
       pillar: factor.pillar,
-      score: factor.score,
+      score: Math.round(factor.score), // Round to integer for database
       confidence: 80, // Default confidence level
-      weight: factor.weight,
+      weight: Math.round(factor.weight * 100) / 100, // Round weight to 2 decimal places
       evidence: factor.evidence, // JSONB column expects array
       recommendations: factor.recommendations, // JSONB column expects array
     }));
