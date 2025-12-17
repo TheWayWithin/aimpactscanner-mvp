@@ -6,8 +6,14 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { authenticateUser, AuthenticatedRequest } from '../middleware/auth';
+import { authenticateUser } from '../middleware/auth';
 import { supabaseAdmin } from '../lib/supabase';
+
+// Type for user data from database
+interface UserData {
+  tier: string | null;
+  subscription_tier: string | null;
+}
 
 const router = Router();
 
@@ -102,7 +108,8 @@ async function checkAndIncrementUsage(userId: string, tier: string): Promise<Usa
   }
 
   // Record the generation (usage tracking)
-  const { error: insertError } = await supabaseAdmin
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error: insertError } = await (supabaseAdmin as any)
     .from('llmstxt_generations')
     .insert({
       user_id: userId,
@@ -150,11 +157,12 @@ router.post('/', async (req: Request, res: Response) => {
     console.log('Authenticated user:', user.id);
 
     // Get user tier from users table
-    const { data: userData, error: userDataError } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: userData, error: userDataError } = await (supabaseAdmin as any)
       .from('users')
       .select('tier, subscription_tier')
       .eq('id', user.id)
-      .single();
+      .single() as { data: UserData | null; error: unknown };
 
     if (userDataError || !userData) {
       console.error('User data error:', userDataError);
@@ -234,7 +242,7 @@ router.post('/', async (req: Request, res: Response) => {
           });
         }
 
-        const analyzeData = await analyzeResponse.json();
+        const analyzeData = await analyzeResponse.json() as { id: string };
         console.log('Analysis started:', analyzeData.id);
 
         return res.json(analyzeData);
