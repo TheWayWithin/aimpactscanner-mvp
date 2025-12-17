@@ -1,0 +1,205 @@
+ 🍪 GDPR consent stub initialized
+ Consent handling delegated to React component
+ Analytics initialized after LCP
+ AI Search Mastery: Supabase client initialized. Connecting to the powerful MASTERY-AI Framework backend.
+ 🚀 React application loaded
+ 🔍 APP INIT - Full URL: https://aimpactscanner.com/?code=a6f6514b-c337-4de7-84ae-3980c096130a#oauth-callback
+ 🔍 APP INIT - Hash: oauth-callback
+ 🔍 APP INIT - Query params: ?code=a6f6514b-c337-4de7-84ae-3980c096130a
+ 📍 INITIAL HASH DETECTED: oauth-callback
+ 🔒 SECURITY: Deferring route navigation until session check completes
+ 🚀 App initializing with session persistence...
+ 🔍 App mounted - Full URL: https://aimpactscanner.com/?code=a6f6514b-c337-4de7-84ae-3980c096130a#oauth-callback
+ 🔍 App mounted - Hash: #oauth-callback
+ 🔍 App mounted - Query params: ?code=a6f6514b-c337-4de7-84ae-3980c096130a
+ ⏳ Checking for existing session before rendering...
+ 🔄 Starting session restoration check...
+ 🔧 Setting up enhanced onAuthStateChange listener...
+ 📦 Loading full Supabase SDK...
+ ✅ Supabase SDK loaded
+ LCP: 1280
+ 🔐 Auth state changed: SIGNED_IN jamie.watters.mail@gmail.com sessionChecked: false
+ ✅ SIGNED_IN event detected
+ 📍 Current view: landing
+ 📍 oauthCallbackProcessed: false
+ ✅ SIGNED_IN event - routing to oauth-callback
+ 📍 Set view to oauth-callback, forcing hash update...
+ 🔐 Auth state changed: SIGNED_IN jamie.watters.mail@gmail.com sessionChecked: false
+ ✅ SIGNED_IN event detected
+ 📍 Current view: landing
+ 📍 oauthCallbackProcessed: false
+ ✅ SIGNED_IN event - routing to oauth-callback
+ 📍 Set view to oauth-callback, forcing hash update...
+ 🔐 Auth state changed: INITIAL_SESSION jamie.watters.mail@gmail.com sessionChecked: false
+ 🔄 INITIAL_SESSION detected: Object
+ ✅ Session restored from storage on app load
+ 🔍 Fetching user tier for: 2e8915de-245b-4872-9bb3-5724cc21ecab
+ 📍 OAuth callback in URL - skipping auto-navigation, let OAuthCallback component handle it
+ 🔍 Session restoration result: Object
+ ✅ Valid session restored, setting auth state
+ 🔄 Already fetching user tier for: 2e8915de-245b-4872-9bb3-5724cc21ecab - skipping duplicate call
+ ⏳ Waiting for session state to propagate before navigation...
+ 🔒 SECURITY: Processing initial pending route: oauth-callback
+ 🔄 OAuthCallback component mounted - Processing OAuth callback...
+ 🔍 Current URL: https://aimpactscanner.com/#oauth-callback
+ 🔍 Current hash: #oauth-callback
+ 🔄 Attempt 1 to retrieve OAuth session...
+pdmtvkcxnqysujnpcnyh.supabase.co/rest/v1/rpc/get_user_data:1  Failed to load resource: the server responded with a status of 404 ()
+ ✅ Session retrieved: 2e8915de-245b-4872-9bb3-5724cc21ecab
+ 🔍 User account age: 14083504858ms (EXISTING USER)
+ 📦 Retrieved auth context: Object
+ 📦 Auth context: Object
+ ⚠️ RPC function failed, trying direct query: Object
+Fe @ main-D0nRr-9C.js:2
+ ⏳ SECURITY: Session check not complete - deferring navigation to: dashboard
+ ✅ Retrieved user data: Object
+ 👋 Existing user login, userData found
+ 🔄 routeUser CALLED
+ 📊 userData: Object
+ 📊 is_first_login: false
+ 📊 authContext: Object
+ 🔄 Returning user, routing to post-login destination
+ 🧭 Determining post-login destination for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+ 📦 Retrieved auth context: Object
+ 🔄 Returning user, checking tier for routing
+ 📊 User tier: coffee
+ ✅ Returning user login, routing to dashboard (tier: coffee)
+ 📍 getPostLoginDestination returned: Object
+ 🧹 Cleared auth context
+ 🚀 Final destination object: {
+  "path": "/dashboard",
+  "state": {}
+}
+ 🚀 Destination path: /dashboard
+ 🗺️ Path mapping: /dashboard → dashboard
+ 🗺️ Final viewName to navigate to: dashboard
+ 💾 Stored routeState in sessionStorage: Object
+ ⏳ Waiting 500ms for session state to update...
+ CLS: 0.00011149011184891642
+ Synced tier from database: coffee for jamie.watters.mail@gmail.com
+ ✅ User data fetched successfully: Object
+ 🔄 OAuthCallback component mounted - Processing OAuth callback...
+ 🔍 Current URL: https://aimpactscanner.com/#oauth-callback
+ 🔍 Current hash: #oauth-callback
+ 🔄 Attempt 1 to retrieve OAuth session...
+ ✅ Session retrieved: 2e8915de-245b-4872-9bb3-5724cc21ecab
+ 🔍 User account age: 14083505382ms (EXISTING USER)
+ 📭 No auth context found
+ 📦 Auth context: null
+ ✅ Retrieved user data: Object
+ 👋 Existing user login, userData found
+ 🔄 routeUser CALLED
+ 📊 userData: Object
+ 📊 is_first_login: false
+ 📊 authContext: null
+ 🔄 Returning user, routing to post-login destination
+ 🧭 Determining post-login destination for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+ 📭 No auth context found
+ 🔄 Returning user, checking tier for routing
+ 📊 User tier: coffee
+ ✅ Returning user login, routing to dashboard (tier: coffee)
+ 📍 getPostLoginDestination returned: Object
+ 🧹 Cleared auth context
+ 🚀 Final destination object: {
+  "path": "/dashboard",
+  "state": {}
+}
+ 🚀 Destination path: /dashboard
+ 🗺️ Path mapping: /dashboard → dashboard
+ 🗺️ Final viewName to navigate to: dashboard
+ 💾 Stored routeState in sessionStorage: Object
+ ⏳ Waiting 500ms for session state to update...
+ ✅ FIX 2: Set oauthCallbackProcessed flag to prevent race condition
+ 🔒 SECURITY: Using onNavigate callback for protected route navigation
+ 🔒 Calling onNavigate with viewName: dashboard
+ 🔒 onNavigate is typeof: function
+ ✅ SECURITY: Authenticated user accessing protected route: dashboard
+ ✅ onNavigate completed, should now be at view: dashboard
+ 🔧 useUserInitializer: Starting initialization for user: 2e8915de-245b-4872-9bb3-5724cc21ecab jamie.watters.mail@gmail.com 
+ 📱 Using cached tier data for quick initialization: coffee
+ 📊 Setting user tier from UserInitializer: coffee
+ CLS: 0.00001488134833810604
+ 📊 Loading analysis history from database for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+ 📊 Loading analysis history from database for user: 2e8915de-245b-4872-9bb3-5724cc21ecab
+ CLS: 0.13364601013799687
+ ✅ FIX 2: Set oauthCallbackProcessed flag to prevent race condition
+ 🔒 SECURITY: Using onNavigate callback for protected route navigation
+ 🔒 Calling onNavigate with viewName: dashboard
+ 🔒 onNavigate is typeof: function
+ ✅ SECURITY: Authenticated user accessing protected route: dashboard
+ ✅ onNavigate completed, should now be at view: dashboard
+ ✅ Loaded 10 analyses from database
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 CLS: 0.051271162813726574
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+AnalysisHistory-CDcdCoO1.js:1 ✅ Loaded 10 analyses from database
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess: Object
+main-D0nRr-9C.js:2 [DEBUG] hasFeatureAccess result: Object
+main-D0nRr-9C.js:2 📡 Full GTM script loaded (107KB)
+main-D0nRr-9C.js:2 🚀 Preloading PDF libraries in background...
+main-D0nRr-9C.js:2 ✅ PDF libraries preloaded successfully
+main-D0nRr-9C.js:2 FID: 1.6999998092651367
+main-D0nRr-9C.js:2 ✅ SECURITY: Authenticated user accessing protected route: input
+main-D0nRr-9C.js:2 🚀 Starting analysis for URL: https://trader-7.com
+main-D0nRr-9C.js:2 ✅ SECURITY: Authenticated user accessing protected route: analysis
+main-D0nRr-9C.js:2 🔄 SimpleAnalysisProgress: Starting mock progress for dc61d736-8665-4d6a-8b11-b0c9250e55bd
+main-D0nRr-9C.js:2 CLS: 0.0000016976939280548783
+main-D0nRr-9C.js:2 💨 Window lost focus
+main-D0nRr-9C.js:2 ✅ SimpleAnalysisProgress: Mock analysis completed
+main-D0nRr-9C.js:2 🔄 Mock analysis progress completed, waiting for real analysis...
+main-D0nRr-9C.js:2 ❌ Edge Function error: Error: Analysis timeout - please try again
+    at main-D0nRr-9C.js:2:217079
+onAnalyze @ main-D0nRr-9C.js:2
+main-D0nRr-9C.js:2 ❌ SimpleAnalysisProgress: Error received, stopping animation

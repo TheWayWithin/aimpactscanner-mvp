@@ -162,7 +162,7 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
       // Fetch analyses from Supabase with pagination
       const { data: analyses, error: fetchError } = await supabase
         .from('analyses')
-        .select('id, url, created_at, scores, page_title, page_description, framework_version, analysis_duration')
+        .select('id, url, created_at, overall_score, scores, page_title, page_description, framework_version, analysis_duration')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
