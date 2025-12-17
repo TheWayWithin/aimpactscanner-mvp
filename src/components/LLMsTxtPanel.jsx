@@ -280,7 +280,7 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
       </div>
       <h3 className="text-lg font-medium mb-2" style={{ color: '#0F172A' }}>Upgrade to Generate LLMs.txt</h3>
       <p className="text-sm mb-4" style={{ color: '#64748B' }}>
-        Generate SEO-optimized LLMs.txt files for better AI discovery. Available on Growth ($17.95/mo) and Scale ($29.95/mo) tiers.
+        Generate SEO-optimized LLMs.txt files for better AI discovery. Available on Growth ($12.46/mo) and Scale ($24.96/mo) tiers.
       </p>
       <button
         onClick={() => onUpgrade && onUpgrade()}
