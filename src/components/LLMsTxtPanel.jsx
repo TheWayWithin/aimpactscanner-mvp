@@ -169,7 +169,7 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
   };
 
   const pollAnalysisStatus = async (id) => {
-    const maxAttempts = 60; // 60 seconds max (polling every second)
+    const maxAttempts = 300; // 5 minutes max (polling every second) - site crawling takes time
     let attempts = 0;
     const isRailway = useRailwayBackend();
 
