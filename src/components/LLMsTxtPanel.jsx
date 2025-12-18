@@ -194,10 +194,14 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
           data = result.data;
         }
 
-        console.log(`📡 LLMs.txt Poll #${attempts}/${maxAttempts} (${elapsedSec}s): status=${data?.status}`, data);
+        // Handle response format: status can be at data.status OR data.analysis.status
+        const analysisStatus = data?.status || data?.analysis?.status;
+        const analysisError = data?.error || data?.analysis?.error;
+
+        console.log(`📡 LLMs.txt Poll #${attempts}/${maxAttempts} (${elapsedSec}s): status=${analysisStatus}`, data);
         setProgressMessage(`Analyzing website... ${Math.round((attempts / maxAttempts) * 100)}%`);
 
-        if (data?.status === 'completed') {
+        if (analysisStatus === 'completed') {
           console.log(`✅ LLMs.txt: Analysis completed after ${attempts} polls (${elapsedSec}s)`);
           setStatus('generating');
           setProgressMessage('Generating LLMs.txt file...');
@@ -205,15 +209,15 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
           return;
         }
 
-        if (data?.status === 'failed') {
+        if (analysisStatus === 'failed') {
           console.error(`❌ LLMs.txt: Analysis failed after ${attempts} polls (${elapsedSec}s)`, data);
-          throw new Error(data.error || 'Analysis failed');
+          throw new Error(analysisError || 'Analysis failed');
         }
 
         if (attempts < maxAttempts) {
           setTimeout(checkStatus, pollInterval);
         } else {
-          console.error(`⏱️ LLMs.txt: Timeout after ${attempts} polls (${elapsedSec}s). Last status: ${data?.status}`);
+          console.error(`⏱️ LLMs.txt: Timeout after ${attempts} polls (${elapsedSec}s). Last status: ${analysisStatus}`);
           throw new Error('Analysis timeout. Please try again.');
         }
       } catch (error) {
