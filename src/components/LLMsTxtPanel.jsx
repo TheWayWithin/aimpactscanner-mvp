@@ -173,8 +173,14 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
     const pollInterval = 3000; // Poll every 3 seconds (stays under rate limit of 100 req/15min)
     let attempts = 0;
     const isRailway = useRailwayBackend();
+    const startTime = Date.now();
+
+    console.log(`📡 LLMs.txt: Starting status polling for analysis ${id}`);
 
     const checkStatus = async () => {
+      attempts++;
+      const elapsedSec = Math.round((Date.now() - startTime) / 1000);
+
       try {
         let data;
 
@@ -188,9 +194,11 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
           data = result.data;
         }
 
+        console.log(`📡 LLMs.txt Poll #${attempts}/${maxAttempts} (${elapsedSec}s): status=${data?.status}`, data);
         setProgressMessage(`Analyzing website... ${Math.round((attempts / maxAttempts) * 100)}%`);
 
         if (data?.status === 'completed') {
+          console.log(`✅ LLMs.txt: Analysis completed after ${attempts} polls (${elapsedSec}s)`);
           setStatus('generating');
           setProgressMessage('Generating LLMs.txt file...');
           await generateFile(id);
@@ -198,17 +206,18 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
         }
 
         if (data?.status === 'failed') {
+          console.error(`❌ LLMs.txt: Analysis failed after ${attempts} polls (${elapsedSec}s)`, data);
           throw new Error(data.error || 'Analysis failed');
         }
 
-        attempts++;
         if (attempts < maxAttempts) {
           setTimeout(checkStatus, pollInterval);
         } else {
+          console.error(`⏱️ LLMs.txt: Timeout after ${attempts} polls (${elapsedSec}s). Last status: ${data?.status}`);
           throw new Error('Analysis timeout. Please try again.');
         }
       } catch (error) {
-        console.error('Error checking analysis status:', error);
+        console.error(`❌ LLMs.txt Poll #${attempts} error (${elapsedSec}s):`, error);
         setStatus('error');
         setErrorMessage(error.message || 'Analysis failed. Please try again.');
       }
