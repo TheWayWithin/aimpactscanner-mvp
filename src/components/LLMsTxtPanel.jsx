@@ -169,7 +169,8 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
   };
 
   const pollAnalysisStatus = async (id) => {
-    const maxAttempts = 300; // 5 minutes max (polling every second) - site crawling takes time
+    const maxAttempts = 100; // 100 attempts × 3 seconds = 5 minutes max
+    const pollInterval = 3000; // Poll every 3 seconds (stays under rate limit of 100 req/15min)
     let attempts = 0;
     const isRailway = useRailwayBackend();
 
@@ -202,7 +203,7 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
 
         attempts++;
         if (attempts < maxAttempts) {
-          setTimeout(checkStatus, 1000);
+          setTimeout(checkStatus, pollInterval);
         } else {
           throw new Error('Analysis timeout. Please try again.');
         }
