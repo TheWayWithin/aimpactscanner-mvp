@@ -242,8 +242,10 @@ router.post('/', async (req: Request, res: Response) => {
           });
         }
 
-        const analyzeData = await analyzeResponse.json() as { id: string };
-        console.log('Analysis started:', analyzeData.id);
+        const analyzeData = await analyzeResponse.json() as { id?: string; analysis?: { id: string } };
+        // Handle nested response: { analysis: { id: ... } } or { id: ... }
+        const analysisId = analyzeData?.analysis?.id || analyzeData?.id;
+        console.log('Analysis started:', analysisId, 'Full response:', JSON.stringify(analyzeData));
 
         return res.json(analyzeData);
       }
@@ -266,12 +268,20 @@ router.post('/', async (req: Request, res: Response) => {
         );
 
         if (!statusResponse.ok) {
+          const errorText = await statusResponse.text();
+          console.error(`Status check failed for ${analysisId}:`, statusResponse.status, errorText);
           return res.status(statusResponse.status).json({
             error: 'Failed to fetch analysis status',
+            details: errorText,
           });
         }
 
-        const statusData = await statusResponse.json();
+        const statusData = await statusResponse.json() as { status?: string; analysis?: { status: string; error?: string } };
+        // Log details when analysis fails
+        const status = statusData?.status || statusData?.analysis?.status;
+        if (status === 'failed') {
+          console.error(`Analysis ${analysisId} failed:`, JSON.stringify(statusData));
+        }
         return res.json(statusData);
       }
 
