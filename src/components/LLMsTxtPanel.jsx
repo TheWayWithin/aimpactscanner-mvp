@@ -196,7 +196,10 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
 
         // Handle response format: status can be at data.status OR data.analysis.status
         const analysisStatus = data?.status || data?.analysis?.status;
-        const analysisError = data?.error || data?.analysis?.error;
+        // Check multiple paths for error message
+        const analysisError = data?.error || data?.analysis?.error ||
+                              data?.error_message || data?.analysis?.error_message ||
+                              data?.message || data?.analysis?.message;
 
         console.log(`📡 LLMs.txt Poll #${attempts}/${maxAttempts} (${elapsedSec}s): status=${analysisStatus}`, data);
         setProgressMessage(`Analyzing website... ${Math.round((attempts / maxAttempts) * 100)}%`);
@@ -211,7 +214,10 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
 
         if (analysisStatus === 'failed') {
           console.error(`❌ LLMs.txt: Analysis failed after ${attempts} polls (${elapsedSec}s)`, data);
-          throw new Error(analysisError || 'Analysis failed');
+          // Provide helpful error message for common failure scenarios
+          const errorMsg = analysisError ||
+            'Website analysis failed. This may happen if the site blocks crawlers, loads slowly, or has technical issues. Please try again.';
+          throw new Error(errorMsg);
         }
 
         if (attempts < maxAttempts) {
