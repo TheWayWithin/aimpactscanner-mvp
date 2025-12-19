@@ -196,9 +196,10 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
 
         // Handle response format: status can be at data.status OR data.analysis.status
         const analysisStatus = data?.status || data?.analysis?.status;
-        // Check multiple paths for error message
+        // Check multiple paths for error message (including metadata.message from LLMtxtMastery API)
         const analysisError = data?.error || data?.analysis?.error ||
                               data?.error_message || data?.analysis?.error_message ||
+                              data?.metadata?.message || data?.analysis?.metadata?.message ||
                               data?.message || data?.analysis?.message;
 
         console.log(`📡 LLMs.txt Poll #${attempts}/${maxAttempts} (${elapsedSec}s): status=${analysisStatus}`, data);
