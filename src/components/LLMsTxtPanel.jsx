@@ -7,6 +7,7 @@ import {
   getLlmstxtStatus,
   generateLlmstxt,
   downloadLlmstxt,
+  validateLlmstxt,
 } from '../lib/railwayApi';
 
 /**
@@ -25,6 +26,7 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [usageStats, setUsageStats] = useState(null);
   const [progressMessage, setProgressMessage] = useState('');
+  const [jsRenderQuota, setJsRenderQuota] = useState(null); // Scale tier JS rendering quota
 
   // Tier configuration
   const isEligible = userTier === 'growth' || userTier === 'scale';
@@ -157,6 +159,11 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
 
       const newAnalysisId = analysisIdFromResponse;
       setAnalysisId(newAnalysisId);
+
+      // Capture JS render quota for Scale tier users (v1.2.0 API)
+      if (analyzeData?.jsRenderQuota) {
+        setJsRenderQuota(analyzeData.jsRenderQuota);
+      }
 
       // Poll for analysis completion
       await pollAnalysisStatus(newAnalysisId);
@@ -375,6 +382,50 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
     );
   };
 
+  // Render JS render quota for Scale tier
+  const renderJsRenderQuota = () => {
+    if (userTier !== 'scale' || !jsRenderQuota) return null;
+
+    const { used, limit, remaining } = jsRenderQuota;
+    const percentage = Math.min((used / limit) * 100, 100);
+
+    return (
+      <div className="mb-4 p-3 rounded-lg" style={{ backgroundColor: '#F0FDF4', border: '1px solid #BBF7D0' }}>
+        <div className="flex items-center mb-2">
+          <svg className="h-4 w-4 mr-2" style={{ color: '#16A34A' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+          </svg>
+          <span className="text-sm font-medium" style={{ color: '#166534' }}>JavaScript Rendering Enabled</span>
+        </div>
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-xs" style={{ color: '#166534' }}>JS Render Quota</span>
+          <span className="text-xs font-semibold" style={{ color: '#166534' }}>
+            {used} / {limit}
+          </span>
+        </div>
+        <div className="w-full rounded-full h-1.5" style={{ backgroundColor: '#BBF7D0' }}>
+          <div
+            className="h-1.5 rounded-full transition-all duration-300"
+            style={{
+              width: `${percentage}%`,
+              backgroundColor: percentage >= 80 ? '#F59E0B' : '#16A34A'
+            }}
+            role="progressbar"
+            aria-valuenow={used}
+            aria-valuemin="0"
+            aria-valuemax={limit}
+          />
+        </div>
+        <p className="text-xs mt-1" style={{ color: '#166534' }}>
+          {remaining > 0
+            ? `${remaining} JS render${remaining !== 1 ? 's' : ''} remaining - analyze React, Vue, and SPA sites`
+            : 'Monthly JS render quota exhausted'
+          }
+        </p>
+      </div>
+    );
+  };
+
   // Render upgrade prompt for ineligible users
   const renderUpgradePrompt = () => (
     <div className="text-center py-6">
@@ -409,6 +460,7 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
     return (
       <div>
         {renderUsageStats()}
+        {renderJsRenderQuota()}
 
         {/* Analyzing State */}
         {status === 'analyzing' && (

@@ -61,7 +61,7 @@ const TIER_MESSAGING = {
     fomo: {
       style: 'yellow', // Upgrade prompt
       headline: "Working with clients?",
-      message: "40 scans won't cover their sites plus yours. Scale gives you 100 scans, unlimited LLMS.txt, and unlimited history - never say no to a project.",
+      message: "40 scans won't cover their sites plus yours. Scale gives you 100 scans, unlimited LLMS.txt, JavaScript rendering for React/Vue sites, and unlimited history - never say no to a project.",
       upgradeNudge: "Upgrade to Scale for $29.95/month"
     },
     whatYouGet: {
@@ -77,21 +77,23 @@ const TIER_MESSAGING = {
   },
   scale: {
     tagline: "Never say no to a client",
-    obHeadline: "100 scans, unlimited LLMS.txt, unlimited history - take on any project",
+    obHeadline: "100 scans, unlimited LLMS.txt, JS rendering for React/Vue sites - take on any project",
     obBullets: [
       "Cover every client site from one account",
-      "Regenerate LLMS.txt after every change, on every site"
+      "Regenerate LLMS.txt after every change, on every site",
+      "Analyze React, Vue, and SPA sites with JavaScript rendering"
     ],
     fomo: {
       style: 'green', // Top tier confirmation
       headline: "No limits",
-      message: "Take on any project. Cover any site. Never run out of scans or history."
+      message: "Take on any project. Cover any site. Analyze even JavaScript-heavy SPAs that other tools can't see."
     },
     whatYouGet: {
       highlighted: "Never say no to a project",
       bullets: [
         "100 scans to cover every client site",
         "Unlimited LLMS.txt after every change",
+        "100 JS renders/month for React, Vue & SPA sites",
         "Unlimited history - your data forever",
         "5-page comparisons for client reports"
       ]

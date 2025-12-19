@@ -1,5 +1,91 @@
 # AImpactScanner MVP - Progress Log
 
+## [December 19, 2025] - Sprint 6 Phase 6: Enhanced LLMs.txt API Integration ✅
+
+**Context**: Integrated LLMtxtMastery API v1.2.0 with tiered access control, JavaScript rendering for CSR sites (Scale tier), and validation endpoints.
+
+### Phase 6.1: Backend API Updates ✅
+
+**Backend Changes** (`backend/src/routes/llmstxt.ts`):
+- Added `TIER_MAX_PAGES` constant: Growth (500 pages), Scale (1000 pages)
+- Updated analyze action to pass v1.2.0 options:
+  - `userTier`: Maps subscription tier to API tier
+  - `userId`: For per-user quota tracking
+  - `renderJs`: Enabled for Scale tier only (JavaScript rendering for SPAs)
+  - `maxPages`: Tier-based page limits
+  - `force`: Optional cache bypass
+- Enhanced error handling for v1.2.0 error codes:
+  - `JS_RENDER_NOT_AVAILABLE` (403): Upgrade prompt to Scale tier
+  - `JS_RENDER_QUOTA_EXCEEDED` (429): Monthly quota exhausted message
+- Forward `tierInfo` and `jsRenderQuota` from API response to client
+
+### Phase 6.2: Validation Endpoints ✅
+
+**New Actions** in `llmstxt.ts`:
+- `validate`: Validate existing llms.txt file at a URL
+  - Options: `fileType`, `includeRobotsTxt`, `bustCache`
+  - Available for Growth+ tiers
+- `batch-validate`: Validate all llms.txt locations (Scale tier only)
+  - Checks: /llms.txt, /llms-full.txt, /.well-known/llms.txt, /llms.md
+  - Returns comparison with best file recommendation
+
+**Frontend API** (`src/lib/railwayApi.js`):
+- Added `validateLlmstxt()` function
+- Added `batchValidateLlmstxt()` function
+- Updated `startLlmstxtAnalysis()` to support `force` option
+
+### Phase 6.3: Frontend Updates ✅
+
+**LLMsTxtPanel.jsx**:
+- Added `jsRenderQuota` state tracking
+- Added `renderJsRenderQuota()` component for Scale users
+  - Shows "JavaScript Rendering Enabled" badge
+  - Displays quota bar (used/limit) with progress indicator
+  - Shows remaining JS renders available
+
+**TierMessagingSection.jsx**:
+- Updated Scale tier messaging to highlight JS rendering benefit:
+  - OB headline: Added "JS rendering for React/Vue sites"
+  - OB bullets: Added "Analyze React, Vue, and SPA sites with JavaScript rendering"
+  - What You Get: Added "100 JS renders/month for React, Vue & SPA sites"
+  - FOMO message: Updated to mention SPA analysis capability
+- Updated Growth tier FOMO to mention JS rendering as Scale benefit
+
+### Files Modified
+
+| File | Changes |
+|------|---------|
+| `backend/src/routes/llmstxt.ts` | v1.2.0 API parameters, error handling, validation endpoints |
+| `src/lib/railwayApi.js` | New validation functions, force option |
+| `src/components/LLMsTxtPanel.jsx` | JS render quota display for Scale tier |
+| `src/components/DynamicTierSelector/TierMessagingSection.jsx` | Scale tier JS rendering messaging |
+
+### Tier Feature Matrix (Updated)
+
+| Feature | Free | Solo | Growth | Scale |
+|---------|------|------|--------|-------|
+| LLMs.txt Generation | ❌ | ❌ | 25/month | Unlimited |
+| LLMs.txt Validation | ❌ | ❌ | ✅ | ✅ |
+| Batch Validation | ❌ | ❌ | ❌ | ✅ |
+| JS Rendering (CSR) | ❌ | ❌ | ❌ | 100/month |
+| Max Pages Analyzed | - | - | 500 | 1000 |
+
+### Verification
+
+- [x] Backend type-check passes: `npm run type-check`
+- [x] Frontend build succeeds: `npm run build`
+- [ ] Staging deployment pending
+- [ ] Production deployment pending
+
+### Next Steps
+
+1. Deploy backend changes to Railway staging
+2. Test JS rendering with Scale tier on CSR site (e.g., evolve-7.com)
+3. Enable Railway backend on production (Phase 5)
+4. Update architecture documentation to v3.0
+
+---
+
 ## [December 17, 2025] - Sprint 6 Status Update: Phases 1-4 Complete ✅
 
 **Context**: Updated project-plan.md to reflect actual Sprint 6 completion status. Documentation was outdated.

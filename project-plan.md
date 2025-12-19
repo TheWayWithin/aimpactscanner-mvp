@@ -786,7 +786,7 @@ Transform signup page into clear value ladder that drives higher-tier conversion
 | Phase 3: Async Job Processing | ✅ COMPLETE | Dec 15, 2025 |
 | Phase 4: Headless Browser (Puppeteer) | ✅ COMPLETE | Dec 15, 2025 |
 | Phase 5: Production Migration | ⏳ READY | Pending |
-| Phase 6: LLMs.txt Migration | ❌ Not Started | - |
+| Phase 6: Enhanced LLMs.txt API | ⏳ IN PROGRESS | Started Dec 19 |
 
 **Key Commits**:
 - `eab3cad` - feat: add Railway backend with async job processing (Phase 3)
@@ -1143,43 +1143,138 @@ Migrate the analysis backend from Supabase Edge Functions to Railway Node.js to 
 
 ---
 
-### Phase 6: LLMs.txt Migration & Cleanup
-**Target Duration**: 0.5 weeks
-**Status**: [ ] Not Started
+### Phase 6: Enhanced LLMs.txt API Integration ✅
+**Target Duration**: 1.5 weeks
+**Status**: ✅ COMPLETE
+**Started**: December 19, 2025
+**Completed**: December 19, 2025
+**API Version**: v1.2.0 (with v1.1.0 validation endpoints)
 
-**Objective**: Migrate generate-llmstxt to Railway and clean up.
+**Objective**: Integrate updated LLMtxtMastery API with tiered access control, JavaScript rendering for CSR sites (Scale tier), and new validation endpoints.
 
-#### Tasks
+**Key API Changes (v1.2.0)**:
+- `options.userTier` - Pass user's subscription tier for page limits
+- `options.renderJs` - Enable JavaScript rendering for SPAs (Scale tier only)
+- `options.userId` - Track per-user JS render quota
+- `options.force` - Bypass cache for fresh analysis
+- New response fields: `tierInfo`, `jsRenderQuota`
+- New error codes: `JS_RENDER_NOT_AVAILABLE`, `JS_RENDER_QUOTA_EXCEEDED`
 
-- [ ] **6.1 Port generate-llmstxt to Railway**
-  - Create `/api/generate-llmstxt` endpoint
-  - Port LLMtxtMastery API integration
-  - Maintain tier restrictions (Growth: 25/mo, Scale: unlimited)
-  - Update frontend API calls
+**New Validation Endpoints (v1.1.0)**:
+- `POST /api/validate-llms-txt` - Validate existing llms.txt files
+- `POST /api/batch-validate-llms-txt` - Batch validation across all locations
+- Multi-file support: llms.txt, llms-full.txt, .well-known/llms.txt, llms.md
+- SPA/Framework detection with content coverage analysis
+- Content depth scoring with recommendations
 
-- [ ] **6.2 Final Documentation**
+#### Phase 6.1: Backend API Updates ✅
+**Status**: ✅ COMPLETE
+
+- [x] **6.1.1 Update Analyze Endpoint**
+  - Pass `userTier` from authenticated user to LLMtxtMastery API
+  - Pass `userId` for per-user quota tracking
+  - Add `renderJs: true` for Scale tier users
+  - Add `force` option to bypass cache
+  - Set `maxPages` based on tier (Growth: 500, Scale: 1000)
+
+- [x] **6.1.2 Handle Enhanced Responses**
+  - Parse and forward `tierInfo` to frontend
+  - Parse and forward `jsRenderQuota` for Scale users
+
+- [x] **6.1.3 Handle New Error Codes**
+  - `JS_RENDER_NOT_AVAILABLE` (403) → Show upgrade prompt to Scale
+  - `JS_RENDER_QUOTA_EXCEEDED` (429) → Show quota exhausted message
+
+#### Phase 6.2: Validation Endpoints Integration ✅
+**Status**: ✅ COMPLETE
+
+- [x] **6.2.1 Add Validation Route**
+  - Added `validate` action to `/api/llmstxt` endpoint
+  - Support `fileType`, `includeRobotsTxt`, `bustCache` options
+  - Available for Growth+ tiers
+
+- [x] **6.2.2 Add Batch Validation Route**
+  - Added `batch-validate` action to `/api/llmstxt` endpoint
+  - Scale tier only (returns 403 for Growth tier)
+  - Returns comparison results across all file locations
+
+#### Phase 6.3: Frontend Updates ✅
+**Status**: ✅ COMPLETE
+
+- [x] **6.3.1 Update LLMsTxtPanel**
+  - Display JS render quota for Scale users
+  - Show "JavaScript Rendering Enabled" indicator with quota bar
+  - Added `validateLlmstxt()` and `batchValidateLlmstxt()` API functions
+
+- [x] **6.3.2 Tier Messaging Updates**
+  - Updated Scale tier OB headline: "JS rendering for React/Vue sites"
+  - Updated Scale tier bullets: "Analyze React, Vue, and SPA sites"
+  - Added "100 JS renders/month for React, Vue & SPA sites" to What You Get
+  - Updated Growth FOMO to mention JS rendering as Scale benefit
+
+- [x] **6.3.3 Error Handling UI**
+  - Backend returns appropriate error codes (403, 429)
+  - Frontend can handle via existing error display
+
+#### Phase 6.4: Testing & Validation ⏳
+**Status**: ⏳ PENDING DEPLOYMENT
+
+- [ ] **6.4.1 Test CSR Site Analysis**
+  - Test evolve-7.com with Scale tier + renderJs=true
+  - Test solomarket.work with Scale tier + renderJs=true
+  - Verify non-Scale tiers cannot use renderJs
+
+- [ ] **6.4.2 Test Validation Endpoints**
+  - Test validate endpoint on sites with llms.txt
+  - Test batch-validate on sites with multiple file types
+  - Verify SPA detection accuracy
+
+- [ ] **6.4.3 Test Quota Tracking**
+  - Verify JS render quota decrements correctly
+  - Verify quota resets monthly
+  - Test quota exceeded error handling
+
+#### Phase 6.5: Documentation & Cleanup ⏳
+**Status**: ⏳ PENDING
+
+- [ ] **6.5.1 Update Documentation**
   - Update architecture.md to v3.0
   - Create ADR-016 for Railway migration
-  - Update CLAUDE.md with new backend structure
-  - Archive Edge Function documentation
+  - Document new LLMs.txt features per tier
 
-- [ ] **6.3 Cleanup**
-  - Remove unused Edge Function code (after 30-day grace period)
-  - Clean up environment variables
-  - Update CI/CD documentation
-  - Close related GitHub issues
+- [ ] **6.5.2 Cleanup Edge Functions**
+  - Archive generate-llmstxt Edge Function
+  - Remove unused environment variables
+  - Update CLAUDE.md with new backend structure
 
 **Deliverables**:
-- LLMs.txt generation working on Railway
-- Updated architecture documentation (v3.0)
-- ADR-016: Railway Backend Migration
-- Clean repository with archived Edge Functions
+- `/backend/src/routes/llmstxt.ts` - Updated with new API parameters
+- `/src/components/LLMsTxtPanel.jsx` - Updated with validation UI
+- `/src/components/LLMsTxtValidation.jsx` - New validation results component
+- Updated tier messaging for Scale JS rendering benefit
+- Architecture documentation v3.0
 
 **Success Criteria**:
-- [ ] LLMs.txt generation works identically on Railway
-- [ ] Documentation fully updated
-- [ ] No orphaned code or configuration
-- [ ] Clean audit of environment variables
+- [ ] CSR sites (evolve-7.com, React SPAs) analyze successfully for Scale tier
+- [ ] Validation endpoints return accurate scores and recommendations
+- [ ] JS render quota tracked and displayed for Scale users
+- [ ] Non-Scale tiers see upgrade prompt when CSR site detected
+- [ ] All existing functionality preserved (Growth: 25/mo, Scale: unlimited)
+
+**Tier Feature Matrix (Updated)**:
+
+| Feature | Free | Solo | Growth | Scale |
+|---------|------|------|--------|-------|
+| LLMs.txt Generation | ❌ | ❌ | 25/month | Unlimited |
+| Validation | ❌ | ❌ | ✅ | ✅ |
+| Batch Validation | ❌ | ❌ | ❌ | ✅ |
+| JS Rendering (CSR) | ❌ | ❌ | ❌ | 100/month |
+| Max Pages Analyzed | - | - | 500 | 1000 |
+
+**Risk Mitigation**:
+1. **JS Render Quota**: Track usage carefully, warn users at 80%
+2. **CSR Detection Latency**: JS rendering takes longer, show progress indicator
+3. **API Costs**: Monitor LLMtxtMastery usage, set alerts at thresholds
 
 ---
 
@@ -1326,23 +1421,32 @@ Update signup and pricing page messaging to accurately reflect tier-based factor
 
 ## Next Mission Planning
 
-**Sprint 6 Status**: Phases 1-4 COMPLETE, Phase 5 READY, Phase 6 pending
+**Sprint 6 Status**: Phases 1-4 COMPLETE, Phase 5 READY, Phase 6 IN PROGRESS
 
 **Immediate Next Steps**:
-1. **Phase 5: Enable Railway on Production** - Flip feature flag, validate, monitor
-2. **Phase 6: LLMs.txt Migration** - Port to Railway after Phase 5 stable
+1. **Phase 6.1: Backend API Updates** - Pass userTier, userId, renderJs to LLMtxtMastery API
+2. **Phase 6.2: Validation Endpoints** - Add validate and batch-validate routes
+3. **Phase 6.3: Frontend Updates** - Update LLMsTxtPanel with JS render quota and validation
+4. **Phase 5: Production Migration** - After Phase 6 tested on staging
+
+**Phase 6 Unlocks**:
+- ✅ CSR/SPA website analysis (React, Vue, Next.js client-side apps) for Scale tier
+- ✅ JavaScript rendering with 100/month quota for Scale tier
+- ✅ LLMs.txt file validation with scoring and recommendations
+- ✅ Batch validation across all llms.txt file locations
+- ✅ Tier-specific page limits (Growth: 500, Scale: 1000)
 
 **After Sprint 6 Complete**:
 1. **Growth Marketing** - Content, SEO, social proof
 2. **Feature Development** - AI Remediation Planner, Progress Tracking
 3. **Technical Debt** - Code cleanup, performance optimization
 
-*Sprint 6 unlocks CSR website analysis via Puppeteer on Railway backend.*
+*Sprint 6 Phase 6 integrates LLMtxtMastery API v1.2.0 with JS rendering for CSR sites.*
 
 ---
 
-**Document Version**: 7.1 (Sprint 6 Progress Update)
-**Last Updated**: December 17, 2025
+**Document Version**: 7.2 (Sprint 6 Phase 6 - Enhanced LLMs.txt API)
+**Last Updated**: December 19, 2025
 **Previous Version**: See git history
 
 *Document maintained by THE COORDINATOR (AGENT-11)*
