@@ -246,10 +246,24 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
         if (data?.error) throw new Error(data.error);
       }
 
+      // Log the response structure for debugging
+      console.log('📦 LLMs.txt Generate response:', data);
+
+      // Handle nested response format: id/content can be at data.X or data.llmstxt.X or data.analysis.X
+      const downloadId = data?.id || data?.llmstxt?.id || data?.analysis?.id;
+      const downloadContent = data?.content || data?.llmstxt?.content || data?.analysis?.content;
+
+      console.log('📦 LLMs.txt Download data extracted:', { id: downloadId, hasContent: !!downloadContent });
+
+      if (!downloadId) {
+        console.error('❌ LLMs.txt: No download ID found in response:', data);
+        throw new Error('Failed to get download ID from generate response');
+      }
+
       // Store the download data
       setDownloadData({
-        id: data.id,
-        content: data.content, // If the API returns content directly
+        id: downloadId,
+        content: downloadContent, // If the API returns content directly
       });
       setStatus('completed');
       setProgressMessage('LLMs.txt file ready for download!');
@@ -265,9 +279,15 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
   };
 
   const handleDownload = async () => {
-    if (!downloadData?.id) return;
+    console.log('📥 LLMs.txt Download clicked, downloadData:', downloadData);
+
+    if (!downloadData?.id) {
+      console.error('❌ LLMs.txt: No download ID available, cannot download');
+      return;
+    }
 
     try {
+      console.log('📥 LLMs.txt: Fetching file content for ID:', downloadData.id);
       let fileContent;
 
       if (useRailwayBackend()) {
@@ -281,6 +301,8 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
         fileContent = data;
       }
 
+      console.log('📥 LLMs.txt: File content received, length:', fileContent?.length);
+
       // Create blob and download
       const blob = new Blob([fileContent], { type: 'text/plain' });
       const url = window.URL.createObjectURL(blob);
@@ -291,8 +313,9 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+      console.log('✅ LLMs.txt: Download triggered successfully');
     } catch (error) {
-      console.error('Error downloading file:', error);
+      console.error('❌ LLMs.txt: Error downloading file:', error);
       setErrorMessage('Failed to download file. Please try again.');
     }
   };

@@ -1,0 +1,610 @@
+🍪 GDPR consent stub initialized
+VM6:23 Consent handling delegated to React component
+VM6:29 Analytics initialized after LCP
+vendor-supabase-YOZNOpgP.js:1 AI Search Mastery: Supabase client initialized. Connecting to the powerful MASTERY-AI Framework backend.
+index-BEUt-Eh6.js:2 🚀 React application loaded
+main-CfnBbfIi.js:2 🔍 APP INIT - Full URL: https://aimpactscanner.com/?code=3e2dfd94-97cb-4df6-a754-1945a2cd1fbb#oauth-callback
+main-CfnBbfIi.js:2 🔍 APP INIT - Hash: oauth-callback
+main-CfnBbfIi.js:2 🔍 APP INIT - Query params: ?code=3e2dfd94-97cb-4df6-a754-1945a2cd1fbb
+main-CfnBbfIi.js:2 📍 INITIAL HASH DETECTED: oauth-callback
+main-CfnBbfIi.js:2 🔒 SECURITY: Deferring route navigation until session check completes
+main-CfnBbfIi.js:2 🚀 App initializing with session persistence...
+main-CfnBbfIi.js:2 🔍 App mounted - Full URL: https://aimpactscanner.com/?code=3e2dfd94-97cb-4df6-a754-1945a2cd1fbb#oauth-callback
+main-CfnBbfIi.js:2 🔍 App mounted - Hash: #oauth-callback
+main-CfnBbfIi.js:2 🔍 App mounted - Query params: ?code=3e2dfd94-97cb-4df6-a754-1945a2cd1fbb
+main-CfnBbfIi.js:2 ⏳ Checking for existing session before rendering...
+main-CfnBbfIi.js:2 🔄 Starting session restoration check...
+main-CfnBbfIi.js:2 🔧 Setting up enhanced onAuthStateChange listener...
+main-CfnBbfIi.js:2 📦 Loading full Supabase SDK...
+main-CfnBbfIi.js:2 ✅ Supabase SDK loaded
+main-CfnBbfIi.js:2 LCP: 1792
+main-CfnBbfIi.js:2 LCP: 1808
+main-CfnBbfIi.js:2 🔐 Auth state changed: SIGNED_IN aimpactscannertest@gmail.com sessionChecked: false
+main-CfnBbfIi.js:2 ✅ SIGNED_IN event detected
+main-CfnBbfIi.js:2 📍 Current view: landing
+main-CfnBbfIi.js:2 📍 oauthCallbackProcessed: false
+main-CfnBbfIi.js:2 ✅ SIGNED_IN event - routing to oauth-callback
+main-CfnBbfIi.js:2 📍 Set view to oauth-callback, forcing hash update...
+main-CfnBbfIi.js:2 🔐 Auth state changed: SIGNED_IN aimpactscannertest@gmail.com sessionChecked: false
+main-CfnBbfIi.js:2 ✅ SIGNED_IN event detected
+main-CfnBbfIi.js:2 📍 Current view: landing
+main-CfnBbfIi.js:2 📍 oauthCallbackProcessed: false
+main-CfnBbfIi.js:2 ✅ SIGNED_IN event - routing to oauth-callback
+main-CfnBbfIi.js:2 📍 Set view to oauth-callback, forcing hash update...
+main-CfnBbfIi.js:2 🔐 Auth state changed: INITIAL_SESSION aimpactscannertest@gmail.com sessionChecked: false
+main-CfnBbfIi.js:2 🔄 INITIAL_SESSION detected: Object
+main-CfnBbfIi.js:2 ✅ Session restored from storage on app load
+main-CfnBbfIi.js:2 🔍 Fetching user tier for: 8573ca32-e752-48a9-b09b-bac5a991f58f
+main-CfnBbfIi.js:2 📍 OAuth callback in URL - skipping auto-navigation, let OAuthCallback component handle it
+main-CfnBbfIi.js:2 🔍 Session restoration result: Object
+main-CfnBbfIi.js:2 ✅ Valid session restored, setting auth state
+main-CfnBbfIi.js:2 🔄 Already fetching user tier for: 8573ca32-e752-48a9-b09b-bac5a991f58f - skipping duplicate call
+main-CfnBbfIi.js:2 ⏳ Waiting for session state to propagate before navigation...
+main-CfnBbfIi.js:2 🔒 SECURITY: Processing initial pending route: oauth-callback
+main-CfnBbfIi.js:2 ⏳ SECURITY: Session check not complete - deferring navigation to: dashboard
+OAuthCallback-DxUXP71n.js:1 🔄 OAuthCallback component mounted - Processing OAuth callback...
+OAuthCallback-DxUXP71n.js:1 🔍 Current URL: https://aimpactscanner.com/#oauth-callback
+OAuthCallback-DxUXP71n.js:1 🔍 Current hash: #oauth-callback
+OAuthCallback-DxUXP71n.js:1 🔄 Attempt 1 to retrieve OAuth session...
+OAuthCallback-DxUXP71n.js:1 ✅ Session retrieved: 8573ca32-e752-48a9-b09b-bac5a991f58f
+OAuthCallback-DxUXP71n.js:1 🔍 User account age: 5483449154ms (EXISTING USER)
+vendor-supabase-YOZNOpgP.js:1 📦 Retrieved auth context: Object
+OAuthCallback-DxUXP71n.js:1 📦 Auth context: Object
+pdmtvkcxnqysujnpcnyh.supabase.co/rest/v1/rpc/get_user_data:1  Failed to load resource: the server responded with a status of 404 ()Understand this error
+main-CfnBbfIi.js:2 ⚠️ RPC function failed, trying direct query: Object
+We @ main-CfnBbfIi.js:2Understand this warning
+vendor-supabase-YOZNOpgP.js:1 ✅ Retrieved user data: Object
+OAuthCallback-DxUXP71n.js:1 👋 Existing user login, userData found
+OAuthCallback-DxUXP71n.js:1 🔄 routeUser CALLED
+OAuthCallback-DxUXP71n.js:1 📊 userData: Object
+OAuthCallback-DxUXP71n.js:1 📊 is_first_login: false
+OAuthCallback-DxUXP71n.js:1 📊 authContext: Object
+OAuthCallback-DxUXP71n.js:1 🔄 Returning user, routing to post-login destination
+vendor-supabase-YOZNOpgP.js:1 🧭 Determining post-login destination for user: 8573ca32-e752-48a9-b09b-bac5a991f58f
+vendor-supabase-YOZNOpgP.js:1 📦 Retrieved auth context: Object
+vendor-supabase-YOZNOpgP.js:1 🔄 Returning user, checking tier for routing
+vendor-supabase-YOZNOpgP.js:1 📊 User tier: growth
+vendor-supabase-YOZNOpgP.js:1 ✅ Returning user login, routing to dashboard (tier: growth)
+OAuthCallback-DxUXP71n.js:1 📍 getPostLoginDestination returned: Object
+vendor-supabase-YOZNOpgP.js:1 🧹 Cleared auth context
+OAuthCallback-DxUXP71n.js:1 🚀 Final destination object: {
+  "path": "/dashboard",
+  "state": {}
+}
+OAuthCallback-DxUXP71n.js:1 🚀 Destination path: /dashboard
+OAuthCallback-DxUXP71n.js:1 🗺️ Path mapping: /dashboard → dashboard
+OAuthCallback-DxUXP71n.js:1 🗺️ Final viewName to navigate to: dashboard
+OAuthCallback-DxUXP71n.js:1 💾 Stored routeState in sessionStorage: Object
+OAuthCallback-DxUXP71n.js:1 ⏳ Waiting 500ms for session state to update...
+main-CfnBbfIi.js:2 CLS: 0.00013654612830305707
+main-CfnBbfIi.js:2 Synced tier from database: growth for aimpactscannertest@gmail.com
+main-CfnBbfIi.js:2 ✅ User data fetched successfully: Object
+OAuthCallback-DxUXP71n.js:1 🔄 OAuthCallback component mounted - Processing OAuth callback...
+OAuthCallback-DxUXP71n.js:1 🔍 Current URL: https://aimpactscanner.com/#oauth-callback
+OAuthCallback-DxUXP71n.js:1 🔍 Current hash: #oauth-callback
+OAuthCallback-DxUXP71n.js:1 🔄 Attempt 1 to retrieve OAuth session...
+OAuthCallback-DxUXP71n.js:1 ✅ Session retrieved: 8573ca32-e752-48a9-b09b-bac5a991f58f
+OAuthCallback-DxUXP71n.js:1 🔍 User account age: 5483449954ms (EXISTING USER)
+vendor-supabase-YOZNOpgP.js:1 📭 No auth context found
+OAuthCallback-DxUXP71n.js:1 📦 Auth context: null
+vendor-supabase-YOZNOpgP.js:1 ✅ Retrieved user data: Object
+OAuthCallback-DxUXP71n.js:1 👋 Existing user login, userData found
+OAuthCallback-DxUXP71n.js:1 🔄 routeUser CALLED
+OAuthCallback-DxUXP71n.js:1 📊 userData: Object
+OAuthCallback-DxUXP71n.js:1 📊 is_first_login: false
+OAuthCallback-DxUXP71n.js:1 📊 authContext: null
+OAuthCallback-DxUXP71n.js:1 🔄 Returning user, routing to post-login destination
+vendor-supabase-YOZNOpgP.js:1 🧭 Determining post-login destination for user: 8573ca32-e752-48a9-b09b-bac5a991f58f
+vendor-supabase-YOZNOpgP.js:1 📭 No auth context found
+vendor-supabase-YOZNOpgP.js:1 🔄 Returning user, checking tier for routing
+vendor-supabase-YOZNOpgP.js:1 📊 User tier: growth
+vendor-supabase-YOZNOpgP.js:1 ✅ Returning user login, routing to dashboard (tier: growth)
+OAuthCallback-DxUXP71n.js:1 📍 getPostLoginDestination returned: Object
+vendor-supabase-YOZNOpgP.js:1 🧹 Cleared auth context
+OAuthCallback-DxUXP71n.js:1 🚀 Final destination object: {
+  "path": "/dashboard",
+  "state": {}
+}
+OAuthCallback-DxUXP71n.js:1 🚀 Destination path: /dashboard
+OAuthCallback-DxUXP71n.js:1 🗺️ Path mapping: /dashboard → dashboard
+OAuthCallback-DxUXP71n.js:1 🗺️ Final viewName to navigate to: dashboard
+OAuthCallback-DxUXP71n.js:1 💾 Stored routeState in sessionStorage: Object
+OAuthCallback-DxUXP71n.js:1 ⏳ Waiting 500ms for session state to update...
+OAuthCallback-DxUXP71n.js:1 ✅ FIX 2: Set oauthCallbackProcessed flag to prevent race condition
+OAuthCallback-DxUXP71n.js:1 🔒 SECURITY: Using onNavigate callback for protected route navigation
+OAuthCallback-DxUXP71n.js:1 🔒 Calling onNavigate with viewName: dashboard
+OAuthCallback-DxUXP71n.js:1 🔒 onNavigate is typeof: function
+main-CfnBbfIi.js:2 ✅ SECURITY: Authenticated user accessing protected route: dashboard
+OAuthCallback-DxUXP71n.js:1 ✅ onNavigate completed, should now be at view: dashboard
+main-CfnBbfIi.js:2 🔧 useUserInitializer: Starting initialization for user: 8573ca32-e752-48a9-b09b-bac5a991f58f aimpactscannertest@gmail.com 
+main-CfnBbfIi.js:2 📱 Using cached tier data for quick initialization: growth
+main-CfnBbfIi.js:2 📊 Setting user tier from UserInitializer: growth
+main-CfnBbfIi.js:2 CLS: 0.0000807839073593144
+2AnalysisHistory-BuY0S0Kq.js:1 📊 Loading analysis history from database for user: 8573ca32-e752-48a9-b09b-bac5a991f58f
+main-CfnBbfIi.js:2 CLS: 0.14921226421721415
+OAuthCallback-DxUXP71n.js:1 ✅ FIX 2: Set oauthCallbackProcessed flag to prevent race condition
+OAuthCallback-DxUXP71n.js:1 🔒 SECURITY: Using onNavigate callback for protected route navigation
+OAuthCallback-DxUXP71n.js:1 🔒 Calling onNavigate with viewName: dashboard
+OAuthCallback-DxUXP71n.js:1 🔒 onNavigate is typeof: function
+main-CfnBbfIi.js:2 ✅ SECURITY: Authenticated user accessing protected route: dashboard
+OAuthCallback-DxUXP71n.js:1 ✅ onNavigate completed, should now be at view: dashboard
+main-CfnBbfIi.js:2 📡 Full GTM script loaded (107KB)
+AnalysisHistory-BuY0S0Kq.js:1 ✅ Loaded 10 analyses from database
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 CLS: 0.052472130418289374
+AnalysisHistory-BuY0S0Kq.js:1 ✅ Loaded 10 analyses from database
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 🚀 Preloading PDF libraries in background...
+main-CfnBbfIi.js:2 ✅ PDF libraries preloaded successfully
+main-CfnBbfIi.js:2 ✅ SECURITY: Authenticated user accessing protected route: input
+main-CfnBbfIi.js:2 FID: 1.6000001430511475
+main-CfnBbfIi.js:2 🚀 Starting analysis for URL: https://freecalchub.com
+main-CfnBbfIi.js:2 ✅ SECURITY: Authenticated user accessing protected route: analysis
+main-CfnBbfIi.js:2 🔧 Railway Backend Check: Object
+main-CfnBbfIi.js:2 🚂 Using Railway backend: https://aimpactscanner-backend-production.up.railway.app
+main-CfnBbfIi.js:2 📊 Analysis progress: processing (attempt undefined)
+main-CfnBbfIi.js:2 ✅ Valid session found in localStorage
+206Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+main-CfnBbfIi.js:2 🔄 SimpleAnalysisProgress: Starting mock progress for fdf12fee-4ddc-433e-9899-6ff7a4fa3bed
+main-CfnBbfIi.js:2 CLS: 0.0000020792295305402487
+main-CfnBbfIi.js:2 ✅ Analysis completed: Object
+main-CfnBbfIi.js:2 ✅ SECURITY: Authenticated user accessing protected route: results
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 📝 Adding analysis to localStorage history (fallback): https://freecalchub.com
+main-CfnBbfIi.js:2 ✅ Analysis added to localStorage history
+main-CfnBbfIi.js:2 🔧 Railway Backend Check: Object
+main-CfnBbfIi.js:2 📡 LLMs.txt: Using Railway backend for usage stats
+main-CfnBbfIi.js:2 ✅ Valid session found in localStorage
+main-CfnBbfIi.js:2 CLS: 0.6368635052891423
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: free
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: false
+main-CfnBbfIi.js:2 CLS: 0.005855037509652897
+main-CfnBbfIi.js:2 CLS: 0.00612667107530549
+main-CfnBbfIi.js:2 Synced tier from database: growth for aimpactscannertest@gmail.com
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 CLS: 0.008493779656078703
+main-CfnBbfIi.js:2 CLS: 0.01256341937024007
+main-CfnBbfIi.js:2 💨 Window lost focus
+main-CfnBbfIi.js:2 🎯 Window gained focus
+main-CfnBbfIi.js:2 🔧 Railway Backend Check: Object
+main-CfnBbfIi.js:2 📡 LLMs.txt: Using Railway backend for analysis
+main-CfnBbfIi.js:2 ✅ Valid session found in localStorage
+main-CfnBbfIi.js:2 🔧 Railway Backend Check: Object
+main-CfnBbfIi.js:2 ✅ Valid session found in localStorage
+main-CfnBbfIi.js:2 💨 Window lost focus
+main-CfnBbfIi.js:2 🔍 Tab visibility changed: HIDDEN (change #1)
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🚀 Tab started in hidden state
+53main-CfnBbfIi.js:2 ✅ Valid session found in localStorage
+main-CfnBbfIi.js:2 🔍 Tab visibility changed: VISIBLE (change #2)
+main-CfnBbfIi.js:2 ⏱️ Tab was hidden for 210917ms
+main-CfnBbfIi.js:2 🎯 Window gained focus
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfnBbfIi.js:2 🔐 Auth state changed: SIGNED_IN aimpactscannertest@gmail.com sessionChecked: false
+main-CfnBbfIi.js:2 ✅ SIGNED_IN event detected
+main-CfnBbfIi.js:2 📍 Current view: landing
+main-CfnBbfIi.js:2 📍 oauthCallbackProcessed: true
+main-CfnBbfIi.js:2 ✅ SIGNED_IN event - oauth-callback already processed or at callback, skipping redirect
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfnBbfIi.js:2 🔍 Real analysis check: Object
+main-CfnBbfIi.js:2 📦 Grouped factors result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess result: Object
+main-CfnBbfIi.js:2 [DEBUG] hasFeatureAccess returned: true
+3main-CfnBbfIi.js:2 ✅ Valid session found in localStorage
+main-CfnBbfIi.js:2 💨 Window lost focus
+43main-CfnBbfIi.js:2 ✅ Valid session found in localStorage
+main-CfnBbfIi.js:2 Error checking analysis status: Error: Analysis timeout. Please try again.
+    at a (main-CfnBbfIi.js:2:69033)
+a @ main-CfnBbfIi.js:2Understand this error
+main-CfnBbfIi.js:2 CLS: 0.002155092365543203
+main-CfnBbfIi.js:2 🎯 Window gained focus
+main-CfnBbfIi.js:2 💨 Window lost focus

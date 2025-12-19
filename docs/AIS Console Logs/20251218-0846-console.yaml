@@ -1,0 +1,685 @@
+(index):130 🍪 GDPR consent stub initialized
+(index):173 Consent handling delegated to React component
+(index):179 Analytics initialized after LCP
+vendor-supabase-YOZNOpgP.js:1 AI Search Mastery: Supabase client initialized. Connecting to the powerful MASTERY-AI Framework backend.
+index-BhmauSNq.js:2 🚀 React application loaded
+main-CfYjNw3U.js:2 🔍 APP INIT - Full URL: https://aimpactscanner.com/#results
+main-CfYjNw3U.js:2 🔍 APP INIT - Hash: results
+main-CfYjNw3U.js:2 🔍 APP INIT - Query params: 
+main-CfYjNw3U.js:2 📍 INITIAL HASH DETECTED: results
+main-CfYjNw3U.js:2 🔒 SECURITY: Deferring route navigation until session check completes
+main-CfYjNw3U.js:2 🚀 App initializing with session persistence...
+main-CfYjNw3U.js:2 🔍 App mounted - Full URL: https://aimpactscanner.com/#results
+main-CfYjNw3U.js:2 🔍 App mounted - Hash: #results
+main-CfYjNw3U.js:2 🔍 App mounted - Query params: 
+main-CfYjNw3U.js:2 ⏳ Checking for existing session before rendering...
+main-CfYjNw3U.js:2 🔄 Starting session restoration check...
+main-CfYjNw3U.js:2 🔧 Setting up enhanced onAuthStateChange listener...
+main-CfYjNw3U.js:2 📦 Loading full Supabase SDK...
+main-CfYjNw3U.js:2 ✅ Supabase SDK loaded
+main-CfYjNw3U.js:2 🔐 Auth state changed: INITIAL_SESSION aimpactscannertest@gmail.com sessionChecked: false
+main-CfYjNw3U.js:2 🔄 INITIAL_SESSION detected: {hasSession: true, sessionChecked: false, userEmail: 'aimpactscannertest@gmail.com'}
+main-CfYjNw3U.js:2 ✅ Session restored from storage on app load
+main-CfYjNw3U.js:2 📱 Found local tier data: growth for user: aimpactscannertest@gmail.com
+main-CfYjNw3U.js:2 🔍 Fetching user tier for: 8573ca32-e752-48a9-b09b-bac5a991f58f
+main-CfYjNw3U.js:2 ⏳ SECURITY: Session check not complete - deferring navigation to: dashboard
+main-CfYjNw3U.js:2 🔧 useUserInitializer: Starting initialization for user: 8573ca32-e752-48a9-b09b-bac5a991f58f aimpactscannertest@gmail.com 
+main-CfYjNw3U.js:2 📱 Using cached tier data for quick initialization: growth
+main-CfYjNw3U.js:2 📊 Setting user tier from UserInitializer: growth
+main-CfYjNw3U.js:2 LCP: 1392
+main-CfYjNw3U.js:2 LCP: 1392
+vendor-supabase-YOZNOpgP.js:1  POST https://pdmtvkcxnqysujnpcnyh.supabase.co/rest/v1/rpc/get_user_data 404 (Not Found)
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+o @ vendor-supabase-YOZNOpgP.js:1
+Promise.then
+l @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+ot @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+then @ vendor-supabase-YOZNOpgP.js:1
+main-CfYjNw3U.js:2 ⚠️ RPC function failed, trying direct query: {code: 'PGRST202', details: 'Searched for the function public.get_user_data wit…r, but no matches were found in the schema cache.', hint: 'Perhaps you meant to call the function public.get_user_dashboard_data', message: 'Could not find the function public.get_user_data(user_id) in the schema cache'}
+$e @ main-CfYjNw3U.js:2
+await in $e
+(anonymous) @ main-CfYjNw3U.js:2
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+_useSession @ vendor-supabase-YOZNOpgP.js:1
+await in _useSession
+_emitInitialSession @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+main-CfYjNw3U.js:2 🔍 Session restoration result: {hasSession: true, hasUser: true, userEmail: 'aimpactscannertest@gmail.com', expiresAt: 1766065643, error: undefined}
+main-CfYjNw3U.js:2 ✅ Valid session restored, setting auth state
+main-CfYjNw3U.js:2 🔄 Already fetching user tier for: 8573ca32-e752-48a9-b09b-bac5a991f58f - skipping duplicate call
+main-CfYjNw3U.js:2 ⏳ Waiting for session state to propagate before navigation...
+main-CfYjNw3U.js:2 🔒 SECURITY: Processing deferred route after session check: dashboard
+main-CfYjNw3U.js:2 ⏳ SECURITY: Session check not complete - deferring navigation to: dashboard
+main-CfYjNw3U.js:2 🔄 useUserInitializer: Skipping - too soon after last init: 840ms
+main-CfYjNw3U.js:2 ⏳ SECURITY: Session check not complete - deferring navigation to: dashboard
+main-CfYjNw3U.js:2 ✅ User data fetched successfully: {id: '8573ca32-e752-48a9-b09b-bac5a991f58f', email: 'aimpactscannertest@gmail.com', full_name: 'aimpactscannertest', avatar_url: null, subscription_tier: null, …}
+main-CfYjNw3U.js:2 Synced tier from database: growth for aimpactscannertest@gmail.com
+main-CfYjNw3U.js:2 📡 Full GTM script loaded (107KB)
+main-CfYjNw3U.js:2 🎯 Window gained focus
+main-CfYjNw3U.js:2 ✅ SECURITY: Authenticated user accessing protected route: dashboard
+main-CfYjNw3U.js:2 FID: 4
+AnalysisHistory-Cockspzm.js:1 📊 Loading analysis history from database for user: 8573ca32-e752-48a9-b09b-bac5a991f58f
+AnalysisHistory-Cockspzm.js:1 📊 Loading analysis history from database for user: 8573ca32-e752-48a9-b09b-bac5a991f58f
+AnalysisHistory-Cockspzm.js:1 ✅ Loaded 10 analyses from database
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+AnalysisHistory-Cockspzm.js:1 ✅ Loaded 10 analyses from database
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-CfYjNw3U.js:2 CLS: 0.060140706973373585
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-CfYjNw3U.js:2 📊 Viewing analysis from history: {analysisId: 'fdf12fee-4ddc-433e-9899-6ff7a4fa3bed', url: 'https://freecalchub.com'}
+main-CfYjNw3U.js:2 📊 Pillar scores: {hasPillarScores: false, pillars: {…}, factorCount: 27}
+main-CfYjNw3U.js:2 ✅ SECURITY: Authenticated user accessing protected route: results
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'llms_txt', mappedTier: 'growth'}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-CfYjNw3U.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfYjNw3U.js:2 🔍 Real analysis check: {isRealAnalysis: true, hasFactors: true, factorsCount: 27, factors: Array(27)}
+main-CfYjNw3U.js:2 📦 Grouped factors result: {totalFactors: 27, groupedCount: 9, groups: Array(9)}
+main-CfYjNw3U.js:2 📝 Adding analysis to localStorage history (fallback): https://freecalchub.com
+main-CfYjNw3U.js:2 📝 Analysis already exists in history, updating entry
+main-CfYjNw3U.js:2 ✅ Analysis added to localStorage history
+main-CfYjNw3U.js:2 🔧 Railway Backend Check: {VITE_USE_RAILWAY_BACKEND: 'true', isEnabled: true, RAILWAY_API_URL: 'https://aimpactscanner-backend-production.up.railway.app'}
+main-CfYjNw3U.js:2 📡 LLMs.txt: Using Railway backend for usage stats
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+main-CfYjNw3U.js:2 [DEBUG] hasPDFAccess called with tier: free
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'pdf_export', mappedTier: 'free'}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(5), result: false}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess returned: false
+main-CfYjNw3U.js:2 🚀 Preloading PDF libraries in background...
+main-CfYjNw3U.js:2 CLS: 0.007440383866099573
+main-CfYjNw3U.js:2 ✅ PDF libraries preloaded successfully
+main-CfYjNw3U.js:2 CLS: 0.007593358766730671
+main-CfYjNw3U.js:2 Synced tier from database: growth for aimpactscannertest@gmail.com
+main-CfYjNw3U.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'pdf_export', mappedTier: 'growth'}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(5), result: true}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CfYjNw3U.js:2 CLS: 0.011022923554530249
+main-CfYjNw3U.js:2 CLS: 0.01630290504457751
+main-CfYjNw3U.js:2 🔧 Railway Backend Check: {VITE_USE_RAILWAY_BACKEND: 'true', isEnabled: true, RAILWAY_API_URL: 'https://aimpactscanner-backend-production.up.railway.app'}
+main-CfYjNw3U.js:2 📡 LLMs.txt: Using Railway backend for analysis
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 🔧 Railway Backend Check: {VITE_USE_RAILWAY_BACKEND: 'true', isEnabled: true, RAILWAY_API_URL: 'https://aimpactscanner-backend-production.up.railway.app'}
+main-CfYjNw3U.js:2 📡 LLMs.txt: Starting status polling for analysis 70
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #1/100 (0s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #2/100 (3s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #3/100 (7s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #4/100 (10s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #5/100 (14s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #6/100 (17s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #7/100 (21s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #8/100 (24s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #9/100 (28s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #10/100 (32s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #11/100 (35s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #12/100 (39s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #13/100 (42s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #14/100 (46s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #15/100 (49s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #16/100 (53s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #17/100 (57s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #18/100 (60s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #19/100 (64s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #20/100 (67s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 💨 Window lost focus
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #21/100 (71s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #22/100 (75s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #23/100 (78s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #24/100 (82s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #25/100 (85s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #26/100 (89s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #27/100 (92s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #28/100 (96s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #29/100 (99s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #30/100 (103s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #31/100 (107s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #32/100 (110s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #33/100 (114s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #34/100 (117s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #35/100 (121s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #36/100 (124s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #37/100 (128s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #38/100 (131s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #39/100 (135s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #40/100 (139s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #41/100 (142s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #42/100 (146s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #43/100 (149s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #44/100 (153s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #45/100 (157s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #46/100 (160s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #47/100 (164s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #48/100 (167s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #49/100 (171s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #50/100 (174s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #51/100 (178s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #52/100 (182s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #53/100 (185s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #54/100 (189s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #55/100 (192s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #56/100 (196s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #57/100 (199s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #58/100 (203s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #59/100 (207s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #60/100 (210s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #61/100 (214s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #62/100 (218s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #63/100 (221s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #64/100 (225s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #65/100 (228s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #66/100 (232s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #67/100 (236s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #68/100 (239s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #69/100 (243s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #70/100 (247s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #71/100 (250s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #72/100 (254s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #73/100 (257s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #74/100 (261s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #75/100 (264s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #76/100 (268s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #77/100 (271s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #78/100 (275s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #79/100 (279s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #80/100 (282s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #81/100 (286s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #82/100 (289s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #83/100 (293s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #84/100 (296s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #85/100 (300s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #86/100 (304s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #87/100 (307s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #88/100 (311s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #89/100 (315s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #90/100 (318s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #91/100 (322s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #92/100 (325s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #93/100 (329s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #94/100 (332s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #95/100 (336s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #96/100 (339s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #97/100 (343s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2 📡 LLMs.txt Poll #98/100 (347s): status=undefined {success: true, analysis: {…}}
+main-CfYjNw3U.js:2 ✅ Valid session found in localStorage
+main-CfYjNw3U.js:2  POST https://aimpactscanner-backend-production.up.railway.app/api/llmstxt 429 (Too Many Requests)
+C @ main-CfYjNw3U.js:2
+await in C
+(anonymous) @ main-CfYjNw3U.js:2
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+main-CfYjNw3U.js:2 ❌ LLMs.txt Poll #99 error (350s): Error: Too many requests
+    at C (main-CfYjNw3U.js:2:66287)
+    at async r (main-CfYjNw3U.js:2:68740)
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+setTimeout
+r @ main-CfYjNw3U.js:2
+main-CfYjNw3U.js:2 CLS: 0.001475721115834545
+main-CfYjNw3U.js:2 🔐 Auth state changed: TOKEN_REFRESHED aimpactscannertest@gmail.com sessionChecked: false
+main-CfYjNw3U.js:2 🔄 Token refreshed, updating session
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'llms_txt', mappedTier: 'growth'}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-CfYjNw3U.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "fdf12fee-4ddc-433e-9899-6ff7a4fa3bed",
+  "url": "https://freecalchub.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 77,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CfYjNw3U.js:2 🔍 Real analysis check: {isRealAnalysis: true, hasFactors: true, factorsCount: 27, factors: Array(27)}
+main-CfYjNw3U.js:2 📦 Grouped factors result: {totalFactors: 27, groupedCount: 9, groups: Array(9)}
+main-CfYjNw3U.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'pdf_export', mappedTier: 'growth'}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(5), result: true}
+main-CfYjNw3U.js:2 [DEBUG] hasFeatureAccess returned: true

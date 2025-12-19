@@ -1,0 +1,58 @@
+2025-12-17T22:10:21.938959618Z [inf]  scheduling build on Metal builder "builder-oujoni"
+2025-12-17T22:10:24.601149900Z [inf]  fetched snapshot sha256:6dc59bfcb66c5fc8b224befef9cb9f8ae180730857f451fe2afaea2bfb36b237 (74 MB bytes)
+2025-12-17T22:10:24.601207367Z [inf]  fetching snapshot
+2025-12-17T22:10:27.158172994Z [inf]  fetched snapshot sha256:6a65594995a967f52219a3dcb22cdba7292afa494158d81e94e829406b658851 (74 MB bytes)
+2025-12-17T22:10:27.158286545Z [inf]  fetching snapshot
+2025-12-17T22:10:27.769496312Z [inf]  modified file: backend/src/index.ts (1734b -> 1757b)
+2025-12-17T22:10:28.373418118Z [inf]  unpacking archive
+2025-12-17T22:10:29.274793038Z [inf]  [internal] load build definition from backend/Dockerfile
+2025-12-17T22:10:29.274802061Z [inf]  [internal] load build definition from backend/Dockerfile
+2025-12-17T22:10:29.274865126Z [inf]  [internal] load build definition from backend/Dockerfile
+2025-12-17T22:10:29.275028732Z [inf]  [internal] load build definition from backend/Dockerfile
+2025-12-17T22:10:29.588602369Z [inf]  [internal] load build definition from backend/Dockerfile
+2025-12-17T22:10:29.752620334Z [inf]  [internal] load metadata for docker.io/library/node:20-alpine
+2025-12-17T22:10:29.983199479Z [inf]  [internal] load metadata for docker.io/library/node:20-alpine
+2025-12-17T22:10:29.983619700Z [inf]  [internal] load .dockerignore
+2025-12-17T22:10:29.983631208Z [inf]  [internal] load .dockerignore
+2025-12-17T22:10:29.983725199Z [inf]  [internal] load .dockerignore
+2025-12-17T22:10:30.247491689Z [inf]  [internal] load .dockerignore
+2025-12-17T22:10:30.316230799Z [inf]  [production 5/5] COPY --from=builder /app/dist ./dist
+2025-12-17T22:10:30.316234334Z [inf]  [builder 7/7] RUN npm run build
+2025-12-17T22:10:30.316234935Z [inf]  [builder 6/7] COPY backend/src ./src
+2025-12-17T22:10:30.316235166Z [inf]  [builder 5/7] COPY backend/tsconfig.json ./
+2025-12-17T22:10:30.316235296Z [inf]  [builder 4/7] RUN npm ci
+2025-12-17T22:10:30.316235466Z [inf]  [production 4/5] RUN npm ci --only=production
+2025-12-17T22:10:30.316235616Z [inf]  [builder 3/7] COPY backend/package*.json ./
+2025-12-17T22:10:30.316235747Z [inf]  [internal] load build context
+2025-12-17T22:10:30.316235887Z [inf]  [builder 2/7] WORKDIR /app
+2025-12-17T22:10:30.316236047Z [inf]  [builder 1/7] FROM docker.io/library/node:20-alpine@sha256:643e7036aa985317ebfee460005e322aa550c6b6883000d01daefb58689a58e2
+2025-12-17T22:10:30.316358411Z [inf]  [internal] load build context
+2025-12-17T22:10:30.316410709Z [inf]  [builder 1/7] FROM docker.io/library/node:20-alpine@sha256:643e7036aa985317ebfee460005e322aa550c6b6883000d01daefb58689a58e2
+2025-12-17T22:10:30.361578571Z [inf]  [builder 1/7] FROM docker.io/library/node:20-alpine@sha256:643e7036aa985317ebfee460005e322aa550c6b6883000d01daefb58689a58e2
+2025-12-17T22:10:30.362383399Z [inf]  [internal] load build context
+2025-12-17T22:10:30.715195466Z [inf]  [internal] load build context
+2025-12-17T22:10:30.834495135Z [inf]  [builder 2/7] WORKDIR /app
+2025-12-17T22:10:30.834506181Z [inf]  [builder 3/7] COPY backend/package*.json ./
+2025-12-17T22:10:30.834506802Z [inf]  [builder 4/7] RUN npm ci
+2025-12-17T22:10:30.834507213Z [inf]  [builder 5/7] COPY backend/tsconfig.json ./
+2025-12-17T22:10:30.834507443Z [inf]  [builder 6/7] COPY backend/src ./src
+2025-12-17T22:10:32.312499987Z [inf]  [builder 6/7] COPY backend/src ./src
+2025-12-17T22:10:32.357840758Z [inf]  [builder 7/7] RUN npm run build
+2025-12-17T22:10:34.04796441Z [inf]  
+> aimpactscanner-backend@1.0.0 build
+> tsc
+
+
+2025-12-17T22:10:36.344114288Z [inf]  src/routes/llmstxt.ts(9,28): error TS6133: 'AuthenticatedRequest' is declared but its value is never read.
+
+2025-12-17T22:10:36.344349251Z [inf]  src/routes/llmstxt.ts(107,6): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "llmstxt_generations", never, "POST">', gave the following error.
+    Argument of type '{ user_id: string; created_at: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "llmstxt_generations", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'user_id' does not exist in type 'never[]'.
+src/routes/llmstxt.ts(164,32): error TS2339: Property 'subscription_tier' does not exist on type 'never'.
+src/routes/llmstxt.ts(164,62): error TS2339: Property 'tier' does not exist on type 'never'.
+src/routes/llmstxt.ts(238,42): error TS18046: 'analyzeData' is of type 'unknown'.
+
+2025-12-17T22:10:36.518262381Z [err]  [builder 7/7] RUN npm run build
+2025-12-17T22:10:36.597998271Z [err]  Build Failed: build daemon returned an error < failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 2 >
