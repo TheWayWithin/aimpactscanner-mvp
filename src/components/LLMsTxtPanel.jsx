@@ -249,9 +249,9 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
       // Log the response structure for debugging
       console.log('📦 LLMs.txt Generate response:', data);
 
-      // Handle nested response format: id/content can be at data.X or data.llmstxt.X or data.analysis.X
-      const downloadId = data?.id || data?.llmstxt?.id || data?.analysis?.id;
-      const downloadContent = data?.content || data?.llmstxt?.content || data?.analysis?.content;
+      // Handle nested response format: id/content can be at data.X or data.file.X or data.llmstxt.X or data.analysis.X
+      const downloadId = data?.id || data?.file?.id || data?.llmstxt?.id || data?.analysis?.id;
+      const downloadContent = data?.content || data?.file?.content || data?.llmstxt?.content || data?.analysis?.content;
 
       console.log('📦 LLMs.txt Download data extracted:', { id: downloadId, hasContent: !!downloadContent });
 
