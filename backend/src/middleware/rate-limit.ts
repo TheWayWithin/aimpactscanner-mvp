@@ -90,5 +90,12 @@ export const globalRateLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req: Request) => req.path === '/health'
+  skip: (req: Request) => {
+    // Skip rate limiting for health checks
+    if (req.path === '/health') return true;
+    // Skip for llmstxt endpoint - it has its own auth and tier-based rate limiting
+    // Status polling can make many requests during long-running site crawls
+    if (req.path === '/api/llmstxt') return true;
+    return false;
+  }
 });

@@ -287,11 +287,25 @@ export async function getLlmstxtUsage() {
 
 /**
  * Start LLMs.txt analysis for a URL
+ * Supports v1.2.0 API features including JS rendering for Scale tier
+ *
  * @param {string} url - URL to analyze
- * @returns {Promise<{id: string}>}
+ * @param {object} options - Optional parameters
+ * @param {boolean} options.force - Bypass cache for fresh analysis
+ * @returns {Promise<{id: string, tierInfo?: object, jsRenderQuota?: object}>}
  */
-export async function startLlmstxtAnalysis(url) {
-  return callLlmstxtApi({ action: 'analyze', url });
+export async function startLlmstxtAnalysis(url, options = {}) {
+  const body = {
+    action: 'analyze',
+    url,
+  };
+
+  // Add optional force parameter to bypass cache
+  if (options.force !== undefined) {
+    body.force = options.force;
+  }
+
+  return callLlmstxtApi(body);
 }
 
 /**
@@ -319,4 +333,46 @@ export async function generateLlmstxt(analysisId) {
  */
 export async function downloadLlmstxt(id) {
   return callLlmstxtApi({ action: 'download', id });
+}
+
+// ============================================
+// LLMs.txt Validation API (v1.1.0+)
+// ============================================
+
+/**
+ * Validate an existing llms.txt file at a URL
+ * Available for Growth+ tiers
+ *
+ * @param {string} url - Base URL of website with llms.txt file
+ * @param {object} options - Validation options
+ * @param {string} options.fileType - File type: 'auto', 'llms.txt', 'llms-full.txt', '.well-known', 'llms.md'
+ * @param {boolean} options.includeRobotsTxt - Check for robots.txt conflicts (default: true)
+ * @param {boolean} options.bustCache - Force fresh validation (default: false)
+ * @returns {Promise<{validation: object, user: object}>}
+ */
+export async function validateLlmstxt(url, options = {}) {
+  return callLlmstxtApi({
+    action: 'validate',
+    url,
+    fileType: options.fileType || 'auto',
+    includeRobotsTxt: options.includeRobotsTxt !== false,
+    bustCache: options.bustCache || false,
+  });
+}
+
+/**
+ * Batch validate all llms.txt locations for a URL
+ * Available only for Scale tier
+ *
+ * @param {string} url - Base URL of website to check
+ * @param {object} options - Validation options
+ * @param {boolean} options.includeRobotsTxt - Check for robots.txt conflicts (default: true)
+ * @returns {Promise<{batchValidation: object}>}
+ */
+export async function batchValidateLlmstxt(url, options = {}) {
+  return callLlmstxtApi({
+    action: 'batch-validate',
+    url,
+    includeRobotsTxt: options.includeRobotsTxt !== false,
+  });
 }

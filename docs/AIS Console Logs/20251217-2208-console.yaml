@@ -1,0 +1,264 @@
+(index):130 🍪 GDPR consent stub initialized
+vendor-supabase-YOZNOpgP.js:1 AI Search Mastery: Supabase client initialized. Connecting to the powerful MASTERY-AI Framework backend.
+index-D0jKhFU7.js:2 🚀 React application loaded
+main-CWJGSqIZ.js:2 🍪 Applied stored consent to GTM: {necessary: true, analytics: true, marketing: true, timestamp: '2025-12-18T02:49:14.438Z'}
+main-CWJGSqIZ.js:2 🔍 APP INIT - Full URL: https://aimpactscanner.com/#results
+main-CWJGSqIZ.js:2 🔍 APP INIT - Hash: results
+main-CWJGSqIZ.js:2 🔍 APP INIT - Query params: 
+main-CWJGSqIZ.js:2 📍 INITIAL HASH DETECTED: results
+main-CWJGSqIZ.js:2 🔒 SECURITY: Deferring route navigation until session check completes
+main-CWJGSqIZ.js:2 🚀 App initializing with session persistence...
+main-CWJGSqIZ.js:2 🔍 App mounted - Full URL: https://aimpactscanner.com/#results
+main-CWJGSqIZ.js:2 🔍 App mounted - Hash: #results
+main-CWJGSqIZ.js:2 🔍 App mounted - Query params: 
+main-CWJGSqIZ.js:2 ⏳ Checking for existing session before rendering...
+main-CWJGSqIZ.js:2 🔄 Starting session restoration check...
+main-CWJGSqIZ.js:2 🔧 Setting up enhanced onAuthStateChange listener...
+main-CWJGSqIZ.js:2 📦 Loading full Supabase SDK...
+main-CWJGSqIZ.js:2 ✅ Supabase SDK loaded
+main-CWJGSqIZ.js:2 🔐 Auth state changed: INITIAL_SESSION aimpactscannertest@gmail.com sessionChecked: false
+main-CWJGSqIZ.js:2 🔄 INITIAL_SESSION detected: {hasSession: true, sessionChecked: false, userEmail: 'aimpactscannertest@gmail.com'}
+main-CWJGSqIZ.js:2 ✅ Session restored from storage on app load
+main-CWJGSqIZ.js:2 📱 Found local tier data: growth for user: aimpactscannertest@gmail.com
+main-CWJGSqIZ.js:2 🔍 Fetching user tier for: 8573ca32-e752-48a9-b09b-bac5a991f58f
+main-CWJGSqIZ.js:2 ⏳ SECURITY: Session check not complete - deferring navigation to: dashboard
+main-CWJGSqIZ.js:2 🔧 useUserInitializer: Starting initialization for user: 8573ca32-e752-48a9-b09b-bac5a991f58f aimpactscannertest@gmail.com 
+main-CWJGSqIZ.js:2 📱 Using cached tier data for quick initialization: growth
+main-CWJGSqIZ.js:2 📊 Setting user tier from UserInitializer: growth
+(index):173 Consent handling delegated to React component
+(index):179 Analytics initialized after LCP
+main-CWJGSqIZ.js:2 LCP: 2572
+vendor-supabase-YOZNOpgP.js:1  POST https://pdmtvkcxnqysujnpcnyh.supabase.co/rest/v1/rpc/get_user_data 404 (Not Found)
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+o @ vendor-supabase-YOZNOpgP.js:1
+Promise.then
+l @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+ot @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+then @ vendor-supabase-YOZNOpgP.js:1Understand this error
+main-CWJGSqIZ.js:2 ⚠️ RPC function failed, trying direct query: {code: 'PGRST202', details: 'Searched for the function public.get_user_data wit…r, but no matches were found in the schema cache.', hint: 'Perhaps you meant to call the function public.get_user_dashboard_data', message: 'Could not find the function public.get_user_data(user_id) in the schema cache'}
+We @ main-CWJGSqIZ.js:2
+await in We
+(anonymous) @ main-CWJGSqIZ.js:2
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+_useSession @ vendor-supabase-YOZNOpgP.js:1
+await in _useSession
+_emitInitialSession @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1
+(anonymous) @ vendor-supabase-YOZNOpgP.js:1Understand this warning
+main-CWJGSqIZ.js:2 🔍 Session restoration result: {hasSession: true, hasUser: true, userEmail: 'aimpactscannertest@gmail.com', expiresAt: 1766029745, error: undefined}
+main-CWJGSqIZ.js:2 ✅ Valid session restored, setting auth state
+main-CWJGSqIZ.js:2 🔄 Already fetching user tier for: 8573ca32-e752-48a9-b09b-bac5a991f58f - skipping duplicate call
+main-CWJGSqIZ.js:2 ⏳ Waiting for session state to propagate before navigation...
+main-CWJGSqIZ.js:2 🔒 SECURITY: Processing deferred route after session check: dashboard
+main-CWJGSqIZ.js:2 ⏳ SECURITY: Session check not complete - deferring navigation to: dashboard
+main-CWJGSqIZ.js:2 🔄 useUserInitializer: Skipping - too soon after last init: 963ms
+main-CWJGSqIZ.js:2 🍪 Applied stored consent to GTM: {necessary: true, analytics: true, marketing: true, timestamp: '2025-12-18T02:49:14.438Z'}
+main-CWJGSqIZ.js:2 ⏳ SECURITY: Session check not complete - deferring navigation to: dashboard
+main-CWJGSqIZ.js:2 ✅ User data fetched successfully: {id: '8573ca32-e752-48a9-b09b-bac5a991f58f', email: 'aimpactscannertest@gmail.com', full_name: 'aimpactscannertest', avatar_url: null, subscription_tier: null, …}
+main-CWJGSqIZ.js:2 Synced tier from database: growth for aimpactscannertest@gmail.com
+main-CWJGSqIZ.js:2 📡 Full GTM script loaded (107KB)
+main-CWJGSqIZ.js:2 ✅ SECURITY: Authenticated user accessing protected route: dashboard
+main-CWJGSqIZ.js:2 FID: 1.0999999046325684
+AnalysisHistory-C2hgNJ24.js:1 📊 Loading analysis history from database for user: 8573ca32-e752-48a9-b09b-bac5a991f58f
+AnalysisHistory-C2hgNJ24.js:1 📊 Loading analysis history from database for user: 8573ca32-e752-48a9-b09b-bac5a991f58f
+AnalysisHistory-C2hgNJ24.js:1 ✅ Loaded 10 analyses from database
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-CWJGSqIZ.js:2 CLS: 0.06497223215454237
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+AnalysisHistory-C2hgNJ24.js:1 ✅ Loaded 10 analyses from database
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-CWJGSqIZ.js:2 🚀 Preloading PDF libraries in background...
+main-CWJGSqIZ.js:2 ✅ PDF libraries preloaded successfully
+main-CWJGSqIZ.js:2 📊 Viewing analysis from history: {analysisId: 'ea1f44de-5af1-446e-bc63-f23fe0b26b43', url: 'https://aimpactscanner.com'}
+main-CWJGSqIZ.js:2 📊 Pillar scores: {hasPillarScores: false, pillars: {…}, factorCount: 27}
+main-CWJGSqIZ.js:2 ✅ SECURITY: Authenticated user accessing protected route: results
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'csv_export', mappedTier: 'growth'}
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'llms_txt', mappedTier: 'growth'}
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(4), result: true}
+main-CWJGSqIZ.js:2 📊 SimpleResultsDashboard props: {
+  "analysisId": "ea1f44de-5af1-446e-bc63-f23fe0b26b43",
+  "url": "https://aimpactscanner.com",
+  "has_analysisData": true,
+  "has_factors": true,
+  "factors_count": 27,
+  "overall_score": 51,
+  "first_factor_name": "HTTPS Security",
+  "userTier": "growth",
+  "canExportCSV": true,
+  "canUseLLMSTxt": true
+}
+main-CWJGSqIZ.js:2 🔍 Real analysis check: {isRealAnalysis: true, hasFactors: true, factorsCount: 27, factors: Array(27)}
+main-CWJGSqIZ.js:2 📦 Grouped factors result: {totalFactors: 27, groupedCount: 9, groups: Array(9)}
+main-CWJGSqIZ.js:2 📝 Adding analysis to localStorage history (fallback): https://aimpactscanner.com
+main-CWJGSqIZ.js:2 📝 Analysis already exists in history, updating entry
+main-CWJGSqIZ.js:2 ✅ Analysis added to localStorage history
+main-CWJGSqIZ.js:2 🔧 Railway Backend Check: {VITE_USE_RAILWAY_BACKEND: 'true', isEnabled: true, RAILWAY_API_URL: 'https://aimpactscanner-backend-production.up.railway.app'}
+main-CWJGSqIZ.js:2 📡 LLMs.txt: Using Railway backend for usage stats
+main-CWJGSqIZ.js:2 ✅ Valid session found in localStorage
+202Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self' <URL> <URL> <URL>". The policy is report-only, so the violation has been logged but no further action has been taken.
+main-CWJGSqIZ.js:2 [DEBUG] hasPDFAccess called with tier: free
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess: {tier: 'free', feature: 'pdf_export', mappedTier: 'free'}
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(5), result: false}
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess returned: false
+main-CWJGSqIZ.js:2 CLS: 0.008499080721894089
+main-CWJGSqIZ.js:2 Synced tier from database: growth for aimpactscannertest@gmail.com
+main-CWJGSqIZ.js:2 [DEBUG] hasPDFAccess called with tier: growth
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess: {tier: 'growth', feature: 'pdf_export', mappedTier: 'growth'}
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess result: {allowedTiers: Array(5), result: true}
+main-CWJGSqIZ.js:2 [DEBUG] hasFeatureAccess returned: true
+main-CWJGSqIZ.js:2 CLS: 0.028902590878777976
+main-CWJGSqIZ.js:2 CLS: 0.018858886735697574
+main-CWJGSqIZ.js:2 🔧 Railway Backend Check: {VITE_USE_RAILWAY_BACKEND: 'true', isEnabled: true, RAILWAY_API_URL: 'https://aimpactscanner-backend-production.up.railway.app'}
+main-CWJGSqIZ.js:2 📡 LLMs.txt: Using Railway backend for analysis
+main-CWJGSqIZ.js:2 ✅ Valid session found in localStorage
+main-CWJGSqIZ.js:2 🔧 Railway Backend Check: {VITE_USE_RAILWAY_BACKEND: 'true', isEnabled: true, RAILWAY_API_URL: 'https://aimpactscanner-backend-production.up.railway.app'}
+main-CWJGSqIZ.js:2 ✅ Valid session found in localStorage
+6main-CWJGSqIZ.js:2 ✅ Valid session found in localStorage
+main-CWJGSqIZ.js:2 💨 Window lost focus
+92main-CWJGSqIZ.js:2 ✅ Valid session found in localStorage
+main-CWJGSqIZ.js:2  POST https://aimpactscanner-backend-production.up.railway.app/api/llmstxt 429 (Too Many Requests)
+C @ main-CWJGSqIZ.js:2
+await in C
+(anonymous) @ main-CWJGSqIZ.js:2
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2Understand this error
+main-CWJGSqIZ.js:2 Error checking analysis status: Error: Too many requests
+    at C (main-CWJGSqIZ.js:2:66287)
+    at async a (main-CWJGSqIZ.js:2:68608)
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2
+setTimeout
+a @ main-CWJGSqIZ.js:2Understand this error
+main-CWJGSqIZ.js:2 CLS: 0.0016923001698660705

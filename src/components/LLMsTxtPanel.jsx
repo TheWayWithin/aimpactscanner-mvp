@@ -7,6 +7,7 @@ import {
   getLlmstxtStatus,
   generateLlmstxt,
   downloadLlmstxt,
+  validateLlmstxt,
 } from '../lib/railwayApi';
 
 /**
@@ -25,6 +26,7 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [usageStats, setUsageStats] = useState(null);
   const [progressMessage, setProgressMessage] = useState('');
+  const [jsRenderQuota, setJsRenderQuota] = useState(null); // Scale tier JS rendering quota
 
   // Tier configuration
   const isEligible = userTier === 'growth' || userTier === 'scale';
@@ -158,6 +160,11 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
       const newAnalysisId = analysisIdFromResponse;
       setAnalysisId(newAnalysisId);
 
+      // Capture JS render quota for Scale tier users (v1.2.0 API)
+      if (analyzeData?.jsRenderQuota) {
+        setJsRenderQuota(analyzeData.jsRenderQuota);
+      }
+
       // Poll for analysis completion
       await pollAnalysisStatus(newAnalysisId);
 
@@ -169,11 +176,18 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
   };
 
   const pollAnalysisStatus = async (id) => {
-    const maxAttempts = 60; // 60 seconds max (polling every second)
+    const maxAttempts = 100; // 100 attempts × 3 seconds = 5 minutes max
+    const pollInterval = 3000; // Poll every 3 seconds (stays under rate limit of 100 req/15min)
     let attempts = 0;
     const isRailway = useRailwayBackend();
+    const startTime = Date.now();
+
+    console.log(`📡 LLMs.txt: Starting status polling for analysis ${id}`);
 
     const checkStatus = async () => {
+      attempts++;
+      const elapsedSec = Math.round((Date.now() - startTime) / 1000);
+
       try {
         let data;
 
@@ -187,27 +201,41 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
           data = result.data;
         }
 
+        // Handle response format: status can be at data.status OR data.analysis.status
+        const analysisStatus = data?.status || data?.analysis?.status;
+        // Check multiple paths for error message (including metadata.message from LLMtxtMastery API)
+        const analysisError = data?.error || data?.analysis?.error ||
+                              data?.error_message || data?.analysis?.error_message ||
+                              data?.metadata?.message || data?.analysis?.metadata?.message ||
+                              data?.message || data?.analysis?.message;
+
+        console.log(`📡 LLMs.txt Poll #${attempts}/${maxAttempts} (${elapsedSec}s): status=${analysisStatus}`, data);
         setProgressMessage(`Analyzing website... ${Math.round((attempts / maxAttempts) * 100)}%`);
 
-        if (data?.status === 'completed') {
+        if (analysisStatus === 'completed') {
+          console.log(`✅ LLMs.txt: Analysis completed after ${attempts} polls (${elapsedSec}s)`);
           setStatus('generating');
           setProgressMessage('Generating LLMs.txt file...');
           await generateFile(id);
           return;
         }
 
-        if (data?.status === 'failed') {
-          throw new Error(data.error || 'Analysis failed');
+        if (analysisStatus === 'failed') {
+          console.error(`❌ LLMs.txt: Analysis failed after ${attempts} polls (${elapsedSec}s)`, data);
+          // Provide helpful error message for common failure scenarios
+          const errorMsg = analysisError ||
+            'Website analysis failed. This may happen if the site blocks crawlers, loads slowly, or has technical issues. Please try again.';
+          throw new Error(errorMsg);
         }
 
-        attempts++;
         if (attempts < maxAttempts) {
-          setTimeout(checkStatus, 1000);
+          setTimeout(checkStatus, pollInterval);
         } else {
+          console.error(`⏱️ LLMs.txt: Timeout after ${attempts} polls (${elapsedSec}s). Last status: ${analysisStatus}`);
           throw new Error('Analysis timeout. Please try again.');
         }
       } catch (error) {
-        console.error('Error checking analysis status:', error);
+        console.error(`❌ LLMs.txt Poll #${attempts} error (${elapsedSec}s):`, error);
         setStatus('error');
         setErrorMessage(error.message || 'Analysis failed. Please try again.');
       }
@@ -232,10 +260,24 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
         if (data?.error) throw new Error(data.error);
       }
 
+      // Log the response structure for debugging
+      console.log('📦 LLMs.txt Generate response:', data);
+
+      // Handle nested response format: id/content can be at data.X or data.file.X or data.llmstxt.X or data.analysis.X
+      const downloadId = data?.id || data?.file?.id || data?.llmstxt?.id || data?.analysis?.id;
+      const downloadContent = data?.content || data?.file?.content || data?.llmstxt?.content || data?.analysis?.content;
+
+      console.log('📦 LLMs.txt Download data extracted:', { id: downloadId, hasContent: !!downloadContent });
+
+      if (!downloadId) {
+        console.error('❌ LLMs.txt: No download ID found in response:', data);
+        throw new Error('Failed to get download ID from generate response');
+      }
+
       // Store the download data
       setDownloadData({
-        id: data.id,
-        content: data.content, // If the API returns content directly
+        id: downloadId,
+        content: downloadContent, // If the API returns content directly
       });
       setStatus('completed');
       setProgressMessage('LLMs.txt file ready for download!');
@@ -251,9 +293,15 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
   };
 
   const handleDownload = async () => {
-    if (!downloadData?.id) return;
+    console.log('📥 LLMs.txt Download clicked, downloadData:', downloadData);
+
+    if (!downloadData?.id) {
+      console.error('❌ LLMs.txt: No download ID available, cannot download');
+      return;
+    }
 
     try {
+      console.log('📥 LLMs.txt: Fetching file content for ID:', downloadData.id);
       let fileContent;
 
       if (useRailwayBackend()) {
@@ -267,6 +315,8 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
         fileContent = data;
       }
 
+      console.log('📥 LLMs.txt: File content received, length:', fileContent?.length);
+
       // Create blob and download
       const blob = new Blob([fileContent], { type: 'text/plain' });
       const url = window.URL.createObjectURL(blob);
@@ -277,8 +327,9 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+      console.log('✅ LLMs.txt: Download triggered successfully');
     } catch (error) {
-      console.error('Error downloading file:', error);
+      console.error('❌ LLMs.txt: Error downloading file:', error);
       setErrorMessage('Failed to download file. Please try again.');
     }
   };
@@ -331,6 +382,50 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
     );
   };
 
+  // Render JS render quota for Scale tier
+  const renderJsRenderQuota = () => {
+    if (userTier !== 'scale' || !jsRenderQuota) return null;
+
+    const { used, limit, remaining } = jsRenderQuota;
+    const percentage = Math.min((used / limit) * 100, 100);
+
+    return (
+      <div className="mb-4 p-3 rounded-lg" style={{ backgroundColor: '#F0FDF4', border: '1px solid #BBF7D0' }}>
+        <div className="flex items-center mb-2">
+          <svg className="h-4 w-4 mr-2" style={{ color: '#16A34A' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+          </svg>
+          <span className="text-sm font-medium" style={{ color: '#166534' }}>JavaScript Rendering Enabled</span>
+        </div>
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-xs" style={{ color: '#166534' }}>JS Render Quota</span>
+          <span className="text-xs font-semibold" style={{ color: '#166534' }}>
+            {used} / {limit}
+          </span>
+        </div>
+        <div className="w-full rounded-full h-1.5" style={{ backgroundColor: '#BBF7D0' }}>
+          <div
+            className="h-1.5 rounded-full transition-all duration-300"
+            style={{
+              width: `${percentage}%`,
+              backgroundColor: percentage >= 80 ? '#F59E0B' : '#16A34A'
+            }}
+            role="progressbar"
+            aria-valuenow={used}
+            aria-valuemin="0"
+            aria-valuemax={limit}
+          />
+        </div>
+        <p className="text-xs mt-1" style={{ color: '#166534' }}>
+          {remaining > 0
+            ? `${remaining} JS render${remaining !== 1 ? 's' : ''} remaining - analyze React, Vue, and SPA sites`
+            : 'Monthly JS render quota exhausted'
+          }
+        </p>
+      </div>
+    );
+  };
+
   // Render upgrade prompt for ineligible users
   const renderUpgradePrompt = () => (
     <div className="text-center py-6">
@@ -365,6 +460,7 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
     return (
       <div>
         {renderUsageStats()}
+        {renderJsRenderQuota()}
 
         {/* Analyzing State */}
         {status === 'analyzing' && (

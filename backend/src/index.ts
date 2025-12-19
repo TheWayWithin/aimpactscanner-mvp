@@ -47,7 +47,7 @@ app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 AImpactScanner Backend running on port ${PORT}`);
+  console.log(`🚀 AImpactScanner Backend v1.1.0 running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔒 CORS enabled for: ${process.env.ALLOWED_ORIGINS || 'localhost'}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/health`);
