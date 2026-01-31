@@ -59,3 +59,4 @@ verify-stripe-products.cjs
 # MCP config files (contain API tokens)
 .mcp.json
 .mcp-profiles/
+.env.local

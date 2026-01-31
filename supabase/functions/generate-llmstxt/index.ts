@@ -398,10 +398,10 @@ async function checkAndIncrementUsage(
 
   if (usageError) {
     console.error('Error fetching usage:', usageError);
-    // If table doesn't exist yet, allow the request (graceful degradation)
+    // If table doesn't exist, deny — table should exist in production
     if (usageError.code === '42P01') {
-      console.log('llmstxt_generations table not found - allowing request');
-      return { allowed: true, used: 0 };
+      console.error('llmstxt_generations table not found - denying request');
+      return { allowed: false, used: 0, message: 'Service temporarily unavailable' };
     }
     return { allowed: false, message: 'Error checking usage limits' };
   }
@@ -427,9 +427,9 @@ async function checkAndIncrementUsage(
 
   if (insertError) {
     console.error('Error recording usage:', insertError);
-    // If table doesn't exist, allow the request
+    // If table doesn't exist, deny
     if (insertError.code === '42P01') {
-      return { allowed: true, used: currentUsage };
+      return { allowed: false, used: currentUsage, message: 'Service temporarily unavailable' };
     }
     return { allowed: false, message: 'Error updating usage tracking' };
   }

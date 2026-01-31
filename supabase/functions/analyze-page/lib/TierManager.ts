@@ -78,35 +78,40 @@ export class TierManager {
         const userTier = user.tier || 'free';
         console.log('✅ User tier (fallback):', userTier);
 
-        // For now, allow all analyses while we're setting up
-        // In production, this would enforce tier limits
+        // Check tier limits
+        const tierLimits: Record<string, number> = { free: 3, coffee: 10, growth: 40, professional: 40, scale: 100, enterprise: 100 };
+        const limit = tierLimits[userTier] ?? 3;
+        const used = user.monthly_analyses_used || 0;
+        const allowed = userTier !== 'free' ? true : used < limit;
+
         return {
-          allowed: true,
+          allowed,
           tier: userTier,
-          remainingAnalyses: userTier === 'free' ? 3 : undefined,
+          remainingAnalyses: limit - used,
           subscriptionExpired: false,
-          upgradeRequired: false,
-          message: 'Analysis allowed (fallback mode)'
+          upgradeRequired: !allowed,
+          message: allowed ? 'Analysis allowed (fallback mode)' : `Free tier limit reached (${used}/${limit})`
         };
       } catch (fallbackError) {
         console.log('❌ Fallback query failed:', fallbackError.message);
-        // Ultimate fallback - allow analysis but log the issue
+        // Deny access when we can't verify the user's tier
         return {
-          allowed: true,
-          tier: 'free',
-          remainingAnalyses: 3,
+          allowed: false,
+          tier: 'unknown',
+          remainingAnalyses: 0,
           subscriptionExpired: false,
-          upgradeRequired: false,
-          message: 'Analysis allowed (ultimate fallback)'
+          upgradeRequired: true,
+          message: 'Unable to verify access. Please try again.'
         };
       }
 
     } catch (error) {
       console.error('❌ TierManager.validateAnalysisAccess error:', error);
       return {
-        allowed: true, // Allow for now during setup
-        tier: 'free',
-        message: 'Analysis allowed (error fallback)'
+        allowed: false,
+        tier: 'unknown',
+        upgradeRequired: true,
+        message: 'Unable to verify access. Please try again.'
       };
     }
   }

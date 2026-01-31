@@ -140,7 +140,38 @@ router.post('/', async (req: Request, res: Response) => {
     const userId = authReq.user.id;
     const userTier = authReq.user.tier;
 
-    console.log(`[Analysis] Starting analysis for ${url} (user: ${userId}, tier: ${userTier}, analysisId: ${analysisId})`);
+    // Enforce tier-based analysis limits
+    const tierLimits: Record<string, number> = { free: 3, coffee: 10, growth: 40, professional: 40, scale: 100, enterprise: 100 };
+    const monthlyLimit = tierLimits[String(userTier)] ?? 3;
+
+    const now = new Date();
+    const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+    const { count: monthlyUsed, error: countError } = await supabaseAdmin
+      .from('analyses')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .gte('created_at', firstOfMonth);
+
+    if (countError) {
+      console.error('[Analysis] Failed to check usage:', countError);
+      res.status(500).json({ error: 'Unable to verify usage limits', code: 'USAGE_CHECK_FAILED' });
+      return;
+    }
+
+    if ((monthlyUsed ?? 0) >= monthlyLimit) {
+      console.log(`[Analysis] User ${userId} (${userTier}) hit monthly limit: ${monthlyUsed}/${monthlyLimit}`);
+      res.status(429).json({
+        error: `Monthly analysis limit reached (${monthlyUsed}/${monthlyLimit}). Upgrade your plan for more analyses.`,
+        code: 'MONTHLY_LIMIT_REACHED',
+        used: monthlyUsed,
+        limit: monthlyLimit,
+        tier: userTier,
+      });
+      return;
+    }
+
+    console.log(`[Analysis] Starting analysis for ${url} (user: ${userId}, tier: ${userTier}, usage: ${monthlyUsed}/${monthlyLimit}, analysisId: ${analysisId})`);
 
     // Check if analysis record already exists (frontend may have pre-created it)
     const { data: existingAnalysis } = await supabaseAdmin
@@ -439,6 +470,37 @@ router.post('/async', async (req: Request, res: Response) => {
 
     const userId = authReq.user.id;
     const userTier = authReq.user.tier;
+
+    // Enforce tier-based analysis limits (same as sync route)
+    const asyncTierLimits: Record<string, number> = { free: 3, coffee: 10, growth: 40, professional: 40, scale: 100, enterprise: 100 };
+    const asyncMonthlyLimit = asyncTierLimits[String(userTier)] ?? 3;
+
+    const asyncNow = new Date();
+    const asyncFirstOfMonth = new Date(asyncNow.getFullYear(), asyncNow.getMonth(), 1).toISOString();
+
+    const { count: asyncMonthlyUsed, error: asyncCountError } = await supabaseAdmin
+      .from('analyses')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .gte('created_at', asyncFirstOfMonth);
+
+    if (asyncCountError) {
+      console.error('[Analysis] Failed to check usage:', asyncCountError);
+      res.status(500).json({ error: 'Unable to verify usage limits', code: 'USAGE_CHECK_FAILED' });
+      return;
+    }
+
+    if ((asyncMonthlyUsed ?? 0) >= asyncMonthlyLimit) {
+      console.log(`[Analysis] User ${userId} (${userTier}) hit monthly limit: ${asyncMonthlyUsed}/${asyncMonthlyLimit}`);
+      res.status(429).json({
+        error: `Monthly analysis limit reached (${asyncMonthlyUsed}/${asyncMonthlyLimit}). Upgrade your plan for more analyses.`,
+        code: 'MONTHLY_LIMIT_REACHED',
+        used: asyncMonthlyUsed,
+        limit: asyncMonthlyLimit,
+        tier: userTier,
+      });
+      return;
+    }
 
     // Determine priority based on tier (higher tier = higher priority)
     // Scale/enterprise get priority 10, growth/professional get 5, others get 0

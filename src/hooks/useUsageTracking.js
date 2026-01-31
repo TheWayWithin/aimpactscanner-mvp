@@ -14,6 +14,9 @@ export const useUsageTracking = (userEmail) => {
 
   const STORAGE_KEY = userEmail ? `usage_${userEmail}` : 'usage_anonymous';
   const FREE_TIER_LIMIT = 3;
+  const TIER_LIMITS = { free: 3, coffee: 10, growth: 40, professional: 40, scale: 100, enterprise: 100 };
+
+  const getTierLimit = (tier) => TIER_LIMITS[tier] ?? FREE_TIER_LIMIT;
 
   useEffect(() => {
     loadUsageData();
@@ -74,12 +77,15 @@ export const useUsageTracking = (userEmail) => {
           // New month - reset usage
           resetMonthlyUsage();
         } else {
+          const limit = getTierLimit(syncedTier);
+          const used = data.monthlyUsed || 0;
           setUsageData({
-            monthlyUsed: data.monthlyUsed || 0,
-            remaining: data.isUnlimited ? Infinity : Math.max(0, FREE_TIER_LIMIT - (data.monthlyUsed || 0)),
+            monthlyUsed: used,
+            remaining: Math.max(0, limit - used),
             resetDate: getMonthResetDate(),
-            isUnlimited: syncedIsUnlimited, // Use database-synced value
-            tier: syncedTier // Use database-synced tier, not localStorage fallback
+            isUnlimited: false, // No tier is truly unlimited — all have caps
+            tier: syncedTier,
+            tierLimit: limit
           });
         }
       } else {
@@ -115,11 +121,9 @@ export const useUsageTracking = (userEmail) => {
   };
 
   const incrementUsage = () => {
-    if (usageData.isUnlimited) {
-      return true; // Unlimited users can always analyze
-    }
-
-    if (usageData.remaining <= 0) {
+    const limit = getTierLimit(usageData.tier);
+    
+    if (usageData.monthlyUsed >= limit) {
       return false; // Limit reached
     }
 
@@ -127,7 +131,7 @@ export const useUsageTracking = (userEmail) => {
     const updatedData = {
       monthlyUsed: newUsed,
       lastUpdated: new Date().toISOString(),
-      isUnlimited: usageData.isUnlimited,
+      isUnlimited: false,
       tier: usageData.tier
     };
 
@@ -136,7 +140,8 @@ export const useUsageTracking = (userEmail) => {
     setUsageData(prev => ({
       ...prev,
       monthlyUsed: newUsed,
-      remaining: Math.max(0, FREE_TIER_LIMIT - newUsed)
+      remaining: Math.max(0, limit - newUsed),
+      tierLimit: limit
     }));
 
     return true;
@@ -196,7 +201,7 @@ export const useUsageTracking = (userEmail) => {
   };
 
   const canAnalyze = () => {
-    return usageData.isUnlimited || usageData.remaining > 0;
+    return usageData.remaining > 0;
   };
 
   const getDaysUntilReset = () => {
@@ -240,17 +245,21 @@ export const checkUsageLimit = (userEmail) => {
       return { canAnalyze: true, remaining: 3 };
     }
     
-    const remaining = data.isUnlimited ? Infinity : Math.max(0, 3 - (data.monthlyUsed || 0));
+    const tier = data.tier || 'free';
+    const tierLimits = { free: 3, coffee: 10, growth: 40, professional: 40, scale: 100, enterprise: 100 };
+    const limit = tierLimits[tier] ?? 3;
+    const remaining = Math.max(0, limit - (data.monthlyUsed || 0));
     
     return {
-      canAnalyze: data.isUnlimited || remaining > 0,
+      canAnalyze: remaining > 0,
       remaining: remaining,
-      isUnlimited: data.isUnlimited,
-      tier: data.tier || 'free',
-      hasPDFAccess: hasFeatureAccess(data.tier || 'free', 'pdf_export')
+      isUnlimited: false,
+      tier: tier,
+      tierLimit: limit,
+      hasPDFAccess: hasFeatureAccess(tier, 'pdf_export')
     };
   } catch (error) {
     console.error('Error checking usage limit:', error);
-    return { canAnalyze: true, remaining: 3 };
+    return { canAnalyze: false, remaining: 0 };
   }
 };
