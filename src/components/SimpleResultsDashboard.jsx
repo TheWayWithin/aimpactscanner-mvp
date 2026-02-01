@@ -164,7 +164,13 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
   
   // Transform pillars from Edge Function format to dashboard format
   const transformPillars = (pillarsData) => {
-    if (!pillarsData) return null;
+    if (!pillarsData) {
+      console.log('⚠️ transformPillars: pillarsData is null/undefined');
+      return null;
+    }
+    console.log('📊 transformPillars input keys:', Object.keys(pillarsData));
+    console.log('📊 transformPillars AI pillar:', JSON.stringify(pillarsData.AI || pillarsData.ai));
+    console.log('📊 transformPillars sample pillar:', JSON.stringify(Object.values(pillarsData)[0]));
     return {
       ai: pillarsData.AI || { score: pillarScores.ai, weight: 23.8, factors: 3, name: "AI Response Optimization & Citation" },
       authority: pillarsData.A || { score: pillarScores.authority, weight: 17.9, factors: 2, name: "Authority & Trust Signals" },
