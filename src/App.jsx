@@ -25,6 +25,7 @@ const SimpleAccountDashboard = React.lazy(() => import('./components/SimpleAccou
 const RegistrationFlow = React.lazy(() => import('./components/RegistrationFlow'));
 const DiagnosticSignup = React.lazy(() => import('./pages/DiagnosticSignup'));
 const OAuthCallback = React.lazy(() => import('./components/OAuthCallback'));
+const Signup = React.lazy(() => import('./pages/Signup'));
 
 // Keep frequently used components as regular imports
 import Login from './components/Login';
@@ -350,21 +351,16 @@ function AppContent({ initialUrl }) {
 
       case 'login':
         return (
-          <Login 
-            onSuccess={() => routingHook.navigate('dashboard')}
-            onNavigateToSignup={() => routingHook.navigate('signup')}
-          />
+          <Suspense fallback={<ComponentLoader message="Loading..." />}>
+            <Signup mode="login" session={session} onNavigate={routingHook.navigate} />
+          </Suspense>
         );
 
       case 'signup':
       case 'register':
         return (
-          <Suspense fallback={<ComponentLoader message="Loading registration..." />}>
-            <RegistrationFlow
-              onSuccess={() => routingHook.navigate('dashboard')}
-              onNavigateToLogin={() => routingHook.navigate('login')}
-              pendingAnalysis={pendingAnalysis}
-            />
+          <Suspense fallback={<ComponentLoader message="Loading..." />}>
+            <Signup session={session} onNavigate={routingHook.navigate} />
           </Suspense>
         );
 
