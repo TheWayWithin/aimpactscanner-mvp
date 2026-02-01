@@ -113,11 +113,15 @@ async function updateProgress(
  * If not provided, creates a new record.
  */
 router.post('/', optionalAuth, async (req: Request, res: Response) => {
-  const authReq = req as AuthenticatedRequest;
-  const { url, analysisId: providedAnalysisId, userId: bodyUserId, userTier: bodyUserTier } = req.body;
+  const { url, analysisId: providedAnalysisId, userTier: bodyUserTier } = req.body;
   // Use provided analysisId or generate new one
   const analysisId = providedAnalysisId || uuidv4();
   const startTime = Date.now();
+
+  // Determine auth status early so it's available in catch block
+  const isAnonymous = !(req as AuthenticatedRequest).user;
+  const userId = (req as AuthenticatedRequest).user?.id || uuidv4();
+  const userTier = (req as AuthenticatedRequest).user?.tier || bodyUserTier || 'free';
 
   try {
     if (!url || typeof url !== 'string') {
@@ -135,11 +139,6 @@ router.post('/', optionalAuth, async (req: Request, res: Response) => {
       });
       return;
     }
-
-    // Support authenticated and anonymous users
-    const isAnonymous = !authReq.user;
-    const userId = authReq.user?.id || uuidv4();
-    const userTier = authReq.user?.tier || bodyUserTier || 'free';
 
     console.log(`[Analysis] Starting analysis for ${url} (user: ${userId}, tier: ${userTier}, analysisId: ${analysisId}, anonymous: ${isAnonymous})`);
 
@@ -433,7 +432,7 @@ router.get('/:id', authenticateUser, async (req: Request, res: Response) => {
  */
 router.post('/async', optionalAuth, async (req: Request, res: Response) => {
   const authReq = req as AuthenticatedRequest;
-  const { url, priority, userId: bodyUserId, userTier: bodyUserTier } = req.body;
+  const { url, priority, userTier: bodyUserTier } = req.body;
   const analysisId = uuidv4();
 
   try {
