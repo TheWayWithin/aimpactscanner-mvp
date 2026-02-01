@@ -7,7 +7,7 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { authenticateUser, AuthenticatedRequest } from '../middleware/auth';
+import { authenticateUser, optionalAuth, AuthenticatedRequest } from '../middleware/auth';
 import { createTierRateLimiter } from '../middleware/rate-limit';
 import { supabaseAdmin } from '../lib/supabase';
 import { analyzeAllFactors, getAnalysisSummary } from '../services/analyzer';
@@ -26,8 +26,7 @@ type AnalysisFactorRow = Database['public']['Tables']['analysis_factors']['Row']
 
 const router = Router();
 
-// Apply authentication and tier-based rate limiting
-router.use(authenticateUser);
+// Rate limiting applied globally; auth applied per-route
 router.use(createTierRateLimiter());
 
 /**
@@ -113,9 +112,9 @@ async function updateProgress(
  * Accepts optional analysisId - if provided, updates existing record.
  * If not provided, creates a new record.
  */
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', optionalAuth, async (req: Request, res: Response) => {
   const authReq = req as AuthenticatedRequest;
-  const { url, analysisId: providedAnalysisId } = req.body;
+  const { url, analysisId: providedAnalysisId, userId: bodyUserId, userTier: bodyUserTier } = req.body;
   // Use provided analysisId or generate new one
   const analysisId = providedAnalysisId || uuidv4();
   const startTime = Date.now();
@@ -137,8 +136,9 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
 
-    const userId = authReq.user.id;
-    const userTier = authReq.user.tier;
+    // Support authenticated and anonymous users
+    const userId = authReq.user?.id || bodyUserId || `temp_${uuidv4()}`;
+    const userTier = authReq.user?.tier || bodyUserTier || 'free';
 
     console.log(`[Analysis] Starting analysis for ${url} (user: ${userId}, tier: ${userTier}, analysisId: ${analysisId})`);
 
@@ -360,7 +360,7 @@ router.post('/', async (req: Request, res: Response) => {
 /**
  * GET /api/analyze/:id
  */
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', authenticateUser, async (req: Request, res: Response) => {
   const authReq = req as AuthenticatedRequest;
   const { id } = req.params;
 
@@ -415,9 +415,9 @@ router.get('/:id', async (req: Request, res: Response) => {
  * POST /api/analyze/async
  * Queue an analysis job for background processing
  */
-router.post('/async', async (req: Request, res: Response) => {
+router.post('/async', optionalAuth, async (req: Request, res: Response) => {
   const authReq = req as AuthenticatedRequest;
-  const { url, priority } = req.body;
+  const { url, priority, userId: bodyUserId, userTier: bodyUserTier } = req.body;
   const analysisId = uuidv4();
 
   try {
@@ -437,8 +437,9 @@ router.post('/async', async (req: Request, res: Response) => {
       return;
     }
 
-    const userId = authReq.user.id;
-    const userTier = authReq.user.tier;
+    // Support authenticated and anonymous users
+    const userId = authReq.user?.id || bodyUserId || `temp_${uuidv4()}`;
+    const userTier = authReq.user?.tier || bodyUserTier || 'free';
 
     // Determine priority based on tier (higher tier = higher priority)
     // Scale/enterprise get priority 10, growth/professional get 5, others get 0
@@ -515,7 +516,7 @@ router.post('/async', async (req: Request, res: Response) => {
  * GET /api/analyze/jobs
  * Get user's job history
  */
-router.get('/jobs', async (req: Request, res: Response) => {
+router.get('/jobs', authenticateUser, async (req: Request, res: Response) => {
   const authReq = req as AuthenticatedRequest;
   const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
 
@@ -550,7 +551,7 @@ router.get('/jobs', async (req: Request, res: Response) => {
  * GET /api/analyze/jobs/:jobId
  * Get specific job status
  */
-router.get('/jobs/:jobId', async (req: Request, res: Response) => {
+router.get('/jobs/:jobId', authenticateUser, async (req: Request, res: Response) => {
   const authReq = req as AuthenticatedRequest;
   const { jobId } = req.params;
 
@@ -628,7 +629,7 @@ router.get('/jobs/:jobId', async (req: Request, res: Response) => {
 /**
  * GET /api/analyze/progress/:id
  */
-router.get('/progress/:id', async (req: Request, res: Response) => {
+router.get('/progress/:id', authenticateUser, async (req: Request, res: Response) => {
   const authReq = req as AuthenticatedRequest;
   const { id } = req.params;
 

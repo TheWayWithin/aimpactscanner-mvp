@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
+import { analyzeSyncAnonymous } from '../lib/railwayApi';
 import AILogo from './AILogo';
 import NavigationButtons from './NavigationButtons';
 
@@ -54,30 +54,17 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
       localStorage.setItem('pendingAnalysisUrl', validatedUrl);
       localStorage.setItem('pendingAnalysisId', analysisId);
       
-      // Start real Edge Function analysis
-      console.log('🚀 Starting real analysis from landing page:', { analysisId, url: validatedUrl, tempUserId });
+      // Start analysis via Railway backend
+      console.log('🚀 Starting analysis from landing page:', { analysisId, url: validatedUrl, tempUserId });
       
-      // Call Edge Function for real analysis
-      const { data, error: invokeError } = await supabase.functions.invoke('analyze-page', {
-        body: {
-          url: validatedUrl,
-          analysisId: analysisId,
-          userId: tempUserId
-        }
-      });
+      // Call Railway backend for anonymous analysis
+      const data = await analyzeSyncAnonymous(validatedUrl);
       
-      if (invokeError) {
-        console.error('❌ Edge Function error:', invokeError);
-        setError(`Analysis error: ${invokeError.message}`);
-        setIsAnalyzing(false);
-        return;
-      }
-      
-      console.log('✅ Analysis initiated successfully:', data);
-      console.log('📊 Edge Function response details:', JSON.stringify({
+      console.log('✅ Analysis completed successfully:', data);
+      console.log('📊 Analysis response details:', JSON.stringify({
         success: data?.success,
         overall_score: data?.overall_score,
-        factors_count: data?.factors_count,
+        factor_count: data?.factor_count,
         has_factors: !!data?.factors,
         factors_length: data?.factors?.length || 0,
         first_factor: data?.factors?.[0]
@@ -89,7 +76,7 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
         analysisData.results = {
           overall_score: data.overall_score,
           factors: data.factors || [],
-          factors_count: data.factors_count || 0,
+          factors_count: data.factor_count || 0,
           pillars: data.pillars || null
         };
         console.log('💾 Storing analysis data with factors:', JSON.stringify({
@@ -99,7 +86,7 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
         }, null, 2));
         localStorage.setItem('landingAnalysisData', JSON.stringify(analysisData));
       } else {
-        console.warn('⚠️ Edge Function did not return success or data:', data);
+        console.warn('⚠️ Analysis did not return success:', data);
       }
       
       // Trigger analysis complete callback to show results
