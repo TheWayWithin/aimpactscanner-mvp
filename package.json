@@ -94,7 +94,13 @@
     "test:uat:debug": "node tests/uat/run-uat.js --debug --headed",
     "test:uat:report": "npx playwright show-report test-results/uat",
     "test:uat:ci": "node tests/uat/setup-uat.js && node tests/uat/run-uat.js --category all",
-    "uat": "npm run test:uat:setup && npm run test:uat"
+    "uat": "npm run test:uat:setup && npm run test:uat",
+    "test:tier1": "npx playwright test tests/tier1-landing.spec.ts --config playwright.config.ts",
+    "test:tier2": "npx playwright test tests/tier2-auth.spec.ts --config playwright.config.ts",
+    "test:tier3": "npx playwright test tests/tier3-analysis.spec.ts --config playwright.config.ts",
+    "test:tier4": "npx playwright test tests/tier4-checkout.spec.ts --config playwright.config.ts",
+    "test:oat": "npx playwright test --config playwright.config.ts",
+    "test:quick-oat": "npx playwright test tests/tier1-landing.spec.ts tests/tier2-auth.spec.ts --config playwright.config.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.51.0",
