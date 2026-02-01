@@ -60,3 +60,4 @@ verify-stripe-products.cjs
 .mcp.json
 .mcp-profiles/
 .env.local
+.env.test

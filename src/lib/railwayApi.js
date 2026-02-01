@@ -221,6 +221,36 @@ export async function runAnalysis(url, userId, analysisId, userTier = 'free', on
 }
 
 /**
+ * Run anonymous analysis synchronously (no auth required)
+ * Used by the landing page for free scans without sign-in.
+ *
+ * @param {string} url - URL to analyze
+ * @returns {Promise<{success: boolean, overall_score?: number, factors?: Array, error?: string}>}
+ */
+export async function analyzeSyncAnonymous(url) {
+  const tempUserId = 'temp_' + crypto.randomUUID();
+
+  const response = await fetch(`${RAILWAY_API_URL}/api/analyze`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      url,
+      userId: tempUserId,
+      userTier: 'free',
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || `HTTP ${response.status}: Analysis failed`);
+  }
+
+  return response.json();
+}
+
+/**
  * Check if Railway backend should be used
  * Controlled by VITE_USE_RAILWAY_BACKEND env var
  */

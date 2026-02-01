@@ -65,9 +65,9 @@
 # Environment-specific configuration
 [context.production.environment]
   NODE_ENV = "production"
-  # Railway backend - uncomment to enable in production
-  # VITE_USE_RAILWAY_BACKEND = "true"
-  # VITE_RAILWAY_API_URL = "https://aimpactscanner-backend-production.up.railway.app"
+  # Railway backend - enabled for production
+  VITE_USE_RAILWAY_BACKEND = "true"
+  VITE_RAILWAY_API_URL = "https://aimpactscanner-backend-production.up.railway.app"
 
 [context.deploy-preview.environment]
   # Use STAGING database and test keys for deploy previews

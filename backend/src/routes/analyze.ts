@@ -7,7 +7,7 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { authenticateUser, AuthenticatedRequest } from '../middleware/auth';
+import { authenticateUser, optionalAuth, AuthenticatedRequest } from '../middleware/auth';
 import { createTierRateLimiter } from '../middleware/rate-limit';
 import { supabaseAdmin } from '../lib/supabase';
 import { analyzeAllFactors, getAnalysisSummary } from '../services/analyzer';
@@ -26,8 +26,7 @@ type AnalysisFactorRow = Database['public']['Tables']['analysis_factors']['Row']
 
 const router = Router();
 
-// Apply authentication and tier-based rate limiting
-router.use(authenticateUser);
+// Rate limiting applied globally; auth applied per-route
 router.use(createTierRateLimiter());
 
 /**
@@ -113,12 +112,16 @@ async function updateProgress(
  * Accepts optional analysisId - if provided, updates existing record.
  * If not provided, creates a new record.
  */
-router.post('/', async (req: Request, res: Response) => {
-  const authReq = req as AuthenticatedRequest;
-  const { url, analysisId: providedAnalysisId } = req.body;
+router.post('/', optionalAuth, async (req: Request, res: Response) => {
+  const { url, analysisId: providedAnalysisId, userTier: bodyUserTier } = req.body;
   // Use provided analysisId or generate new one
   const analysisId = providedAnalysisId || uuidv4();
   const startTime = Date.now();
+
+  // Determine auth status early so it's available in catch block
+  const isAnonymous = !(req as AuthenticatedRequest).user;
+  const userId = (req as AuthenticatedRequest).user?.id || uuidv4();
+  const userTier = (req as AuthenticatedRequest).user?.tier || bodyUserTier || 'free';
 
   try {
     if (!url || typeof url !== 'string') {
@@ -137,95 +140,105 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
 
-    const userId = authReq.user.id;
-    const userTier = authReq.user.tier;
+    console.log(`[Analysis] Starting analysis for ${url} (user: ${userId}, tier: ${userTier}, analysisId: ${analysisId}, anonymous: ${isAnonymous})`);
 
-    // Enforce tier-based analysis limits
-    const tierLimits: Record<string, number> = { free: 3, coffee: 10, growth: 40, professional: 40, scale: 100, enterprise: 100 };
-    const monthlyLimit = tierLimits[String(userTier)] ?? 3;
+    // Enforce tier-based analysis limits (only for authenticated users)
+    if (!isAnonymous) {
+      const tierLimits: Record<string, number> = { free: 3, coffee: 10, growth: 40, professional: 40, scale: 100, enterprise: 100 };
+      const monthlyLimit = tierLimits[String(userTier)] ?? 3;
 
-    const now = new Date();
-    const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+      const now = new Date();
+      const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
-    const { count: monthlyUsed, error: countError } = await supabaseAdmin
-      .from('analyses')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', userId)
-      .gte('created_at', firstOfMonth);
-
-    if (countError) {
-      console.error('[Analysis] Failed to check usage:', countError);
-      res.status(500).json({ error: 'Unable to verify usage limits', code: 'USAGE_CHECK_FAILED' });
-      return;
-    }
-
-    if ((monthlyUsed ?? 0) >= monthlyLimit) {
-      console.log(`[Analysis] User ${userId} (${userTier}) hit monthly limit: ${monthlyUsed}/${monthlyLimit}`);
-      res.status(429).json({
-        error: `Monthly analysis limit reached (${monthlyUsed}/${monthlyLimit}). Upgrade your plan for more analyses.`,
-        code: 'MONTHLY_LIMIT_REACHED',
-        used: monthlyUsed,
-        limit: monthlyLimit,
-        tier: userTier,
-      });
-      return;
-    }
-
-    console.log(`[Analysis] Starting analysis for ${url} (user: ${userId}, tier: ${userTier}, usage: ${monthlyUsed}/${monthlyLimit}, analysisId: ${analysisId})`);
-
-    // Check if analysis record already exists (frontend may have pre-created it)
-    const { data: existingAnalysis } = await supabaseAdmin
-      .from('analyses')
-      .select('id')
-      .eq('id', analysisId)
-      .single();
-
-    if (existingAnalysis) {
-      // Update existing record to processing status
-      const { error: updateError } = await supabaseAdmin
+      const { count: monthlyUsed, error: countError } = await supabaseAdmin
         .from('analyses')
-        .update({
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .gte('created_at', firstOfMonth);
+
+      if (countError) {
+        console.error('[Analysis] Failed to check usage:', countError);
+        res.status(500).json({ error: 'Unable to verify usage limits', code: 'USAGE_CHECK_FAILED' });
+        return;
+      }
+
+      if ((monthlyUsed ?? 0) >= monthlyLimit) {
+        console.log(`[Analysis] User ${userId} (${userTier}) hit monthly limit: ${monthlyUsed}/${monthlyLimit}`);
+        res.status(429).json({
+          error: `Monthly analysis limit reached (${monthlyUsed}/${monthlyLimit}). Upgrade your plan for more analyses.`,
+          code: 'MONTHLY_LIMIT_REACHED',
+          used: monthlyUsed,
+          limit: monthlyLimit,
+          tier: userTier,
+        });
+        return;
+      }
+
+      console.log(`[Analysis] Usage check passed: ${monthlyUsed}/${monthlyLimit}`);
+    } else {
+      console.log(`[Analysis] Anonymous scan — skipping usage limits`);
+    }
+
+    // Only persist to database for authenticated users (anonymous scans skip DB due to FK constraints)
+    if (!isAnonymous) {
+      // Check if analysis record already exists (frontend may have pre-created it)
+      const { data: existingAnalysis } = await supabaseAdmin
+        .from('analyses')
+        .select('id')
+        .eq('id', analysisId)
+        .single();
+
+      if (existingAnalysis) {
+        // Update existing record to processing status
+        const { error: updateError } = await supabaseAdmin
+          .from('analyses')
+          .update({
+            status: 'processing',
+            framework_version: '3.1.1',
+          } as never)
+          .eq('id', analysisId);
+
+        if (updateError) {
+          console.error('Failed to update analysis record:', updateError);
+          res.status(500).json({
+            error: 'Failed to start analysis',
+            code: 'DATABASE_ERROR',
+          });
+          return;
+        }
+        console.log(`[Analysis] Using existing analysis record: ${analysisId}`);
+      } else {
+        // Create new analysis record
+        const analysisInsert: AnalysisInsert = {
+          id: analysisId,
+          user_id: userId,
+          url,
           status: 'processing',
           framework_version: '3.1.1',
-        } as never)
-        .eq('id', analysisId);
+          created_at: new Date().toISOString(),
+        };
 
-      if (updateError) {
-        console.error('Failed to update analysis record:', updateError);
-        res.status(500).json({
-          error: 'Failed to start analysis',
-          code: 'DATABASE_ERROR',
-        });
-        return;
+        const { error: insertError } = await supabaseAdmin
+          .from('analyses')
+          .insert(analysisInsert as never);
+
+        if (insertError) {
+          console.error('Failed to create analysis record:', insertError);
+          res.status(500).json({
+            error: 'Failed to start analysis',
+            code: 'DATABASE_ERROR',
+          });
+          return;
+        }
+        console.log(`[Analysis] Created new analysis record: ${analysisId}`);
       }
-      console.log(`[Analysis] Using existing analysis record: ${analysisId}`);
     } else {
-      // Create new analysis record
-      const analysisInsert: AnalysisInsert = {
-        id: analysisId,
-        user_id: userId,
-        url,
-        status: 'processing',
-        framework_version: '3.1.1',
-        created_at: new Date().toISOString(),
-      };
-
-      const { error: insertError } = await supabaseAdmin
-        .from('analyses')
-        .insert(analysisInsert as never);
-
-      if (insertError) {
-        console.error('Failed to create analysis record:', insertError);
-        res.status(500).json({
-          error: 'Failed to start analysis',
-          code: 'DATABASE_ERROR',
-        });
-        return;
-      }
-      console.log(`[Analysis] Created new analysis record: ${analysisId}`);
+      console.log(`[Analysis] Anonymous scan — skipping database persistence`);
     }
 
-    await updateProgress(analysisId, 'fetching', 0, 'Fetching page content...', 'The first step is retrieving your page content for analysis.');
+    if (!isAnonymous) {
+      await updateProgress(analysisId, 'fetching', 0, 'Fetching page content...', 'The first step is retrieving your page content for analysis.');
+    }
 
     // Fetch page content
     let pageContent: string;
@@ -236,14 +249,16 @@ router.post('/', async (req: Request, res: Response) => {
     } catch (fetchError) {
       const errorMessage = fetchError instanceof Error ? fetchError.message : 'Unknown error';
 
-      const failedUpdate: AnalysisUpdate = {
-        status: 'failed',
-      };
+      if (!isAnonymous) {
+        const failedUpdate: AnalysisUpdate = {
+          status: 'failed',
+        };
 
-      await supabaseAdmin
-        .from('analyses')
-        .update(failedUpdate as never)
-        .eq('id', analysisId);
+        await supabaseAdmin
+          .from('analyses')
+          .update(failedUpdate as never)
+          .eq('id', analysisId);
+      }
 
       res.status(422).json({
         error: `Failed to fetch page: ${errorMessage}`,
@@ -253,28 +268,32 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
 
-    // Progress callback
+    // Progress callback (only persist for authenticated users)
     const progressCallback = async (
       stage: string,
       percent: number,
       message: string,
       educational: string
     ) => {
-      await updateProgress(analysisId, stage, percent, message, educational);
+      if (!isAnonymous) {
+        await updateProgress(analysisId, stage, percent, message, educational);
+      }
     };
 
     // Run analysis
     const result = await analyzeAllFactors(url, pageContent, userTier, progressCallback);
 
     if (!result.success) {
-      const failedUpdate: AnalysisUpdate = {
-        status: 'failed',
-      };
+      if (!isAnonymous) {
+        const failedUpdate: AnalysisUpdate = {
+          status: 'failed',
+        };
 
-      await supabaseAdmin
-        .from('analyses')
-        .update(failedUpdate as never)
-        .eq('id', analysisId);
+        await supabaseAdmin
+          .from('analyses')
+          .update(failedUpdate as never)
+          .eq('id', analysisId);
+      }
 
       res.status(500).json({
         error: result.error || 'Analysis failed',
@@ -285,20 +304,31 @@ router.post('/', async (req: Request, res: Response) => {
 
     const summary = getAnalysisSummary(result);
 
-    // Update analysis with results using raw SQL to bypass PostgREST schema cache issues
-    const roundedScore = Math.round(result.overall_score);
+    // Only persist results to database for authenticated users
+    if (!isAnonymous) {
+      const roundedScore = Math.round(result.overall_score);
 
-    try {
-      // Use raw SQL via RPC to bypass schema cache
-      // @ts-expect-error - Custom RPC function not in generated types
-      const { error: updateError } = await supabaseAdmin.rpc('update_analysis_score', {
-        p_analysis_id: analysisId,
-        p_score: roundedScore,
-      });
+      try {
+        // Use raw SQL via RPC to bypass schema cache
+        // @ts-expect-error - Custom RPC function not in generated types
+        const { error: updateError } = await supabaseAdmin.rpc('update_analysis_score', {
+          p_analysis_id: analysisId,
+          p_score: roundedScore,
+        });
 
-      if (updateError) {
-        console.error('Failed to update analysis via RPC:', updateError);
-        // Fallback: try direct update
+        if (updateError) {
+          console.error('Failed to update analysis via RPC:', updateError);
+          const { error: fallbackError } = await supabaseAdmin
+            .from('analyses')
+            .update({ status: 'completed', overall_score: roundedScore } as never)
+            .eq('id', analysisId);
+
+          if (fallbackError) {
+            console.error('Fallback update also failed:', fallbackError);
+          }
+        }
+      } catch (rpcError) {
+        console.error('RPC call failed:', rpcError);
         const { error: fallbackError } = await supabaseAdmin
           .from('analyses')
           .update({ status: 'completed', overall_score: roundedScore } as never)
@@ -308,47 +338,36 @@ router.post('/', async (req: Request, res: Response) => {
           console.error('Fallback update also failed:', fallbackError);
         }
       }
-    } catch (rpcError) {
-      console.error('RPC call failed:', rpcError);
-      // Fallback: try direct update
-      const { error: fallbackError } = await supabaseAdmin
-        .from('analyses')
-        .update({ status: 'completed', overall_score: roundedScore } as never)
-        .eq('id', analysisId);
 
-      if (fallbackError) {
-        console.error('Fallback update also failed:', fallbackError);
+      // Store factor results with rounded scores
+      const factorInserts: AnalysisFactorInsert[] = result.factors.map(factor => ({
+        id: uuidv4(),
+        analysis_id: analysisId,
+        factor_id: factor.factor_id,
+        factor_name: factor.factor_name,
+        pillar: factor.pillar,
+        score: Math.round(factor.score),
+        confidence: 80,
+        weight: Math.round(factor.weight * 100) / 100,
+        evidence: factor.evidence,
+        recommendations: factor.recommendations,
+      }));
+
+      const { error: factorError } = await supabaseAdmin
+        .from('analysis_factors')
+        .insert(factorInserts as never[]);
+
+      if (factorError) {
+        console.error('Failed to store factor results:', factorError);
       }
-    }
 
-    // Store factor results with rounded scores
-    const factorInserts: AnalysisFactorInsert[] = result.factors.map(factor => ({
-      id: uuidv4(),
-      analysis_id: analysisId,
-      factor_id: factor.factor_id,
-      factor_name: factor.factor_name,
-      pillar: factor.pillar,
-      score: Math.round(factor.score), // Round to integer for database
-      confidence: 80, // Default confidence level
-      weight: Math.round(factor.weight * 100) / 100, // Round weight to 2 decimal places
-      evidence: factor.evidence, // JSONB column expects array
-      recommendations: factor.recommendations, // JSONB column expects array
-    }));
-
-    const { error: factorError } = await supabaseAdmin
-      .from('analysis_factors')
-      .insert(factorInserts as never[]);
-
-    if (factorError) {
-      console.error('Failed to store factor results:', factorError);
-    }
-
-    // Increment user's analysis count (ignore errors)
-    try {
-      // @ts-expect-error - RPC function may not be in generated types
-      await supabaseAdmin.rpc('increment_analysis_count', { user_id: userId });
-    } catch (err) {
-      console.error('Failed to increment analysis count:', err);
+      // Increment user's analysis count (ignore errors)
+      try {
+        // @ts-expect-error - RPC function may not be in generated types
+        await supabaseAdmin.rpc('increment_analysis_count', { user_id: userId });
+      } catch (err) {
+        console.error('Failed to increment analysis count:', err);
+      }
     }
 
     const totalTime = Date.now() - startTime;
@@ -369,16 +388,18 @@ router.post('/', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('[Analysis] Unexpected error:', error);
 
-    try {
-      const failedUpdate: AnalysisUpdate = {
-        status: 'failed',
-      };
-      await supabaseAdmin
-        .from('analyses')
-        .update(failedUpdate as never)
-        .eq('id', analysisId);
-    } catch {
-      // Ignore cleanup errors
+    if (!isAnonymous) {
+      try {
+        const failedUpdate: AnalysisUpdate = {
+          status: 'failed',
+        };
+        await supabaseAdmin
+          .from('analyses')
+          .update(failedUpdate as never)
+          .eq('id', analysisId);
+      } catch {
+        // Ignore cleanup errors
+      }
     }
 
     res.status(500).json({
@@ -391,7 +412,7 @@ router.post('/', async (req: Request, res: Response) => {
 /**
  * GET /api/analyze/:id
  */
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', authenticateUser, async (req: Request, res: Response) => {
   const authReq = req as AuthenticatedRequest;
   const { id } = req.params;
 
@@ -446,9 +467,9 @@ router.get('/:id', async (req: Request, res: Response) => {
  * POST /api/analyze/async
  * Queue an analysis job for background processing
  */
-router.post('/async', async (req: Request, res: Response) => {
+router.post('/async', optionalAuth, async (req: Request, res: Response) => {
   const authReq = req as AuthenticatedRequest;
-  const { url, priority } = req.body;
+  const { url, priority, userTier: bodyUserTier } = req.body;
   const analysisId = uuidv4();
 
   try {
@@ -468,8 +489,10 @@ router.post('/async', async (req: Request, res: Response) => {
       return;
     }
 
-    const userId = authReq.user.id;
-    const userTier = authReq.user.tier;
+    // Support authenticated and anonymous users
+    // Always use a valid UUID for user_id (database column is UUID type)
+    const userId = authReq.user?.id || uuidv4();
+    const userTier = authReq.user?.tier || bodyUserTier || 'free';
 
     // Enforce tier-based analysis limits (same as sync route)
     const asyncTierLimits: Record<string, number> = { free: 3, coffee: 10, growth: 40, professional: 40, scale: 100, enterprise: 100 };
@@ -577,7 +600,7 @@ router.post('/async', async (req: Request, res: Response) => {
  * GET /api/analyze/jobs
  * Get user's job history
  */
-router.get('/jobs', async (req: Request, res: Response) => {
+router.get('/jobs', authenticateUser, async (req: Request, res: Response) => {
   const authReq = req as AuthenticatedRequest;
   const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
 
@@ -612,7 +635,7 @@ router.get('/jobs', async (req: Request, res: Response) => {
  * GET /api/analyze/jobs/:jobId
  * Get specific job status
  */
-router.get('/jobs/:jobId', async (req: Request, res: Response) => {
+router.get('/jobs/:jobId', authenticateUser, async (req: Request, res: Response) => {
   const authReq = req as AuthenticatedRequest;
   const { jobId } = req.params;
 
@@ -690,7 +713,7 @@ router.get('/jobs/:jobId', async (req: Request, res: Response) => {
 /**
  * GET /api/analyze/progress/:id
  */
-router.get('/progress/:id', async (req: Request, res: Response) => {
+router.get('/progress/:id', authenticateUser, async (req: Request, res: Response) => {
   const authReq = req as AuthenticatedRequest;
   const { id } = req.params;
 
