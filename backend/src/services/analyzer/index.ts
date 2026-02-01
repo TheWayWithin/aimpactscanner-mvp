@@ -305,11 +305,13 @@ export function getAnalysisSummary(result: AnalysisResult): {
 
   // Get pillar breakdown
   const pillarBreakdown = getPillarBreakdown(result.factors);
-  const simplifiedPillarBreakdown: Record<string, { score: number; name: string }> = {};
+  const simplifiedPillarBreakdown: Record<string, { score: number; weight: number; factorCount: number; name: string }> = {};
 
   for (const [pillar, data] of Object.entries(pillarBreakdown)) {
     simplifiedPillarBreakdown[pillar] = {
       score: data.score,
+      weight: data.weight,
+      factorCount: data.factorCount,
       name: data.name,
     };
   }
