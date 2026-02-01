@@ -470,14 +470,35 @@ export function useAuth({ actionsRef, sharedRefs, tabVisibility }) {
         if (event === 'SIGNED_IN' && newSession) {
           console.log('✅ SIGNED_IN event detected');
           const currentView = actions.getCurrentView ? actions.getCurrentView() : '';
-
-          if (currentView !== 'oauth-callback' && !oauthCallbackProcessed.current) {
-            console.log('✅ SIGNED_IN event - routing to oauth-callback');
+          
+          // Check if this is an OAuth/magic-link sign-in (tokens in URL hash)
+          const urlHash = window.location.hash.slice(1);
+          const isOAuthSignIn = urlHash.includes('access_token=') || urlHash.includes('refresh_token=');
+          const isMagicLink = hasMagicLinkTokens();
+          
+          if ((isOAuthSignIn || isMagicLink) && currentView !== 'oauth-callback' && !oauthCallbackProcessed.current) {
+            // OAuth/magic-link sign-in → route through oauth-callback component
+            console.log('✅ SIGNED_IN (OAuth/Magic Link) - routing to oauth-callback');
             setSession(newSession);
             setSessionChecked(true);
             setIsLoadingAuth(false);
             if (actions.navigateInternal) actions.navigateInternal('oauth-callback');
             window.location.hash = 'oauth-callback';
+            return;
+          } else if (!isOAuthSignIn && !isMagicLink) {
+            // Password sign-in → go straight to dashboard
+            console.log('✅ SIGNED_IN (password) - routing to dashboard');
+            setSession(newSession);
+            setSessionChecked(true);
+            setIsLoadingAuth(false);
+            
+            // Fetch user tier then navigate
+            fetchUserTier(newSession.user.id, newSession.user.email, newSession).catch(err => {
+              console.warn('Failed to fetch user tier:', err);
+              setUserTier('free');
+            });
+            
+            if (actions.navigate) actions.navigate('dashboard');
             return;
           } else {
             console.log('✅ SIGNED_IN event - already processed, skipping redirect');

@@ -24,6 +24,7 @@ const UnifiedRegistration = React.lazy(() => import('./components/UnifiedRegistr
 const SimpleAccountDashboard = React.lazy(() => import('./components/SimpleAccountDashboard'));
 const RegistrationFlow = React.lazy(() => import('./components/RegistrationFlow'));
 const DiagnosticSignup = React.lazy(() => import('./pages/DiagnosticSignup'));
+const OAuthCallback = React.lazy(() => import('./components/OAuthCallback'));
 
 // Keep frequently used components as regular imports
 import Login from './components/Login';
@@ -416,6 +417,16 @@ function AppContent({ initialUrl }) {
       
       case 'about':
         return <AboutPage onNavigate={routingHook.navigate} />;
+
+      case 'oauth-callback':
+        return (
+          <Suspense fallback={<ComponentLoader message="Processing authentication..." />}>
+            <OAuthCallback 
+              onNavigate={routingHook.navigate} 
+              oauthCallbackProcessedRef={oauthCallbackProcessed} 
+            />
+          </Suspense>
+        );
 
       case 'email-verification':
         return (
