@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import TrustBadges from './TrustBadges';
 import AILogo from './AILogo';
 import NavigationButtons from './NavigationButtons';
 
@@ -113,6 +112,50 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
     }
   };
 
+  const pricingTiers = [
+    {
+      name: 'Free',
+      price: '$0',
+      period: 'forever',
+      scans: '3 scans / month',
+      features: ['AI readiness check', 'SEO foundation audit', '27-factor analysis', 'Basic recommendations'],
+      cta: 'Start Free',
+      action: () => onNavigate('signup'),
+      highlighted: false,
+    },
+    {
+      name: 'Solo',
+      price: '$5.95',
+      period: '/ month',
+      scans: '10 scans / month',
+      features: ['Everything in Free', 'Full detailed reports', 'PDF export', 'Priority analysis'],
+      cta: 'Get Started',
+      action: () => onNavigate('checkout-solo'),
+      highlighted: true,
+      badge: 'Most Popular',
+    },
+    {
+      name: 'Growth',
+      price: '$17.95',
+      period: '/ month',
+      scans: '40 scans / month',
+      features: ['Everything in Solo', 'Ongoing monitoring', 'Competitor comparison', 'Email alerts'],
+      cta: 'Go Growth',
+      action: () => onNavigate('checkout-growth'),
+      highlighted: false,
+    },
+    {
+      name: 'Scale',
+      price: '$34.95',
+      period: '/ month',
+      scans: '100 scans / month',
+      features: ['Everything in Growth', 'Team access', 'API access', 'Bulk analysis'],
+      cta: 'Go Scale',
+      action: () => onNavigate('checkout-scale'),
+      highlighted: false,
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Header with Logo */}
@@ -170,11 +213,17 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-16">
         <div className="text-center">
-          {/* Urgency Banner */}
-          <div className="inline-flex items-center bg-red-100 text-red-800 px-4 py-2 rounded-full mb-8">
-            <span className="animate-pulse mr-2">🔴</span>
-            <span className="font-semibold">Warning:</span>&nbsp;
-            <span>AI is reshaping search - protect your traffic now</span>
+          {/* Data-backed insight banner */}
+          <div className="inline-flex items-center bg-blue-50 text-blue-800 px-5 py-2.5 rounded-full mb-8 border border-blue-200">
+            <span className="mr-2">📊</span>
+            <span>AI answers now replace <strong>40% of traditional search clicks</strong> — is your site ready?</span>
+          </div>
+
+          {/* Early Access Badge */}
+          <div className="mb-4">
+            <span className="inline-flex items-center bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">
+              ✨ Early Access
+            </span>
           </div>
 
           {/* Main Headline */}
@@ -190,28 +239,21 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
             Because you can't win with AI if Google can't even find you.
           </p>
 
-          {/* Social Proof - Real Clients */}
-          <div className="mb-12">
-            <div className="text-center mb-6">
-              <div className="font-semibold text-gray-900 text-lg">Trusted by 7 pioneering sites</div>
-              <div className="text-sm text-gray-600">Real clients using our AI optimization analysis</div>
+          {/* Stats - only provably true */}
+          <div className="flex justify-center items-center gap-8 mb-10">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600 mb-1">15s</div>
+              <div className="text-sm text-gray-600">Analysis Time</div>
             </div>
-            
-            {/* Client Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 max-w-5xl mx-auto">
-              {[
-                'FreeCalcHub',
-                'Evolve-7',
-                'Agent-11',
-                'SoloMarket',
-                'LLMtxt Mastery',
-                'AI Search Mastery',
-                'ISOTracker'
-              ].map((client, index) => (
-                <div key={index} className="bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-md border border-gray-100 text-center hover:shadow-lg transition-shadow">
-                  <div className="text-sm font-medium text-gray-900">{client}</div>
-                </div>
-              ))}
+            <div className="w-px h-10 bg-gray-300" />
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600 mb-1">27</div>
+              <div className="text-sm text-gray-600">Factors Checked</div>
+            </div>
+            <div className="w-px h-10 bg-gray-300" />
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600 mb-1">AI + SEO</div>
+              <div className="text-sm text-gray-600">In One Scan</div>
             </div>
           </div>
 
@@ -244,8 +286,8 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
                 )}
               </button>
             </div>
-            <p className="text-sm text-gray-600 mt-2">
-              Analyze one page at a time - start with your homepage or most important page
+            <p className="text-sm text-gray-500 mt-3">
+              Free forever — upgrade for full reports, PDF exports, and ongoing monitoring
             </p>
             {error && (
               <p className="mt-2 text-red-600">{error}</p>
@@ -258,18 +300,11 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
         </div>
       </div>
 
-      {/* Trust Indicators */}
-      <div className="border-t border-gray-200 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <TrustBadges />
-        </div>
-      </div>
-
       {/* What We Check - 2-in-1 Value */}
       <div className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-center mb-4">One Scan. Two Critical Audits.</h2>
         <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-          Most tools check one thing. We check 27 factors across AI readiness AND traditional SEO -
+          Most tools check one thing. We check 27 factors across AI readiness AND traditional SEO —
           because both determine your visibility.
         </p>
         <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -352,26 +387,61 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
         </div>
       </div>
 
-      {/* Community Section */}
+      {/* Pricing Section */}
       <div className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">Join Our Growing Community</h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Thousands of businesses are already using AI analysis to optimize their websites and protect their traffic.
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-4">Simple, Honest Pricing</h2>
+          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+            Start free. Upgrade when you need more scans, full reports, or ongoing monitoring.
           </p>
-          <div className="flex justify-center items-center gap-8">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">10+</div>
-              <div className="text-sm text-gray-600">Businesses Analyzed</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">2.4x</div>
-              <div className="text-sm text-gray-600">Average Improvement</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">15s</div>
-              <div className="text-sm text-gray-600">Analysis Time</div>
-            </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {pricingTiers.map((tier) => (
+              <div
+                key={tier.name}
+                className={`relative bg-white rounded-xl p-6 shadow-md border-2 transition-shadow hover:shadow-lg ${
+                  tier.highlighted
+                    ? 'border-blue-500 ring-2 ring-blue-200'
+                    : 'border-gray-100'
+                }`}
+              >
+                {tier.badge && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                      {tier.badge}
+                    </span>
+                  </div>
+                )}
+                <div className="text-center mb-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{tier.name}</h3>
+                  <div className="flex items-baseline justify-center gap-1">
+                    <span className="text-4xl font-bold text-gray-900">{tier.price}</span>
+                    <span className="text-gray-500 text-sm">{tier.period}</span>
+                  </div>
+                  <div className="text-sm text-blue-600 font-medium mt-2">{tier.scans}</div>
+                </div>
+                <ul className="space-y-3 mb-6">
+                  {tier.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2 text-sm text-gray-700">
+                      <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={tier.action}
+                  className={`w-full py-3 rounded-lg font-semibold transition-colors ${
+                    tier.highlighted
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                  }`}
+                >
+                  {tier.cta}
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -387,7 +457,7 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
           </p>
           <p className="text-gray-600">
             When AI started changing search, I couldn't afford expensive consultants or enterprise tools. 
-            So I created the analysis I wished existed - comprehensive, affordable, and actually actionable.
+            So I created the analysis I wished existed — comprehensive, affordable, and actually actionable.
           </p>
         </div>
       </div>
@@ -395,11 +465,10 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
       {/* Final CTA */}
       <div className="max-w-4xl mx-auto px-4 py-16 text-center">
         <h2 className="text-3xl font-bold mb-4">
-          Don't Let AI Steal Another Visitor
+          See How Your Site Performs in AI Search
         </h2>
         <p className="text-xl text-gray-600 mb-8">
-          Every day you wait, competitors get stronger in AI search results.
-          See what you're losing right now - completely free.
+          Get your AI readiness score and SEO audit in 15 seconds — completely free, no signup required.
         </p>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
