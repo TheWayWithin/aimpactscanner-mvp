@@ -227,16 +227,7 @@ function AppContent({ initialUrl }) {
     actionsRef.current.handleUpgrade = handleUpgrade;
   }, [handleUpgrade]);
   
-  // Show loading screen while auth is being checked
-  if (isLoadingAuth || !sessionChecked) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <ComponentLoader message="Initializing..." />
-      </div>
-    );
-  }
-
-  // Analysis helpers
+  // Analysis helpers — must be before any early returns to maintain hook order
   const handleAnalyze = useCallback(async (url) => {
     if (!canAnalyze()) {
       const tier = userTier || 'free';
@@ -264,6 +255,17 @@ function AppContent({ initialUrl }) {
       tracking.trackError('analysis_failed', { url, error: error.message });
     }
   }, [canAnalyze, userTier, usageData, tracking, analysisHook, incrementUsage]);
+
+  // Show loading screen while auth is being checked
+  // NOTE: This must be AFTER all hooks (useCallback, useEffect, etc.) to avoid
+  // "Rendered more hooks than during the previous render" error (#310)
+  if (isLoadingAuth || !sessionChecked) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <ComponentLoader message="Initializing..." />
+      </div>
+    );
+  }
 
   const renderCurrentView = () => {
     switch (currentView) {
