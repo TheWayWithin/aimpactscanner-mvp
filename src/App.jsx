@@ -41,13 +41,12 @@ import { useTabVisibility } from './hooks/useTabVisibility';
 import { usePDFPreloader, usePDFPreloadTrigger } from './hooks/usePDFPreloader';
 import AuthenticatedHeader from './components/AuthenticatedHeader';
 import AILogo from './components/AILogo';
-import PrivacyPolicyPage from './components/PrivacyPolicyPage.jsx';
-import TermsOfServicePage from './components/TermsOfServicePage.jsx';
+import { PrivacyPolicy, TermsOfService } from './components/gdpr';
 import ContactPage from './components/ContactPage.jsx';
 import AboutPage from './components/AboutPage.jsx';
 import Footer from './components/Footer.jsx';
 import NavigationButtons from './components/NavigationButtons.jsx';
-import SimpleConsentBanner from './components/SimpleConsentBanner.jsx';
+import { CookieConsent } from './components/gdpr';
 import PerformanceOptimizer, { usePerformanceMonitoring } from './components/PerformanceOptimizer.jsx';
 
 // Loading component for Suspense boundaries - Memoized for performance
@@ -405,10 +404,10 @@ function AppContent({ initialUrl }) {
         );
 
       case 'privacy':
-        return <PrivacyPolicyPage onNavigate={routingHook.navigate} />;
+        return <PrivacyPolicy onNavigate={routingHook.navigate} isAuthenticated={!!session?.user} />;
       
       case 'terms':
-        return <TermsOfServicePage onNavigate={routingHook.navigate} />;
+        return <TermsOfService onNavigate={routingHook.navigate} isAuthenticated={!!session?.user} />;
       
       case 'contact':
         return <ContactPage onNavigate={routingHook.navigate} />;
@@ -432,7 +431,13 @@ function AppContent({ initialUrl }) {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <SimpleConsentBanner />
+      <CookieConsent 
+        onConsent={(preferences) => {
+          // Handle consent preferences for analytics integration
+          console.log('GDPR consent updated:', preferences);
+        }}
+        privacyPolicyUrl="#privacy"
+      />
       
       {session?.user && userReady && (
         <UserInitializer 
