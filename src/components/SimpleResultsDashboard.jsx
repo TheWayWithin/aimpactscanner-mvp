@@ -368,7 +368,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
     return pillarOrder
       .map(p => {
         // Map pillar keys to the results.pillars structure
-        const pillarKey = {
+        const pillarKeyLower = {
           'AI': 'ai',
           'A': 'authority',
           'M': 'machine_readability',
@@ -380,7 +380,8 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
           'P': 'performance'
         }[p.key] || p.key.toLowerCase();
         
-        const pillarData = results.pillars[pillarKey] || {};
+        // Backend returns uppercase keys (AI, A, M, etc.), frontend may use lowercase
+        const pillarData = results.pillars[pillarKeyLower] || results.pillars[p.key] || {};
         
         return {
           name: p.name,
