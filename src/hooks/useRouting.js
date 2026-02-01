@@ -124,8 +124,10 @@ export function useRouting(session, sessionChecked) {
     const hasOAuthTokens = hash && (hash.includes('access_token=') || hash.includes('refresh_token='));
     const hasMagicLink = hasMagicLinkTokens();
     const isOAuthReturn = hasOAuthTokens && !hash.includes('/');
+    const hasPKCECode = new URLSearchParams(window.location.search).has('code');
+    const isOAuthCallbackHash = hash === 'oauth-callback' || hash.startsWith('oauth-callback');
 
-    if (hasOAuthTokens || hasMagicLink || isOAuthReturn) {
+    if (hasOAuthTokens || hasMagicLink || isOAuthReturn || hasPKCECode || isOAuthCallbackHash) {
       console.log('🔐 Authentication tokens detected, routing to oauth-callback');
       console.log('🔐 Token type:', { hasOAuthTokens, hasMagicLink, isOAuthReturn });
       setCurrentViewInternal('oauth-callback');

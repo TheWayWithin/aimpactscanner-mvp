@@ -471,9 +471,12 @@ export function useAuth({ actionsRef, sharedRefs, tabVisibility }) {
           console.log('✅ SIGNED_IN event detected');
           const currentView = actions.getCurrentView ? actions.getCurrentView() : '';
           
-          // Check if this is an OAuth/magic-link sign-in (tokens in URL hash)
+          // Check if this is an OAuth/magic-link sign-in
           const urlHash = window.location.hash.slice(1);
-          const isOAuthSignIn = urlHash.includes('access_token=') || urlHash.includes('refresh_token=');
+          const urlParams = new URLSearchParams(window.location.search);
+          const isOAuthSignIn = urlHash.includes('access_token=') || urlHash.includes('refresh_token=') 
+            || urlParams.has('code')  // Google PKCE flow uses ?code= parameter
+            || urlHash === 'oauth-callback' || urlHash.startsWith('oauth-callback');
           const isMagicLink = hasMagicLinkTokens();
           
           if ((isOAuthSignIn || isMagicLink) && currentView !== 'oauth-callback' && !oauthCallbackProcessed.current) {
