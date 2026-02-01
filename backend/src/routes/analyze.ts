@@ -137,10 +137,11 @@ router.post('/', optionalAuth, async (req: Request, res: Response) => {
     }
 
     // Support authenticated and anonymous users
-    const userId = authReq.user?.id || bodyUserId || `temp_${uuidv4()}`;
+    // Always use a valid UUID for user_id (database column is UUID type)
+    const userId = authReq.user?.id || uuidv4();
     const userTier = authReq.user?.tier || bodyUserTier || 'free';
 
-    console.log(`[Analysis] Starting analysis for ${url} (user: ${userId}, tier: ${userTier}, analysisId: ${analysisId})`);
+    console.log(`[Analysis] Starting analysis for ${url} (user: ${userId}, tier: ${userTier}, analysisId: ${analysisId}, anonymous: ${!authReq.user})`);
 
     // Check if analysis record already exists (frontend may have pre-created it)
     const { data: existingAnalysis } = await supabaseAdmin
@@ -438,7 +439,8 @@ router.post('/async', optionalAuth, async (req: Request, res: Response) => {
     }
 
     // Support authenticated and anonymous users
-    const userId = authReq.user?.id || bodyUserId || `temp_${uuidv4()}`;
+    // Always use a valid UUID for user_id (database column is UUID type)
+    const userId = authReq.user?.id || uuidv4();
     const userTier = authReq.user?.tier || bodyUserTier || 'free';
 
     // Determine priority based on tier (higher tier = higher priority)
