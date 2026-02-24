@@ -7,6 +7,12 @@
   # Node.js version for build - Vite 7 requires Node 20+
   NODE_VERSION = "20.19.0"
 
+# Serve llms.txt directly
+[[redirects]]
+  from = "/llms.txt"
+  to = "/llms.txt"
+  status = 200
+
 # SPA redirect rule - catch all routes and serve index.html
 [[redirects]]
   from = "/*"
