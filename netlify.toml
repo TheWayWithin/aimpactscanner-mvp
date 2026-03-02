@@ -87,12 +87,18 @@
   VITE_RAILWAY_API_URL = "https://aimpactscanner-backend-staging.up.railway.app"
 
 # Branch deploys (e.g., develop branch → develop--aimpactscanner.netlify.app)
+[context.branch-deploy]
+  command = "npm ci --include=dev && npx vite build"
+
 [context.branch-deploy.environment]
   VITE_SUPABASE_URL = "https://isgzvwpjokcmtizstwru.supabase.co"  # STAGING
   VITE_USE_RAILWAY_BACKEND = "true"
   VITE_RAILWAY_API_URL = "https://aimpactscanner-backend-staging.up.railway.app"
 
 # Specific branch: develop
+[context.develop]
+  command = "npm ci --include=dev && npx vite build"
+
 [context.develop.environment]
   VITE_SUPABASE_URL = "https://isgzvwpjokcmtizstwru.supabase.co"  # STAGING
   VITE_USE_RAILWAY_BACKEND = "true"
