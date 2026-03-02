@@ -97,7 +97,7 @@
 
 # Specific branch: develop
 [context.develop]
-  command = "npm ci --include=dev && npx vite build"
+  command = "echo '=== Node/npm versions ===' && node --version && npm --version && echo '=== npm ci ===' && npm ci --include=dev 2>&1 && echo '=== npm ci done ===' && echo '=== vite build ===' && npx vite build 2>&1; BUILD_EXIT=$?; echo '=== vite exit: '$BUILD_EXIT' ===' && exit $BUILD_EXIT"
 
 [context.develop.environment]
   VITE_SUPABASE_URL = "https://isgzvwpjokcmtizstwru.supabase.co"  # STAGING
