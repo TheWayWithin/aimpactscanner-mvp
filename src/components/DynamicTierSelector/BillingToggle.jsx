@@ -12,9 +12,9 @@ const BillingToggle = ({
 
   // Max savings by tier (for display message)
   const maxSavings = {
-    coffee: 21.90,
-    growth: 65.90,
-    scale: 119.90
+    coffee: 29.85,
+    growth: 59.85,
+    scale: 119.85
   };
 
   const handleToggle = (frequency) => {
@@ -82,7 +82,7 @@ const BillingToggle = ({
       {/* Savings Message */}
       {isAnnual && (
         <div className="text-sm text-green-700 font-medium">
-          💰 Save up to ${tierSavings.toFixed(2)}/year with annual billing
+          Save up to ${tierSavings.toFixed(2)}/year with annual billing
         </div>
       )}
 

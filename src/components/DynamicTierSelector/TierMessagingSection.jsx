@@ -15,7 +15,7 @@ const TIER_MESSAGING = {
       style: 'yellow', // Upgrade prompt
       headline: "What you're missing:",
       message: "Free scans 19 AI factors - but skips the 8 SEO factors blocking Google (and the AIs scraping it) from finding you. Fix something? That's scan 2. Verify it worked? Scan 3. You're done. Solo unlocks all 27 factors plus 10 scans to actually move forward.",
-      upgradeNudge: "Upgrade to Solo for just $4.95/month"
+      upgradeNudge: "Upgrade to Solo for just $9.95/month"
     },
     whatYouGet: {
       highlighted: "Find out if you're losing customers right now",
@@ -38,7 +38,7 @@ const TIER_MESSAGING = {
       style: 'yellow', // Upgrade prompt
       headline: "More than a side project?",
       message: "You'll need to work across pages and sites, track your progress, and keep AI finding you after every change. Growth is built for that.",
-      upgradeNudge: "Upgrade to Growth for $14.95/month"
+      upgradeNudge: "Upgrade to Growth for $19.95/month"
     },
     whatYouGet: {
       highlighted: "10 scans to fix your key pages",
@@ -62,7 +62,7 @@ const TIER_MESSAGING = {
       style: 'yellow', // Upgrade prompt
       headline: "Working with clients?",
       message: "40 scans won't cover their sites plus yours. Scale gives you 100 scans, unlimited LLMS.txt, JavaScript rendering for React/Vue sites, and unlimited history - never say no to a project.",
-      upgradeNudge: "Upgrade to Scale for $29.95/month"
+      upgradeNudge: "Upgrade to Scale for $39.95/month"
     },
     whatYouGet: {
       highlighted: "Know exactly what to fix, in what order",
@@ -127,7 +127,7 @@ const TierMessagingSection = ({ selectedTier, isTransitioning = false }) => {
         ${isFree ? 'bg-gray-50 border-2 border-gray-300' : ''}
         ${selectedTier === 'coffee' ? 'bg-blue-50 border-2 border-blue-300' : ''}
         ${selectedTier === 'growth' ? 'bg-gradient-to-r from-yellow-50 to-green-50 border-2 border-yellow-400' : ''}
-        ${isScale ? 'bg-purple-50 border-2 border-purple-400' : ''}
+        ${isScale ? 'bg-cloud border-2 border-signal' : ''}
       `}>
         <h3
           className={`
@@ -135,7 +135,7 @@ const TierMessagingSection = ({ selectedTier, isTransitioning = false }) => {
             ${isFree ? 'text-gray-900' : ''}
             ${selectedTier === 'coffee' ? 'text-blue-900' : ''}
             ${selectedTier === 'growth' ? 'text-green-900' : ''}
-            ${isScale ? 'text-purple-900' : ''}
+            ${isScale ? 'text-ink' : ''}
           `}
           data-testid="tier-heading"
         >

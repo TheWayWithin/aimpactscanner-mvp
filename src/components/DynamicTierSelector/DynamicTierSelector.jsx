@@ -40,21 +40,21 @@ const DynamicTierSelector = ({
     },
     {
       internalId: 'coffee',
-      displayName: 'Solo ($4.95/mo)',
+      displayName: 'Solo ($9.95/mo)',
       tagline: 'Stop losing customers',
       description: '10 analyses per month',
       badge: null
     },
     {
       internalId: 'growth',
-      displayName: 'Growth ($14.95/mo)',
+      displayName: 'Growth ($19.95/mo)',
       tagline: 'Never lose a customer to AI',
       description: '40 analyses per month',
-      badge: '⭐ RECOMMENDED'
+      badge: 'RECOMMENDED'
     },
     {
       internalId: 'scale',
-      displayName: 'Scale ($29.95/mo)',
+      displayName: 'Scale ($39.95/mo)',
       tagline: 'Never say no to a client',
       description: '100 analyses per month',
       badge: null
@@ -182,15 +182,15 @@ const DynamicTierSelector = ({
         <div className={`
           mt-4 p-4 rounded-lg border-2 transition-all
           ${isTransitioning ? 'opacity-50' : 'opacity-100'}
-          ${selectedTier === 'growth' ? 'border-yellow-400 bg-yellow-50' : 'border-gray-200 bg-gray-50'}
+          ${selectedTier === 'growth' ? 'border-signal bg-signal/5' : 'border-mist bg-cloud'}
         `}>
-          <div className="font-semibold text-gray-900 mb-2">
+          <div className="font-semibold text-ink mb-2">
             Selected: {selectedTierData?.displayName}
             {selectedTier === 'growth' && isTrial && (
-              <span className="ml-2 text-xs font-bold text-green-600">🎁 7-DAY TRIAL</span>
+              <span className="ml-2 text-xs font-bold text-green-600">7-DAY TRIAL</span>
             )}
           </div>
-          <div className="text-lg font-bold text-gray-900">
+          <div className="text-lg font-bold text-ink">
             {selectedTier === 'growth' && isTrial ? (
               <>$0 for 7 days</>
             ) : (
@@ -206,7 +206,7 @@ const DynamicTierSelector = ({
           </div>
           {selectedPricing.isAnnual && selectedPricing.displaySavings && !isTrial && (
             <div className="text-sm text-green-600 font-semibold mt-2">
-              💰 {selectedPricing.displaySavings}
+              {selectedPricing.displaySavings}
             </div>
           )}
         </div>
@@ -216,7 +216,7 @@ const DynamicTierSelector = ({
       <div className="mt-6">
         <button
           onClick={handleContinue}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg transition-colors text-lg shadow-lg hover:shadow-xl"
+          className="w-full bg-signal hover:bg-signal/90 text-white font-bold py-4 px-6 rounded-lg transition-colors text-lg shadow-lg hover:shadow-xl"
         >
           Continue to Sign Up →
         </button>
