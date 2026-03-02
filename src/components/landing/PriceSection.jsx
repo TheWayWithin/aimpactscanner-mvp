@@ -30,23 +30,38 @@ const tiers = [
       'Priority recommendations',
     ],
     cta: 'Start Solo',
-    highlighted: true,
+    highlighted: false,
   },
   {
     name: 'Growth',
     price: '$19.95',
     period: '/month',
     description: 'Full optimization loop',
-    badge: 'Best Value',
+    badge: 'Most Popular',
     features: [
-      '30 scans per month',
+      '40 scans per month',
       'Everything in Solo',
-      'LLM.txt Mastery integration',
-      'Diagnose-Optimize-Test loop',
+      'LLM.txt Mastery included',
+      'Remediation Planner',
       'Competitive benchmarking',
       'Priority support',
     ],
     cta: 'Start Growth',
+    highlighted: true,
+  },
+  {
+    name: 'Scale',
+    price: '$39.95',
+    period: '/month',
+    description: 'For teams & agencies',
+    features: [
+      '100 scans per month',
+      'Everything in Growth',
+      'API access & webhooks',
+      'White-label reports',
+      'Team collaboration',
+    ],
+    cta: 'Start Scale',
     highlighted: false,
   },
 ];
@@ -79,7 +94,7 @@ const PriceSection = ({ onNavigate }) => {
       </div>
 
       {/* Tier cards */}
-      <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-12">
         {tiers.map((tier) => (
           <div
             key={tier.name}

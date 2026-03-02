@@ -8,69 +8,52 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
     {
       category: 'Analysis Features',
       items: [
-        { name: 'Phase A Factors (Basic Analysis)', free: true, coffee: true, growth: true, scale: true },
-        { name: 'Complete 22-Factor Analysis', free: false, coffee: false, growth: true, scale: true },
+        { name: '27-Factor Analysis', free: 'Basic depth', coffee: 'Full depth', growth: 'Full depth', scale: 'Full depth' },
         { name: 'AI Remediation Planner', free: false, coffee: false, growth: true, scale: true },
-        { name: 'Progress Tracking Dashboard', free: false, coffee: false, growth: true, scale: true },
         { name: 'AI-Powered Recommendations', free: 'Basic', coffee: 'Advanced', growth: 'Expert', scale: 'Enterprise' },
-        { name: 'Educational Insights', free: false, coffee: true, growth: true, scale: true },
         { name: 'Competitor Benchmarking', free: false, coffee: false, growth: true, scale: true },
-        { name: 'Historical Tracking', free: false, coffee: 'Limited', growth: 'Unlimited', scale: 'Unlimited' }
+        { name: 'Historical Tracking', free: false, coffee: true, growth: true, scale: true },
+        { name: 'LLM.txt Mastery', free: false, coffee: false, growth: 'Included', scale: 'Included' }
       ]
     },
     {
       category: 'Usage & Limits',
       items: [
-        { name: 'Monthly Analysis Limit', free: '3', coffee: 'Unlimited', growth: 'Unlimited', scale: 'Unlimited' },
-        { name: 'Report Downloads', free: 'Watermarked', coffee: 'Clean PDFs', growth: 'Advanced PDFs', scale: 'Custom Branded' },
-        { name: 'Data Export', free: false, coffee: 'CSV', growth: 'CSV + JSON', scale: 'CSV + JSON + API' },
-        { name: 'Analysis Speed', free: 'Standard', coffee: 'Fast', growth: 'Priority', scale: 'Dedicated Queue' }
-      ]
-    },
-    {
-      category: 'Reporting & Insights',
-      items: [
-        { name: 'Basic Recommendations', free: true, coffee: true, growth: true, scale: true },
-        { name: 'Advanced SEO Insights', free: false, coffee: true, growth: true, scale: true },
-        { name: 'Performance Metrics', free: 'Basic', coffee: 'Detailed', growth: 'Comprehensive', scale: 'Enterprise' },
-        { name: 'Custom Branding', free: false, coffee: false, growth: true, scale: true },
-        { name: 'White-Label Reports', free: false, coffee: false, growth: false, scale: true }
+        { name: 'Monthly Scan Limit', free: '3', coffee: '10', growth: '40', scale: '100' },
+        { name: 'Report Downloads', free: 'Watermarked', coffee: 'Clean PDFs', growth: 'Advanced PDFs', scale: 'White-label' },
+        { name: 'Data Export', free: false, coffee: 'CSV', growth: 'CSV + JSON', scale: 'CSV + JSON + API' }
       ]
     },
     {
       category: 'Integration & API',
       items: [
-        { name: 'Web Dashboard Access', free: true, coffee: true, growth: true, scale: true },
+        { name: 'Web Dashboard', free: true, coffee: true, growth: true, scale: true },
         { name: 'API Access', free: false, coffee: false, growth: false, scale: true },
         { name: 'Webhook Integration', free: false, coffee: false, growth: false, scale: true },
-        { name: 'Third-Party Integrations', free: false, coffee: 'Basic', growth: 'Standard', scale: 'Advanced' },
         { name: 'Team Collaboration', free: false, coffee: false, growth: false, scale: true }
       ]
     },
     {
-      category: 'Support & Training',
+      category: 'Support',
       items: [
-        { name: 'Community Support', free: true, coffee: true, growth: true, scale: true },
         { name: 'Email Support', free: false, coffee: true, growth: true, scale: true },
         { name: 'Priority Support', free: false, coffee: false, growth: '24hr Response', scale: '1hr Response' },
-        { name: 'Training Materials', free: 'Basic', coffee: 'Standard', growth: 'Premium', scale: 'Enterprise' },
-        { name: 'Onboarding Call', free: false, coffee: false, growth: true, scale: true },
-        { name: 'Dedicated Account Manager', free: false, coffee: false, growth: false, scale: true }
+        { name: 'Dedicated Support', free: false, coffee: false, growth: false, scale: true }
       ]
     }
   ];
 
   const plans = [
-    { id: 'free', name: 'Free Trial', price: '$0' },
-    { id: 'coffee', name: '☕ Coffee', price: '$4.95/mo' },
-    { id: 'growth', name: '🚀 Growth', price: '$29/mo' },
-    { id: 'scale', name: '📈 Scale', price: '$99/mo' }
+    { id: 'free', name: 'Free', price: '$0' },
+    { id: 'coffee', name: 'Solo', price: '$9.95/mo' },
+    { id: 'growth', name: 'Growth', price: '$19.95/mo' },
+    { id: 'scale', name: 'Scale', price: '$39.95/mo' }
   ];
 
   const renderFeatureValue = (value, planId) => {
     if (typeof value === 'boolean') {
       return value ? (
-        <svg className="w-5 h-5 text-green-500 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+        <svg className="w-5 h-5 text-clarity mx-auto" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
         </svg>
       ) : (
@@ -95,9 +78,9 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
 
       return (
         <span className={`text-sm font-medium ${
-          isHighlighted 
-            ? 'text-blue-600 font-semibold' 
-            : 'text-gray-700'
+          isHighlighted
+            ? 'text-signal font-semibold'
+            : 'text-ink/70'
         }`}>
           {value}
         </span>
@@ -111,9 +94,9 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
     const baseClass = "p-6 text-center";
     
     if (planId === 'growth') {
-      return `${baseClass} bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200`;
+      return `${baseClass} bg-signal/5 border-2 border-signal/30`;
     } else if (planId === 'scale') {
-      return `${baseClass} bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-200`;
+      return `${baseClass} bg-gradient-to-br from-mastery to-clarity border-2 border-mist`;
     } else if (planId === 'coffee') {
       return `${baseClass} bg-gradient-to-br from-yellow-50 to-yellow-100 border border-yellow-200`;
     } else {
@@ -124,10 +107,10 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
   return (
     <div className={`max-w-6xl mx-auto ${className}`}>
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold mb-4" style={{ color: 'var(--framework-black)' }}>
+        <h2 className="text-3xl font-bold text-ink mb-4">
           Compare All Features
         </h2>
-        <p className="text-lg text-gray-600">
+        <p className="text-lg text-slate-500">
           See exactly what's included in each plan
         </p>
       </div>
@@ -140,15 +123,15 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
           </div>
           {plans.map((plan) => (
             <div key={plan.id} className={getPlanHeaderClass(plan.id)}>
-              <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--framework-black)' }}>
+              <h3 className="text-xl font-bold text-ink mb-2">
                 {plan.name}
               </h3>
-              <p className="text-2xl font-bold" style={{ color: 'var(--mastery-blue)' }}>
+              <p className="text-2xl font-bold text-signal">
                 {plan.price}
               </p>
               {plan.id === 'growth' && (
                 <div className="mt-2">
-                  <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                  <span className="inline-block px-3 py-1 bg-signal/10 text-signal text-xs font-semibold rounded-full">
                     MOST POPULAR
                   </span>
                 </div>
@@ -208,26 +191,22 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
         ))}
 
         {/* CTA Footer */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-8">
+        <div className="bg-signal/5 p-8">
           <div className="text-center">
-            <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--framework-black)' }}>
-              Ready to supercharge your website analysis?
+            <h3 className="text-xl font-bold text-ink mb-4">
+              Ready to improve your AI visibility?
             </h3>
-            <p className="text-gray-600 mb-6">
-              Join thousands of businesses improving their online presence with AI-powered insights
+            <p className="text-slate-500 mb-6">
+              Start free, upgrade when you see the gaps worth fixing
             </p>
             <div className="flex justify-center space-x-4">
-              <button 
-                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+              <button
+                className="px-6 py-3 bg-cloud text-ink rounded-lg font-semibold hover:bg-mist transition-colors border border-mist"
               >
-                Start Free Trial
+                Start Free
               </button>
-              <button 
-                className="px-6 py-3 text-white rounded-lg font-semibold hover:scale-105 transition-transform shadow-lg"
-                style={{ 
-                  background: 'linear-gradient(135deg, var(--mastery-blue) 0%, #3B82F6 100%)',
-                  boxShadow: '0 8px 20px rgba(30, 58, 138, 0.3)'
-                }}
+              <button
+                className="px-6 py-3 text-white rounded-lg font-semibold hover:scale-105 transition-transform shadow-lg bg-gradient-to-r from-mastery to-signal"
               >
                 Get Growth Plan
               </button>
@@ -237,8 +216,8 @@ const PricingComparison = ({ currentTier = 'free', className = '' }) => {
       </div>
 
       {/* FAQ Section */}
-      <div className="mt-12 bg-gray-50 rounded-2xl p-8">
-        <h3 className="text-2xl font-bold text-center mb-8" style={{ color: 'var(--framework-black)' }}>
+      <div className="mt-12 bg-cloud rounded-2xl p-8 border border-mist">
+        <h3 className="text-2xl font-bold text-center text-ink mb-8">
           Frequently Asked Questions
         </h3>
         

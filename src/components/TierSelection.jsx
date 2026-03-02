@@ -9,16 +9,16 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
 
   // Annual pricing (per year)
   const annualPrices = {
-    coffee: 49.50,
-    growth: 149.50,
-    scale: 299.50
+    coffee: 89.55,
+    growth: 179.55,
+    scale: 359.55
   };
 
-  // Monthly savings compared to annual
+  // Monthly savings compared to annual (25% discount)
   const yearSavings = {
-    coffee: 21.90,  // (5.95*12) - 49.50
-    growth: 65.90,  // (17.95*12) - 149.50
-    scale: 119.90   // (34.95*12) - 299.50
+    coffee: 29.85,  // (9.95*12) - 89.55
+    growth: 59.85,  // (19.95*12) - 179.55
+    scale: 119.85   // (39.95*12) - 359.55
   };
 
   const tiers = [
@@ -30,78 +30,73 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
       annualPrice: 0,
       analyses: '3 per month',
       features: [
+        '27 factors (basic depth)',
         'Basic recommendations',
-        'Phase A factors',
-        'Web-only results view',
-        'Community support',
-        '❌ No PDF export'
+        'Watermarked reports',
+        'No credit card required'
       ],
-      cta: showRegistrationFlow ? 'Start Free Trial' : 'Switch to Free',
+      cta: showRegistrationFlow ? 'Start Free' : 'Switch to Free',
       highlight: false,
       popular: false
     },
     {
       id: 'coffee',
       name: 'Solo',
-      price: 5.95,
-      monthlyPrice: 5.95,
-      annualPrice: 49.50,
+      price: 9.95,
+      monthlyPrice: 9.95,
+      annualPrice: 89.55,
       analyses: '10 per month',
       features: [
-        '✨ Professional PDF reports',
-        'Clean, exportable results',
-        'Educational content',
-        'Email support',
-        'Cancel anytime'
+        '27 factors (full depth)',
+        'Clean PDF reports',
+        'Advanced recommendations',
+        'Historical tracking',
+        'Email support'
       ],
-      cta: showRegistrationFlow ? 'Choose Solo Plan' : 'Upgrade to Solo',
-      highlight: true,
-      popular: true,
-      description: 'Perfect for individuals and small businesses'
+      cta: showRegistrationFlow ? 'Choose Solo' : 'Upgrade to Solo',
+      highlight: false,
+      popular: false,
+      description: 'For focused solopreneurs'
     },
     {
       id: 'growth',
-      name: '🚀 Growth',
-      price: 17.95,
-      monthlyPrice: 17.95,
-      annualPrice: 149.50,
+      name: 'Growth',
+      price: 19.95,
+      monthlyPrice: 19.95,
+      annualPrice: 179.55,
       analyses: '40 per month',
       features: [
-        '🎁 7-day free trial',
+        '7-day free trial',
         'Everything in Solo',
-        '📊 CSV export',
-        '🗺️ AI Remediation Planner',
-        'Progress tracking dashboard',
-        'Phase B factors (22 total)',
+        'Remediation Planner',
+        'Competitor benchmarking',
+        'LLM.txt Mastery included',
         'Priority support'
       ],
       cta: showRegistrationFlow ? 'Choose Growth' : 'Upgrade to Growth',
-      highlight: false,
-      popular: false,
-      comingSoon: false,
-      description: 'Complete analysis & planning for growing businesses'
+      highlight: true,
+      popular: true,
+      description: 'Full optimization loop'
     },
     {
       id: 'scale',
-      name: '📈 Scale',
-      price: 34.95,
-      monthlyPrice: 34.95,
-      annualPrice: 299.50,
+      name: 'Scale',
+      price: 39.95,
+      monthlyPrice: 39.95,
+      annualPrice: 359.55,
       analyses: '100 per month',
       features: [
         'Everything in Growth',
-        '🔗 API access',
-        '🏢 White-label PDF reports',
+        'API access & webhooks',
+        'White-label PDF reports',
         'Team collaboration',
-        'Custom reporting',
-        'Webhook integrations',
+        'LLM.txt Scale included',
         'Dedicated support'
       ],
-      cta: 'Contact Sales',
+      cta: showRegistrationFlow ? 'Choose Scale' : 'Upgrade to Scale',
       highlight: false,
       popular: false,
-      comingSoon: false,
-      description: 'Enterprise-grade solution for scaling teams'
+      description: 'For teams & agencies'
     }
   ];
 
@@ -153,10 +148,10 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
     }
     
     if (tier.highlight) {
-      return 'w-full py-3 px-4 rounded-md font-medium text-sm transition-colors bg-blue-500 text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2';
+      return 'w-full py-3 px-4 rounded-md font-medium text-sm transition-colors bg-signal text-white hover:bg-signal/90 focus:ring-2 focus:ring-signal focus:ring-offset-2';
     }
-    
-    return 'w-full py-3 px-4 rounded-md font-medium text-sm transition-colors bg-gray-900 text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2';
+
+    return 'w-full py-3 px-4 rounded-md font-medium text-sm transition-colors bg-ink text-white hover:bg-ink/90 focus:ring-2 focus:ring-ink focus:ring-offset-2';
   };
 
   const getButtonText = (tier) => {
@@ -182,10 +177,10 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
   return (
     <div className={`max-w-6xl mx-auto ${className}`}>
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        <h2 className="text-3xl font-bold text-ink mb-4">
           Choose Your Plan
         </h2>
-        <p className="text-lg text-gray-600">
+        <p className="text-lg text-slate-500">
           Start free, upgrade as you grow. Cancel anytime.
         </p>
       </div>
@@ -214,8 +209,8 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
             }`}
           >
             Annual
-            <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full font-semibold">
-              Save 30%
+            <span className="absolute -top-2 -right-2 bg-clarity text-white text-xs px-2 py-0.5 rounded-full font-semibold">
+              3 months free
             </span>
           </button>
         </div>
@@ -227,52 +222,52 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
             key={tier.id}
             className={`relative rounded-lg border-2 p-6 transition-all hover:shadow-lg flex flex-col min-h-[500px] ${
               tier.highlight
-                ? 'border-blue-500 bg-blue-50 transform scale-105'
-                : 'border-gray-200 bg-white'
+                ? 'border-signal bg-signal/5 transform scale-105'
+                : 'border-mist bg-white'
             } ${tier.comingSoon ? 'opacity-75' : ''}`}
           >
             {tier.popular && (
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap">
-                  Popular
+                <span className="bg-signal text-white px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap">
+                  Most Popular
                 </span>
               </div>
             )}
 
             <div className="text-center mb-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-xl font-bold text-ink mb-2">
                 {tier.name}
               </h3>
 
               <div className="mb-2">
-                <span className="text-4xl font-bold text-gray-900">
+                <span className="text-4xl font-bold text-ink">
                   {getDisplayPrice(tier).main}
                 </span>
                 {tier.price > 0 && (
-                  <span className="text-gray-500 text-sm">/mo</span>
+                  <span className="text-slate-500 text-sm">/mo</span>
                 )}
               </div>
 
               {/* Show billing details for annual */}
               {getDisplayPrice(tier).subtitle && (
-                <p className="text-xs text-gray-500 mb-1">
+                <p className="text-xs text-slate-500 mb-1">
                   {getDisplayPrice(tier).subtitle}
                 </p>
               )}
 
               {/* Show savings badge for annual billing on paid tiers */}
               {billingCycle === 'annual' && tier.price > 0 && yearSavings[tier.id] && (
-                <p className="text-xs font-medium text-green-600 mb-1">
+                <p className="text-xs font-medium text-clarity mb-1">
                   Save ${yearSavings[tier.id].toFixed(2)}/year
                 </p>
               )}
 
-              <p className="text-sm font-medium text-blue-600 mb-1">
-                {tier.analyses} analyses
+              <p className="text-sm font-medium text-signal mb-1">
+                {tier.analyses} scans
               </p>
 
               {tier.description && (
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-slate-500">
                   {tier.description}
                 </p>
               )}
@@ -280,9 +275,9 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
 
             <ul className="space-y-3 mb-6 flex-grow">
               {tier.features.map((feature, index) => (
-                <li key={index} className="flex items-start text-sm text-gray-700">
+                <li key={index} className="flex items-start text-sm text-ink/80">
                   <svg
-                    className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"
+                    className="h-4 w-4 text-clarity mr-2 mt-0.5 flex-shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -321,7 +316,7 @@ const TierSelection = ({ currentTier, onUpgrade, className = '', showRegistratio
       </div>
 
       <div className="mt-8 text-center">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-slate-500">
           All plans include secure payment processing and can be canceled anytime.
         </p>
       </div>

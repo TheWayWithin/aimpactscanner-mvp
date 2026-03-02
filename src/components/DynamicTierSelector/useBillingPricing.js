@@ -3,9 +3,9 @@ import { useMemo } from 'react';
 
 const PRICING = {
   free: { monthly: 0, annual: null },
-  coffee: { monthly: 5.95, annual: 49.50 },      // Annual = $4.13/mo
-  growth: { monthly: 17.95, annual: 149.50 },    // Annual = $12.46/mo
-  scale: { monthly: 34.95, annual: 299.50 }      // Annual = $24.96/mo
+  coffee: { monthly: 9.95, annual: 89.55 },      // Annual = $7.46/mo (25% off)
+  growth: { monthly: 19.95, annual: 179.55 },    // Annual = $14.96/mo (25% off)
+  scale: { monthly: 39.95, annual: 359.55 }      // Annual = $29.96/mo (25% off)
 };
 
 /**
