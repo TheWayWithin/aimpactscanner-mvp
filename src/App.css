@@ -3,33 +3,54 @@
 /* Google Fonts are now loaded optimally in index.html with preconnect and preload */
 /* This eliminates render-blocking CSS imports for better performance */
 
-/* Tailwind CSS v4 - Loaded with optimized layering */
-@import "tailwindcss" layer(utilities);
+/* Tailwind CSS v4 */
+@import "tailwindcss";
 
-/* Primary Brand Colors */
-:root {
-  --mastery-blue: #1E3A8A;        /* Primary brand elements, headers, CTAs */
-  --mastery-blue-light: rgba(30, 58, 138, 0.05); /* Lighter shade for backgrounds */
-  --ai-silver: #64748B;           /* Supporting text, borders, accents */
-  --ai-silver-light: rgba(100, 116, 139, 0.2); /* Lighter shade for backgrounds */
-  --authority-white: #FFFFFF;     /* Clean backgrounds, content areas */
-  --framework-black: #0F172A;     /* Body text, strong contrast */
-
-  /* Secondary Colors */
-  --innovation-teal: #0891B2;     /* Interactive elements, links, highlights */
-  --success-green: #059669;       /* Positive indicators, improvements */
-  --warning-amber: #D97706;       /* Attention, areas needing improvement */
-  --error-red: #DC2626;           /* Critical issues, urgent attention */
-
-  /* Typography Variables */
+/* Register brand colors with Tailwind v4 so utility classes are generated */
+@theme {
+  --color-mastery: #1E3A5F;
+  --color-signal: #2563EB;
+  --color-clarity: #0D9488;
+  --color-amber: #D97706;
+  --color-ink: #1E293B;
+  --color-slate: #475569;
+  --color-stone: #94A3B8;
+  --color-mist: #E2E8F0;
+  --color-cloud: #F1F5F9;
+  --color-success: #059669;
+  --color-warning: #D97706;
+  --color-error: #DC2626;
+  /* Legacy aliases */
+  --color-mastery-blue: #1E3A5F;
+  --color-innovation-teal: #0D9488;
+  --color-framework-black: #1E293B;
+  --color-ai-silver: #475569;
+  --color-authority-white: #FFFFFF;
+  --color-success-green: #059669;
+  --color-warning-amber: #D97706;
+  --color-error-red: #DC2626;
+  /* Fonts */
   --font-primary: 'Inter', sans-serif;
-  --font-secondary: 'Source Sans Pro', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Legacy CSS variable aliases (used by custom CSS classes below) */
+:root {
+  --mastery-blue: #1E3A5F;
+  --mastery-blue-light: rgba(30, 58, 95, 0.05);
+  --ai-silver: #475569;
+  --ai-silver-light: rgba(71, 85, 105, 0.2);
+  --authority-white: #FFFFFF;
+  --framework-black: #1E293B;
+  --innovation-teal: #0D9488;
+  --success-green: #059669;
+  --warning-amber: #D97706;
+  --error-red: #DC2626;
 }
 
 /* Basic Body Styles for Brand Fonts and Colors with LCP Optimization */
 body {
-  font-family: var(--font-secondary);
+  font-family: var(--font-primary);
   color: var(--framework-black);
   background-color: var(--authority-white);
   margin: 0;
@@ -52,7 +73,7 @@ body {
 /* Critical above-the-fold content optimization */
 .hero-section {
   min-height: 60vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-mastery) 0%, var(--color-clarity) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -235,7 +256,7 @@ body.consent-banner-visible {
 }
 
 .brand-intro-text {
-  font-family: var(--font-secondary);
+  font-family: var(--font-primary);
   font-size: 1.2em;
   color: var(--framework-black);
 }
@@ -247,7 +268,7 @@ body.consent-banner-visible {
   width: 100%;
   padding: 15px 0;
   text-align: center;
-  font-family: var(--font-secondary);
+  font-family: var(--font-primary);
   font-size: 0.9em;
 }
 
@@ -323,7 +344,7 @@ body.consent-banner-visible {
 
 /* Gradient text effects */
 .gradient-text {
-  background: linear-gradient(135deg, var(--mastery-blue) 0%, var(--innovation-teal) 100%);
+  background: linear-gradient(135deg, var(--color-mastery) 0%, var(--color-clarity) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
