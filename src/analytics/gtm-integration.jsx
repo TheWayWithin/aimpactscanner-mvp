@@ -171,6 +171,80 @@ export const useGTMTracking = () => {
     });
   };
 
+  // Audit v3 conversion funnel events
+  const trackScanStart = (url) => {
+    gtmPush({
+      event: 'scan_start',
+      event_category: 'conversion',
+      scanned_url: url,
+      user_tier: localStorage.getItem('user-tier') || 'free'
+    });
+  };
+
+  const trackScanComplete = (url, score) => {
+    gtmPush({
+      event: 'scan_complete_free',
+      event_category: 'conversion',
+      scanned_url: url,
+      score: score,
+      user_tier: localStorage.getItem('user-tier') || 'free'
+    });
+  };
+
+  const trackViewSampleReport = () => {
+    gtmPush({
+      event: 'view_sample_report',
+      event_category: 'engagement'
+    });
+  };
+
+  const trackViewPricingPage = () => {
+    gtmPush({
+      event: 'view_pricing_page',
+      event_category: 'engagement',
+      user_tier: localStorage.getItem('user-tier') || 'free'
+    });
+  };
+
+  const trackSelectPlan = (planName) => {
+    gtmPush({
+      event: `select_plan_${planName}`,
+      event_category: 'conversion',
+      plan: planName,
+      user_tier: localStorage.getItem('user-tier') || 'free'
+    });
+  };
+
+  const trackCheckoutStart = (planName, value) => {
+    gtmPush({
+      event: 'checkout_start',
+      event_category: 'conversion',
+      plan: planName,
+      value: value,
+      currency: ANALYTICS_CONFIG.CURRENCY
+    });
+  };
+
+  const trackPurchaseComplete = (planName, value, transactionId) => {
+    gtmPush({
+      event: 'purchase_complete',
+      event_category: 'conversion',
+      plan: planName,
+      value: value,
+      currency: ANALYTICS_CONFIG.CURRENCY,
+      transaction_id: transactionId
+    });
+  };
+
+  const trackRescan = (url) => {
+    gtmPush({
+      event: 'rescan_within_7d',
+      event_category: 'engagement',
+      scanned_url: url,
+      user_tier: localStorage.getItem('user-tier') || 'free'
+    });
+  };
+
   // Helper function to get current consent status
   const getCurrentConsentStatus = (type) => {
     try {
@@ -205,7 +279,16 @@ export const useGTMTracking = () => {
     trackUpgrade,
     trackFeatureUsage,
     trackError,
-    getCurrentConsentStatus
+    getCurrentConsentStatus,
+    // Audit v3 conversion funnel
+    trackScanStart,
+    trackScanComplete,
+    trackViewSampleReport,
+    trackViewPricingPage,
+    trackSelectPlan,
+    trackCheckoutStart,
+    trackPurchaseComplete,
+    trackRescan
   };
 };
 

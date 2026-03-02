@@ -1,0 +1,9 @@
+export { default as HeroSection } from './HeroSection';
+export { default as ProblemSection } from './ProblemSection';
+export { default as SolutionSection } from './SolutionSection';
+export { default as OutputSection } from './OutputSection';
+export { default as MethodologySection } from './MethodologySection';
+export { default as ProofSection } from './ProofSection';
+export { default as PriceSection } from './PriceSection';
+export { default as FitSection } from './FitSection';
+export { default as FinalCtaSection } from './FinalCtaSection';
