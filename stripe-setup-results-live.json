@@ -5,6 +5,14 @@
     "scale": "prod_TIsJguLGJqqDWi"
   },
   "prices": {
+    "solo_monthly": "price_1T6LWRIiC84gpR8Hpex0UWx1",
+    "solo_annual": "price_1T6LXOIiC84gpR8HvC9HRoNX",
+    "growth_monthly": "price_1T6LY4IiC84gpR8HS8rmRfwl",
+    "growth_annual": "price_1T6LYsIiC84gpR8HNvrd5RSY",
+    "scale_monthly": "price_1T6LZaIiC84gpR8HgkQ2hrZK",
+    "scale_annual": "price_1T6LaGIiC84gpR8HkaaL4NWi"
+  },
+  "prices_v1_archived": {
     "solo_monthly": "price_1SMGZ2IiC84gpR8H0dShUU0z",
     "solo_annual": "price_1SMGZ2IiC84gpR8HQtENjbRm",
     "growth_monthly": "price_1SMGZ3IiC84gpR8HQvEjhBv5",

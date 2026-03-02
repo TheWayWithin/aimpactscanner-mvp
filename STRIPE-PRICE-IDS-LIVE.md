@@ -8,16 +8,27 @@
 
 ---
 
-## Price IDs (Live Mode - Production)
+## Price IDs v2 (Live Mode - Production) - Updated 2026-03-02
 
 | Product | Price ID | Price | Billing | Trial? | Metadata |
 |---------|----------|-------|---------|--------|----------|
-| Solo Monthly | `price_1SMGZ2IiC84gpR8H0dShUU0z` | $5.95 | Monthly | No | `tier=coffee` |
-| Solo Annual | `price_1SMGZ2IiC84gpR8HQtENjbRm` | $49.50 | Yearly | No | `tier=coffee, billing=annual` |
-| Growth Monthly | `price_1SMGZ3IiC84gpR8HQvEjhBv5` | $17.95 | Monthly | No | `tier=growth` |
-| Growth Annual | `price_1SMGZ3IiC84gpR8Hk0aMTjB2` | $149.50 | Yearly | **7 days** | `tier=growth, billing=annual` |
-| Scale Monthly | `price_1SMGZ4IiC84gpR8H30pVuKqm` | $34.95 | Monthly | No | `tier=scale` |
-| Scale Annual | `price_1SMGZ5IiC84gpR8HTP46tTjj` | $299.50 | Yearly | No | `tier=scale, billing=annual` |
+| Solo Monthly | `price_1T6LWRIiC84gpR8Hpex0UWx1` | $9.95 | Monthly | No | `tier=coffee` |
+| Solo Annual | `price_1T6LXOIiC84gpR8HvC9HRoNX` | $89.55 | Yearly | No | `tier=coffee, billing=annual` |
+| Growth Monthly | `price_1T6LY4IiC84gpR8HS8rmRfwl` | $19.95 | Monthly | No | `tier=growth` |
+| Growth Annual | `price_1T6LYsIiC84gpR8HNvrd5RSY` | $179.55 | Yearly | **7 days** (via trial_period_days) | `tier=growth, billing=annual` |
+| Scale Monthly | `price_1T6LZaIiC84gpR8HgkQ2hrZK` | $39.95 | Monthly | No | `tier=scale` |
+| Scale Annual | `price_1T6LaGIiC84gpR8HkaaL4NWi` | $359.55 | Yearly | No | `tier=scale, billing=annual` |
+
+### Archived v1 Price IDs (DO NOT USE - existing subscribers may reference these)
+
+| Product | Price ID | Price | Status |
+|---------|----------|-------|--------|
+| Solo Monthly | `price_1SMGZ2IiC84gpR8H0dShUU0z` | $5.95 | Archived |
+| Solo Annual | `price_1SMGZ2IiC84gpR8HQtENjbRm` | $49.50 | Archived |
+| Growth Monthly | `price_1SMGZ3IiC84gpR8HQvEjhBv5` | $17.95 | Archived |
+| Growth Annual | `price_1SMGZ3IiC84gpR8Hk0aMTjB2` | $149.50 | Archived |
+| Scale Monthly | `price_1SMGZ4IiC84gpR8H30pVuKqm` | $34.95 | Archived |
+| Scale Annual | `price_1SMGZ5IiC84gpR8HTP46tTjj` | $299.50 | Archived |
 
 ---
 

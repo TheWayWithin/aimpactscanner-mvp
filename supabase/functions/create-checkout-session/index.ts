@@ -27,19 +27,20 @@ serve(async (req) => {
       console.log('Mapped starter tier to coffee');
     }
 
-    // Price ID mapping (Live Mode) - matches STRIPE-PRICE-IDS-LIVE.md
+    // Price ID mapping (Live Mode) - v2 pricing ($9.95/$19.95/$39.95, 25% annual discount)
+    // Updated 2026-03-02: Old v1 prices archived in Stripe, new v2 prices created
     const STRIPE_PRICE_IDS = {
       coffee: {
-        monthly: 'price_1SMGZ2IiC84gpR8H0dShUU0z',
-        annual: 'price_1SMGZ2IiC84gpR8HQtENjbRm'
+        monthly: 'price_1T6LWRIiC84gpR8Hpex0UWx1',  // $9.95/mo
+        annual: 'price_1T6LXOIiC84gpR8HvC9HRoNX'     // $89.55/yr ($7.46/mo)
       },
       growth: {
-        monthly: 'price_1SMGZ3IiC84gpR8HQvEjhBv5',
-        annual: 'price_1SMGZ3IiC84gpR8Hk0aMTjB2' // Has 7-day trial configured in Stripe
+        monthly: 'price_1T6LY4IiC84gpR8HS8rmRfwl',  // $19.95/mo
+        annual: 'price_1T6LYsIiC84gpR8HNvrd5RSY'     // $179.55/yr ($14.96/mo) - trial via trial_period_days
       },
       scale: {
-        monthly: 'price_1SMGZ4IiC84gpR8H30pVuKqm',
-        annual: 'price_1SMGZ5IiC84gpR8HTP46tTjj'
+        monthly: 'price_1T6LZaIiC84gpR8HgkQ2hrZK',  // $39.95/mo
+        annual: 'price_1T6LaGIiC84gpR8HkaaL4NWi'     // $359.55/yr ($29.96/mo)
       }
     };
 
@@ -54,9 +55,9 @@ serve(async (req) => {
         priceId = STRIPE_PRICE_IDS[tier][billing];
         console.log(`Using ${tier} ${billing} price ID:`, priceId);
 
-        // For Growth Annual with trial, Stripe handles trial automatically
-        if (tier === 'growth' && billing === 'annual' && isTrial) {
-          console.log('✅ Growth Annual trial - Stripe will apply 7-day trial period automatically');
+        // For Growth with trial, trial_period_days is added to the checkout session below
+        if (tier === 'growth' && isTrial) {
+          console.log('✅ Growth trial selected - will add 7-day trial_period_days to session');
         }
       } else {
         // Fallback to old Coffee price ID
