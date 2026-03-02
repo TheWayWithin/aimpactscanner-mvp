@@ -95,18 +95,16 @@
     "test:uat:report": "npx playwright show-report test-results/uat",
     "test:uat:ci": "node tests/uat/setup-uat.js && node tests/uat/run-uat.js --category all",
     "uat": "npm run test:uat:setup && npm run test:uat",
-    "test:tier1": "npx playwright test tests/tier1-landing.spec.ts --config playwright.config.ts",
-    "test:tier2": "npx playwright test tests/tier2-auth.spec.ts --config playwright.config.ts",
-    "test:tier3": "npx playwright test tests/tier3-analysis.spec.ts --config playwright.config.ts",
-    "test:tier4": "npx playwright test tests/tier4-checkout.spec.ts --config playwright.config.ts",
-    "test:oat": "npx playwright test --config playwright.config.ts",
-    "test:quick-oat": "npx playwright test tests/tier1-landing.spec.ts tests/tier2-auth.spec.ts --config playwright.config.ts"
+    "test:api:setup": "node tests/api/setup-scale-user.js",
+    "test:api": "node tests/api/api-keys-test.js",
+    "test:api:staging": "API_TEST_STAGING_URL=https://aimpactscanner-backend-production.up.railway.app node tests/api/api-keys-test.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.51.0",
     "bcryptjs": "^3.0.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
+    "lucide-react": "^0.575.0",
     "prop-types": "^15.8.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
