@@ -4,8 +4,8 @@
   publish = "dist"
 
 [build.environment]
-  # Node.js version for build - Vite 7 requires Node 20+
-  NODE_VERSION = "20.19.0"
+  # Node.js version for build - using 22 LTS for compatibility
+  NODE_VERSION = "22"
 
 # Serve llms.txt directly
 [[redirects]]
