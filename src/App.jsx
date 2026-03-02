@@ -45,6 +45,11 @@ import PrivacyPolicyPage from './components/PrivacyPolicyPage.jsx';
 import TermsOfServicePage from './components/TermsOfServicePage.jsx';
 import ContactPage from './components/ContactPage.jsx';
 import AboutPage from './components/AboutPage.jsx';
+const MethodologyPage = React.lazy(() => import('./components/MethodologyPage.jsx'));
+const HowItWorksPage = React.lazy(() => import('./components/HowItWorksPage.jsx'));
+const FaqPage = React.lazy(() => import('./components/FaqPage.jsx'));
+const SuitePage = React.lazy(() => import('./components/SuitePage.jsx'));
+const SampleReportPage = React.lazy(() => import('./components/SampleReportPage.jsx'));
 import Footer from './components/Footer.jsx';
 import NavigationButtons from './components/NavigationButtons.jsx';
 import SimpleConsentBanner from './components/SimpleConsentBanner.jsx'; // Optimized for LCP performance
@@ -171,7 +176,15 @@ function AppContent({ initialUrl }) {
     trackSignup,
     trackUpgrade,
     trackFeatureUsage,
-    trackError
+    trackError,
+    trackScanStart,
+    trackScanComplete,
+    trackViewSampleReport,
+    trackViewPricingPage,
+    trackSelectPlan,
+    trackCheckoutStart,
+    trackPurchaseComplete,
+    trackRescan
   } = useGTMTracking();
   
   // Track if we've already processed the pending analysis to prevent duplicate processing
@@ -210,6 +223,9 @@ function AppContent({ initialUrl }) {
   // Track page views when current view changes
   useEffect(() => {
     trackPageView(`/${currentView}`);
+    // Audit v3 specific funnel events
+    if (currentView === 'sample-report') trackViewSampleReport();
+    if (currentView === 'pricing') trackViewPricingPage();
   }, [currentView]);
 
   // Global navigation handler for privacy policy links
@@ -242,6 +258,7 @@ function AppContent({ initialUrl }) {
     const newTier = message.includes('Coffee') ? 'coffee' : 'professional';
     const tierValue = newTier === 'coffee' ? 5 : 25; // Coffee: $5, Professional: $25
     trackUpgrade(userTier, newTier, tierValue);
+    trackPurchaseComplete(newTier, tierValue, `upgrade_${Date.now()}`);
     
     // Refresh user tier after successful upgrade
     if (session?.user?.id) {
@@ -257,11 +274,19 @@ function AppContent({ initialUrl }) {
     alert(`Upgrade failed: ${error}`);
   };
 
-  const { handleUpgrade, loading: upgradeLoading } = useUpgrade(
-    session?.user, 
-    handleUpgradeSuccess, 
+  const { handleUpgrade: rawHandleUpgrade, loading: upgradeLoading } = useUpgrade(
+    session?.user,
+    handleUpgradeSuccess,
     handleUpgradeError
   );
+
+  // Wrap handleUpgrade to fire audit v3 funnel events
+  const handleUpgrade = (targetTier, billingFrequency) => {
+    const tierValues = { solo: 9.95, coffee: 9.95, growth: 19.95, scale: 39.95 };
+    trackSelectPlan(targetTier);
+    trackCheckoutStart(targetTier, tierValues[targetTier] || 0);
+    rawHandleUpgrade(targetTier, billingFrequency);
+  };
 
   useEffect(() => {
     // Handle browser back/forward buttons with route protection
@@ -1178,7 +1203,7 @@ function AppContent({ initialUrl }) {
     
     // Smart routing based on user type and context
     if (isNewUser && hasAnalysisData) {
-      // New verified users with analysis data → go to results
+      // New verified users with analysis data   go to results
       console.log('🎯 New verified user with analysis data → redirecting to results');
       const pendingUrl = localStorage.getItem('pendingAnalysisUrl');
       const pendingId = localStorage.getItem('pendingAnalysisId');
@@ -1212,12 +1237,12 @@ function AppContent({ initialUrl }) {
         setCurrentView('dashboard');
       }
     } else if (isNewUser && !hasAnalysisData) {
-      // New verified users without analysis data → go to dashboard with welcome
+      // New verified users without analysis data   go to dashboard with welcome
       console.log('🎯 New verified user without analysis data → redirecting to dashboard');
       setShowWelcome(true);
       setCurrentView('dashboard');
     } else {
-      // Returning users → always go to dashboard
+      // Returning users   always go to dashboard
       console.log('🎯 Returning user → redirecting to dashboard');
       setCurrentView('dashboard');
     }
@@ -1390,6 +1415,7 @@ function AppContent({ initialUrl }) {
 
       console.log('🚀 Starting analysis for URL:', url);
       trackAnalysisStart(url);
+      trackScanStart(url);
       
       setCurrentUrl(url);
       setCurrentAnalysisId(analysisId);
@@ -1552,6 +1578,7 @@ function AppContent({ initialUrl }) {
           };
           setAnalysisResults(results);
           trackAnalysisComplete(url, data.overall_score, duration);
+          trackScanComplete(url, data.overall_score);
           
           // Switch to results view once we have real data
           setCurrentView('results');
@@ -1945,6 +1972,62 @@ function AppContent({ initialUrl }) {
     );
   }
 
+  // Content pages (Phase 3) - lazy-loaded for performance
+  if (currentView === 'methodology') {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Suspense fallback={<ComponentLoader message="Loading methodology..." />}>
+          <MethodologyPage onNavigate={setCurrentView} isAuthenticated={!!session} />
+        </Suspense>
+        <Footer onNavigate={setCurrentView} />
+      </div>
+    );
+  }
+
+  if (currentView === 'how-it-works') {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <HowItWorksPage onNavigate={setCurrentView} />
+        </Suspense>
+        <Footer onNavigate={setCurrentView} />
+      </div>
+    );
+  }
+
+  if (currentView === 'sample-report') {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Suspense fallback={<ComponentLoader message="Loading sample report..." />}>
+          <SampleReportPage onNavigate={setCurrentView} />
+        </Suspense>
+        <Footer onNavigate={setCurrentView} />
+      </div>
+    );
+  }
+
+  if (currentView === 'suite') {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <SuitePage onNavigate={setCurrentView} />
+        </Suspense>
+        <Footer onNavigate={setCurrentView} />
+      </div>
+    );
+  }
+
+  if (currentView === 'faq') {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Suspense fallback={<ComponentLoader message="Loading..." />}>
+          <FaqPage onNavigate={setCurrentView} />
+        </Suspense>
+        <Footer onNavigate={setCurrentView} />
+      </div>
+    );
+  }
+
   // Add pricing page accessibility for unauthenticated users
   if (currentView === 'pricing' && !session) {
     return (
@@ -2128,7 +2211,7 @@ function AppContent({ initialUrl }) {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            🔍 New Analysis
+            New Analysis
           </button>
           <button
             onClick={() => setCurrentView('pricing')}
@@ -2138,7 +2221,7 @@ function AppContent({ initialUrl }) {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            💎 Upgrade
+            Upgrade
           </button>
           <button
             onClick={() => setCurrentView('account')}
@@ -2148,7 +2231,7 @@ function AppContent({ initialUrl }) {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            👤 Account
+             Account
           </button>
         </div>
 
@@ -2166,7 +2249,7 @@ function AppContent({ initialUrl }) {
                   onClick={() => setCurrentView('input')}
                   className="px-8 py-4 bg-blue-600 text-white rounded-lg font-bold text-lg hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all"
                 >
-                  🔍 Start New Analysis
+                  Start New Analysis
                 </button>
               </div>
           </div>
@@ -2186,7 +2269,7 @@ function AppContent({ initialUrl }) {
             <>
               {analysisError && (
                 <div className="error-banner">
-                  <div className="error-icon">⚠️</div>
+                  <div className="error-icon"></div>
                   <div className="error-content">
                     <h3>{analysisError.title}</h3>
                     <p>{analysisError.message}</p>

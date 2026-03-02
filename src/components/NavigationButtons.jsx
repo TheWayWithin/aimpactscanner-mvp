@@ -16,50 +16,50 @@ const NavigationButtons = ({ currentView, onNavigate, isAuthenticated = false })
         onClick={() => handleNavigation('dashboard')}
         className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
           currentView === 'dashboard' 
-            ? 'bg-blue-600 text-white' 
+            ? 'bg-signal text-white' 
             : isAuthenticated
               ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               : 'bg-gray-100 text-gray-500 hover:bg-gray-200 cursor-pointer'
         }`}
         title={!isAuthenticated ? 'Sign in to access Dashboard' : 'Dashboard'}
       >
-        🏠 Dashboard
+        Dashboard
       </button>
       <button
         onClick={() => handleNavigation('input')}
         className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
           currentView === 'input' 
-            ? 'bg-blue-600 text-white' 
+            ? 'bg-signal text-white' 
             : isAuthenticated
               ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               : 'bg-gray-100 text-gray-500 hover:bg-gray-200 cursor-pointer'
         }`}
         title={!isAuthenticated ? 'Sign in to start analysis' : 'New Analysis'}
       >
-        🔍 New Analysis
+         New Analysis
       </button>
       <button
         onClick={() => onNavigate('pricing')}
         className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
           currentView === 'pricing' 
-            ? 'bg-blue-600 text-white' 
+            ? 'bg-signal text-white' 
             : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
         }`}
       >
-        💎 Upgrade
+        Upgrade
       </button>
       <button
         onClick={() => handleNavigation('account')}
         className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
           currentView === 'account' 
-            ? 'bg-blue-600 text-white' 
+            ? 'bg-signal text-white' 
             : isAuthenticated
               ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               : 'bg-gray-100 text-gray-500 hover:bg-gray-200 cursor-pointer'
         }`}
         title={!isAuthenticated ? 'Sign in to access Account' : 'Account'}
       >
-        👤 Account
+        Account
       </button>
     </div>
   );

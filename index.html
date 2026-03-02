@@ -3,29 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>AImpactScanner - AI Search Optimization Analysis | Check Your AI Visibility</title>
-    <meta name="build-version" content="v2.0.2-production">
-    
+    <title>AImpactScanner - See How AI Sees Your Business | AI Search Mastery</title>
+    <meta name="build-version" content="v3.0.0-modernization">
+
     <!-- Essential SEO Meta Tags -->
-    <meta name="description" content="Free AI impact analysis for your website. See how ChatGPT, Claude, and Perplexity view your site. Get your AI optimization score in 15 seconds with 148 factors analyzed.">
-    <meta name="keywords" content="AI SEO, AI optimization, ChatGPT SEO, Claude optimization, AI search ranking, website AI analysis, AI visibility checker">
+    <meta name="description" content="Analyze your page against the published 27-factor MASTERY-AI Framework. Get a prioritized list of what to fix first — free in under 60 seconds. No email required.">
+    <meta name="keywords" content="AI visibility, AI search optimization, MASTERY-AI Framework, ChatGPT visibility, AI citation, AI search ranking, website AI analysis">
     <meta name="author" content="AI Search Mastery">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://aimpactscanner.com/">
-    
+
     <!-- Open Graph Tags for Social Sharing -->
-    <meta property="og:title" content="AImpactScanner - Free AI Search Optimization Analysis">
-    <meta property="og:description" content="Discover how AI search engines see your website. Free analysis of 148 factors in 15 seconds. See what you're losing to ChatGPT and Claude.">
+    <meta property="og:title" content="AImpactScanner - See How AI Sees Your Business">
+    <meta property="og:description" content="Analyze your page against the 27-factor MASTERY-AI Framework. Get your AI Visibility Score and a prioritized list of what to fix first — free in 60 seconds.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://aimpactscanner.com/">
     <meta property="og:image" content="https://aimpactscanner.com/social-preview.png">
     <meta property="og:site_name" content="AImpactScanner">
     <meta property="og:locale" content="en_US">
-    
+
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="AImpactScanner - Free AI Search Optimization Analysis">
-    <meta name="twitter:description" content="Is AI stealing your traffic? Find out in 15 seconds with our free analysis of 148 factors.">
+    <meta name="twitter:title" content="AImpactScanner - See How AI Sees Your Business">
+    <meta name="twitter:description" content="Analyze your page against the 27-factor MASTERY-AI Framework. Free AI Visibility Score in 60 seconds. No email required.">
     <meta name="twitter:image" content="https://aimpactscanner.com/social-preview.png">
     <meta name="twitter:site" content="@aisearchmastery">
     
@@ -41,7 +41,7 @@
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "AImpactScanner",
-      "description": "AI search optimization analysis tool that checks how ChatGPT, Claude, Perplexity and other AI systems see your website",
+      "description": "Analyze any page against the 27-factor MASTERY-AI Framework. Get an AI Visibility Score, 8-pillar breakdown, and prioritized gaps to fix.",
       "url": "https://aimpactscanner.com",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
@@ -79,22 +79,15 @@
     <link rel="preconnect" href="https://aimpactscanner.supabase.co">
     <link rel="dns-prefetch" href="https://aimpactscanner.supabase.co">
     
-    <!-- CRITICAL FIX: Optimize font loading to prevent FOIT and reduce LCP -->
+    <!-- Font Loading: Inter only (AI Search Mastery unified typography) -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" fetchpriority="high">
-    <!-- Defer non-critical fonts to after LCP -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" media="print" onload="this.media='all'">
-    <!-- Load JetBrains Mono only when needed for code display -->
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
-    
-    <!-- Preload only critical Inter font for hero content -->
+
+    <!-- Preload critical Inter font file -->
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
-    <!-- Source Sans Pro loaded on-demand to prevent unused preload warnings -->
-    
+
     <!-- Fallback for no-JS -->
     <noscript>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap">
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
     </noscript>
 
     <!-- Favicon and App Icons -->
@@ -194,15 +187,20 @@
     
     <!-- Critical CSS for optimal LCP and First Paint -->
     <style>
-      /* Critical CSS Variables - Inline for immediate availability */
+      /* Critical CSS Variables - AI Search Mastery (March 2026) */
       :root {
-        --mastery-blue: #1E3A8A;
+        --color-mastery: #1E3A5F;
+        --color-signal: #2563EB;
+        --color-clarity: #0D9488;
+        --color-ink: #1E293B;
+        --color-white: #FFFFFF;
+        --color-slate: #475569;
+        --mastery-blue: #1E3A5F;
         --authority-white: #FFFFFF;
-        --framework-black: #0F172A;
-        --ai-silver: #64748B;
-        --innovation-teal: #0891B2;
+        --framework-black: #1E293B;
+        --ai-silver: #475569;
+        --innovation-teal: #0D9488;
         --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        --font-secondary: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       }
       
       /* Critical base styles for immediate render */
@@ -221,9 +219,9 @@
       body {
         margin: 0;
         padding: 0;
-        font-family: var(--font-secondary);
-        color: var(--framework-black);
-        background-color: var(--authority-white);
+        font-family: var(--font-primary);
+        color: var(--color-ink);
+        background-color: var(--color-white);
         contain: layout style;
         overscroll-behavior: none;
       }
@@ -239,13 +237,13 @@
         align-items: center;
         justify-content: center;
         min-height: 100vh;
-        font-family: var(--font-secondary);
+        font-family: var(--font-primary);
       }
-      
+
       /* Critical hero section for above-the-fold */
       .hero-section {
         min-height: 60vh;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1E3A5F 0%, #0D9488 100%);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -445,56 +443,50 @@
 
   </head>
   <body>
-    <!-- Static Hero for Instant LCP (16.6s → <2.5s) -->
-    <div id="static-hero" class="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div class="container mx-auto px-4 py-8">
+    <!-- Static Hero for Instant LCP -->
+    <div id="static-hero" style="min-height:100vh;background:linear-gradient(135deg,#1E3A5F 0%,#0D9488 100%);">
+      <div style="max-width:80rem;margin:0 auto;padding:2rem 1rem;">
         <!-- Static Navigation -->
-        <nav class="flex items-center justify-between mb-12">
-          <div class="flex items-center gap-2">
-            <span class="text-2xl font-bold text-blue-600">⚡</span>
-            <span class="text-xl font-semibold text-gray-800">AImpactScanner</span>
+        <nav style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3rem;">
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <span style="font-size:1.25rem;font-weight:700;color:white;">AImpactScanner</span>
+            <span style="font-size:0.75rem;color:rgba(255,255,255,0.7);">Part of AI Search Mastery</span>
           </div>
         </nav>
-        
+
         <!-- Hero Content - Immediate LCP -->
-        <div class="max-w-4xl mx-auto text-center pt-12">
-          <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Is AI Stealing Your Traffic?
+        <div style="max-width:48rem;margin:0 auto;text-align:center;padding-top:4rem;">
+          <h1 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:white;margin:0 0 1.5rem;line-height:1.1;">
+            See how AI sees your business.
           </h1>
-          <p class="text-xl text-gray-600 mb-8">
-            Find out in seconds how AI search engines see your website
+          <p style="font-size:clamp(1rem,2.5vw,1.25rem);color:rgba(255,255,255,0.85);margin:0 0 2rem;">
+            Analyze your page against the published 27-factor MASTERY-AI Framework. Get a prioritized list of what to fix first.
           </p>
-          
+
           <!-- Static Form -->
-          <div class="max-w-2xl mx-auto">
-            <div class="flex flex-col md:flex-row gap-4">
-              <input 
-                type="url" 
-                placeholder="Enter your website URL (e.g., example.com)"
-                class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          <div style="max-width:36rem;margin:0 auto;">
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              <input
+                type="url"
+                placeholder="https://yourwebsite.com/your-most-important-page"
+                style="width:100%;padding:0.875rem 1rem;border:2px solid rgba(255,255,255,0.3);border-radius:0.5rem;font-size:1rem;background:rgba(255,255,255,0.1);color:white;"
                 id="static-url-input"
               />
-              <button 
-                class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+              <button
+                style="padding:0.875rem 1.5rem;background:#2563EB;color:white;font-weight:600;border-radius:0.5rem;border:none;font-size:1rem;cursor:pointer;"
                 id="static-analyze-btn"
                 onclick="window.__pendingUrl = document.getElementById('static-url-input').value; this.textContent = 'Loading...'; this.disabled = true;"
               >
-                Analyze My Site →
+                Scan My Page Free
               </button>
             </div>
           </div>
-          
+
           <!-- Trust Indicators -->
-          <div class="mt-12 flex flex-wrap items-center justify-center gap-8 text-gray-600">
-            <span class="flex items-center gap-2">
-              <span>✓</span> Free Analysis
-            </span>
-            <span class="flex items-center gap-2">
-              <span>✓</span> No Sign-up Required
-            </span>
-            <span class="flex items-center gap-2">
-              <span>✓</span> 15-Factor AI Framework
-            </span>
+          <div style="margin-top:2rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:1.5rem;color:rgba(255,255,255,0.7);font-size:0.875rem;">
+            <span>27 factors analyzed</span>
+            <span>Results in ~60 seconds</span>
+            <span>No email required</span>
           </div>
         </div>
       </div>

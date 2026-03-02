@@ -19,6 +19,15 @@ export const ANALYTICS_CONFIG = {
     PURCHASE: 'purchase',
     FEATURE_USAGE: 'feature_usage',
     ERROR_TRACKING: 'exception',
+    // Audit v3 conversion funnel events
+    SCAN_START: 'scan_start',
+    SCAN_COMPLETE_FREE: 'scan_complete_free',
+    VIEW_SAMPLE_REPORT: 'view_sample_report',
+    VIEW_PRICING_PAGE: 'view_pricing_page',
+    SELECT_PLAN: 'select_plan',
+    CHECKOUT_START: 'checkout_start',
+    PURCHASE_COMPLETE: 'purchase_complete',
+    RESCAN_WITHIN_7D: 'rescan_within_7d',
     // Tier Selector Events (Phase 8)
     TIER_SELECTOR_VIEWED: 'tier_selector_viewed',
     TIER_SELECTION_CHANGED: 'tier_selection_changed',
