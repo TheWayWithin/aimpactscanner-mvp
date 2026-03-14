@@ -434,9 +434,9 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
       </div>
-      <h3 className="text-lg font-medium mb-2" style={{ color: '#0F172A' }}>Upgrade to Generate LLMs.txt</h3>
+      <h3 className="text-lg font-medium mb-2" style={{ color: '#1E293B' }}>Add LLMs.txt Generation to Your Plan</h3>
       <p className="text-sm mb-4" style={{ color: '#64748B' }}>
-        Generate SEO-optimized LLMs.txt files for better AI discovery. Available on Growth ($12.46/mo) and Scale ($24.96/mo) tiers.
+        Upgrade your AImpactScanner plan to generate LLMs.txt files directly inside this tool. Available on Growth ($12.46/mo) and Scale ($24.96/mo) tiers.
       </p>
       <button
         onClick={() => onUpgrade && onUpgrade()}
@@ -606,7 +606,7 @@ const LLMsTxtPanel = ({ analysisUrl, userTier, onUpgrade }) => {
   return (
     <div className="rounded-lg p-6 shadow" style={{ backgroundColor: 'white' }} role="region" aria-label="LLMs.txt Generation Panel">
       <div className="mb-4">
-        <h2 className="text-xl font-semibold" style={{ color: '#0F172A' }}>
+        <h2 className="text-xl font-semibold" style={{ color: '#1E293B' }}>
           LLMs.txt Generation
           {userTier === 'growth' && <span className="ml-2 text-xs font-normal px-2 py-1 rounded-full" style={{ backgroundColor: '#F3E8FF', color: '#7C3AED' }}>Growth</span>}
           {userTier === 'scale' && <span className="ml-2 text-xs font-normal px-2 py-1 rounded-full" style={{ backgroundColor: '#DCFCE7', color: '#16A34A' }}>Scale</span>}

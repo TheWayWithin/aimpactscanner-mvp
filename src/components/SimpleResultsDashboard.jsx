@@ -652,8 +652,33 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
           (f.factor_name || f.name || '').toLowerCase().includes('llms.txt') ||
           (f.factor_name || f.name || '').toLowerCase().includes('llm.txt')
         );
-        const showCallout = !llmsFactor || llmsFactor.score < 70;
-        if (!showCallout) return null;
+        const hasLlmsIssue = !llmsFactor || llmsFactor.score < 70;
+        if (!hasLlmsIssue) return null;
+
+        const isGrowthOrScale = userTier === 'growth' || userTier === 'scale';
+
+        if (isGrowthOrScale) {
+          // Growth/Scale users already have built-in generation — just remind them
+          return (
+            <div className="mb-6 bg-gradient-to-r from-clarity/5 to-clarity/10 border border-clarity/20 rounded-xl p-5">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-10 h-10 bg-clarity/10 rounded-lg flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-clarity" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-ink mb-1">Your llms.txt needs attention</h4>
+                  <p className="text-sm text-slate">
+                    Your plan includes LLMs.txt generation above. Use it to create a quality-scored file, then validate
+                    it with <a href="https://llmtxtmastery.com" target="_blank" rel="noopener noreferrer" className="text-signal hover:text-signal/80 font-medium">LLM.txt Mastery</a> to
+                    check formatting and discoverability.
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        // Free/Coffee users — recommend the standalone tool
         return (
           <div className="mb-6 bg-gradient-to-r from-signal/5 to-mastery/5 border border-signal/20 rounded-xl p-5">
             <div className="flex items-start gap-4">
@@ -663,8 +688,8 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
               <div className="flex-1">
                 <h4 className="font-semibold text-ink mb-1">Recommended Next Step: Fix Your llms.txt</h4>
                 <p className="text-sm text-slate mb-3">
-                  Generate quality-scored llms.txt files with <strong>LLM.txt Mastery</strong> — discovers
-                  JS-rendered pages other tools miss, validates formatting, and guides deployment. Free tier available.
+                  Generate quality-scored llms.txt files with <strong>LLM.txt Mastery</strong> — a standalone tool that
+                  discovers JS-rendered pages other tools miss, validates formatting, and guides deployment. Free tier available.
                 </p>
                 <a
                   href="https://llmtxtmastery.com"
