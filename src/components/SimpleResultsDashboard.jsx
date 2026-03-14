@@ -1,5 +1,6 @@
 // Simplified Results Dashboard - works without database
 import React, { useEffect, useState } from 'react';
+import { Bot, Lock, Settings, FileText, Users, Wrench, Link, TrendingUp, Zap, CheckCircle, Lightbulb, ExternalLink } from 'lucide-react';
 import { addToHistory } from '../utils/analysisHistory';
 import LazyTierPDFButton from './LazyTierPDFButton';
 import LLMsTxtPanel from './LLMsTxtPanel';
@@ -269,7 +270,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         name: "LLMs.txt Implementation",
         score: 30,
         pillar: "Machine Readability",
-        evidence: ["❌ No LLMs.txt file found at /llms.txt", "Missing AI content accessibility protocol"],
+        evidence: ["No LLMs.txt file found at /llms.txt", "Missing AI content accessibility protocol"],
         recommendations: ["Create a professional LLMs.txt file using llmtxtmastery.com", "Follow llmstxt.org standard for AI visibility", "Include structured content map with H1 title and key sections"]
       }
     ]
@@ -304,7 +305,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
   const getPillarStyle = (key) => {
     const styles = {
       'AI': { bg: 'bg-blue-50', border: 'border-blue-500', text: 'text-blue-700', badge: 'bg-blue-100' },
-      'A': { bg: 'bg-purple-50', border: 'border-purple-500', text: 'text-purple-700', badge: 'bg-purple-100' },
+      'A': { bg: 'bg-cloud', border: 'border-signal', text: 'text-mastery', badge: 'bg-cloud' },
       'M': { bg: 'bg-green-50', border: 'border-green-500', text: 'text-green-700', badge: 'bg-green-100' },
       'S': { bg: 'bg-orange-50', border: 'border-orange-500', text: 'text-orange-700', badge: 'bg-orange-100' },
       'E': { bg: 'bg-yellow-50', border: 'border-yellow-500', text: 'text-yellow-700', badge: 'bg-yellow-100' },
@@ -323,15 +324,15 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
     
     // Define pillar order and full names
     const pillarOrder = [
-      { key: 'AI', name: 'AI Response Optimization & Citation', icon: '🤖' },
-      { key: 'A', name: 'Authority & Trust Signals', icon: '🔐' },
-      { key: 'M', name: 'Machine Readability & Technical Infrastructure', icon: '⚙️' },
-      { key: 'S', name: 'Semantic Content Quality', icon: '📝' },
-      { key: 'E', name: 'Engagement & User Experience', icon: '👥' },
-      { key: 'T', name: 'Technical SEO & Foundation', icon: '🔧' },
-      { key: 'R', name: 'Reference Networks & Citations', icon: '🔗' },
-      { key: 'Y', name: 'Yield Optimization & Freshness', icon: '📈' },
-      { key: 'P', name: 'Performance & Speed', icon: '⚡' }
+      { key: 'AI', name: 'AI Response Optimization & Citation', icon: <Bot className="w-5 h-5" /> },
+      { key: 'A', name: 'Authority & Trust Signals', icon: <Lock className="w-5 h-5" /> },
+      { key: 'M', name: 'Machine Readability & Technical Infrastructure', icon: <Settings className="w-5 h-5" /> },
+      { key: 'S', name: 'Semantic Content Quality', icon: <FileText className="w-5 h-5" /> },
+      { key: 'E', name: 'Engagement & User Experience', icon: <Users className="w-5 h-5" /> },
+      { key: 'T', name: 'Technical SEO & Foundation', icon: <Wrench className="w-5 h-5" /> },
+      { key: 'R', name: 'Reference Networks & Citations', icon: <Link className="w-5 h-5" /> },
+      { key: 'Y', name: 'Yield Optimization & Freshness', icon: <TrendingUp className="w-5 h-5" /> },
+      { key: 'P', name: 'Performance & Speed', icon: <Zap className="w-5 h-5" /> }
     ];
     
     // Initialize groups
@@ -422,30 +423,120 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
     groups: groupedFactors.map(g => ({ pillar: g.name, factorCount: g.factors.length }))
   });
 
+  // Compute top 3 gaps (lowest-scoring pillars)
+  const topGaps = Object.entries(results.pillars)
+    .map(([key, pillar]) => ({ key, ...pillar }))
+    .sort((a, b) => (a.score || 0) - (b.score || 0))
+    .slice(0, 3);
+
   return (
     <div className="results-dashboard max-w-6xl mx-auto p-6" data-testid="results-dashboard">
-      {/* Page Analysis Header */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">
-          Analysis Results for: <span className="text-blue-600">{results.url || 'example.com'}</span>
-        </h2>
-      </div>
-      
-      {/* Demo Mode Notice - Only show when using demo data */}
-      {!isRealAnalysis && (
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
+      {/* AI Visibility Score - Above the Fold Hero */}
+      <div className="bg-gradient-to-br from-mastery to-mastery/90 rounded-2xl p-8 mb-6 text-white">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex-1">
+            <h1 className="text-2xl md:text-3xl font-bold mb-2">
+              {isRealAnalysis ? 'AI Visibility Score' : 'Sample AI Visibility Report'}
+            </h1>
+            <p className="text-white/70 break-all text-sm mb-3">{results.url || 'example.com'}</p>
+            {!isRealAnalysis && (
+              <p className="text-white/60 text-sm">
+                This shows you exactly what our analysis looks like.
+              </p>
+            )}
+          </div>
+          <div className="text-center">
+            <div
+              className={`text-6xl md:text-7xl font-bold ${
+                results.overall_score >= 80 ? 'text-green-300' :
+                results.overall_score >= 60 ? 'text-amber-300' :
+                'text-red-300'
+              }`}
+              data-testid="overall-score"
+            >
+              {results.overall_score}
             </div>
-            <div className="ml-3">
-              <p className="text-sm text-yellow-800">
-                <strong>Sample Report:</strong> This shows you exactly what our analysis looks like. 
-                Ready to analyze your own site? Click "New Analysis" in the navigation above to get started!
+            <div className="text-white/60 text-sm mt-1">out of 100</div>
+            <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium mt-2 ${
+              results.overall_score >= 80 ? 'bg-green-500/20 text-green-200' :
+              results.overall_score >= 60 ? 'bg-amber-500/20 text-amber-200' :
+              'bg-red-500/20 text-red-200'
+            }`}>
+              {getScoreLabel(results.overall_score)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Top 3 Gaps to Fix First */}
+      <div className="mb-6">
+        <h2 className="text-lg font-bold text-ink mb-4">Top 3 Gaps to Fix First</h2>
+        <div className="grid md:grid-cols-3 gap-4">
+          {topGaps.map((gap, index) => (
+            <div key={gap.key} className="bg-white rounded-xl border border-mist p-5 shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-medium text-stone uppercase tracking-wider">
+                  Gap #{index + 1}
+                </span>
+                <span className={`text-lg font-bold px-2 py-0.5 rounded ${getScoreColor(gap.score)}`}>
+                  {gap.score || 0}
+                </span>
+              </div>
+              <h3 className="font-semibold text-ink text-sm mb-2">
+                {gap.name || gap.key.replace(/_/g, ' ')}
+              </h3>
+              <div className="w-full bg-mist rounded-full h-2 mb-3">
+                <div
+                  className={`h-full rounded-full ${
+                    (gap.score || 0) >= 80 ? 'bg-green-500' :
+                    (gap.score || 0) >= 60 ? 'bg-amber-500' :
+                    'bg-red-500'
+                  }`}
+                  style={{ width: `${gap.score || 0}%` }}
+                />
+              </div>
+              <p className="text-xs text-slate">
+                Weight: {gap.weight || 0}% of total score
               </p>
             </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Contextual Upgrade Prompt */}
+      {userTier === 'free' && (
+        <div className="bg-signal/5 border border-signal/20 rounded-xl p-5 mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h3 className="font-semibold text-ink">Want the full picture?</h3>
+              <p className="text-sm text-slate mt-1">
+                Upgrade to Solo ($9.95/mo) to unlock full 27-factor breakdown, PDF exports, and historical tracking.
+              </p>
+            </div>
+            <button
+              onClick={() => onNavigate && onNavigate('pricing')}
+              className="px-5 py-2.5 bg-signal text-white rounded-lg font-medium hover:bg-signal/90 transition-colors whitespace-nowrap text-sm"
+            >
+              View Plans
+            </button>
+          </div>
+        </div>
+      )}
+      {userTier === 'solo' && (
+        <div className="bg-clarity/5 border border-clarity/20 rounded-xl p-5 mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h3 className="font-semibold text-ink">Ready for the full loop?</h3>
+              <p className="text-sm text-slate mt-1">
+                Upgrade to Growth ($19.95/mo) to get LLM.txt Mastery integration and the complete Diagnose-Optimize-Test-Repeat cycle.
+              </p>
+            </div>
+            <button
+              onClick={() => onNavigate && onNavigate('pricing')}
+              className="px-5 py-2.5 bg-clarity text-white rounded-lg font-medium hover:bg-clarity/90 transition-colors whitespace-nowrap text-sm"
+            >
+              Upgrade to Growth
+            </button>
           </div>
         </div>
       )}
@@ -491,31 +582,20 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         </div>
       )}
 
-      {/* Header */}
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              {isRealAnalysis ? 'AI Impact Analysis Results' : 'Sample Analysis Report'}
-            </h1>
-            <p className="text-gray-600 break-all mb-3">{results.url}</p>
-            
-            {/* Export Buttons Section */}
-            <div className="space-y-3">
-              {/* PDF Export Button (Solo+) */}
-              <div className="flex items-center gap-3">
-                <LazyTierPDFButton
-                  analysisId={analysisId}
-                  url={results.url}
-                  analysisData={results}
-                  onReportGenerated={handlePDFGenerated}
-                  userEmail={userEmail}
-                  user={user}
-                />
-                <span className="text-sm text-gray-500">
-                  Professional PDF report with detailed recommendations
-                </span>
-              </div>
+      {/* Export & Actions Bar */}
+      <div className="bg-white rounded-xl shadow-sm border border-mist p-5 mb-6">
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Export Buttons Section */}
+          <div className="flex flex-wrap items-center gap-3">
+            {/* PDF Export Button (Solo+) */}
+            <LazyTierPDFButton
+              analysisId={analysisId}
+              url={results.url}
+              analysisData={results}
+              onReportGenerated={handlePDFGenerated}
+              userEmail={userEmail}
+              user={user}
+            />
 
               {/* CSV Export Button (Growth+) */}
               <div className="flex items-center gap-3">
@@ -532,7 +612,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
                 ) : (
                   <button
                     onClick={() => onNavigate && onNavigate('pricing')}
-                    className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                    className="inline-flex items-center px-4 py-2 bg-signal text-white rounded-lg hover:bg-signal transition-colors font-medium"
                   >
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -545,26 +625,10 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
                 </span>
               </div>
 
-              {/* LLMS.txt Generation - See LLMsTxtPanel below */}
-            </div>
           </div>
-          <div className="text-right ml-6">
-            <div className="text-3xl font-bold text-blue-600" data-testid="overall-score">{results.overall_score}</div>
-            <div className="text-sm text-gray-600">Overall Score</div>
-            <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium mt-2 ${getScoreColor(results.overall_score)}`}>
-              {getScoreLabel(results.overall_score)}
-            </div>
+          <div className="text-xs text-slate">
+            Framework: MASTERY-AI v3.1.1 | 27 factors | {results.factors.length} analyzed
           </div>
-        </div>
-        
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <p className="text-blue-800 text-sm">
-            <strong>Framework:</strong> MASTERY-AI v3.1.1 with 27 factors across all 9 pillars. 
-            {isRealAnalysis 
-              ? 'Phase A implementation with complete coverage - quality over quantity, every factor matters.'
-              : 'Sample shows strategic factors from analyzing FreeCalcHub, Evolve-7, Agent-11, and 4 other client sites.'
-            }
-          </p>
         </div>
       </div>
 
@@ -581,6 +645,41 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
           }}
         />
       </div>
+
+      {/* LLM.txt Mastery Recommendation Callout */}
+      {(() => {
+        const llmsFactor = results.factors.find(f =>
+          (f.factor_name || f.name || '').toLowerCase().includes('llms.txt') ||
+          (f.factor_name || f.name || '').toLowerCase().includes('llm.txt')
+        );
+        const showCallout = !llmsFactor || llmsFactor.score < 70;
+        if (!showCallout) return null;
+        return (
+          <div className="mb-6 bg-gradient-to-r from-signal/5 to-mastery/5 border border-signal/20 rounded-xl p-5">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-10 h-10 bg-signal/10 rounded-lg flex items-center justify-center">
+                <FileText className="w-5 h-5 text-signal" />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-ink mb-1">Recommended Next Step: Fix Your llms.txt</h4>
+                <p className="text-sm text-slate mb-3">
+                  Generate quality-scored llms.txt files with <strong>LLM.txt Mastery</strong> — discovers
+                  JS-rendered pages other tools miss, validates formatting, and guides deployment. Free tier available.
+                </p>
+                <a
+                  href="https://llmtxtmastery.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-signal hover:text-signal/80 transition-colors"
+                >
+                  Try LLM.txt Mastery free
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Critical Issues Banner - Show blockers/warnings prominently */}
       <CriticalIssuesBanner factors={results.factors} />
@@ -600,9 +699,13 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
             <div className="text-xs text-gray-500 mb-2">
               Weight: {pillar.weight}% • {pillar.factors} factors
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
-                className="bg-blue-600 h-2 rounded-full"
+            <div className="w-full bg-mist rounded-full h-2">
+              <div
+                className={`h-2 rounded-full ${
+                  pillar.score >= 80 ? 'bg-clarity' :
+                  pillar.score >= 60 ? 'bg-amber' :
+                  'bg-red-500'
+                }`}
                 style={{ width: `${pillar.score}%` }}
               ></div>
             </div>
@@ -666,7 +769,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <h5 className="font-medium text-green-700 mb-2">✅ Evidence Found</h5>
+                      <h5 className="font-medium text-green-700 mb-2 flex items-center gap-1"><CheckCircle className="w-4 h-4" /> Evidence Found</h5>
                       <ul className="text-sm text-gray-700 space-y-1">
                         {factor.evidence.map((item, i) => (
                           <li key={i} className="flex items-start">
@@ -678,7 +781,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
                     </div>
                     
                     <div>
-                      <h5 className="font-medium text-blue-700 mb-2">💡 Recommendations</h5>
+                      <h5 className="font-medium text-blue-700 mb-2 flex items-center gap-1"><Lightbulb className="w-4 h-4" /> Recommendations</h5>
                       <ul className="text-sm text-gray-700 space-y-1">
                         {factor.recommendations.map((item, i) => (
                           <li key={i} className="flex items-start">

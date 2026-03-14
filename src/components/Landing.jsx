@@ -12,6 +12,7 @@ import ProofSection from './landing/ProofSection';
 import PriceSection from './landing/PriceSection';
 import FitSection from './landing/FitSection';
 import FinalCtaSection from './landing/FinalCtaSection';
+import EcosystemSection from './landing/EcosystemSection';
 
 function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
   const [url, setUrl] = useState('');
@@ -174,6 +175,9 @@ function Landing({ onAnalysisComplete, onNavigate, isAuthenticated }) {
 
       {/* Step 8: Fit - "Am I the right person for this?" */}
       <FitSection />
+
+      {/* Ecosystem - "What's the bigger picture?" */}
+      <EcosystemSection />
 
       {/* Step 9: Final CTA - "What should I do now?" */}
       <FinalCtaSection />
