@@ -59,6 +59,27 @@ async function fetchPageContent(url: string): Promise<{ content: string; statusC
     return { content, statusCode: response.status };
   } catch (error) {
     clearTimeout(timeout);
+    // Provide user-friendly error messages for common fetch failures
+    if (error instanceof Error) {
+      const cause = (error as NodeJS.ErrnoException).cause as NodeJS.ErrnoException | undefined;
+      const code = cause?.code || (error as NodeJS.ErrnoException).code;
+
+      if (code === 'ENOTFOUND' || code === 'EAI_AGAIN') {
+        throw new Error(`The website could not be found. Please check the URL and try again.`);
+      }
+      if (code === 'ECONNREFUSED') {
+        throw new Error(`The website refused the connection. It may be down or blocking requests.`);
+      }
+      if (code === 'ECONNRESET' || code === 'EPIPE') {
+        throw new Error(`The connection was interrupted. The website may be experiencing issues.`);
+      }
+      if (code === 'CERT_HAS_EXPIRED' || code === 'UNABLE_TO_VERIFY_LEAF_SIGNATURE' || code === 'ERR_TLS_CERT_ALTNAME_INVALID') {
+        throw new Error(`The website has an invalid or expired SSL certificate.`);
+      }
+      if (error.name === 'AbortError') {
+        throw new Error(`The website took too long to respond (30s timeout). It may be slow or unreachable.`);
+      }
+    }
     throw error;
   }
 }
