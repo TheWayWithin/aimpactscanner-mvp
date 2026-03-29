@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AImpactScanner API Documentation</title>
+  <style>
+    :root {
+      --purple: #7c3aed;
+      --purple-dark: #6d28d9;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --green: #059669;
+      --red: #dc2626;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--gray-800);
+      line-height: 1.6;
+      background: var(--gray-50);
+    }
+    .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; color: var(--gray-900); }
+    h2 { font-size: 1.5rem; margin: 2.5rem 0 1rem; color: var(--gray-900); border-bottom: 2px solid var(--gray-200); padding-bottom: 0.5rem; }
+    h3 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; color: var(--gray-900); }
+    p { margin-bottom: 1rem; color: var(--gray-600); }
+    a { color: var(--purple); }
+    code {
+      background: var(--gray-100);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      font-size: 0.9em;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    pre {
+      background: var(--gray-900);
+      color: #e5e7eb;
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    pre code { background: none; padding: 0; color: inherit; }
+    .badge {
+      display: inline-block;
+      padding: 0.2em 0.6em;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-get { background: #dbeafe; color: #1e40af; }
+    .badge-post { background: #d1fae5; color: #065f46; }
+    .badge-delete { background: #fee2e2; color: #991b1b; }
+    .badge-scale { background: #ede9fe; color: #5b21b6; }
+    .endpoint {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .endpoint-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .endpoint-path { font-family: monospace; font-weight: 600; font-size: 0.95rem; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+    th, td { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--gray-200); font-size: 0.9rem; }
+    th { background: var(--gray-100); font-weight: 600; }
+    .note {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .nav { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .nav a { text-decoration: none; font-size: 0.9rem; }
+    .subtitle { color: var(--gray-600); font-size: 1.1rem; margin-bottom: 1.5rem; }
+    .back-link { display: inline-block; margin-bottom: 1rem; font-size: 0.9rem; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">&larr; Back to AImpactScanner</a>
+    <h1>AImpactScanner API</h1>
+    <p class="subtitle">Programmatic access to AI-readiness analysis. <span class="badge badge-scale">Scale Tier</span></p>
+
+    <nav class="nav">
+      <a href="#auth">Authentication</a>
+      <a href="#endpoints">Endpoints</a>
+      <a href="#rate-limits">Rate Limits</a>
+      <a href="#examples">Examples</a>
+      <a href="#errors">Errors</a>
+    </nav>
+
+    <h2 id="auth">Authentication</h2>
+    <p>All API requests require authentication via an API key. Generate keys from your <a href="/#dashboard">account dashboard</a>.</p>
+    <p>Include your key in the <code>X-API-Key</code> header:</p>
+    <pre><code>curl -H "X-API-Key: ais_sk_your_key_here" \
+  https://aimpactscanner-backend-production.up.railway.app/api/analyze</code></pre>
+
+    <div class="note">
+      API keys are shown only once when created. Store them securely. If lost, revoke and create a new one.
+    </div>
+
+    <h2 id="endpoints">Endpoints</h2>
+    <p>Base URL: <code>https://aimpactscanner-backend-production.up.railway.app</code></p>
+
+    <h3>Analysis</h3>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="badge badge-post">POST</span>
+        <span class="endpoint-path">/api/analyze</span>
+      </div>
+      <p>Run a synchronous AI-readiness analysis on a URL.</p>
+      <h4 style="margin: 0.75rem 0 0.5rem; font-size: 0.85rem; color: var(--gray-600);">Request Body</h4>
+      <table>
+        <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>url</code></td><td>string</td><td>URL to analyze (required)</td></tr>
+        <tr><td><code>userId</code></td><td>string</td><td>Your user ID (required)</td></tr>
+        <tr><td><code>userTier</code></td><td>string</td><td>Your tier, e.g. <code>"scale"</code></td></tr>
+      </table>
+      <h4 style="margin: 0.75rem 0 0.5rem; font-size: 0.85rem; color: var(--gray-600);">Response</h4>
+      <pre><code>{
+  "success": true,
+  "overall_score": 73,
+  "factors": [
+    { "name": "Structured Data", "score": 85, "weight": 0.15 },
+    { "name": "Content Quality", "score": 70, "weight": 0.20 }
+  ],
+  "analysisId": "uuid"
+}</code></pre>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="badge badge-post">POST</span>
+        <span class="endpoint-path">/api/analyze/async</span>
+      </div>
+      <p>Start an async analysis. Returns a job ID for polling.</p>
+      <table>
+        <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>url</code></td><td>string</td><td>URL to analyze (required)</td></tr>
+        <tr><td><code>userId</code></td><td>string</td><td>Your user ID (required)</td></tr>
+        <tr><td><code>analysisId</code></td><td>string</td><td>Pre-created analysis record ID</td></tr>
+        <tr><td><code>userTier</code></td><td>string</td><td>Your tier</td></tr>
+      </table>
+      <pre><code>{ "success": true, "jobId": "uuid", "analysisId": "uuid" }</code></pre>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="badge badge-get">GET</span>
+        <span class="endpoint-path">/api/analyze/jobs/:jobId</span>
+      </div>
+      <p>Check the status of an async analysis job.</p>
+      <pre><code>// Pending
+{ "status": "processing" }
+
+// Complete
+{ "status": "completed", "result": { "overall_score": 73, ... } }
+
+// Failed
+{ "status": "failed", "error": "reason" }</code></pre>
+    </div>
+
+    <h3>API Key Management</h3>
+    <p>Manage your API keys. These endpoints require JWT authentication (browser session), not API key auth.</p>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="badge badge-post">POST</span>
+        <span class="endpoint-path">/api/keys</span>
+      </div>
+      <p>Create a new API key. The raw key is returned only once.</p>
+      <table>
+        <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>name</code></td><td>string</td><td>Human-readable name (required, max 64 chars)</td></tr>
+      </table>
+      <pre><code>{
+  "id": "uuid",
+  "name": "My Script",
+  "key": "ais_sk_abc123...",
+  "prefix": "ais_sk_abc12",
+  "created_at": "2026-02-10T...",
+  "warning": "Save this key now. It cannot be shown again."
+}</code></pre>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="badge badge-get">GET</span>
+        <span class="endpoint-path">/api/keys</span>
+      </div>
+      <p>List all your API keys (active and revoked).</p>
+      <pre><code>{
+  "keys": [
+    {
+      "id": "uuid",
+      "name": "CI Pipeline",
+      "key_prefix": "ais_sk_abc12",
+      "created_at": "2026-02-10T...",
+      "last_used_at": "2026-02-10T...",
+      "is_active": true,
+      "revoked_at": null
+    }
+  ]
+}</code></pre>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="badge badge-delete">DELETE</span>
+        <span class="endpoint-path">/api/keys/:id</span>
+      </div>
+      <p>Revoke an API key. Soft-deletes the key (cannot be undone).</p>
+      <pre><code>{ "success": true, "message": "API key revoked" }</code></pre>
+    </div>
+
+    <h2 id="rate-limits">Rate Limits</h2>
+    <table>
+      <tr><th>Tier</th><th>Requests/Hour</th><th>API Access</th></tr>
+      <tr><td>Free</td><td>5</td><td>No</td></tr>
+      <tr><td>Solo</td><td>20</td><td>No</td></tr>
+      <tr><td>Growth</td><td>50</td><td>No</td></tr>
+      <tr><td>Scale</td><td>100</td><td>Yes</td></tr>
+    </table>
+    <p>Rate limit headers are included in responses:</p>
+    <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; color: var(--gray-600);">
+      <li><code>RateLimit-Limit</code> - Max requests per window</li>
+      <li><code>RateLimit-Remaining</code> - Requests remaining</li>
+    </ul>
+
+    <h2 id="examples">Code Examples</h2>
+
+    <h3>curl</h3>
+    <pre><code># Run analysis
+curl -X POST \
+  https://aimpactscanner-backend-production.up.railway.app/api/analyze \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: ais_sk_your_key_here" \
+  -d '{"url": "https://example.com", "userId": "your-user-id", "userTier": "scale"}'</code></pre>
+
+    <h3>Python</h3>
+    <pre><code>import requests
+
+API_KEY = "ais_sk_your_key_here"
+BASE = "https://aimpactscanner-backend-production.up.railway.app"
+
+# Run analysis
+resp = requests.post(f"{BASE}/api/analyze", json={
+    "url": "https://example.com",
+    "userId": "your-user-id",
+    "userTier": "scale"
+}, headers={"X-API-Key": API_KEY})
+
+result = resp.json()
+print(f"Score: {result['overall_score']}")</code></pre>
+
+    <h3>JavaScript (Node.js)</h3>
+    <pre><code>const API_KEY = "ais_sk_your_key_here";
+const BASE = "https://aimpactscanner-backend-production.up.railway.app";
+
+const resp = await fetch(`${BASE}/api/analyze`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": API_KEY,
+  },
+  body: JSON.stringify({
+    url: "https://example.com",
+    userId: "your-user-id",
+    userTier: "scale",
+  }),
+});
+
+const result = await resp.json();
+console.log(`Score: ${result.overall_score}`);</code></pre>
+
+    <h2 id="errors">Error Codes</h2>
+    <table>
+      <tr><th>Code</th><th>HTTP</th><th>Description</th></tr>
+      <tr><td><code>UNAUTHORIZED</code></td><td>401</td><td>Missing or invalid authentication</td></tr>
+      <tr><td><code>INVALID_API_KEY</code></td><td>401</td><td>API key is invalid, expired, or revoked</td></tr>
+      <tr><td><code>TIER_INSUFFICIENT</code></td><td>403</td><td>Feature requires a higher tier</td></tr>
+      <tr><td><code>RATE_LIMIT_EXCEEDED</code></td><td>429</td><td>Too many requests</td></tr>
+      <tr><td><code>VALIDATION_ERROR</code></td><td>400</td><td>Invalid request parameters</td></tr>
+      <tr><td><code>INTERNAL_ERROR</code></td><td>500</td><td>Server error</td></tr>
+    </table>
+
+    <p style="margin-top: 3rem; color: #9ca3af; font-size: 0.85rem; text-align: center;">
+      AImpactScanner API &mdash; <a href="/" style="color: #9ca3af;">aimpactscanner.com</a>
+    </p>
+  </div>
+</body>
+</html>
