@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { supabaseAdmin } from '../lib/supabase';
+import { authenticateApiKey } from './apiKeyAuth';
 
 /**
  * Subscription tier types - aligned with existing tierUtils.js
@@ -49,16 +50,18 @@ function normalizeTier(tier: string | null | undefined): SubscriptionTier {
 }
 
 /**
- * JWT Authentication Middleware
+ * Dual Authentication Middleware
  *
- * Validates Supabase JWT token from Authorization header and attaches user to request.
+ * Supports two auth methods:
+ * 1. API Key via X-API-Key header (Scale tier only)
+ * 2. JWT via Authorization: Bearer header (all tiers)
+ *
+ * Both methods attach the same req.user shape for downstream middleware.
  *
  * SECURITY:
- * - Verifies JWT signature using Supabase
- * - Checks token expiration
+ * - API key: SHA-256 hash lookup, Scale tier verification
+ * - JWT: Verifies signature using Supabase, checks expiration
  * - Fetches user tier from database for rate limiting
- *
- * Aligned with existing OAuth authentication flow from architecture.md (ADR-009)
  *
  * Usage:
  * app.post('/api/analyze', authenticateUser, analyzeHandler);
@@ -68,6 +71,11 @@ export async function authenticateUser(
   res: Response,
   next: NextFunction
 ): Promise<void> {
+  // Check for API key first
+  if (req.headers['x-api-key']) {
+    return authenticateApiKey(req, res, next);
+  }
+
   try {
     const authHeader = req.headers.authorization;
 

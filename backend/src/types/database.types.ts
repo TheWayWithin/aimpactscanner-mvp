@@ -242,6 +242,50 @@ export interface Database {
           updated_at?: string;
         };
       };
+      api_keys: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          key_hash: string;
+          key_prefix: string;
+          last_used_at: string | null;
+          created_at: string;
+          revoked_at: string | null;
+          is_active: boolean;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          name: string;
+          key_hash: string;
+          key_prefix: string;
+          last_used_at?: string | null;
+          created_at?: string;
+          revoked_at?: string | null;
+          is_active?: boolean;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          name?: string;
+          key_hash?: string;
+          key_prefix?: string;
+          last_used_at?: string | null;
+          created_at?: string;
+          revoked_at?: string | null;
+          is_active?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "api_keys_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -278,6 +322,7 @@ export type AnalysisFactor = Database['public']['Tables']['analysis_factors']['R
 export type AnalysisJob = Database['public']['Tables']['analysis_jobs']['Row'];
 export type AnalysisJobInsert = Database['public']['Tables']['analysis_jobs']['Insert'];
 export type AnalysisJobUpdate = Database['public']['Tables']['analysis_jobs']['Update'];
+export type ApiKey = Database['public']['Tables']['api_keys']['Row'];
 
 /**
  * Factor result interface - aligned with existing Edge Function FactorResult
