@@ -83,9 +83,9 @@ const UsageDashboard = ({ user, onUpgrade, className = '' }) => {
   const getTierDisplayName = (tier) => {
     const tierNames = {
       'free': 'Free',
-      'coffee': '☕ Coffee',
-      'professional': '💼 Professional',
-      'enterprise': '🏢 Enterprise'
+      'coffee': 'Coffee',
+      'professional': 'Professional',
+      'enterprise': 'Enterprise'
     };
     return tierNames[tier] || tier;
   };
@@ -194,7 +194,7 @@ const UsageDashboard = ({ user, onUpgrade, className = '' }) => {
                   onClick={() => onUpgrade?.('coffee')}
                   className="bg-blue-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-600 transition-colors"
                 >
-                  ☕ Buy Me a Coffee
+                  Buy Me a Coffee
                 </button>
               </div>
             </div>

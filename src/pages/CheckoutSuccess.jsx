@@ -110,7 +110,7 @@ const CheckoutSuccess = () => {
   const getTierContent = (tier) => {
     const content = {
       coffee: {
-        emoji: '☕',
+        emoji: '',
         name: 'Coffee',
         title: 'Welcome to Coffee Tier!',
         analyses: '10 analyses/month',
@@ -122,7 +122,7 @@ const CheckoutSuccess = () => {
         ]
       },
       growth: {
-        emoji: '🚀',
+        emoji: '',
         name: 'Growth',
         title: 'Welcome to Growth Tier!',
         analyses: '40 analyses/month',
@@ -135,7 +135,7 @@ const CheckoutSuccess = () => {
         ]
       },
       scale: {
-        emoji: '🏢',
+        emoji: '',
         name: 'Scale',
         title: 'Welcome to Scale Tier!',
         analyses: '100 analyses/month',
@@ -219,7 +219,7 @@ const CheckoutSuccess = () => {
 
         {/* Success Message */}
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-          🎉 {tierContent.title}
+          {tierContent.title}
         </h1>
 
         <p className="text-xl text-gray-700 mb-8 leading-normal">
@@ -239,13 +239,13 @@ const CheckoutSuccess = () => {
         {/* What's Unlocked Section */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-left">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            ✨ What You've Unlocked
+            What You've Unlocked
           </h2>
 
           <div className="grid gap-4">
             {tierContent.benefits.map((benefit, index) => (
               <div key={index} className="flex items-start gap-3">
-                <div className="text-green-500 text-2xl">✅</div>
+                <div className="text-green-500 text-2xl"></div>
                 <div>
                   <h3 className="font-semibold text-gray-900">{benefit.title}</h3>
                   <p className="text-gray-600 text-sm">{benefit.desc}</p>
@@ -258,7 +258,7 @@ const CheckoutSuccess = () => {
         {/* Next Steps */}
         <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-8 text-left">
           <h2 className="text-xl font-bold text-gray-900 mb-3">
-            🚀 Next Steps
+            Next Steps
           </h2>
           <ol className="list-decimal list-inside space-y-2 text-gray-700">
             <li>Head to your dashboard to start analyzing</li>
@@ -281,7 +281,7 @@ const CheckoutSuccess = () => {
             background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)'
           }}
         >
-          Go to Dashboard →
+          Go to Dashboard 
         </button>
 
         {/* Support Link */}

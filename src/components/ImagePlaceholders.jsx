@@ -30,13 +30,13 @@ export const HeroIllustration = ({ className = '' }) => {
 // Feature Icon Component
 export const FeatureIcon = ({ type, className = '' }) => {
   const icons = {
-    'ai-analysis': '🤖',
-    'competitive': '📊',
-    'traffic': '📈',
+    'ai-analysis': '',
+    'competitive': '',
+    'traffic': '',
     'monitoring': '⏰',
-    'framework': '✅',
+    'framework': '',
     'export': '📥',
-    'education': '💡',
+    'education': '',
     'support': '🎧'
   };
 
@@ -51,9 +51,9 @@ export const FeatureIcon = ({ type, className = '' }) => {
 // Tier Illustration Component
 export const TierIllustration = ({ tier, className = '' }) => {
   const illustrations = {
-    'free': '🎯',
-    'coffee': '☕',
-    'professional': '🚀'
+    'free': '',
+    'coffee': '',
+    'professional': ''
   };
 
   // TODO: Replace with actual tier illustrations
@@ -79,10 +79,10 @@ export const LoadingAnimation = ({ className = '' }) => {
 // Trust Badge Component
 export const TrustBadge = ({ type, className = '' }) => {
   const badges = {
-    'ssl': '🔒 SSL Secured',
-    'privacy': '🛡️ Data Privacy',
+    'ssl': 'SSL Secured',
+    'privacy': 'Data Privacy',
     'guarantee': '✓ 30-Day Guarantee',
-    'certified': '🏆 MASTERY-AI'
+    'certified': 'MASTERY-AI'
   };
 
   // TODO: Replace with actual badge images
@@ -97,15 +97,15 @@ export const TrustBadge = ({ type, className = '' }) => {
 export const EmptyState = ({ type, className = '' }) => {
   const states = {
     'no-analysis': {
-      emoji: '🔍',
+      emoji: '',
       text: 'No analysis yet'
     },
     'error': {
-      emoji: '❌',
+      emoji: '',
       text: 'Something went wrong'
     },
     'welcome': {
-      emoji: '👋',
+      emoji: '',
       text: 'Welcome!'
     }
   };

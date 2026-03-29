@@ -73,14 +73,14 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
     // Group factors by pillar for organized display
     const groupedFactors = {};
     const pillarOrder = [
-      { key: 'ai', name: 'AI Response Optimization & Citation', icon: '🤖', color: '#1E3A8A' },
+      { key: 'ai', name: 'AI Response Optimization & Citation', icon: '🤖', color: '#1E3A5F' },
       { key: 'authority', name: 'Authority & Trust Signals', icon: '🔐', color: '#7C3AED' },
       { key: 'machine_readability', name: 'Machine Readability & Technical Infrastructure', icon: '⚙️', color: '#059669' },
       { key: 'semantic', name: 'Semantic Content Quality', icon: '📝', color: '#EA580C' },
       { key: 'engagement', name: 'Engagement & User Experience', icon: '👥', color: '#EAB308' },
       { key: 'topical', name: 'Topical Expertise & Experience', icon: '🎯', color: '#6366F1' },
       { key: 'reference', name: 'Reference Networks & Citations', icon: '🔗', color: '#6B7280' },
-      { key: 'yield', name: 'Yield Optimization & Freshness', icon: '📈', color: '#0891B2' }
+      { key: 'yield', name: 'Yield Optimization & Freshness', icon: '📈', color: '#0D9488' }
     ];
 
     // Initialize groups
@@ -263,7 +263,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
         const {
           fontSize = 10,
           fontStyle = 'normal',
-          color = '#0F172A',
+          color = '#1E293B',
           maxWidth = contentWidth,
           lineHeight = 1.4
         } = options;
@@ -312,7 +312,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
 
       // URL and Overall Score Section
       checkPageBreak(30);
-      addText('Analyzed Website', margin, currentY, { fontSize: 16, fontStyle: 'bold', color: '#1E3A8A' });
+      addText('Analyzed Website', margin, currentY, { fontSize: 16, fontStyle: 'bold', color: '#1E3A5F' });
       addText(reportData.url, margin, currentY, { fontSize: 12, maxWidth: contentWidth - 50 });
       
       // Overall Score Box
@@ -343,7 +343,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
       currentY += 25;
 
       // Executive Summary Section
-      addText('Executive Summary', margin, currentY, { fontSize: 16, fontStyle: 'bold', color: '#1E3A8A' });
+      addText('Executive Summary', margin, currentY, { fontSize: 16, fontStyle: 'bold', color: '#1E3A5F' });
       
       addText(`Performance Level: ${summary.overall.label}`, margin, currentY, { fontSize: 12, fontStyle: 'bold' });
       addText(summary.overall.description, margin, currentY, { fontSize: 11 });
@@ -384,7 +384,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
       pdf.addPage();
       currentY = margin;
       
-      addText('MASTERY-AI Framework Results', margin, currentY, { fontSize: 18, fontStyle: 'bold', color: '#1E3A8A' });
+      addText('MASTERY-AI Framework Results', margin, currentY, { fontSize: 18, fontStyle: 'bold', color: '#1E3A5F' });
       addText('8-Pillar Optimization Framework Analysis', margin, currentY, { fontSize: 12, color: '#6B7280' });
       
       currentY += 5;
@@ -442,7 +442,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
         pdf.addPage();
         currentY = margin;
         
-        addText('Detailed Factor Analysis', margin, currentY, { fontSize: 18, fontStyle: 'bold', color: '#1E3A8A' });
+        addText('Detailed Factor Analysis', margin, currentY, { fontSize: 18, fontStyle: 'bold', color: '#1E3A5F' });
         
         pillarKeys.forEach(key => {
           const pillar = reportData.groupedFactors[key];
@@ -491,7 +491,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
               
               // Recommendations
               if (factor.recommendations && factor.recommendations.length > 0) {
-                addText('Recommendations:', margin + 5, currentY, { fontSize: 10, fontStyle: 'bold', color: '#1E3A8A' });
+                addText('Recommendations:', margin + 5, currentY, { fontSize: 10, fontStyle: 'bold', color: '#1E3A5F' });
                 factor.recommendations.forEach(rec => {
                   addText(`• ${rec}`, margin + 10, currentY, { fontSize: 9, color: '#374151' });
                 });
@@ -518,7 +518,7 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
       pdf.addPage();
       currentY = margin;
       
-      addText('Prioritized Action Plan', margin, currentY, { fontSize: 18, fontStyle: 'bold', color: '#1E3A8A' });
+      addText('Prioritized Action Plan', margin, currentY, { fontSize: 18, fontStyle: 'bold', color: '#1E3A5F' });
       addText('Recommended optimization sequence based on impact potential', margin, currentY, { fontSize: 11, color: '#6B7280' });
       
       currentY += 5;

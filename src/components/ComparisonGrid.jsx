@@ -1,6 +1,7 @@
 // ComparisonGrid.jsx - Reusable tier comparison component
 import React from 'react';
 import PropTypes from 'prop-types';
+import { CheckCircle, XCircle } from 'lucide-react';
 
 const ComparisonGrid = ({ currentTier, upgradeTier, benefits, limitations }) => {
   return (
@@ -26,9 +27,7 @@ const ComparisonGrid = ({ currentTier, upgradeTier, benefits, limitations }) => 
               <ul className="space-y-3">
                 {(limitations || currentTier?.limitations || []).map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <span className="text-red-500 text-xl flex-shrink-0 mt-0.5" aria-hidden="true">
-                      ❌
-                    </span>
+                    <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <span className="text-base text-gray-700 leading-normal">
                       {item}
                     </span>
@@ -58,9 +57,7 @@ const ComparisonGrid = ({ currentTier, upgradeTier, benefits, limitations }) => 
               <ul className="space-y-3">
                 {(benefits || upgradeTier?.benefits || []).map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <span className="text-green-600 text-xl flex-shrink-0 mt-0.5" aria-hidden="true">
-                      ✅
-                    </span>
+                    <CheckCircle className="w-5 h-5 text-success flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <span className="text-base text-gray-700 leading-normal font-medium">
                       {item}
                     </span>

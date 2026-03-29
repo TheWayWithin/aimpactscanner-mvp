@@ -172,7 +172,7 @@ function SimpleAnalysisProgress({ analysisId, url, onAnalysisComplete, error, on
         {isComplete && (
           <div className="mt-4 text-center">
             <p className="text-green-600 font-medium">
-              ✅ Analysis complete! Redirecting to results...
+              Analysis complete! Redirecting to results...
             </p>
           </div>
         )}

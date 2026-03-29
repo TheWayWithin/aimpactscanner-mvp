@@ -172,7 +172,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-6xl mx-auto px-4">
         {/* Value Proposition Bar */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-lg mb-6 shadow-lg">
+        <div className="bg-gradient-to-r from-blue-600 to-clarity text-white p-4 rounded-lg mb-6 shadow-lg">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="font-bold text-lg">Your AI Search Optimization Analysis</h2>
@@ -198,7 +198,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
         {/* Opportunity Banner */}
         <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
           <div className="flex items-center">
-            <span className="text-2xl mr-3">🎯</span>
+            <span className="text-2xl mr-3"></span>
             <div>
               <h3 className="font-semibold text-blue-900">AI Discovery Opportunity</h3>
               <p className="text-blue-700">
@@ -275,7 +275,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
-                ⚡ Quick Wins ({analysisFactors.improvements.length})
+                Quick Wins ({analysisFactors.improvements.length})
               </button>
               <button
                 onClick={() => setSelectedTab('strengths')}
@@ -285,7 +285,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
-                ✅ Strengths ({analysisFactors.strengths.length})
+                Strengths ({analysisFactors.strengths.length})
               </button>
             </div>
           </div>
@@ -331,7 +331,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                                 }}
                                 className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
                               >
-                                Get Detailed Fix →
+                                Get Detailed Fix  
                               </button>
                             </div>
                           </div>
@@ -388,7 +388,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
         <div className="relative mb-8">
           <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 rounded-lg flex items-center justify-center">
             <div className="text-center">
-              <div className="text-4xl mb-4">🔒</div>
+              <div className="text-4xl mb-4"></div>
               <h3 className="text-2xl font-bold mb-2">Unlock Full Analysis</h3>
               <p className="text-gray-600 mb-6">
                 See all 148 factors, competitor analysis, and your recovery roadmap
@@ -457,7 +457,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                 onClick={() => onUpgradeClick('professional')}
                 className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all"
               >
-                Start Professional →
+                Start Professional  
               </button>
               <p className="text-xs text-center mt-2 text-gray-600">
                 50% off first month - Limited time
@@ -497,7 +497,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                 onClick={() => onUpgradeClick('starter')}
                 className="w-full bg-gray-600 text-white py-3 rounded-lg font-semibold hover:bg-gray-700 transition-all"
               >
-                Start Starter →
+                Start Starter  
               </button>
             </div>
 
@@ -542,7 +542,7 @@ function TeaserResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
           {/* Trust Badges */}
           <div className="flex justify-center items-center gap-8 mt-8 pt-8 border-t">
             <div className="flex items-center gap-2 text-gray-600">
-              <span>🔒</span>
+              <span></span>
               <span className="text-sm">SSL Secured</span>
             </div>
             <div className="flex items-center gap-2 text-gray-600">

@@ -8,11 +8,11 @@ function PrivacyPolicy() {
         <h1 className="text-3xl font-primary font-bold mb-6 text-center" style={{ color: 'var(--framework-black)' }}>
           Privacy Policy
         </h1>
-        <p className="text-center font-secondary mb-8" style={{ color: 'var(--ai-silver)' }}>
+        <p className="text-center font-primary mb-8" style={{ color: 'var(--ai-silver)' }}>
           AImpactScanner by AI Search Mastery
         </p>
 
-        <div className="space-y-6 font-secondary text-sm" style={{ color: 'var(--framework-black)' }}>
+        <div className="space-y-6 font-primary text-sm" style={{ color: 'var(--framework-black)' }}>
           <section>
             <h2 className="text-xl font-semibold mb-3">1. Information We Collect</h2>
             <p className="mb-3">

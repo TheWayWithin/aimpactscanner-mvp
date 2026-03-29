@@ -283,7 +283,7 @@ function AppNew() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
         <div className="text-center p-8 bg-white rounded-lg shadow-xl max-w-md">
-          <div className="text-6xl mb-4">🎉</div>
+          <div className="text-6xl mb-4"></div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Successful!</h1>
           <p className="text-gray-600 mb-6">
             Welcome to the Coffee Tier! Your subscription is now active.
@@ -347,7 +347,7 @@ function AppNew() {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            🔍 New Analysis
+            New Analysis
           </button>
           <button
             onClick={() => setCurrentView('pricing')}
@@ -357,7 +357,7 @@ function AppNew() {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            💎 Upgrade
+            Upgrade
           </button>
           <button
             onClick={() => setCurrentView('account')}
@@ -367,7 +367,7 @@ function AppNew() {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            👤 Account
+             Account
           </button>
         </div>
 
@@ -382,7 +382,7 @@ function AppNew() {
               onClick={() => setCurrentView('input')}
               className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
             >
-              Start New Analysis →
+              Start New Analysis  
             </button>
           </div>
         )}

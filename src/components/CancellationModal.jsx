@@ -37,11 +37,11 @@ const CancellationModal = ({ isOpen, onClose, onSuccess }) => {
       if (data?.success) {
         // Show success message with refund info if applicable
         if (data.refund) {
-          alert(`✅ Subscription canceled successfully!\n\n💰 Refund processed: $${data.refund.amount} ${data.refund.currency.toUpperCase()}\n\nThank you for trying AImpactScanner. We hope to see you again!`);
+          alert(`Subscription canceled successfully!\n\nRefund processed: $${data.refund.amount} ${data.refund.currency.toUpperCase()}\n\nThank you for trying AImpactScanner. We hope to see you again!`);
         } else if (data.eligibleForRefund) {
-          alert(`✅ Subscription canceled successfully!\n\n💰 You're eligible for our 30-day money-back guarantee. A refund will be processed shortly.\n\nThank you for trying AImpactScanner!`);
+          alert(`Subscription canceled successfully!\n\nYou're eligible for our 30-day money-back guarantee. A refund will be processed shortly.\n\nThank you for trying AImpactScanner!`);
         } else {
-          alert(`✅ Subscription canceled successfully!\n\nYour access will continue until ${new Date(data.endsAt).toLocaleDateString()}.\n\nThank you for being a valued customer!`);
+          alert(`Subscription canceled successfully!\n\nYour access will continue until ${new Date(data.endsAt).toLocaleDateString()}.\n\nThank you for being a valued customer!`);
         }
         
         onSuccess?.();

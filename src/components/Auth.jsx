@@ -52,12 +52,12 @@ function Auth() {
         <h1 className="text-center text-3xl font-primary font-bold mb-6" style={{ color: 'var(--framework-black)' }}>
           Sign In to AImpactScanner
         </h1>
-        <p className="text-center font-secondary mb-8" style={{ color: 'var(--ai-silver)' }}>
+        <p className="text-center font-primary mb-8" style={{ color: 'var(--ai-silver)' }}>
           Access comprehensive AI optimization insights powered by the MASTERY-AI Framework v2.1 Enhanced Edition.
         </p>
 
         {message && (
-          <div className={`p-3 mb-4 rounded-md font-secondary text-sm ${
+          <div className={`p-3 mb-4 rounded-md font-primary text-sm ${
               message.includes("success") || message.includes("Check your email")
               ? 'text-authority-white'
               : 'text-authority-white'
@@ -96,7 +96,7 @@ function Auth() {
           </a>
         </div>
         
-        <p className="text-center font-secondary text-xs mt-6" style={{ color: 'var(--ai-silver)' }}>
+        <p className="text-center font-primary text-xs mt-6" style={{ color: 'var(--ai-silver)' }}>
           By signing in, you agree to the AI Search Mastery Terms of Service.
         </p>
       </div>

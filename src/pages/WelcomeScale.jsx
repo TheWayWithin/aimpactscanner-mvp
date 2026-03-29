@@ -89,7 +89,7 @@ const WelcomeScale = () => {
 
           {/* Headline */}
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Welcome to Scale Tier! 🎉
+            Welcome to Scale Tier! 
           </h1>
 
           {/* Subheadline */}
@@ -103,9 +103,9 @@ const WelcomeScale = () => {
             {featurePills.map((pill, index) => (
               <span
                 key={index}
-                className="inline-block bg-white text-purple-600 font-semibold text-sm px-4 py-2 rounded-full border-2 border-purple-600"
+                className="inline-block bg-white text-signal font-semibold text-sm px-4 py-2 rounded-full border-2 border-signal"
               >
-                ✅ {pill}
+                {pill}
               </span>
             ))}
           </div>
@@ -126,11 +126,11 @@ const WelcomeScale = () => {
                 className="
                   step-card bg-white border-2 border-gray-200 rounded-xl p-6 text-center
                   transition-all duration-300 transform hover:-translate-y-1
-                  hover:border-purple-400 hover:shadow-xl
+                  hover:border-signal hover:shadow-xl
                 "
               >
                 {/* Step Number */}
-                <div className="step-number w-14 h-14 bg-purple-600 text-white text-2xl font-bold rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="step-number w-14 h-14 bg-signal text-white text-2xl font-bold rounded-full flex items-center justify-center mx-auto mb-6">
                   {step.number}
                 </div>
 
@@ -148,7 +148,7 @@ const WelcomeScale = () => {
                 <button
                   onClick={step.onClick}
                   className="
-                    w-full px-6 py-3 bg-purple-600 hover:bg-purple-700
+                    w-full px-6 py-3 bg-signal hover:bg-signal
                     text-white font-semibold rounded-lg
                     transition-all transform hover:-translate-y-0.5
                   "
@@ -162,7 +162,7 @@ const WelcomeScale = () => {
       </section>
 
       {/* Support Section */}
-      <section className="support-section py-12 px-5 md:py-16 md:px-10 bg-purple-50">
+      <section className="support-section py-12 px-5 md:py-16 md:px-10 bg-cloud">
         <div className="container max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-8">
             Your Dedicated Support Team
@@ -170,8 +170,8 @@ const WelcomeScale = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Account Manager Card */}
-            <div className="bg-white border-2 border-purple-200 rounded-xl p-6">
-              <div className="text-4xl mb-4">👤</div>
+            <div className="bg-white border-2 border-mist rounded-xl p-6">
+              <div className="text-4xl mb-4"></div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 Dedicated Account Manager
               </h3>
@@ -180,15 +180,15 @@ const WelcomeScale = () => {
               </p>
               <button
                 onClick={() => alert('Account manager contact coming soon!')}
-                className="text-purple-600 hover:text-purple-800 font-semibold underline"
+                className="text-signal hover:text-mastery font-semibold underline"
               >
-                Schedule Your First Call →
+                Schedule Your First Call 
               </button>
             </div>
 
             {/* Priority Support Card */}
-            <div className="bg-white border-2 border-purple-200 rounded-xl p-6">
-              <div className="text-4xl mb-4">⚡</div>
+            <div className="bg-white border-2 border-mist rounded-xl p-6">
+              <div className="text-4xl mb-4"></div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 Priority Support
               </h3>
@@ -197,9 +197,9 @@ const WelcomeScale = () => {
               </p>
               <button
                 onClick={() => alert('Support portal coming soon!')}
-                className="text-purple-600 hover:text-purple-800 font-semibold underline"
+                className="text-signal hover:text-mastery font-semibold underline"
               >
-                Contact Support →
+                Contact Support 
               </button>
             </div>
           </div>
@@ -227,7 +227,7 @@ const WelcomeScale = () => {
             onClick={handleContinueToDashboard}
             className="
               px-10 py-4 text-lg font-semibold rounded-lg
-              bg-white text-purple-900 hover:bg-gray-100
+              bg-white text-ink hover:bg-gray-100
               transition-all transform hover:-translate-y-0.5
               shadow-lg hover:shadow-xl
               min-w-[280px]

@@ -44,7 +44,7 @@ function URLInput({ onAnalyze, isAnalyzing = false }) {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold mb-2" style={{ color: '#0F172A' }}>
+        <h2 className="text-2xl font-bold mb-2" style={{ color: '#1E293B' }}>
           AI Impact Analysis
         </h2>
         <p className="text-gray-600">

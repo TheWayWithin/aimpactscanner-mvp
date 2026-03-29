@@ -41,7 +41,7 @@ function PillarSection({ pillar, isExpanded: defaultExpanded = false }) {
             {/* Pillar Info */}
             <div>
               <div className="flex items-center space-x-3">
-                <h3 className="text-lg font-semibold" style={{ color: '#0F172A' }}>
+                <h3 className="text-lg font-semibold" style={{ color: '#1E293B' }}>
                   {pillar.name}
                 </h3>
                 <span className="text-sm font-medium px-2 py-1 rounded" 

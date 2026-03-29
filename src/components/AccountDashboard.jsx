@@ -134,13 +134,13 @@ const AccountDashboard = ({ user, className = '' }) => {
 
   const getTierDisplayName = (tier) => {
     const tierNames = {
-      'free': '🆓 Free',
-      'coffee': '☕ Coffee',
-      'growth': '🚀 Growth',
-      'scale': '📈 Scale',
+      'free': 'Free',
+      'coffee': 'Coffee',
+      'growth': 'Growth',
+      'scale': 'Scale',
       // Backward compatibility
-      'professional': '🚀 Growth',
-      'enterprise': '📈 Scale'
+      'professional': 'Growth',
+      'enterprise': 'Scale'
     };
     return tierNames[tier] || tier;
   };
@@ -218,7 +218,7 @@ const AccountDashboard = ({ user, className = '' }) => {
             We're experiencing temporary issues connecting to our database. This doesn't affect your ability to run analyses.
           </p>
           <div className="bg-white rounded-lg p-4 mb-4">
-            <p className="text-gray-700 mb-2">✅ You can still:</p>
+            <p className="text-gray-700 mb-2">You can still:</p>
             <ul className="list-disc list-inside text-gray-600 space-y-1">
               <li>Run free analyses (3 per month)</li>
               <li>View analysis results</li>

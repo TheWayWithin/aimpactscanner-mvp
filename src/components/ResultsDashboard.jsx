@@ -15,7 +15,7 @@ function ResultsDashboard({ analysisId }) {
       id: 'AI',
       name: 'AI Response Optimization & Citation',
       description: 'Citation potential and AI system compatibility with MCP integration',
-      color: '#1E3A8A', // Mastery Blue
+      color: '#1E3A5F', // Mastery Blue
       weight: 23.8 // Official framework weight
     },
     {
@@ -57,7 +57,7 @@ function ResultsDashboard({ analysisId }) {
       id: 'R',
       name: 'Reference Networks & Citations',
       description: 'Citation authority and reference network strength',
-      color: '#0891B2', // Cyan
+      color: '#0D9488', // Cyan
       weight: 5.9 // Official framework weight
     },
     {
@@ -217,7 +217,7 @@ function ResultsDashboard({ analysisId }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#0891B2' }}></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#0D9488' }}></div>
       </div>
     );
   }
@@ -261,7 +261,7 @@ function ResultsDashboard({ analysisId }) {
         </div>
         
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold" style={{ color: '#0F172A' }}>
+          <h2 className="text-2xl font-bold" style={{ color: '#1E293B' }}>
             MASTERY-AI Analysis Results
           </h2>
           <div className="flex items-center justify-center space-x-2">
@@ -300,7 +300,7 @@ function ResultsDashboard({ analysisId }) {
 
       {/* Summary Insights */}
       <div className="mt-8 p-6 rounded-lg" style={{ backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-        <h3 className="text-lg font-semibold mb-4" style={{ color: '#0F172A' }}>
+        <h3 className="text-lg font-semibold mb-4" style={{ color: '#1E293B' }}>
           Key Insights & Recommendations
         </h3>
         
@@ -325,7 +325,7 @@ function ResultsDashboard({ analysisId }) {
           {/* Areas for Improvement */}
           <div>
             <h4 className="font-medium mb-3" style={{ color: '#DC2626' }}>
-              ⚡ Priority Improvements
+              Priority Improvements
             </h4>
             <ul className="space-y-2">
               {Object.values(pillarGroups)

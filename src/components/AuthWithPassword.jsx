@@ -359,7 +359,7 @@ function AuthWithPassword({
         <h1 className="text-center text-3xl font-primary font-bold mb-2" style={{ color: 'var(--framework-black)' }}>
           {mode === 'login' ? 'Sign In' : mode === 'register' ? 'Create Account' : 'Reset Password'}
         </h1>
-        <p className="text-center font-secondary mb-8" style={{ color: 'var(--ai-silver)' }}>
+        <p className="text-center font-primary mb-8" style={{ color: 'var(--ai-silver)' }}>
           {mode === 'login' 
             ? 'Access comprehensive AI optimization insights powered by the MASTERY-AI Framework v3.1.1.'
             : mode === 'register'
@@ -375,7 +375,7 @@ function AuthWithPassword({
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <div className="text-center">
               <div className="text-2xl mb-1">
-                {selectedTier === 'coffee' ? '☕' : selectedTier === 'professional' ? '💼' : selectedTier === 'free' ? '🆓' : '🏢'}
+                {selectedTier === 'coffee' ? '' : selectedTier === 'professional' ? '' : selectedTier === 'free' ? '' : ''}
               </div>
               <h3 className="font-semibold text-blue-900 capitalize">
                 {selectedTier} {selectedTier !== 'free' ? 'Subscription' : 'Trial'}
@@ -396,7 +396,7 @@ function AuthWithPassword({
         )}
 
         {message && (
-          <div className={`p-3 mb-4 rounded-md font-secondary text-sm text-white`} 
+          <div className={`p-3 mb-4 rounded-md font-primary text-sm text-white`} 
                style={{ 
                  backgroundColor: messageType === 'success' 
                    ? 'var(--success-green)' 
@@ -438,7 +438,7 @@ function AuthWithPassword({
                 onClick={() => setShowPassword(!showPassword)}
               >
                 <span className="text-sm" style={{ color: 'var(--ai-silver)' }}>
-                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                  {showPassword ? '' : '‍🗨️'}
                 </span>
               </button>
             </div>
@@ -452,14 +452,14 @@ function AuthWithPassword({
                   onChange={(e) => handleInputChange('rememberMe', e.target.checked)}
                   disabled={loading}
                 />
-                <span className="text-sm font-secondary" style={{ color: 'var(--framework-black)' }}>
+                <span className="text-sm font-primary" style={{ color: 'var(--framework-black)' }}>
                   Remember me
                 </span>
               </label>
               
               <button
                 type="button"
-                className="text-sm font-secondary underline"
+                className="text-sm font-primary underline"
                 style={{ color: 'var(--mastery-blue)' }}
                 onClick={() => setMode('reset')}
                 disabled={loading}
@@ -477,7 +477,7 @@ function AuthWithPassword({
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
 
-            <p className="text-center font-secondary text-sm mt-4" style={{ color: 'var(--ai-silver)' }}>
+            <p className="text-center font-primary text-sm mt-4" style={{ color: 'var(--ai-silver)' }}>
               Don't have an account?{' '}
               <button
                 type="button"
@@ -522,7 +522,7 @@ function AuthWithPassword({
                 onClick={() => setShowPassword(!showPassword)}
               >
                 <span className="text-sm" style={{ color: 'var(--ai-silver)' }}>
-                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                  {showPassword ? '' : '‍🗨️'}
                 </span>
               </button>
             </div>
@@ -530,15 +530,15 @@ function AuthWithPassword({
             {formData.password && (
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-secondary" style={{ color: 'var(--framework-black)' }}>
+                  <span className="text-xs font-primary" style={{ color: 'var(--framework-black)' }}>
                     Password Strength:
                   </span>
-                  <span className="text-xs font-secondary font-semibold" 
+                  <span className="text-xs font-primary font-semibold" 
                         style={{ color: strengthDisplay.color }}>
                     {strengthDisplay.text}
                   </span>
                 </div>
-                <div className="space-y-1 text-xs font-secondary">
+                <div className="space-y-1 text-xs font-primary">
                   <div className={`flex items-center ${passwordStrength.requirements.minLength ? 'text-green-600' : 'text-gray-500'}`}>
                     <span className="mr-2">{passwordStrength.requirements.minLength ? '✓' : '○'}</span>
                     At least 8 characters
@@ -580,13 +580,13 @@ function AuthWithPassword({
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 <span className="text-sm" style={{ color: 'var(--ai-silver)' }}>
-                  {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                  {showConfirmPassword ? '' : '‍🗨️'}
                 </span>
               </button>
             </div>
 
             {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-              <p className="text-xs text-red-600 font-secondary">
+              <p className="text-xs text-red-600 font-primary">
                 Passwords do not match
               </p>
             )}
@@ -600,7 +600,7 @@ function AuthWithPassword({
                 disabled={loading}
                 required
               />
-              <span className="text-sm font-secondary" style={{ color: 'var(--framework-black)' }}>
+              <span className="text-sm font-primary" style={{ color: 'var(--framework-black)' }}>
                 I agree to the{' '}
                 <a href="/terms" className="underline" style={{ color: 'var(--mastery-blue)' }}>
                   Terms of Service
@@ -621,7 +621,7 @@ function AuthWithPassword({
               {loading ? 'Creating account...' : 'Create Account'}
             </button>
 
-            <p className="text-center font-secondary text-sm mt-4" style={{ color: 'var(--ai-silver)' }}>
+            <p className="text-center font-primary text-sm mt-4" style={{ color: 'var(--ai-silver)' }}>
               Already have an account?{' '}
               <button
                 type="button"
@@ -658,7 +658,7 @@ function AuthWithPassword({
               {loading ? 'Sending reset email...' : 'Send Reset Email'}
             </button>
 
-            <p className="text-center font-secondary text-sm mt-4" style={{ color: 'var(--ai-silver)' }}>
+            <p className="text-center font-primary text-sm mt-4" style={{ color: 'var(--ai-silver)' }}>
               Remember your password?{' '}
               <button
                 type="button"
@@ -673,7 +673,7 @@ function AuthWithPassword({
           </form>
         )}
 
-        <p className="text-center font-secondary text-xs mt-6" style={{ color: 'var(--ai-silver)' }}>
+        <p className="text-center font-primary text-xs mt-6" style={{ color: 'var(--ai-silver)' }}>
           Powered by the MASTERY-AI Framework v3.1.1 - Professional AI Search Optimization
         </p>
       </div>

@@ -276,6 +276,73 @@ export function getRailwayApiUrl() {
 }
 
 // ============================================
+// API Key Management
+// ============================================
+
+/**
+ * Create a new API key
+ * @param {string} name - Human-readable name for the key
+ * @returns {Promise<{id: string, name: string, key: string, prefix: string, created_at: string, warning: string}>}
+ */
+export async function createApiKey(name) {
+  const headers = await getAuthHeaders();
+
+  const response = await fetch(`${RAILWAY_API_URL}/api/keys`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ name }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || `HTTP ${response.status}: Failed to create API key`);
+  }
+
+  return response.json();
+}
+
+/**
+ * List user's API keys
+ * @returns {Promise<{keys: Array<{id: string, name: string, key_prefix: string, created_at: string, last_used_at: string|null, is_active: boolean, revoked_at: string|null}>}>}
+ */
+export async function listApiKeys() {
+  const headers = await getAuthHeaders();
+
+  const response = await fetch(`${RAILWAY_API_URL}/api/keys`, {
+    method: 'GET',
+    headers,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || `HTTP ${response.status}: Failed to list API keys`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Revoke an API key
+ * @param {string} id - API key ID to revoke
+ * @returns {Promise<{success: boolean, message: string}>}
+ */
+export async function revokeApiKey(id) {
+  const headers = await getAuthHeaders();
+
+  const response = await fetch(`${RAILWAY_API_URL}/api/keys/${id}`, {
+    method: 'DELETE',
+    headers,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || `HTTP ${response.status}: Failed to revoke API key`);
+  }
+
+  return response.json();
+}
+
+// ============================================
 // LLMs.txt Generation API
 // ============================================
 

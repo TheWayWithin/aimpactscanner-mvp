@@ -318,7 +318,7 @@ export default function DiagnosticSignup() {
       // ================================================================
       report.tests.databaseLogs = {
         note: 'Database logs only accessible via Supabase dashboard',
-        location: 'Supabase Dashboard → Logs → Postgres Logs',
+        location: 'Supabase Dashboard  Logs  Postgres Logs',
         lookFor: [
           'Trigger execution errors',
           'RLS violation messages',
@@ -568,7 +568,7 @@ export default function DiagnosticSignup() {
                   onClick={copyToClipboard}
                   className="flex-1 py-3 px-6 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold"
                 >
-                  📋 Copy Full Report
+                  Copy Full Report
                 </button>
                 <button
                   onClick={() => {

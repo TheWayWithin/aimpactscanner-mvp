@@ -76,7 +76,7 @@ const CheckoutCancel = () => {
         {/* Benefits Reminder */}
         <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-lg p-6 mb-8 text-left">
           <h2 className="text-xl font-bold text-gray-900 mb-3 text-center">
-            ☕ Coffee Tier Benefits
+            Coffee Tier Benefits
           </h2>
 
           <div className="grid gap-3 text-gray-700">
@@ -118,7 +118,7 @@ const CheckoutCancel = () => {
               min-w-[240px]
             "
             style={{
-              background: 'linear-gradient(135deg, #1E3A8A 0%, #0891B2 100%)'
+              background: 'linear-gradient(135deg, #1E3A5F 0%, #0D9488 100%)'
             }}
           >
             Try Again - Upgrade to Coffee
@@ -140,7 +140,7 @@ const CheckoutCancel = () => {
 
         {/* ZERO RISK Badge */}
         <div className="inline-flex items-center gap-2 bg-green-100 border border-green-300 rounded-full px-4 py-2 mb-4">
-          <span className="text-green-600 text-lg">🛡️</span>
+          <span className="text-green-600 text-lg"></span>
           <span className="text-green-800 font-medium text-sm">
             ZERO RISK • 30-Day Money-Back Guarantee
           </span>

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useUsageTracking } from '../hooks/useUsageTracking';
 import { hasFeatureAccess } from '../lib/tierUtils';
+import ApiKeysSection from './ApiKeysSection';
 
 const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
   const [loading, setLoading] = useState(false);
@@ -47,13 +48,13 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
   // Get tier display info
   const getTierDisplayName = (tier) => {
     const tierNames = {
-      'free': '🆓 Free',
-      'coffee': '☕ Solo',
-      'coffee_pending': '☕ Solo (Payment Pending)',
-      'pending_payment': '⏳ Payment Pending',
-      'pending_registration': '📝 Registration Incomplete',
-      'growth': '🚀 Growth',
-      'scale': '📈 Scale'
+      'free': 'Free',
+      'coffee': 'Solo',
+      'coffee_pending': 'Solo (Payment Pending)',
+      'pending_payment': 'Payment Pending',
+      'pending_registration': 'Registration Incomplete',
+      'growth': 'Growth',
+      'scale': 'Scale'
     };
     return tierNames[tier] || tier || 'Unknown';
   };
@@ -65,7 +66,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
       'coffee_pending': 'bg-yellow-100 text-yellow-600',
       'pending_payment': 'bg-orange-100 text-orange-800',
       'growth': 'bg-blue-100 text-blue-800',
-      'scale': 'bg-purple-100 text-purple-800'
+      'scale': 'bg-cloud text-mastery'
     };
     return colors[tier] || 'bg-gray-100 text-gray-800';
   };
@@ -187,14 +188,14 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
                 {/* API Access Badge - Show for all tiers */}
                 {hasFeatureAccess(userTier, 'api_access') ? (
                   // Scale tier - Active badge
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cloud text-mastery">
                     🔌 API Access
                   </span>
                 ) : (
                   // Free/Solo/Growth - Locked badge with tooltip
                   <div className="relative group">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500 cursor-help">
-                      🔒 API Access
+                      API Access
                     </span>
                     <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-sm rounded py-3 px-4 z-10 left-1/2 -translate-x-1/2 whitespace-nowrap">
                       <p className="font-semibold mb-1">🔌 Automate Your Analysis</p>
@@ -214,7 +215,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
           {showPaymentPending && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <p className="text-yellow-800">
-                ⏳ Your Solo tier subscription is pending payment.
+                Your Solo tier subscription is pending payment.
                 Please complete the payment process to activate your subscription.
               </p>
             </div>
@@ -249,12 +250,17 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
                 href="/#pricing"
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 inline-block"
               >
-                Upgrade to Solo ☕
+                Upgrade to Solo 
               </a>
             )}
           </div>
         </div>
       </div>
+
+      {/* API Keys Section - Scale tier only */}
+      {hasFeatureAccess(userTier, 'api_access') && (
+        <ApiKeysSection />
+      )}
 
       {/* Usage Summary */}
       <div className="bg-white rounded-lg shadow p-6">
@@ -284,7 +290,7 @@ const SimpleAccountDashboard = ({ user, userTier, className = '' }) => {
           ) : (
             <div className="bg-green-50 rounded-lg p-4">
               <p className="text-green-800">
-                ✅ {getRemainingAnalyses()} analyses remaining with your {getTierDisplayName(userTier)} plan
+                {getRemainingAnalyses()} analyses remaining with your {getTierDisplayName(userTier)} plan
               </p>
               <p className="text-sm text-green-600 mt-1">
                 You've completed {getUsedAnalyses()} analyses this month

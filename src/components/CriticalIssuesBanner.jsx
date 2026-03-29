@@ -21,7 +21,7 @@ function CriticalIssuesBanner({ factors }) {
     return (
       <div className="mb-6 p-4 rounded-lg border-2 border-green-200 bg-green-50">
         <div className="flex items-center">
-          <span className="text-2xl mr-3">✅</span>
+          <span className="text-2xl mr-3"></span>
           <div>
             <h3 className="font-semibold text-green-800">No Critical SEO Issues Detected</h3>
             <p className="text-sm text-green-700">Your site passes all fundamental SEO checks. Focus on optimization recommendations below.</p>
@@ -77,7 +77,7 @@ function CriticalIssuesBanner({ factors }) {
       {warnings.length > 0 && (
         <div className="p-4 rounded-lg border-2 border-orange-300 bg-orange-50">
           <div className="flex items-start">
-            <span className="text-2xl mr-3 mt-1">⚠️</span>
+            <span className="text-2xl mr-3 mt-1"></span>
             <div className="flex-1">
               <h3 className="font-bold text-orange-800 text-lg mb-2">
                 {warnings.length} Warning{warnings.length > 1 ? 's' : ''} Detected

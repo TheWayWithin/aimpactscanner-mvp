@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Settings, Lock, FileText, Target, Palette, Link, TrendingUp, Bot } from 'lucide-react';
 import NavigationButtons from './NavigationButtons';
 
 const AboutPage = ({ onNavigate, isAuthenticated }) => {
@@ -107,35 +108,35 @@ const AboutPage = ({ onNavigate, isAuthenticated }) => {
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-gray-900 mb-2">M - ⚙️ Machine Readability</h3>
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">M - <Settings className="w-4 h-4" /> Machine Readability</h3>
                 <p className="text-gray-600 text-sm">Technical infrastructure optimization</p>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-gray-900 mb-2">A - 🔐 Authority & Trust</h3>
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">A - <Lock className="w-4 h-4" /> Authority & Trust</h3>
                 <p className="text-gray-600 text-sm">Credibility markers for AI systems</p>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-gray-900 mb-2">S - 📝 Semantic Content</h3>
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">S - <FileText className="w-4 h-4" /> Semantic Content</h3>
                 <p className="text-gray-600 text-sm">Context and meaning optimization</p>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-gray-900 mb-2">T - 🎯 Topical Expertise</h3>
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">T - <Target className="w-4 h-4" /> Topical Expertise</h3>
                 <p className="text-gray-600 text-sm">Domain authority and specialization</p>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-gray-900 mb-2">E - 🎨 Engagement & UX</h3>
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">E - <Palette className="w-4 h-4" /> Engagement & UX</h3>
                 <p className="text-gray-600 text-sm">User experience signals</p>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-gray-900 mb-2">R - 🔗 Reference Networks</h3>
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">R - <Link className="w-4 h-4" /> Reference Networks</h3>
                 <p className="text-gray-600 text-sm">Citation patterns and linking</p>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-gray-900 mb-2">Y - 📈 Yield Optimization</h3>
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">Y - <TrendingUp className="w-4 h-4" /> Yield Optimization</h3>
                 <p className="text-gray-600 text-sm">Conversion and performance</p>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-gray-900 mb-2">AI - 🤖 AI Response Optimization</h3>
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">AI - <Bot className="w-4 h-4" /> AI Response Optimization</h3>
                 <p className="text-gray-600 text-sm">Citation-worthy content structure</p>
               </div>
             </div>

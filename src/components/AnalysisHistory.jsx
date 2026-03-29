@@ -589,7 +589,7 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
         {/* Header skeleton */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg animate-pulse"></div>
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-clarity rounded-lg animate-pulse"></div>
             <div>
               <div className="h-6 bg-gray-200 rounded w-32 animate-pulse"></div>
               <div className="h-4 bg-gray-200 rounded w-24 mt-1 animate-pulse"></div>
@@ -676,7 +676,7 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
     return (
       <div className="text-center py-12">
         <div className="max-w-md mx-auto">
-          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-clarity rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
@@ -688,7 +688,7 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
           <div className="flex justify-center">
             <button
               onClick={() => window.location.hash = '#input'}
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
+              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-clarity text-white rounded-lg hover:from-blue-700 hover:to-clarity transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -706,7 +706,7 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-clarity rounded-xl flex items-center justify-center shadow-lg">
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
@@ -1001,8 +1001,8 @@ const AnalysisHistory = ({ onViewAnalysis, user, userTier }) => {
                   </div>
                 </div>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <svg style={{ width: '24px', height: '24px', minWidth: '24px' }} className="text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 bg-cloud rounded-lg flex items-center justify-center">
+                <svg style={{ width: '24px', height: '24px', minWidth: '24px' }} className="text-signal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
                 </svg>

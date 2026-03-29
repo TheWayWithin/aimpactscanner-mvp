@@ -13,10 +13,10 @@ const TierDropdownSelector = ({ selectedTier, onTierChange }) => {
 
   // Tier definitions for dropdown options
   const tiers = [
-    { id: 'free', label: '⚠️ FREE - 3 daily (20 pages max)' },
-    { id: 'coffee', label: '☕ COFFEE - 20 monthly ($4.95/month)' },
-    { id: 'growth', label: '🚀 GROWTH - Go Pro ($9.95/month)' },
-    { id: 'scale', label: '🏢 SCALE - Enterprise ($19.95/month)' }
+    { id: 'free', label: 'FREE - 3 daily (20 pages max)' },
+    { id: 'coffee', label: 'COFFEE - 20 monthly ($4.95/month)' },
+    { id: 'growth', label: 'GROWTH - Go Pro ($9.95/month)' },
+    { id: 'scale', label: 'SCALE - Enterprise ($19.95/month)' }
   ];
 
   // Benefits/warnings based on selected tier
@@ -25,35 +25,35 @@ const TierDropdownSelector = ({ selectedTier, onTierChange }) => {
       badge: 'FREE',
       badgeColor: 'bg-red-600',
       description: '3 free analyses per day, up to 20 pages',
-      warning: '⚠️ WARNING: You\'ll miss critical pages and your competitors will outrank you with better llms.txt files!',
+      warning: 'WARNING: You\'ll miss critical pages and your competitors will outrank you with better llms.txt files!',
       warningColor: 'bg-red-50 border-red-200 text-red-700',
       benefits: [
-        { icon: '❌', text: 'Only 3 analyses per day (then locked out)', color: 'text-red-600' },
-        { icon: '❌', text: 'Severely limited to 20 pages only', color: 'text-red-600' },
-        { icon: '❌', text: 'No AI quality scoring (missing critical content)', color: 'text-red-600' },
-        { icon: '❌', text: 'Basic HTML extraction only', color: 'text-red-600' },
-        { icon: '⚠️', text: 'WARNING: AI will only see 20 pages - missing your pricing, features, case studies, and 90% of what makes you unique!', color: 'text-orange-600 font-semibold' }
+        { icon: '', text: 'Only 3 analyses per day (then locked out)', color: 'text-red-600' },
+        { icon: '', text: 'Severely limited to 20 pages only', color: 'text-red-600' },
+        { icon: '', text: 'No AI quality scoring (missing critical content)', color: 'text-red-600' },
+        { icon: '', text: 'Basic HTML extraction only', color: 'text-red-600' },
+        { icon: '', text: 'WARNING: AI will only see 20 pages - missing your pricing, features, case studies, and 90% of what makes you unique!', color: 'text-orange-600 font-semibold' }
       ]
     },
     coffee: {
       badge: 'SOLO',
       badgeColor: 'bg-orange-600',
       description: '20 monthly analyses, up to 200 pages each',
-      message: '🎯 SMART CHOICE! 20 monthly analyses + 30-day guarantee + cancel instantly. After signup, secure Stripe payment ($4.95/month)',
+      message: 'SMART CHOICE! 20 monthly analyses + 30-day guarantee + cancel instantly. After signup, secure Stripe payment ($4.95/month)',
       messageColor: 'bg-green-50 border-green-200 text-green-700',
       benefits: [
-        { icon: '✅', text: '20 monthly analysis credits', color: 'text-green-600' },
-        { icon: '✅', text: '200 pages per analysis (10x more than free)', color: 'text-green-600' },
-        { icon: '✅', text: 'AI-powered content scoring for all pages', color: 'text-green-600' },
-        { icon: '✅', text: 'Priority processing and support', color: 'text-green-600' },
-        { icon: '✅', text: '30-day money-back guarantee', color: 'text-green-600' }
+        { icon: '', text: '20 monthly analysis credits', color: 'text-green-600' },
+        { icon: '', text: '200 pages per analysis (10x more than free)', color: 'text-green-600' },
+        { icon: '', text: 'AI-powered content scoring for all pages', color: 'text-green-600' },
+        { icon: '', text: 'Priority processing and support', color: 'text-green-600' },
+        { icon: '', text: '30-day money-back guarantee', color: 'text-green-600' }
       ]
     },
     growth: {
       badge: 'COMING SOON',
       badgeColor: 'bg-gray-400',
       description: 'Advanced features, priority support',
-      message: '🔧 COMING SOON: Advanced features in development. Start with Coffee tier, upgrade when available.',
+      message: 'COMING SOON: Advanced features in development. Start with Coffee tier, upgrade when available.',
       messageColor: 'bg-blue-50 border-blue-200 text-blue-700',
       benefits: []
     },
@@ -61,7 +61,7 @@ const TierDropdownSelector = ({ selectedTier, onTierChange }) => {
       badge: 'COMING SOON',
       badgeColor: 'bg-gray-400',
       description: 'Enterprise features, white-label reports',
-      message: '🔧 COMING SOON: Enterprise features in development. Start with Coffee tier, upgrade when available.',
+      message: 'COMING SOON: Enterprise features in development. Start with Coffee tier, upgrade when available.',
       messageColor: 'bg-blue-50 border-blue-200 text-blue-700',
       benefits: []
     }
@@ -120,7 +120,7 @@ const TierDropdownSelector = ({ selectedTier, onTierChange }) => {
         {content.benefits.length > 0 && (
           <div className="bg-white border border-gray-200 rounded-lg p-4">
             <h3 className="font-bold text-gray-900 mb-3">
-              {currentTier === 'free' ? '⭕ FREE Plan Benefits' : `☕ ${content.badge} Plan Benefits`}
+              {currentTier === 'free' ? '⭕ FREE Plan Benefits' : `${content.badge} Plan Benefits`}
             </h3>
             <ul className="space-y-2">
               {content.benefits.map((benefit, idx) => (
@@ -136,11 +136,11 @@ const TierDropdownSelector = ({ selectedTier, onTierChange }) => {
 
       {/* ZERO RISK Section */}
       <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-        <h4 className="font-bold text-green-800 mb-3">🛡️ ZERO RISK - We Remove ALL Your Fears</h4>
+        <h4 className="font-bold text-green-800 mb-3">ZERO RISK - We Remove ALL Your Fears</h4>
 
         <div className="space-y-2 text-sm">
           <div className="flex items-start">
-            <span className="text-green-600 mr-2 mt-0.5">💰</span>
+            <span className="text-green-600 mr-2 mt-0.5"></span>
             <div>
               <div className="font-semibold text-green-800">30-Day Money Back Guarantee</div>
               <div className="text-green-700">Don't like the results? Get every penny back. No questions asked. No hoops to jump through. Full refund processed in 24 hours.</div>
@@ -148,7 +148,7 @@ const TierDropdownSelector = ({ selectedTier, onTierChange }) => {
           </div>
 
           <div className="flex items-start">
-            <span className="text-green-600 mr-2 mt-0.5">⚡</span>
+            <span className="text-green-600 mr-2 mt-0.5"></span>
             <div>
               <div className="font-semibold text-green-800">Cancel Instantly Anytime</div>
               <div className="text-green-700">One click cancellation. No phone calls. No retention tactics. Cancel in 10 seconds flat. Keep access until your billing period ends.</div>
@@ -156,7 +156,7 @@ const TierDropdownSelector = ({ selectedTier, onTierChange }) => {
           </div>
 
           <div className="flex items-start">
-            <span className="text-green-600 mr-2 mt-0.5">🏆</span>
+            <span className="text-green-600 mr-2 mt-0.5"></span>
             <div>
               <div className="font-semibold text-green-800">Results in 24 Hours or Refund</div>
               <div className="text-green-700">See dramatic improvements within 24 hours or get a full refund immediately. We stand behind our MASTERY-AI framework.</div>
@@ -164,7 +164,7 @@ const TierDropdownSelector = ({ selectedTier, onTierChange }) => {
           </div>
 
           <div className="flex items-start">
-            <span className="text-green-600 mr-2 mt-0.5">🚀</span>
+            <span className="text-green-600 mr-2 mt-0.5"></span>
             <div>
               <div className="font-semibold text-green-800">Outperform Competitors or Refund</div>
               <div className="text-green-700">We find 3x more pages than competitors or you get your money back. Guaranteed.</div>
@@ -176,15 +176,15 @@ const TierDropdownSelector = ({ selectedTier, onTierChange }) => {
       {/* Credibility Signals */}
       <div className="mt-4 flex items-center justify-center space-x-4 text-xs text-gray-600">
         <div className="flex items-center">
-          <span className="mr-1">✅</span>
+          <span className="mr-1"></span>
           <span>Built by Expert Solopreneur</span>
         </div>
         <div className="flex items-center">
-          <span className="mr-1">✅</span>
+          <span className="mr-1"></span>
           <span>Not VC-Funded BS</span>
         </div>
         <div className="flex items-center">
-          <span className="mr-1">✅</span>
+          <span className="mr-1"></span>
           <span>Real Results for Real Businesses</span>
         </div>
       </div>

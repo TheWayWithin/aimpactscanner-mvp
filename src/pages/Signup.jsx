@@ -165,7 +165,7 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
               {mode === 'signup' && selectedTier && (
                 <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded">
                   <p className="text-sm text-green-800">
-                    ✅ <strong>Plan Selected:</strong> {
+                    <strong>Plan Selected:</strong> {
                       selectedTier === 'coffee' ? 'Solo' :
                       selectedTier === 'free' ? 'Free' :
                       selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1)
@@ -240,7 +240,7 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
             <div className="grid md:grid-cols-3 gap-6">
               {/* Benefit 1 */}
               <div className="text-center">
-                <div className="text-4xl mb-3">⚡</div>
+                <div className="text-4xl mb-3"></div>
                 <h3 className="font-semibold mb-2">Lightning Fast</h3>
                 <p className="text-sm text-gray-600">
                   Get AI optimization insights in under 60 seconds
@@ -249,7 +249,7 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
 
               {/* Benefit 2 */}
               <div className="text-center">
-                <div className="text-4xl mb-3">🎯</div>
+                <div className="text-4xl mb-3"></div>
                 <h3 className="font-semibold mb-2">Proven Framework</h3>
                 <p className="text-sm text-gray-600">
                   MASTERY-AI framework based on real AI search behavior
@@ -258,7 +258,7 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
 
               {/* Benefit 3 */}
               <div className="text-center">
-                <div className="text-4xl mb-3">💰</div>
+                <div className="text-4xl mb-3"></div>
                 <h3 className="font-semibold mb-2">Risk-Free</h3>
                 <p className="text-sm text-gray-600">
                   Start free, upgrade anytime. 30-day money-back guarantee
@@ -270,7 +270,7 @@ const Signup = ({ mode = 'signup', session = null, onNavigate = null }) => {
           {/* Social Proof */}
           <div className="mt-8 bg-gradient-to-r from-blue-50 to-teal-50 rounded-lg p-6">
             <div className="flex items-center justify-center gap-2 mb-3">
-              <span className="text-2xl">⭐⭐⭐⭐⭐</span>
+              <span className="text-2xl"></span>
             </div>
             <p className="text-center text-gray-700 italic">
               "Finally, a tool that shows me EXACTLY how to optimize for AI search engines.

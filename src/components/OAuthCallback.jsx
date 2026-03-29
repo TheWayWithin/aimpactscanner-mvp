@@ -336,7 +336,7 @@ const OAuthCallback = ({ onNavigate, oauthCallbackProcessedRef }) => {
 
         {status === 'error' && (
           <>
-            <div className="text-6xl mb-4">❌</div>
+            <div className="text-6xl mb-4"></div>
             <h2 className="text-2xl font-bold text-red-600 mb-3">
               Authentication Failed
             </h2>

@@ -1,4 +1,4 @@
-// UpsellCoffee.jsx - Free → Coffee tier upgrade page ($4.95/month)
+// UpsellCoffee.jsx - Free  Coffee tier upgrade page ($4.95/month)
 import React, { useState, useEffect } from 'react';
 import ComparisonGrid from '../components/ComparisonGrid';
 import ZeroRiskSection from '../components/ZeroRiskSection';
@@ -113,7 +113,7 @@ const UpsellCoffee = () => {
         >
           <div className="container max-w-3xl mx-auto">
             <p className="text-red-800 font-medium mb-2">
-              ⚠️ {error}
+              {error}
             </p>
             <div className="flex gap-3 justify-center">
               <button
@@ -149,7 +149,7 @@ const UpsellCoffee = () => {
               animation: 'pulse 2s ease-in-out infinite'
             }}
           >
-            ☕
+            
           </div>
 
           {/* Headline */}
@@ -175,7 +175,7 @@ const UpsellCoffee = () => {
               w-full md:w-auto min-w-[280px]
             "
             style={{
-              background: 'linear-gradient(135deg, #1E3A8A 0%, #0891B2 100%)'
+              background: 'linear-gradient(135deg, #1E3A5F 0%, #0D9488 100%)'
             }}
             aria-label="Upgrade to Coffee tier - $4.95 per month"
           >
@@ -199,13 +199,13 @@ const UpsellCoffee = () => {
       {/* Comparison Section */}
       <ComparisonGrid
         currentTier={{
-          icon: '🆓',
+          icon: '',
           name: 'FREE Plan',
           price: '$0/month',
           limitations: freeLimitations
         }}
         upgradeTier={{
-          icon: '☕',
+          icon: '',
           name: 'COFFEE Plan',
           price: '$4.95/month',
           benefits: coffeeBenefits
@@ -219,7 +219,7 @@ const UpsellCoffee = () => {
       <section
         className="final-cta-section py-16 px-5 md:py-20 md:px-10 text-center"
         style={{
-          background: 'linear-gradient(135deg, #1E3A8A 0%, #0891B2 100%)'
+          background: 'linear-gradient(135deg, #1E3A5F 0%, #0D9488 100%)'
         }}
       >
         <div className="container max-w-2xl mx-auto">

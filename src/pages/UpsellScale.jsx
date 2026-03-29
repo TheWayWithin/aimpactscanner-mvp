@@ -1,4 +1,4 @@
-// UpsellScale.jsx - Growth/Coffee → Scale tier waitlist page
+// UpsellScale.jsx - Growth/Coffee  Scale tier waitlist page
 import React, { useState } from 'react';
 import FeatureCard from '../components/FeatureCard';
 import WaitlistCTA from '../components/WaitlistCTA';
@@ -29,17 +29,17 @@ const UpsellScale = () => {
       description: 'Automate analyses and integrate with your workflow'
     },
     {
-      icon: '🎨',
+      icon: '',
       title: 'White-Label Reports',
       description: 'Brand PDFs with your logo and colors'
     },
     {
-      icon: '👥',
+      icon: '',
       title: 'Team Collaboration',
       description: 'Share analyses across your team'
     },
     {
-      icon: '📊',
+      icon: '',
       title: 'Custom Reporting',
       description: 'Build reports tailored to your clients'
     },
@@ -49,7 +49,7 @@ const UpsellScale = () => {
       description: 'Connect with your existing tools'
     },
     {
-      icon: '🎯',
+      icon: '',
       title: 'Dedicated Support',
       description: 'Priority support with dedicated account manager'
     }
@@ -67,12 +67,12 @@ const UpsellScale = () => {
         <div className="container max-w-3xl mx-auto">
           {/* Scale Icon */}
           <div className="icon-scale text-7xl mb-6">
-            🏢
+            
           </div>
 
           {/* Coming Soon Badge */}
           <div
-            className="inline-block px-6 py-2 bg-purple-600 text-white text-sm font-bold rounded-full mb-6 uppercase"
+            className="inline-block px-6 py-2 bg-signal text-white text-sm font-bold rounded-full mb-6 uppercase"
             style={{
               animation: 'pulse 2s ease-in-out infinite'
             }}
@@ -142,8 +142,8 @@ const UpsellScale = () => {
             Scale Tier Pricing
           </h2>
 
-          <div className="bg-white border-2 border-purple-200 rounded-xl p-8 max-w-md mx-auto">
-            <div className="text-5xl font-bold text-purple-600 mb-2">
+          <div className="bg-white border-2 border-mist rounded-xl p-8 max-w-md mx-auto">
+            <div className="text-5xl font-bold text-signal mb-2">
               $99
               <span className="text-xl text-gray-600">/month</span>
             </div>
@@ -152,29 +152,29 @@ const UpsellScale = () => {
             </p>
             <ul className="text-left space-y-2 text-sm text-gray-700">
               <li className="flex items-center gap-2">
-                <span className="text-purple-600">✅</span>
+                <span className="text-signal"></span>
                 <span>All Growth tier features</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-purple-600">✅</span>
+                <span className="text-signal"></span>
                 <span>API access with generous limits</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-purple-600">✅</span>
+                <span className="text-signal"></span>
                 <span>White-label branding</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-purple-600">✅</span>
+                <span className="text-signal"></span>
                 <span>Team collaboration tools</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-purple-600">✅</span>
+                <span className="text-signal"></span>
                 <span>Dedicated account manager</span>
               </li>
             </ul>
           </div>
 
-          <p className="mt-6 text-sm text-purple-700 font-medium">
+          <p className="mt-6 text-sm text-mastery font-medium">
             Early-bird pricing available for waitlist members
           </p>
         </div>
@@ -209,7 +209,7 @@ const UpsellScale = () => {
               }}
               className="
                 px-8 py-4 text-lg font-semibold rounded-lg
-                bg-white text-purple-900 hover:bg-gray-100
+                bg-white text-ink hover:bg-gray-100
                 transition-all transform hover:-translate-y-0.5
                 shadow-lg hover:shadow-xl
                 min-w-[240px]

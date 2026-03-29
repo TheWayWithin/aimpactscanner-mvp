@@ -1,4 +1,4 @@
-// UpsellGrowth.jsx - Coffee → Growth tier waitlist page
+// UpsellGrowth.jsx - Coffee  Growth tier waitlist page
 import React, { useState } from 'react';
 import ComparisonGrid from '../components/ComparisonGrid';
 import WaitlistCTA from '../components/WaitlistCTA';
@@ -52,7 +52,7 @@ const UpsellGrowth = () => {
         <div className="container max-w-3xl mx-auto">
           {/* Growth Icon */}
           <div className="icon-growth text-7xl mb-6">
-            🚀
+            
           </div>
 
           {/* Coming Soon Badge */}
@@ -91,12 +91,12 @@ const UpsellGrowth = () => {
       {/* Comparison Section */}
       <ComparisonGrid
         currentTier={{
-          icon: '☕',
+          icon: '',
           name: 'COFFEE Plan (Current)',
           price: '$4.95/month'
         }}
         upgradeTier={{
-          icon: '🚀',
+          icon: '',
           name: 'GROWTH Plan (Coming Soon)',
           price: '$29/month',
           benefits: growthFeatures

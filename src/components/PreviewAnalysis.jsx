@@ -72,11 +72,11 @@ function PreviewAnalysis({ analysisId, url, onAnalysisComplete }) {
   };
 
   const getStageIcon = () => {
-    if (progress >= 100) return '✅';
+    if (progress >= 100) return '';
     if (currentStage.includes('fetching')) return '📡';
-    if (currentStage.includes('analyzing')) return '🔍';
-    if (currentStage.includes('finalization')) return '📊';
-    return '⚙️';
+    if (currentStage.includes('analyzing')) return '';
+    if (currentStage.includes('finalization')) return '';
+    return '';
   };
 
   return (
@@ -148,7 +148,7 @@ function PreviewAnalysis({ analysisId, url, onAnalysisComplete }) {
           {progress >= 100 && (
             <div className="mt-6 text-center">
               <div className="inline-flex items-center bg-green-100 text-green-800 px-6 py-3 rounded-full">
-                <span className="text-2xl mr-2">🎉</span>
+                <span className="text-2xl mr-2"></span>
                 <span className="font-semibold">Analysis Complete!</span>
                 <span className="ml-2">Preparing your results...</span>
               </div>

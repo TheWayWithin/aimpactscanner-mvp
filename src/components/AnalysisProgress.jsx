@@ -174,10 +174,10 @@ function AnalysisProgress({ analysisId, onAnalysisComplete }) {
   return (
     <div className="rounded-lg p-6 mb-6 shadow-md" style={{ backgroundColor: '#FFFFFF', border: '1px solid #64748B' }}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-primary font-semibold" style={{ color: '#0F172A' }}>
+        <h3 className="font-primary font-semibold" style={{ color: '#1E293B' }}>
           MASTERY-AI Framework Analysis
         </h3>
-        <span className="font-primary text-sm" style={{ color: '#0891B2' }}>
+        <span className="font-primary text-sm" style={{ color: '#0D9488' }}>
           {progress}% Complete
         </span>
       </div>
@@ -185,12 +185,12 @@ function AnalysisProgress({ analysisId, onAnalysisComplete }) {
       <div className="w-full rounded-full h-2 mb-4" style={{ backgroundColor: 'rgba(100, 116, 139, 0.2)' }}>
         <div 
           className="h-2 rounded-full transition-all duration-500"
-          style={{ width: `${progress}%`, backgroundColor: '#0891B2' }}
+          style={{ width: `${progress}%`, backgroundColor: '#0D9488' }}
         />
       </div>
 
       <div className="space-y-3">
-        <p className="font-secondary" style={{ color: '#0F172A' }}>
+        <p className="font-primary" style={{ color: '#1E293B' }}>
           Currently analyzing: <span className="font-semibold">{currentFactor}</span>
         </p>
 
@@ -201,13 +201,13 @@ function AnalysisProgress({ analysisId, onAnalysisComplete }) {
             style={{ 
               backgroundColor: 'rgba(30, 58, 138, 0.05)', // Mastery Blue light background
               border: '1px solid #64748B', // AI Silver 1px border on all sides
-              borderLeft: '4px solid #1E3A8A' // Mastery Blue 4px border only on the left, overrides the 1px
+              borderLeft: '4px solid #1E3A5F' // Mastery Blue 4px border only on the left, overrides the 1px
             }}
           >
-            <h4 className="font-primary font-medium mb-2" style={{ color: '#1E3A8A' }}>
+            <h4 className="font-primary font-medium mb-2" style={{ color: '#1E3A5F' }}>
               Framework Insight
             </h4>
-            <p className="font-secondary text-sm" style={{ color: '#0F172A' }}>
+            <p className="font-primary text-sm" style={{ color: '#1E293B' }}>
               {educationalTip}
             </p>
           </div>

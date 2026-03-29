@@ -352,7 +352,7 @@ const RegistrationFlow = ({ onRegistrationComplete }) => {
           
           <div className="text-center mb-6">
             <div className="text-3xl mb-2">
-              {selectedTier === 'coffee' ? '☕' : selectedTier === 'professional' ? '💼' : '🏢'}
+              {selectedTier === 'coffee' ? '' : selectedTier === 'professional' ? '' : ''}
             </div>
             <h3 className="text-xl font-semibold capitalize text-gray-900">
               {selectedTier} Plan
@@ -414,7 +414,7 @@ const RegistrationFlow = ({ onRegistrationComplete }) => {
 
       {currentStep === 'complete' && (
         <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-8 border border-ai-silver text-center">
-          <div className="text-6xl mb-4">🎉</div>
+          <div className="text-6xl mb-4"></div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             Welcome to AImpactScanner!
           </h2>

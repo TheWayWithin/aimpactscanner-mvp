@@ -6,32 +6,32 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
   const tiers = [
     {
       id: 'free',
-      name: '⚠️ FREE (Limited)',
+      name: 'FREE (Limited)',
       price: '$0/month',
       description: 'Only 3 analyses/month - then locked for 30 days',
       warnings: [
-        '❌ Only 3 analyses/month (then locked out for 30 days)',
-        '❌ No historical tracking (results expire)',
-        '❌ No exports or reports',
-        '⚠️ WARNING: You\'ll miss critical insights competitors WILL find'
+        'Only 3 analyses/month (then locked out for 30 days)',
+        'No historical tracking (results expire)',
+        'No exports or reports',
+        'WARNING: You\'ll miss critical insights competitors WILL find'
       ],
       recommended: false,
       visual: 'secondary'
     },
     {
       id: 'coffee',
-      name: '☕ COFFEE - SMART CHOICE',
+      name: 'COFFEE - SMART CHOICE',
       price: '$4.95/month',
       tagline: 'Less than one coffee per month',
       description: 'Unlimited analyses, professional reports',
       benefits: [
-        '✅ Unlimited analyses (test every page, every competitor)',
-        '✅ 200+ pages per scan (10x deeper than free)',
-        '✅ Professional PDF reports (share with team)',
-        '✅ Historical tracking (watch improvements over time)',
-        '✅ 30-day money-back guarantee (zero risk)'
+        'Unlimited analyses (test every page, every competitor)',
+        '200+ pages per scan (10x deeper than free)',
+        'Professional PDF reports (share with team)',
+        'Historical tracking (watch improvements over time)',
+        '30-day money-back guarantee (zero risk)'
       ],
-      socialProof: '🎯 Join 127 businesses who upgraded in the last 30 days',
+      socialProof: 'Join 127 businesses who upgraded in the last 30 days',
       urgency: '⏱️ Early adopter pricing - $4.95/month (increases to $9/month Feb 1st)',
       recommended: true,
       visual: 'primary',
@@ -39,7 +39,7 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
     },
     {
       id: 'growth',
-      name: '🚀 GROWTH',
+      name: 'GROWTH',
       price: '$29/month',
       description: 'Advanced features, priority support',
       recommended: false,
@@ -48,7 +48,7 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
     },
     {
       id: 'scale',
-      name: '🏢 SCALE',
+      name: 'SCALE',
       price: '$99/month',
       description: 'Enterprise features, white-label reports',
       recommended: false,
@@ -164,7 +164,7 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
               {/* Coming Soon Notice */}
               {isSelected && tier.comingSoon && (
                 <div className="mt-3 ml-6 text-xs text-blue-700 bg-blue-50 px-3 py-2 rounded border border-blue-200">
-                  🔧 COMING SOON: Advanced features in development. Start with Coffee tier, upgrade when available.
+                  COMING SOON: Advanced features in development. Start with Coffee tier, upgrade when available.
                 </div>
               )}
             </div>
@@ -174,11 +174,11 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
 
       {/* ZERO RISK Section */}
       <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-        <h4 className="font-bold text-green-800 mb-3">🛡️ ZERO RISK - We Remove ALL Your Fears</h4>
+        <h4 className="font-bold text-green-800 mb-3">ZERO RISK - We Remove ALL Your Fears</h4>
 
         <div className="space-y-2 text-sm">
           <div className="flex items-start">
-            <span className="text-green-600 mr-2 mt-0.5">💰</span>
+            <span className="text-green-600 mr-2 mt-0.5"></span>
             <div>
               <div className="font-semibold text-green-800">30-Day Money Back Guarantee</div>
               <div className="text-green-700">Don't like the results? Get every penny back. No questions asked. No hoops to jump through. Full refund processed in 24 hours.</div>
@@ -186,7 +186,7 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
           </div>
 
           <div className="flex items-start">
-            <span className="text-green-600 mr-2 mt-0.5">⚡</span>
+            <span className="text-green-600 mr-2 mt-0.5"></span>
             <div>
               <div className="font-semibold text-green-800">Cancel Instantly Anytime</div>
               <div className="text-green-700">One click cancellation. No phone calls. No retention tactics. Cancel in 10 seconds flat. Keep access until your billing period ends.</div>
@@ -194,7 +194,7 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
           </div>
 
           <div className="flex items-start">
-            <span className="text-green-600 mr-2 mt-0.5">🏆</span>
+            <span className="text-green-600 mr-2 mt-0.5"></span>
             <div>
               <div className="font-semibold text-green-800">Results in 24 Hours or Refund</div>
               <div className="text-green-700">See dramatic improvements within 24 hours or get a full refund immediately. We stand behind our MASTERY-AI framework.</div>
@@ -202,7 +202,7 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
           </div>
 
           <div className="flex items-start">
-            <span className="text-green-600 mr-2 mt-0.5">🚀</span>
+            <span className="text-green-600 mr-2 mt-0.5"></span>
             <div>
               <div className="font-semibold text-green-800">Outperform Competitors or Refund</div>
               <div className="text-green-700">We find 3x more pages than competitors or you get your money back. Guaranteed.</div>
@@ -214,7 +214,7 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
       {/* Security & Privacy */}
       <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
         <div className="flex items-start">
-          <span className="text-blue-600 mr-2">🔒</span>
+          <span className="text-blue-600 mr-2"></span>
           <div className="text-sm text-blue-800">
             <div className="font-semibold">Secure & Private</div>
             <div>Your data is encrypted and never shared. We only analyze public content and generate files you control.</div>
@@ -225,15 +225,15 @@ const TierSelector = ({ selectedTier, onTierChange }) => {
       {/* Credibility Signals */}
       <div className="mt-4 flex items-center justify-center space-x-4 text-xs text-gray-600">
         <div className="flex items-center">
-          <span className="mr-1">✅</span>
+          <span className="mr-1"></span>
           <span>Built by Expert Solopreneur</span>
         </div>
         <div className="flex items-center">
-          <span className="mr-1">✅</span>
+          <span className="mr-1"></span>
           <span>Not VC-Funded BS</span>
         </div>
         <div className="flex items-center">
-          <span className="mr-1">✅</span>
+          <span className="mr-1"></span>
           <span>Real Results for Real Businesses</span>
         </div>
       </div>

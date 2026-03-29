@@ -59,7 +59,7 @@ const EmailVerificationPending = ({ email, onResendEmail, onNavigateToLogin }) =
       }
 
       console.log('✅ DEBUG: Resend successful, response data:', data);
-      setResendMessage('✅ Verification email resent successfully!');
+      setResendMessage('Verification email resent successfully!');
       setResendDisabled(true);
       setCountdown(60); // Disable for 60 seconds
     } catch (error) {
@@ -70,7 +70,7 @@ const EmailVerificationPending = ({ email, onResendEmail, onNavigateToLogin }) =
         status: error.status,
         name: error.name
       });
-      setResendMessage('❌ Failed to resend email. Please try again.');
+      setResendMessage('Failed to resend email. Please try again.');
     } finally {
       setResending(false);
     }
@@ -131,7 +131,7 @@ const EmailVerificationPending = ({ email, onResendEmail, onNavigateToLogin }) =
           {/* Important Notes */}
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
             <p className="text-sm text-yellow-800">
-              <strong>⚠️ Important:</strong> The verification link will expire in 24 hours. 
+              <strong>Important:</strong> The verification link will expire in 24 hours. 
               Check your spam/junk folder if you don't see the email in your inbox.
             </p>
           </div>
@@ -139,7 +139,7 @@ const EmailVerificationPending = ({ email, onResendEmail, onNavigateToLogin }) =
           {/* Resend Message */}
           {resendMessage && (
             <div className={`mb-4 p-3 rounded-lg text-sm ${
-              resendMessage.includes('✅') 
+              resendMessage.includes('') 
                 ? 'bg-green-50 text-green-800 border border-green-200'
                 : 'bg-red-50 text-red-800 border border-red-200'
             }`}>

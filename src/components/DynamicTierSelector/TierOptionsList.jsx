@@ -25,7 +25,7 @@ const TierOptionsList = ({
           free: 'border-gray-300',
           coffee: 'border-blue-400',
           growth: 'border-yellow-400',
-          scale: 'border-purple-400'
+          scale: 'border-signal'
         };
 
         // Tier-specific background colors when selected
@@ -33,7 +33,7 @@ const TierOptionsList = ({
           free: 'bg-gray-50',
           coffee: 'bg-blue-50',
           growth: 'bg-yellow-50',
-          scale: 'bg-purple-50'
+          scale: 'bg-cloud'
         };
 
         return (
@@ -56,7 +56,7 @@ const TierOptionsList = ({
             {/* Trial Badge (Growth tier only, top-left) */}
             {isGrowthTier && (
               <div className="absolute -top-3 left-4 px-3 py-1 bg-gradient-to-r from-green-600 to-teal-600 text-xs font-bold rounded-full text-white shadow-md">
-                🎁 7-DAY FREE TRIAL
+                7-DAY FREE TRIAL
               </div>
             )}
 
@@ -119,7 +119,7 @@ const TierOptionsList = ({
                     }}
                     className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-md hover:shadow-lg"
                   >
-                    🎁 Try Growth Free for 7 Days
+                    Try Growth Free for 7 Days
                   </button>
 
                   {/* Secondary CTA - Skip Trial */}

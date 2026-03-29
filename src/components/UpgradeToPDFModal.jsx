@@ -51,11 +51,11 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
         {/* Enhanced Header with Urgency */}
         <div className="relative">
           {/* Background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-t-xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-clarity rounded-t-xl"></div>
           
           <div className="relative flex items-center justify-between p-6 border-b border-gray-100">
             <div className="flex items-center">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-3 rounded-full mr-4 shadow-lg">
+              <div className="bg-gradient-to-br from-blue-500 to-clarity p-3 rounded-full mr-4 shadow-lg">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
@@ -65,7 +65,7 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
                 <p className="text-gray-600 text-lg">Transform your analysis into shareable business documents</p>
                 <div className="flex items-center mt-2 text-sm">
                   <div className="bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-xs font-medium mr-2">
-                    🔥 Most Popular
+                    Most Popular
                   </div>
                   <span className="text-green-600 font-medium">Start immediately after payment</span>
                 </div>
@@ -86,9 +86,9 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
         {/* Content */}
         <div className="p-6">
           {/* Enhanced PDF Preview Section with Visual Appeal */}
-          <div className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-xl p-6 mb-6 border border-blue-100 shadow-sm overflow-hidden">
+          <div className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-clarity rounded-xl p-6 mb-6 border border-blue-100 shadow-sm overflow-hidden">
             {/* Decorative background elements */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full opacity-20 transform translate-x-16 -translate-y-16"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-200 to-clarity rounded-full opacity-20 transform translate-x-16 -translate-y-16"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-indigo-200 to-blue-200 rounded-full opacity-20 transform -translate-x-12 translate-y-12"></div>
             
             <div className="relative flex items-start">
@@ -105,7 +105,7 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
               <div className="flex-1">
                 <h4 className="text-xl font-bold text-blue-900 mb-3 flex items-center">
                   Professional PDF Reports Include:
-                  <span className="ml-2 text-lg">🎨</span>
+                  <span className="ml-2 text-lg"></span>
                 </h4>
                 <div className="grid md:grid-cols-2 gap-3 mb-4">
                   <div className="flex items-center text-blue-800 text-sm bg-white/60 rounded-lg p-2">
@@ -148,9 +148,9 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
                 
                 {/* Added value indicators */}
                 <div className="flex flex-wrap gap-2">
-                  <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">✨ Instant Access</span>
-                  <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">📊 Client-Ready</span>
-                  <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full">🏆 Professional Quality</span>
+                  <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">Instant Access</span>
+                  <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">Client-Ready</span>
+                  <span className="bg-cloud text-mastery text-xs font-medium px-2 py-1 rounded-full">Professional Quality</span>
                 </div>
               </div>
             </div>
@@ -273,7 +273,7 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
               </div>
               <div className="flex items-center mb-3">
                 <div className="bg-blue-100 p-2 rounded-full mr-3">
-                  <span className="text-sm">☕</span>
+                  <span className="text-sm"></span>
                 </div>
                 <div>
                   <h5 className="font-semibold text-blue-900">Coffee Tier</h5>
@@ -287,7 +287,7 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
                   <svg className="w-4 h-4 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  ✨ Professional PDF Reports
+                  Professional PDF Reports
                 </li>
                 <li className="flex items-center">
                   <svg className="w-4 h-4 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -318,7 +318,7 @@ const UpgradeToPDFModal = ({ isOpen, onClose, currentTier, onUpgrade, user }) =>
           </div>
 
           {/* Enhanced Call to Action with Urgency and Value */}
-          <div className="text-center bg-gradient-to-br from-blue-600 to-purple-700 rounded-xl p-8 text-white shadow-xl">
+          <div className="text-center bg-gradient-to-br from-blue-600 to-clarity rounded-xl p-8 text-white shadow-xl">
             {/* Urgency indicator */}
             <div className="mb-4">
               <div className="inline-flex items-center bg-orange-500 text-white text-sm font-bold px-4 py-2 rounded-full animate-pulse">

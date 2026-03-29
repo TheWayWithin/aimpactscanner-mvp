@@ -166,7 +166,7 @@ export function getTierDisplayInfo(tier) {
       displayName: '📈 Scale',
       limit: 100,
       isUnlimited: false,
-      color: 'bg-purple-100 text-purple-800'
+      color: 'bg-cloud text-mastery'
     },
     // Backward compatibility mappings
     'professional': {
@@ -183,7 +183,7 @@ export function getTierDisplayInfo(tier) {
       displayName: '📈 Scale',
       limit: 100,
       isUnlimited: false,
-      color: 'bg-purple-100 text-purple-800'
+      color: 'bg-cloud text-mastery'
     }
   };
 

@@ -42,12 +42,12 @@ const WaitlistCTA = ({ tier, onSuccess, onError }) => {
 
   const tierInfo = {
     growth: {
-      icon: '🚀',
+      icon: '',
       name: 'Growth',
       color: 'green'
     },
     scale: {
-      icon: '🏢',
+      icon: '',
       name: 'Scale',
       color: 'purple'
     }
@@ -100,19 +100,19 @@ const WaitlistCTA = ({ tier, onSuccess, onError }) => {
         {/* Benefits */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 p-6 bg-blue-50 rounded-xl">
           <div className="flex flex-col items-center gap-2">
-            <span className="text-3xl">⚡</span>
+            <span className="text-3xl"></span>
             <span className="text-sm md:text-base font-medium text-gray-800">
               First access when we launch
             </span>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <span className="text-3xl">💰</span>
+            <span className="text-3xl"></span>
             <span className="text-sm md:text-base font-medium text-gray-800">
               Lock in early-bird pricing
             </span>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <span className="text-3xl">🎯</span>
+            <span className="text-3xl"></span>
             <span className="text-sm md:text-base font-medium text-gray-800">
               Help shape {info.name} tier features
             </span>
@@ -127,7 +127,7 @@ const WaitlistCTA = ({ tier, onSuccess, onError }) => {
             w-full md:w-auto px-8 py-4 text-lg font-semibold rounded-lg
             transition-all disabled:opacity-50 disabled:cursor-not-allowed
             shadow-lg hover:shadow-xl transform hover:-translate-y-0.5
-            ${info.color === 'green' ? 'bg-green-600 hover:bg-green-700' : 'bg-purple-600 hover:bg-purple-700'}
+            ${info.color === 'green' ? 'bg-green-600 hover:bg-green-700' : 'bg-signal hover:bg-signal'}
             text-white
           `}
           aria-label={`Join ${info.name} waitlist`}

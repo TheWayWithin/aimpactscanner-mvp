@@ -235,7 +235,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <h4 className="font-medium text-green-700 mb-2">✅ Evidence Found</h4>
+                      <h4 className="font-medium text-green-700 mb-2">Evidence Found</h4>
                       <ul className="text-sm text-gray-700 space-y-1">
                         {(factor.evidence || ['Analysis data available']).map((item, i) => (
                           <li key={i} className="flex items-start">
@@ -247,7 +247,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                     </div>
                     
                     <div>
-                      <h4 className="font-medium text-blue-700 mb-2">💡 Recommendations</h4>
+                      <h4 className="font-medium text-blue-700 mb-2">Recommendations</h4>
                       <ul className="text-sm text-gray-700 space-y-1">
                         {(factor.recommendations || ['Specific recommendations available']).map((item, i) => (
                           <li key={i} className="flex items-start">
@@ -307,7 +307,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <h4 className="font-medium text-green-700 mb-2">✅ Evidence Found</h4>
+                      <h4 className="font-medium text-green-700 mb-2">Evidence Found</h4>
                       <ul className="text-sm text-gray-700 space-y-1">
                         {factor.evidence.map((item, i) => (
                           <li key={i} className="flex items-start">
@@ -319,7 +319,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
                     </div>
                     
                     <div>
-                      <h4 className="font-medium text-blue-700 mb-2">💡 Recommendations</h4>
+                      <h4 className="font-medium text-blue-700 mb-2">Recommendations</h4>
                       <ul className="text-sm text-gray-700 space-y-1">
                         {factor.recommendations.map((item, i) => (
                           <li key={i} className="flex items-start">
@@ -340,8 +340,8 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8 relative">
           {/* Lock Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-gray-100/95 to-gray-200/95 backdrop-blur-sm rounded-lg flex items-center justify-center z-10">
-            <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg shadow-2xl p-6 text-center max-w-md">
-              <div className="text-4xl mb-4">🔒</div>
+            <div className="bg-gradient-to-br from-blue-600 to-clarity rounded-lg shadow-2xl p-6 text-center max-w-md">
+              <div className="text-4xl mb-4"></div>
               <h3 className="text-xl font-bold text-white mb-2">
                 {lockedFactorsCount} More Factors Available
               </h3>
@@ -398,7 +398,7 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
         <ClientCaseStudies />
 
         {/* Strong CTA Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg p-8 text-white text-center">
+        <div className="bg-gradient-to-r from-blue-600 to-clarity rounded-lg shadow-lg p-8 text-white text-center">
           <h2 className="text-3xl font-bold mb-4">
             Get Your Complete Analysis Results
           </h2>
@@ -407,15 +407,15 @@ function PreviewResults({ url, analysisId, onUpgradeClick, onFreeTrialClick }) {
           </p>
           <div className="grid md:grid-cols-3 gap-4 my-6 text-left">
             <div className="bg-blue-800 bg-opacity-40 border border-white border-opacity-30 rounded-lg p-4">
-              <div className="font-semibold mb-2 text-white">✅ All {factors.length || 18} Factor Results</div>
+              <div className="font-semibold mb-2 text-white">All {factors.length || 18} Factor Results</div>
               <div className="text-sm text-blue-100">Complete detailed analysis with evidence and recommendations</div>
             </div>
             <div className="bg-blue-800 bg-opacity-40 border border-white border-opacity-30 rounded-lg p-4">
-              <div className="font-semibold mb-2 text-white">📊 Detailed Scoring</div>
+              <div className="font-semibold mb-2 text-white">Detailed Scoring</div>
               <div className="text-sm text-blue-100">See exactly how each factor impacts your AI visibility</div>
             </div>
             <div className="bg-blue-800 bg-opacity-40 border border-white border-opacity-30 rounded-lg p-4">
-              <div className="font-semibold mb-2 text-white">🎯 Action Plan</div>
+              <div className="font-semibold mb-2 text-white">Action Plan</div>
               <div className="text-sm text-blue-100">Step-by-step recommendations prioritized by impact</div>
             </div>
           </div>

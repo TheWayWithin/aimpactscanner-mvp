@@ -35,7 +35,7 @@ const SavingsHighlight = ({ selectedTier, billingFrequency, isTransitioning = fa
       data-testid="savings-highlight"
     >
       <h4 className="text-lg font-bold text-gray-900 mb-3">
-        {isAnnual ? '💰 Annual Savings Breakdown' : '📊 Monthly Pricing Breakdown'}
+        {isAnnual ? 'Annual Savings Breakdown' : 'Monthly Pricing Breakdown'}
       </h4>
 
       {/* Pricing Comparison Table */}
@@ -78,7 +78,7 @@ const SavingsHighlight = ({ selectedTier, billingFrequency, isTransitioning = fa
               </span>
             </div>
             <div className="flex justify-between items-center bg-yellow-100 -mx-2 px-2 py-2 rounded">
-              <span className="text-sm font-bold text-yellow-800">💡 Switch to annual and save</span>
+              <span className="text-sm font-bold text-yellow-800">Switch to annual and save</span>
               <span className="text-sm font-bold text-yellow-800">
                 ${savings.toFixed(2)}/year
               </span>

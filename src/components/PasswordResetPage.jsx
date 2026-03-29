@@ -188,7 +188,7 @@ function PasswordResetPage() {
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" 
                  style={{ borderColor: 'var(--mastery-blue)' }}></div>
-            <p className="font-secondary" style={{ color: 'var(--framework-black)' }}>
+            <p className="font-primary" style={{ color: 'var(--framework-black)' }}>
               Verifying reset link...
             </p>
           </div>
@@ -203,7 +203,7 @@ function PasswordResetPage() {
         <h1 className="text-center text-3xl font-primary font-bold mb-2" style={{ color: 'var(--framework-black)' }}>
           {isValidToken ? 'Set New Password' : 'Reset Link Invalid'}
         </h1>
-        <p className="text-center font-secondary mb-8" style={{ color: 'var(--ai-silver)' }}>
+        <p className="text-center font-primary mb-8" style={{ color: 'var(--ai-silver)' }}>
           {isValidToken 
             ? 'Create a strong new password for your AImpactScanner account.'
             : 'This password reset link is invalid or has expired.'
@@ -211,7 +211,7 @@ function PasswordResetPage() {
         </p>
 
         {message && (
-          <div className={`p-3 mb-4 rounded-md font-secondary text-sm text-white`} 
+          <div className={`p-3 mb-4 rounded-md font-primary text-sm text-white`} 
                style={{ 
                  backgroundColor: messageType === 'success' 
                    ? 'var(--success-green)' 
@@ -242,7 +242,7 @@ function PasswordResetPage() {
                 onClick={() => setShowPassword(!showPassword)}
               >
                 <span className="text-sm" style={{ color: 'var(--ai-silver)' }}>
-                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                  {showPassword ? '' : '‍🗨️'}
                 </span>
               </button>
             </div>
@@ -250,15 +250,15 @@ function PasswordResetPage() {
             {formData.password && (
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-secondary" style={{ color: 'var(--framework-black)' }}>
+                  <span className="text-xs font-primary" style={{ color: 'var(--framework-black)' }}>
                     Password Strength:
                   </span>
-                  <span className="text-xs font-secondary font-semibold" 
+                  <span className="text-xs font-primary font-semibold" 
                         style={{ color: strengthDisplay.color }}>
                     {strengthDisplay.text}
                   </span>
                 </div>
-                <div className="space-y-1 text-xs font-secondary">
+                <div className="space-y-1 text-xs font-primary">
                   <div className={`flex items-center ${passwordStrength.requirements.minLength ? 'text-green-600' : 'text-gray-500'}`}>
                     <span className="mr-2">{passwordStrength.requirements.minLength ? '✓' : '○'}</span>
                     At least 8 characters
@@ -300,13 +300,13 @@ function PasswordResetPage() {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 <span className="text-sm" style={{ color: 'var(--ai-silver)' }}>
-                  {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                  {showConfirmPassword ? '' : '‍🗨️'}
                 </span>
               </button>
             </div>
 
             {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-              <p className="text-xs text-red-600 font-secondary">
+              <p className="text-xs text-red-600 font-primary">
                 Passwords do not match
               </p>
             )}
@@ -332,7 +332,7 @@ function PasswordResetPage() {
           </div>
         )}
 
-        <p className="text-center font-secondary text-xs mt-6" style={{ color: 'var(--ai-silver)' }}>
+        <p className="text-center font-primary text-xs mt-6" style={{ color: 'var(--ai-silver)' }}>
           Powered by the MASTERY-AI Framework v3.1.1 - Professional AI Search Optimization
         </p>
       </div>

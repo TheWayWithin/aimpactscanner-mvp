@@ -46,7 +46,7 @@ const TrustBadges = () => {
       {badges.map((badge, index) => (
         <div 
           key={index}
-          className="flex items-center gap-3 bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+          className="flex items-center gap-3 bg-signal text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-shadow"
         >
           <div className="flex-shrink-0">
             {badge.icon}

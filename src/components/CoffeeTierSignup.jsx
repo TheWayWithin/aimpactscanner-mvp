@@ -1,5 +1,6 @@
 // CoffeeTierSignup.jsx - Conversion-optimized signup page focused on Coffee tier
 import React, { useState, useEffect } from 'react';
+import { Mail, Coffee, Rocket, TrendingUp, Gift, CheckCircle, XCircle, AlertTriangle, Clock, Eye, EyeOff, Shield, DollarSign, Zap, Trophy, Lock } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 // useUpgrade removed - we create checkout session directly after sign-up
 import AILogo from './AILogo';
@@ -183,7 +184,7 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
           onShowEmailVerification(email.trim().toLowerCase());
         } else {
           // Fallback: Show message and redirect
-          setMessage(`📧 Account created! Check ${email} for verification link.`);
+          setMessage(`Account created! Check ${email} for verification link.`);
           setMessageType('success');
           
           setTimeout(() => {
@@ -211,27 +212,31 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
   };
 
   const tierOptions = [
-    { 
-      id: 'coffee', 
-      label: '☕ COFFEE - Unlimited analyses ($4.95/month)',
-      recommended: true 
+    {
+      id: 'coffee',
+      label: 'COFFEE - Unlimited analyses ($4.95/month)',
+      icon: <Coffee className="w-4 h-4 inline" />,
+      recommended: true
     },
-    { 
-      id: 'growth', 
-      label: '🚀 GROWTH - Advanced features ($29/month)',
+    {
+      id: 'growth',
+      label: 'GROWTH - Advanced features ($29/month)',
+      icon: <Rocket className="w-4 h-4 inline" />,
       recommended: false,
       comingSoon: true
     },
-    { 
-      id: 'scale', 
-      label: '📈 SCALE - Enterprise features ($99/month)',
+    {
+      id: 'scale',
+      label: 'SCALE - Enterprise features ($99/month)',
+      icon: <TrendingUp className="w-4 h-4 inline" />,
       recommended: false,
       comingSoon: true
     },
-    { 
-      id: 'free', 
-      label: '🆓 FREE - 3 analyses/month ($0/month)',
-      recommended: false 
+    {
+      id: 'free',
+      label: 'FREE - 3 analyses/month ($0/month)',
+      icon: <Gift className="w-4 h-4 inline" />,
+      recommended: false
     }
   ];
 
@@ -239,54 +244,58 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
   const getBenefits = () => {
     if (selectedTier === 'coffee') {
       return {
-        title: '☕ COFFEE Plan Benefits',
+        title: 'COFFEE Plan Benefits',
+        titleIcon: <Coffee className="w-5 h-5 inline" />,
         items: [
-          { icon: '✅', text: 'Unlimited AI-powered analyses per month', highlight: true },
-          { icon: '✅', text: '10 MASTERY-AI Framework factors (Phase A)', highlight: true },
-          { icon: '✅', text: 'Professional PDF reports (no watermarks)', highlight: false },
-          { icon: '✅', text: 'Clean, exportable results dashboard', highlight: false },
-          { icon: '✅', text: 'Educational content & recommendations', highlight: false },
-          { icon: '✅', text: 'Email support', highlight: false },
-          { icon: '✅', text: '30-day money-back guarantee', highlight: false }
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Unlimited AI-powered analyses per month', highlight: true },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: '10 MASTERY-AI Framework factors (Phase A)', highlight: true },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Professional PDF reports (no watermarks)', highlight: false },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Clean, exportable results dashboard', highlight: false },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Educational content & recommendations', highlight: false },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Email support', highlight: false },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: '30-day money-back guarantee', highlight: false }
         ]
       };
     } else if (selectedTier === 'growth') {
       return {
-        title: '🚀 GROWTH Plan Benefits',
+        title: 'GROWTH Plan Benefits',
+        titleIcon: <Rocket className="w-5 h-5 inline" />,
         items: [
-          { icon: '✅', text: 'Everything in Coffee Plan', highlight: false },
-          { icon: '✅', text: '22 total factors (Phase A + Phase B)', highlight: true },
-          { icon: '✅', text: 'Advanced PDF reports with deeper insights', highlight: true },
-          { icon: '✅', text: 'AI Remediation Planner', highlight: true },
-          { icon: '✅', text: 'Progress tracking dashboard', highlight: false },
-          { icon: '✅', text: 'Priority support', highlight: false },
-          { icon: '🔜', text: 'Coming soon!', highlight: false }
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Everything in Coffee Plan', highlight: false },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: '22 total factors (Phase A + Phase B)', highlight: true },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Advanced PDF reports with deeper insights', highlight: true },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'AI Remediation Planner', highlight: true },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Progress tracking dashboard', highlight: false },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Priority support', highlight: false },
+          { icon: <Clock className="w-4 h-4 text-signal" />, text: 'Coming soon!', highlight: false }
         ]
       };
     } else if (selectedTier === 'scale') {
       return {
-        title: '📈 SCALE Plan Benefits',
+        title: 'SCALE Plan Benefits',
+        titleIcon: <TrendingUp className="w-5 h-5 inline" />,
         items: [
-          { icon: '✅', text: 'Everything in Growth Plan', highlight: false },
-          { icon: '✅', text: 'API access for automation', highlight: true },
-          { icon: '✅', text: 'White-label PDF reports', highlight: true },
-          { icon: '✅', text: 'Team collaboration features', highlight: true },
-          { icon: '✅', text: 'Custom reporting', highlight: false },
-          { icon: '✅', text: 'Webhook integrations', highlight: false },
-          { icon: '✅', text: 'Dedicated support', highlight: false },
-          { icon: '🔜', text: 'Coming soon!', highlight: false }
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Everything in Growth Plan', highlight: false },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'API access for automation', highlight: true },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'White-label PDF reports', highlight: true },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Team collaboration features', highlight: true },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Custom reporting', highlight: false },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Webhook integrations', highlight: false },
+          { icon: <CheckCircle className="w-4 h-4 text-success" />, text: 'Dedicated support', highlight: false },
+          { icon: <Clock className="w-4 h-4 text-signal" />, text: 'Coming soon!', highlight: false }
         ]
       };
     } else {
       return {
-        title: '🆓 FREE Plan Limitations',
+        title: 'FREE Plan Limitations',
+        titleIcon: <Gift className="w-5 h-5 inline" />,
         items: [
-          { icon: '⚠️', text: 'Only 3 analyses per month', warning: true },
-          { icon: '❌', text: 'Basic recommendations only', strike: true },
-          { icon: '❌', text: 'Phase A factors only', strike: true },
-          { icon: '❌', text: 'Web-only results (no PDF export)', strike: true },
-          { icon: '❌', text: 'Community support only', strike: true },
-          { icon: '❌', text: 'No advanced AI insights', strike: true }
+          { icon: <AlertTriangle className="w-4 h-4 text-warning" />, text: 'Only 3 analyses per month', warning: true },
+          { icon: <XCircle className="w-4 h-4 text-error" />, text: 'Basic recommendations only', strike: true },
+          { icon: <XCircle className="w-4 h-4 text-error" />, text: 'Phase A factors only', strike: true },
+          { icon: <XCircle className="w-4 h-4 text-error" />, text: 'Web-only results (no PDF export)', strike: true },
+          { icon: <XCircle className="w-4 h-4 text-error" />, text: 'Community support only', strike: true },
+          { icon: <XCircle className="w-4 h-4 text-error" />, text: 'No advanced AI insights', strike: true }
         ]
       };
     }
@@ -346,7 +355,7 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
                   {(selectedTier === 'growth' || selectedTier === 'scale') && (
                     <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                       <div className="flex items-center">
-                        <span className="text-blue-600 font-semibold">🔜 COMING SOON</span>
+                        <span className="text-blue-600 font-semibold flex items-center gap-1"><Clock className="w-4 h-4" /> COMING SOON</span>
                         <span className="ml-2 text-sm text-blue-700">
                           Advanced features in development
                         </span>
@@ -360,7 +369,7 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
                   {selectedTier === 'free' && (
                     <div className="mt-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
                       <div className="flex items-center">
-                        <span className="text-orange-600 font-semibold">⚠️ LIMITED ACCESS</span>
+                        <span className="text-orange-600 font-semibold flex items-center gap-1"><AlertTriangle className="w-4 h-4" /> LIMITED ACCESS</span>
                         <span className="ml-2 text-sm text-orange-700">
                           Only 3 analyses per month
                         </span>
@@ -408,9 +417,7 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute inset-y-0 right-0 pr-3 flex items-center"
                     >
-                      <span className="text-gray-500 text-sm">
-                        {showPassword ? '👁️' : '👁️‍🗨️'}
-                      </span>
+                      {showPassword ? <EyeOff className="w-4 h-4 text-gray-500" /> : <Eye className="w-4 h-4 text-gray-500" />}
                     </button>
                   </div>
                   {password && (
@@ -460,9 +467,7 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       className="absolute inset-y-0 right-0 pr-3 flex items-center"
                     >
-                      <span className="text-gray-500 text-sm">
-                        {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
-                      </span>
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4 text-gray-500" /> : <Eye className="w-4 h-4 text-gray-500" />}
                     </button>
                   </div>
                 </div>
@@ -532,8 +537,8 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
             <div className="lg:w-1/2 bg-gray-50 p-8 lg:p-12 border-l border-gray-200">
               {/* Benefits Section */}
               <div className="mb-8">
-                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                  {benefits.title}
+                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  {benefits.titleIcon} {benefits.title}
                 </h3>
                 <div className="space-y-3">
                   {benefits.items.map((item, index) => (
@@ -557,14 +562,14 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
 
               {/* Risk Reversal Section */}
               <div className="border-t border-gray-300 pt-8">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">
-                  🛡️ ZERO RISK - We Remove ALL Your Fears
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-success" /> ZERO RISK - We Remove ALL Your Fears
                 </h3>
-                
+
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-semibold text-gray-800 flex items-center">
-                      💰 30-Day Money Back Guarantee
+                    <h4 className="font-semibold text-gray-800 flex items-center gap-2">
+                      <DollarSign className="w-4 h-4 text-clarity" /> 30-Day Money Back Guarantee
                     </h4>
                     <p className="text-sm text-gray-600 mt-1">
                       Don't like the results? Get every penny back. No questions asked. No hoops to jump through.
@@ -572,8 +577,8 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-800 flex items-center">
-                      ⚡ Cancel Instantly Anytime
+                    <h4 className="font-semibold text-gray-800 flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-amber" /> Cancel Instantly Anytime
                     </h4>
                     <p className="text-sm text-gray-600 mt-1">
                       One click cancellation. No phone calls. No retention tactics. Cancel in 10 seconds flat.
@@ -581,8 +586,8 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-800 flex items-center">
-                      🏆 Results in 24 Hours or Refund
+                    <h4 className="font-semibold text-gray-800 flex items-center gap-2">
+                      <Trophy className="w-4 h-4 text-signal" /> Results in 24 Hours or Refund
                     </h4>
                     <p className="text-sm text-gray-600 mt-1">
                       See dramatic improvements within 24 hours or get a full refund immediately.
@@ -590,8 +595,8 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-800 flex items-center">
-                      🚀 Outperform Competitors or Refund
+                    <h4 className="font-semibold text-gray-800 flex items-center gap-2">
+                      <Rocket className="w-4 h-4 text-mastery" /> Outperform Competitors or Refund
                     </h4>
                     <p className="text-sm text-gray-600 mt-1">
                       We find 3x more pages than competitors or you get your money back. Guaranteed.
@@ -602,14 +607,14 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
                 {/* Bottom Trust Badge */}
                 <div className="mt-8 p-4 bg-white rounded-lg border border-gray-200">
                   <div className="flex items-center justify-center text-sm text-gray-600">
-                    <span className="mr-2">✅</span>
+                    <CheckCircle className="w-3.5 h-3.5 text-success mr-1" />
                     <span className="font-semibold">Built by Expert Solopreneur</span>
                     <span className="mx-2">•</span>
-                    <span className="mr-2">✅</span>
+                    <CheckCircle className="w-3.5 h-3.5 text-success mr-1" />
                     <span className="font-semibold">Not VC-Funded BS</span>
                   </div>
                   <div className="flex items-center justify-center text-sm text-gray-600 mt-2">
-                    <span className="mr-2">✅</span>
+                    <CheckCircle className="w-3.5 h-3.5 text-success mr-1" />
                     <span className="font-semibold">Real Results for Real Businesses</span>
                   </div>
                 </div>
@@ -617,8 +622,8 @@ const CoffeeTierSignup = ({ onRegistrationComplete, onNavigate, onShowEmailVerif
 
               {/* Security Notice */}
               <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h4 className="font-semibold text-blue-900 flex items-center">
-                  🔒 Secure & Private
+                <h4 className="font-semibold text-blue-900 flex items-center gap-2">
+                  <Lock className="w-4 h-4" /> Secure & Private
                 </h4>
                 <p className="text-sm text-blue-800 mt-1">
                   Your data is encrypted and never shared. We only analyze public content and generate files you control.

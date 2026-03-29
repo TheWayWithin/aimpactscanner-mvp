@@ -246,7 +246,7 @@ function AnalysisPreview({ url, analysisId, onUpgradeClick, onFreeTrialClick }) 
         <ClientCaseStudies />
 
         {/* Clear CTA Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg p-8 text-white text-center">
+        <div className="bg-gradient-to-r from-blue-600 to-clarity rounded-lg shadow-lg p-8 text-white text-center">
           <h2 className="text-3xl font-bold mb-4">
             Get Your Real Analysis Results
           </h2>
@@ -266,7 +266,7 @@ function AnalysisPreview({ url, analysisId, onUpgradeClick, onFreeTrialClick }) 
               onClick={() => onUpgradeClick('coffee')}
               className="px-8 py-4 bg-yellow-400 text-gray-900 font-bold rounded-lg hover:bg-yellow-300 transition-all text-lg"
             >
-              ☕ Get Unlimited Analyses for $4.95/mo
+              Get Unlimited Analyses for $4.95/mo
             </button>
           </div>
           

@@ -219,14 +219,14 @@ const CoffeeTierDemo = () => {
                   <strong>Current Implementation Status:</strong>
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li>✅ Database schema with tier management</li>
-                  <li>✅ TierManager class for access control</li>
-                  <li>✅ Edge Function tier validation</li>
-                  <li>✅ Usage tracking and analytics</li>
-                  <li>✅ React UI components (TierSelection, UsageDashboard)</li>
-                  <li>✅ Stripe checkout session creation</li>
-                  <li>✅ Webhook handler for payment processing</li>
-                  <li>🔄 Mock upgrade flow (development mode)</li>
+                  <li>Database schema with tier management</li>
+                  <li>TierManager class for access control</li>
+                  <li>Edge Function tier validation</li>
+                  <li>Usage tracking and analytics</li>
+                  <li>React UI components (TierSelection, UsageDashboard)</li>
+                  <li>Stripe checkout session creation</li>
+                  <li>Webhook handler for payment processing</li>
+                  <li>Mock upgrade flow (development mode)</li>
                 </ul>
                 
                 <div className="mt-6 p-4 bg-blue-50 rounded-md">
@@ -254,7 +254,7 @@ const CoffeeTierDemo = () => {
                       disabled={loading}
                       className="py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors disabled:opacity-50"
                     >
-                      {loading ? 'Processing...' : '☕ Try Coffee Tier (Mock)'}
+                      {loading ? 'Processing...' : 'Try Coffee Tier (Mock)'}
                     </button>
                   )}
                 </div>
