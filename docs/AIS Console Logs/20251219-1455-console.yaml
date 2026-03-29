@@ -1,0 +1,163 @@
+VM18:20 🍪 GDPR consent stub initialized
+/?code=4a955347-1a02-4aa1-b4cf-fe3a9658cb0f#oauth-callback:1 Loading the font 'https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2' violates the following Content Security Policy directive: "font-src 'self' https://fonts.gstatic.com data:". The policy is report-only, so the violation has been logged but no further action has been taken.
+VM19:23 Consent handling delegated to React component
+VM19:29 Analytics initialized after LCP
+vendor-supabase-L4MxzG4g.js:1 AI Search Mastery: Supabase client initialized. Connecting to the powerful MASTERY-AI Framework backend.
+index-usODxAZB.js:2 🚀 React application loaded
+main-cG8su4x_.js:2 🔍 APP INIT - Full URL: https://develop--aimpactscanner.netlify.app/?code=4a955347-1a02-4aa1-b4cf-fe3a9658cb0f#oauth-callback
+main-cG8su4x_.js:2 🔍 APP INIT - Hash: oauth-callback
+main-cG8su4x_.js:2 🔍 APP INIT - Query params: ?code=4a955347-1a02-4aa1-b4cf-fe3a9658cb0f
+main-cG8su4x_.js:2 📍 INITIAL HASH DETECTED: oauth-callback
+main-cG8su4x_.js:2 🔒 SECURITY: Deferring route navigation until session check completes
+main-cG8su4x_.js:2 🚀 App initializing with session persistence...
+main-cG8su4x_.js:2 🔍 App mounted - Full URL: https://develop--aimpactscanner.netlify.app/?code=4a955347-1a02-4aa1-b4cf-fe3a9658cb0f#oauth-callback
+main-cG8su4x_.js:2 🔍 App mounted - Hash: #oauth-callback
+main-cG8su4x_.js:2 🔍 App mounted - Query params: ?code=4a955347-1a02-4aa1-b4cf-fe3a9658cb0f
+main-cG8su4x_.js:2 ⏳ Checking for existing session before rendering...
+main-cG8su4x_.js:2 🔄 Starting session restoration check...
+main-cG8su4x_.js:2 🔧 Setting up enhanced onAuthStateChange listener...
+main-cG8su4x_.js:2 📦 Loading full Supabase SDK...
+main-cG8su4x_.js:2 ✅ Supabase SDK loaded
+main-cG8su4x_.js:2 LCP: 1400
+main-cG8su4x_.js:2 🔐 Auth state changed: SIGNED_IN aimpactscannertest@gmail.com sessionChecked: false
+main-cG8su4x_.js:2 ✅ SIGNED_IN event detected
+main-cG8su4x_.js:2 📍 Current view: landing
+main-cG8su4x_.js:2 📍 oauthCallbackProcessed: false
+main-cG8su4x_.js:2 ✅ SIGNED_IN event - routing to oauth-callback
+main-cG8su4x_.js:2 📍 Set view to oauth-callback, forcing hash update...
+main-cG8su4x_.js:2 🔐 Auth state changed: SIGNED_IN aimpactscannertest@gmail.com sessionChecked: false
+main-cG8su4x_.js:2 ✅ SIGNED_IN event detected
+main-cG8su4x_.js:2 📍 Current view: landing
+main-cG8su4x_.js:2 📍 oauthCallbackProcessed: false
+main-cG8su4x_.js:2 ✅ SIGNED_IN event - routing to oauth-callback
+main-cG8su4x_.js:2 📍 Set view to oauth-callback, forcing hash update...
+main-cG8su4x_.js:2 🔐 Auth state changed: INITIAL_SESSION aimpactscannertest@gmail.com sessionChecked: false
+main-cG8su4x_.js:2 🔄 INITIAL_SESSION detected: Object
+main-cG8su4x_.js:2 ✅ Session restored from storage on app load
+main-cG8su4x_.js:2 🔍 Fetching user tier for: 0754989d-7449-4d0f-8eba-f480447f3eac
+main-cG8su4x_.js:2 📍 OAuth callback in URL - skipping auto-navigation, let OAuthCallback component handle it
+main-cG8su4x_.js:2 🔍 Session restoration result: Object
+main-cG8su4x_.js:2 ✅ Valid session restored, setting auth state
+main-cG8su4x_.js:2 🔄 Already fetching user tier for: 0754989d-7449-4d0f-8eba-f480447f3eac - skipping duplicate call
+main-cG8su4x_.js:2 ⏳ Waiting for session state to propagate before navigation...
+main-cG8su4x_.js:2 🔒 SECURITY: Processing initial pending route: oauth-callback
+main-cG8su4x_.js:2 ⏳ SECURITY: Session check not complete - deferring navigation to: dashboard
+OAuthCallback-DsMC4F4W.js:1 🔄 OAuthCallback component mounted - Processing OAuth callback...
+OAuthCallback-DsMC4F4W.js:1 🔍 Current URL: https://develop--aimpactscanner.netlify.app/#oauth-callback
+OAuthCallback-DsMC4F4W.js:1 🔍 Current hash: #oauth-callback
+OAuthCallback-DsMC4F4W.js:1 🔄 Attempt 1 to retrieve OAuth session...
+OAuthCallback-DsMC4F4W.js:1 ✅ Session retrieved: 0754989d-7449-4d0f-8eba-f480447f3eac
+OAuthCallback-DsMC4F4W.js:1 🔍 User account age: 4298388568ms (EXISTING USER)
+vendor-supabase-L4MxzG4g.js:1 📦 Retrieved auth context: Object
+OAuthCallback-DsMC4F4W.js:1 📦 Auth context: Object
+main-cG8su4x_.js:2 Synced tier from database: growth for aimpactscannertest@gmail.com
+main-cG8su4x_.js:2 ✅ User data fetched successfully: Object
+vendor-supabase-L4MxzG4g.js:1 ✅ Retrieved user data: Object
+OAuthCallback-DsMC4F4W.js:1 👋 Existing user login, userData found
+OAuthCallback-DsMC4F4W.js:1 🔄 routeUser CALLED
+OAuthCallback-DsMC4F4W.js:1 📊 userData: Object
+OAuthCallback-DsMC4F4W.js:1 📊 is_first_login: false
+OAuthCallback-DsMC4F4W.js:1 📊 authContext: Object
+OAuthCallback-DsMC4F4W.js:1 🔄 Returning user, routing to post-login destination
+vendor-supabase-L4MxzG4g.js:1 🧭 Determining post-login destination for user: 0754989d-7449-4d0f-8eba-f480447f3eac
+vendor-supabase-L4MxzG4g.js:1 📦 Retrieved auth context: Object
+vendor-supabase-L4MxzG4g.js:1 🔄 Returning user, checking tier for routing
+vendor-supabase-L4MxzG4g.js:1 📊 User tier: growth
+vendor-supabase-L4MxzG4g.js:1 ✅ Returning user login, routing to dashboard (tier: growth)
+OAuthCallback-DsMC4F4W.js:1 📍 getPostLoginDestination returned: Object
+vendor-supabase-L4MxzG4g.js:1 🧹 Cleared auth context
+OAuthCallback-DsMC4F4W.js:1 🚀 Final destination object: {
+  "path": "/dashboard",
+  "state": {}
+}
+OAuthCallback-DsMC4F4W.js:1 🚀 Destination path: /dashboard
+OAuthCallback-DsMC4F4W.js:1 🗺️ Path mapping: /dashboard → dashboard
+OAuthCallback-DsMC4F4W.js:1 🗺️ Final viewName to navigate to: dashboard
+OAuthCallback-DsMC4F4W.js:1 💾 Stored routeState in sessionStorage: Object
+OAuthCallback-DsMC4F4W.js:1 ⏳ Waiting 500ms for session state to update...
+OAuthCallback-DsMC4F4W.js:1 🔄 OAuthCallback component mounted - Processing OAuth callback...
+OAuthCallback-DsMC4F4W.js:1 🔍 Current URL: https://develop--aimpactscanner.netlify.app/#oauth-callback
+OAuthCallback-DsMC4F4W.js:1 🔍 Current hash: #oauth-callback
+OAuthCallback-DsMC4F4W.js:1 🔄 Attempt 1 to retrieve OAuth session...
+OAuthCallback-DsMC4F4W.js:1 ✅ Session retrieved: 0754989d-7449-4d0f-8eba-f480447f3eac
+OAuthCallback-DsMC4F4W.js:1 🔍 User account age: 4298388717ms (EXISTING USER)
+vendor-supabase-L4MxzG4g.js:1 📭 No auth context found
+OAuthCallback-DsMC4F4W.js:1 📦 Auth context: null
+main-cG8su4x_.js:2 LCP: 2184
+vendor-supabase-L4MxzG4g.js:1 ✅ Retrieved user data: Object
+OAuthCallback-DsMC4F4W.js:1 👋 Existing user login, userData found
+OAuthCallback-DsMC4F4W.js:1 🔄 routeUser CALLED
+OAuthCallback-DsMC4F4W.js:1 📊 userData: Object
+OAuthCallback-DsMC4F4W.js:1 📊 is_first_login: false
+OAuthCallback-DsMC4F4W.js:1 📊 authContext: null
+OAuthCallback-DsMC4F4W.js:1 🔄 Returning user, routing to post-login destination
+vendor-supabase-L4MxzG4g.js:1 🧭 Determining post-login destination for user: 0754989d-7449-4d0f-8eba-f480447f3eac
+vendor-supabase-L4MxzG4g.js:1 📭 No auth context found
+vendor-supabase-L4MxzG4g.js:1 🔄 Returning user, checking tier for routing
+vendor-supabase-L4MxzG4g.js:1 📊 User tier: growth
+vendor-supabase-L4MxzG4g.js:1 ✅ Returning user login, routing to dashboard (tier: growth)
+OAuthCallback-DsMC4F4W.js:1 📍 getPostLoginDestination returned: Object
+vendor-supabase-L4MxzG4g.js:1 🧹 Cleared auth context
+OAuthCallback-DsMC4F4W.js:1 🚀 Final destination object: {
+  "path": "/dashboard",
+  "state": {}
+}
+OAuthCallback-DsMC4F4W.js:1 🚀 Destination path: /dashboard
+OAuthCallback-DsMC4F4W.js:1 🗺️ Path mapping: /dashboard → dashboard
+OAuthCallback-DsMC4F4W.js:1 🗺️ Final viewName to navigate to: dashboard
+OAuthCallback-DsMC4F4W.js:1 💾 Stored routeState in sessionStorage: Object
+OAuthCallback-DsMC4F4W.js:1 ⏳ Waiting 500ms for session state to update...
+OAuthCallback-DsMC4F4W.js:1 ✅ FIX 2: Set oauthCallbackProcessed flag to prevent race condition
+OAuthCallback-DsMC4F4W.js:1 🔒 SECURITY: Using onNavigate callback for protected route navigation
+OAuthCallback-DsMC4F4W.js:1 🔒 Calling onNavigate with viewName: dashboard
+OAuthCallback-DsMC4F4W.js:1 🔒 onNavigate is typeof: function
+main-cG8su4x_.js:2 ✅ SECURITY: Authenticated user accessing protected route: dashboard
+OAuthCallback-DsMC4F4W.js:1 ✅ onNavigate completed, should now be at view: dashboard
+main-cG8su4x_.js:2 🔧 useUserInitializer: Starting initialization for user: 0754989d-7449-4d0f-8eba-f480447f3eac aimpactscannertest@gmail.com 
+main-cG8su4x_.js:2 📱 Using cached tier data for quick initialization: growth
+main-cG8su4x_.js:2 📊 Setting user tier from UserInitializer: growth
+main-cG8su4x_.js:2 CLS: 0.00008153210243009355
+main-cG8su4x_.js:2 LCP: 2720
+OAuthCallback-DsMC4F4W.js:1 ✅ FIX 2: Set oauthCallbackProcessed flag to prevent race condition
+OAuthCallback-DsMC4F4W.js:1 🔒 SECURITY: Using onNavigate callback for protected route navigation
+OAuthCallback-DsMC4F4W.js:1 🔒 Calling onNavigate with viewName: dashboard
+OAuthCallback-DsMC4F4W.js:1 🔒 onNavigate is typeof: function
+main-cG8su4x_.js:2 ✅ SECURITY: Authenticated user accessing protected route: dashboard
+OAuthCallback-DsMC4F4W.js:1 ✅ onNavigate completed, should now be at view: dashboard
+2AnalysisHistory-C7-lqYKj.js:1 📊 Loading analysis history from database for user: 0754989d-7449-4d0f-8eba-f480447f3eac
+main-cG8su4x_.js:2 CLS: 0.12820705138160976
+AnalysisHistory-C7-lqYKj.js:1 ✅ Loaded 10 analyses from database
+main-cG8su4x_.js:2 [DEBUG] hasFeatureAccess: Object
+main-cG8su4x_.js:2 [DEBUG] hasFeatureAccess result: Object
+main-cG8su4x_.js:2 CLS: 0.027875885203472436
+main-cG8su4x_.js:2 [DEBUG] hasFeatureAccess: Object
+main-cG8su4x_.js:2 [DEBUG] hasFeatureAccess result: Object
+AnalysisHistory-C7-lqYKj.js:1 ✅ Loaded 10 analyses from database
+main-cG8su4x_.js:2 [DEBUG] hasFeatureAccess: Object
+main-cG8su4x_.js:2 [DEBUG] hasFeatureAccess result: Object
+main-cG8su4x_.js:2 [DEBUG] hasFeatureAccess: Object
+main-cG8su4x_.js:2 [DEBUG] hasFeatureAccess result: Object
+main-cG8su4x_.js:2 📡 Full GTM script loaded (107KB)
+main-cG8su4x_.js:2 🚀 Preloading PDF libraries in background...
+main-cG8su4x_.js:2 ✅ PDF libraries preloaded successfully
+main-cG8su4x_.js:2 ✅ SECURITY: Authenticated user accessing protected route: input
+main-cG8su4x_.js:2 FID: 1.2999999523162842
+main-cG8su4x_.js:2 🚀 Starting analysis for URL: https://freecalchub.com
+main-cG8su4x_.js:2 ✅ SECURITY: Authenticated user accessing protected route: analysis
+main-cG8su4x_.js:2 🔧 Railway Backend Check: Object
+main-cG8su4x_.js:2 🚂 Using Railway backend: https://aimpactscanner-backend-production.up.railway.app
+main-cG8su4x_.js:2 📊 Analysis progress: processing (attempt undefined)
+main-cG8su4x_.js:2 ✅ Valid session found in localStorage
+main-cG8su4x_.js:2 Connecting to 'https://aimpactscanner-backend-production.up.railway.app/api/analyze' violates the following Content Security Policy directive: "connect-src 'self' https://*.supabase.co https://api.stripe.com https://www.google-analytics.com". The policy is report-only, so the violation has been logged but no further action has been taken.
+main-cG8su4x_.js:2 Connecting to 'https://aimpactscanner-backend-production.up.railway.app/api/analyze' violates the following Content Security Policy directive: "connect-src 'self' https://*.supabase.co https://api.stripe.com https://www.google-analytics.com". The policy is report-only, so the violation has been logged but no further action has been taken.
+main-cG8su4x_.js:2 🔄 SimpleAnalysisProgress: Starting mock progress for e847a644-7cd5-4a46-925f-3b0ff4687364
+main-cG8su4x_.js:2 CLS: 0.000002046688780523761
+aimpactscanner-backend-production.up.railway.app/api/analyze:1  Failed to load resource: the server responded with a status of 401 ()
+main-cG8su4x_.js:2 ❌ Railway error: Error: Invalid or expired token
+    at main-cG8su4x_.js:2:65820
+    at async I (main-cG8su4x_.js:2:65566)
+    at async onAnalyze (main-cG8su4x_.js:2:225763)
+onAnalyze @ main-cG8su4x_.js:2
+main-cG8su4x_.js:2 ❌ SimpleAnalysisProgress: Error received, stopping animation
+main-cG8su4x_.js:2 CLS: 0.05673021283395269
+main-cG8su4x_.js:2 💨 Window lost focus

@@ -1,7 +1,7 @@
 # AImpactScanner Product Description v2.4
 ## Strategic Foundation to Enterprise Leadership Platform
 
-**Executive Summary**: AImpactScanner has successfully transformed from visionary concept to production-ready SaaS platform, achieving 98% alignment with original foundation goals while implementing strategic business optimizations that enhance market penetration and long-term enterprise viability. **December 2025 Sprint 3 deployment** expanded the analysis framework from 23 to 27 factors across 9 pillars, adding 4 high-priority traditional SEO factors (canonical tags, internal linking, duplicate versions, robots.txt) that bring coverage to 75% of traditional SEO best practices.
+**Executive Summary**: AImpactScanner has successfully transformed from visionary concept to production-ready SaaS platform, achieving 98% alignment with original foundation goals while implementing strategic business optimizations that enhance market penetration and long-term enterprise viability. The platform delivers an **18-factor MASTERY-AI analysis across 8 pillars** plus **9 foundational SEO checks** (added in Sprint 2/3) that flag traditional SEO prerequisites before AI scoring begins, bringing foundational coverage to 75% of traditional SEO best practices.
 
 ---
 
@@ -15,7 +15,7 @@
 
 #### Live Platform Specifications
 - **Status**: Production-deployed at [aimpactscanner.com](https://aimpactscanner.com)
-- **Framework**: Complete 27-factor MASTERY-AI Framework v3.1.1 implementation (18 AI + 9 Traditional SEO)
+- **Framework**: 18-factor MASTERY-AI Framework v3.1.1 analysis across 8 pillars + 9 foundational SEO checks
 - **Architecture**: Enterprise-grade React 19 + Vite 7 + Supabase 2.51 + Netlify stack
 - **Performance**: 75+ Lighthouse scores, 8-12 second analysis (target <15s exceeded)
 - **Business Model**: Strategic 2-tier freemium system with proven conversion funnel
@@ -39,13 +39,13 @@
 
 ## Core Capabilities: MASTERY-AI Framework Authority
 
-### 27-Factor Strategic Analysis Engine
+### MASTERY-AI Analysis Engine
 
-Our production system implements **27 strategically selected factors** from the complete 148-factor MASTERY-AI Framework, delivering **80%+ of optimization insights** through the most impactful factors across all 9 framework pillars (including the new Performance pillar).
+Our production system implements **18 scored factors** from the MASTERY-AI Framework v3.1.1 across all **8 framework pillars**, delivering **80%+ of optimization insights** through the most impactful factors. An additional **9 foundational SEO checks** are flagged as prerequisites before AI scoring begins.
 
-### Traditional SEO Foundation (Sprint 2 + Sprint 3)
+### Foundational SEO Checks (Sprint 2 + Sprint 3)
 
-**9 traditional SEO factors** ensure your site has the technical foundation required before AI optimization can be effective:
+**9 foundational SEO checks** ensure your site has the technical foundation required before AI optimization can be effective. These are flagged as prerequisites at the start of a scan but are not part of the MASTERY-AI framework score:
 
 **Sprint 2 - Critical Blockers (5 factors):**
 - **Indexability Status (T.5.1)**: Verifies search engines can find and index your content
@@ -64,7 +64,7 @@ Our production system implements **27 strategically selected factors** from the 
 - Free: Indexability check only
 - Solo+: All 9 traditional SEO factors
 
-**Value Proposition**: AI optimization without solid SEO foundations delivers limited results. These checks ensure your site is technically ready for AI discovery. Sprint 3 brings coverage to 75% of traditional SEO best practices.
+**Value Proposition**: AI optimization without solid SEO foundations delivers limited results. These pre-scan checks ensure your site is technically ready for AI discovery. Sprint 3 brings coverage to 75% of traditional SEO best practices. These checks are separate from the 18-factor MASTERY-AI score.
 
 ### LLMs.txt Generation (NEW - Sprint 1)
 
@@ -78,16 +78,15 @@ Our production system implements **27 strategically selected factors** from the 
   - Scale: Unlimited generations
 - **Value Proposition**: Improve AI discoverability without manual content structuring
 
-#### Complete Pillar Coverage (M.A.S.T.E.R.Y + AI + P)
-1. **AI Pillar (23.8%)**: Citation-worthy content, source authority, RAG optimization
-2. **Authority Pillar (17.9%)**: Transparency, disclosure, contact accessibility
-3. **Machine Readability (14.6%)**: HTTPS security, title optimization, meta descriptions
-4. **Semantic Pillar (13.9%)**: Heading hierarchy, structured data, schema markup
-5. **Engagement Pillar (10.9%)**: Page speed, user experience, accessibility
-6. **Topical Pillar (8.9%)**: Knowledge depth and expertise demonstration
-7. **Reference Pillar (5.9%)**: Citation quality and information accuracy
-8. **Yield Pillar (4.1%)**: Comprehensive metrics and performance optimization
-9. **Performance Pillar (NEW)**: Page speed analysis and performance optimization
+#### Complete MASTERY-AI Pillar Coverage (8 Pillars)
+1. **M - Machine Readability (14.6%)**: HTTPS security, title optimization, meta descriptions, structured data, image accessibility
+2. **A - Authority & Trust (17.9%)**: Author information, contact accessibility, transparency & disclosure
+3. **S - Semantic Content (13.9%)**: Heading hierarchy, content depth
+4. **T - Topical Depth (8.9%)**: Knowledge depth and expertise demonstration
+5. **E - Engagement & UX (10.9%)**: Page speed, user experience, accessibility
+6. **R - Reference Networks (5.9%)**: Citation quality and information accuracy
+7. **Y - Yield Optimization (4.1%)**: Comprehensive metrics and performance optimization
+8. **AI - AI Response Optimization (23.8%)**: Citation-worthy content, source authority, evidence chunking, FAQ/RAG optimization
 
 #### Framework Integrity Maintained
 - **Evidence-based Analysis**: Real content examination with concrete examples
@@ -105,7 +104,7 @@ Our production system implements **27 strategically selected factors** from the 
 #### Free Tier - Foundation Building
 - **Usage**: 5 total analyses (lifetime)
 - **Features**: Full professional-quality analysis experience
-- **Value**: Complete 18-factor MASTERY-AI Framework assessment
+- **Value**: Full 18-factor MASTERY-AI Framework analysis across 8 pillars + 9 foundational SEO checks
 - **Strategy**: Demonstrate value and build market awareness
 - **Conversion**: Natural upgrade prompts at usage limit
 - **Enforcement**: Client + server-side usage tracking with automatic limits
@@ -203,7 +202,7 @@ Our production system implements **27 strategically selected factors** from the 
 
 #### 100% Technical Implementation
 - **Technology Stack**: Perfect alignment with foundation specifications
-- **Feature Completeness**: All 18 planned factors implemented with pillar coverage
+- **Feature Completeness**: All 18 MASTERY-AI factors implemented across 8 pillars + 9 foundational SEO checks
 - **Performance Targets**: All targets met or exceeded with optimization
 - **Security Requirements**: Enhanced with enterprise-grade implementations
 
@@ -277,10 +276,10 @@ Our production system implements **27 strategically selected factors** from the 
 - **Outcome**: Category leadership with 50% Fortune 1000 adoption goal
 
 ### Framework Evolution Path
-- **Current (Phase A)**: 18 factors delivering 80%+ optimization insights
-- **Phase B**: 35+ factors for advanced analysis depth
-- **Phase C**: 75+ factors for comprehensive audit capabilities
-- **Phase D**: Complete 148-factor implementation for enterprise dominance
+- **Current (Phase A)**: 18 MASTERY-AI factors across 8 pillars + 9 foundational SEO checks delivering 80%+ optimization insights
+- **Phase B**: 35+ MASTERY-AI factors for advanced analysis depth
+- **Phase C**: 75+ MASTERY-AI factors for comprehensive audit capabilities
+- **Phase D**: Complete 148-factor MASTERY-AI implementation for enterprise dominance
 
 ---
 
@@ -310,7 +309,7 @@ Our production system implements **27 strategically selected factors** from the 
 - **Free Tier Enforcement**: 3 analysis limit working correctly ✅ **OCTOBER 2025**
 
 #### Framework Authority
-- **Complete Coverage**: All 8 MASTERY-AI pillars represented ✅
+- **Complete Coverage**: All 8 MASTERY-AI pillars represented (18 scored factors + 9 foundational SEO checks) ✅
 - **Framework Compliance**: True v3.1.1 implementation ✅
 - **Evidence Quality**: Professional recommendations with examples ✅
 - **Category Position**: Maintained thought leadership ✅
@@ -341,7 +340,7 @@ Our production system implements **27 strategically selected factors** from the 
 **Message**: "Access professional-grade AI search optimization powered by the authoritative MASTERY-AI Framework. Get enterprise-quality analysis at accessible pricing while we build toward industry-standard enterprise platform. Our October 2025 enhancements include instant OAuth authentication, self-healing subscription management, and smart factor display for improved user experience."
 
 **Key Points**:
-- Complete 18-factor analysis delivering 80%+ of optimization insights
+- 18-factor MASTERY-AI analysis across 8 pillars delivering 80%+ of optimization insights
 - Production-proven platform with 99.9% uptime and <12-second analysis
 - **Modern authentication with multiple sign-in options**: Magic links (7-day TTL), Google OAuth (instant access), GitHub OAuth (developer-friendly)
 - **Self-healing subscription management**: Automatic recovery ensures seamless upgrade experience

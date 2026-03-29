@@ -1,366 +1,455 @@
-# AImpactScanner Positioning Statement
+# AImpactScanner -- Positioning Statement
 
-**Version:** 2.1
-**Date:** December 13, 2025
-**Status:** Active
+**Document Type**: Brand Positioning Framework
+**Version**: 3.0
+**Created**: 2025-10-16
+**Updated**: 2026-03-01
+**Owner**: @brand-strategy
+**Parent Brand**: AI Search Mastery
+**Status**: Active
+**Review Cadence**: Quarterly or upon significant market shift
+**Aligned With**: Unified Brand Style Guide v2.0, Vision & Mission v5.0, AIS Pricing v2.0, AISearchArena Positioning v1.0
 
 ---
 
-## Core Positioning Statement
+## Document Purpose
+
+This positioning statement defines where AImpactScanner sits in the market, who it serves, what it replaces, and how it communicates its value. It governs all messaging, content, and brand decisions for the property. Every page, email, social post, and campaign should trace back to this document.
+
+This document supersedes Positioning Statement v2.0 (October 18, 2025). Key changes: expanded from 18-factor to 27-factor MASTERY-AI Framework, updated pricing ($9.95-$39.95/month), integrated ecosystem positioning with AISearchArena sibling property, and aligned vocabulary and structure with the AI Search Mastery branded house standard.
+
+---
+
+## 1. Market Category Definition
+
+### The Category We Occupy
+
+**AI Search Diagnostic Analysis**
+
+AImpactScanner is a diagnostic tool. It evaluates individual web pages against a published, standardized framework to identify specific gaps in AI search visibility -- then tells the user exactly what to fix, in priority order.
+
+We are not a brand monitoring platform. We are not a competitive intelligence tool. We are not an SEO suite adding AI features. We are a focused diagnostic engine that answers one question per scan: **how does AI search see this page, and what specific changes would improve that?**
+
+### Category Characteristics
+
+| Attribute | AImpactScanner Definition |
+|---|---|
+| **What it is** | A page-level AI search diagnostic tool using a published 27-factor framework |
+| **What it is not** | A brand monitor, a competitive intelligence platform, an SEO suite |
+| **Evaluation scope** | Individual web pages scored against 27 MASTERY-AI factors across 8 pillars |
+| **Analysis speed** | Results delivered in seconds, not hours or days |
+| **Methodology** | Published, standardized, reproducible (MASTERY-AI Framework) |
+| **Perspective** | Practitioner-built (developed by someone who uses these tools on real business sites, not by a team selling to enterprise procurement) |
+
+### Why This Category Needs AImpactScanner
+
+AI-powered search is changing how customers discover businesses. ChatGPT, Perplexity, Claude, and Gemini increasingly answer purchase-intent questions with specific recommendations. Businesses that AI search does not see, does not cite, or does not recommend lose customers they never know existed.
+
+The problem is not awareness. Most business owners have heard that AI search matters. The problem is diagnosis: they do not know what specifically is wrong with their pages, which factors matter most, or what to fix first. The current diagnostic options are:
+
+- **Manual ChatGPT analysis** -- free, but inconsistent, unstructured, and different every time
+- **Enterprise brand monitoring** ($99-$599+/month) -- built for large organizations tracking brand mentions across AI platforms, not solopreneurs fixing specific pages
+- **Traditional SEO tools** -- designed for Google search signals, not AI search visibility factors
+- **Guessing** -- the most common approach, and the most expensive in lost opportunity
+
+AImpactScanner fills the gap between free-but-unreliable and enterprise-but-unaffordable. It provides structured, framework-based diagnostic analysis at a price point built for small business.
+
+---
+
+## 2. Target Audiences
+
+AImpactScanner serves three distinct audiences. Each has different needs, different tool budgets, and different urgency around AI search visibility.
+
+### Primary Audience: Established Solopreneurs
+
+**Who they are**: Business owners with $50K-$250K annual revenue, 2-5 years established. Solo content creators, digital entrepreneurs, coaches, consultants, and service providers. They run their own marketing. They have 4-20 strategic pages that drive their business. They are tech-comfortable but not technical.
+
+**What they need from us**:
+- A clear answer to "how does AI search see my business?" without hiring a consultant
+- Specific, prioritised recommendations they can implement themselves
+- A published framework they can learn from, not just a score they have to trust blindly
+- Pricing that fits a $50-$500/month total tool budget
+- The ability to fix, re-scan, and measure improvement over time
+
+**Their current pain**:
+- Hearing that AI search matters but not knowing what to do about it
+- Pasting URLs into ChatGPT and getting different analysis every time
+- Seeing competitors recommended by AI search and not understanding why
+- Enterprise diagnostic tools priced at $99-$599+/month -- 10x their entire tool budget
+- No way to know if the changes they make are actually working
+
+**Decision criteria**: Affordable (<$40/month), fast (results in seconds), specific (tells them what to fix), educational (explains why it matters), low commitment (free tier to validate first).
+
+### Secondary Audience: Transition Professionals
+
+**Who they are**: Corporate professionals (marketing, SEO, content strategy) transitioning to freelance or consulting work. They understand digital marketing concepts but are new to AI search optimization as a distinct discipline. They need to build credibility and offer AI-relevant services.
+
+**What they need from us**:
+- A structured framework they can learn and reference when advising clients
+- A tool that produces professional-quality diagnostic reports
+- Affordable pricing while they build their consulting practice
+- The educational layer that explains not just what to fix but why each factor matters
+
+**Their current pain**:
+- Traditional SEO expertise does not directly translate to AI search optimization
+- No standardized framework exists for evaluating AI search readiness
+- Client expectations are shifting toward AI visibility, and they need to keep pace
+- Building a new service offering requires tools that do not require enterprise budgets
+
+### Tertiary Audience: Small Agency Owners
+
+**Who they are**: Owners of small digital marketing or SEO agencies (1-5 employees) managing 5-20 client sites. They need scalable diagnostic tools with professional output. They are evaluating whether AI search optimization should become a service line.
+
+**What they need from us**:
+- Volume scanning capability (40-100 analyses per month)
+- White-label reports they can deliver to clients under their own brand
+- API access for integration into existing workflows
+- Competitive benchmarking to show clients where they stand relative to competitors
+- A published methodology they can reference in client proposals
+
+**Their current pain**:
+- Manually analysing each client site for AI search readiness is not scalable
+- Existing tools are either too expensive (enterprise) or too basic (free)
+- No standardized way to report AI search readiness to clients
+- Clients are starting to ask about AI search, and the agency needs answers
+
+### Ecosystem Cross-Referral: AISearchArena Audience
+
+Practitioners who discover AImpactScanner through the AISearchArena benchmark represent a distinct entry path. These users arrive having already seen AImpactScanner evaluated under standardized, independent methodology. They have higher initial trust (the benchmark did the vetting) but also higher scrutiny expectations. Content and messaging for this audience should reference the published methodology and the Diagnose-Optimize-Test-Repeat loop -- not marketing claims they have already evaluated through the benchmark lens.
+
+---
+
+## 3. Competitive Frame of Reference
+
+Positioning requires clarity about what we replace. AImpactScanner does not compete with enterprise brand monitoring platforms or traditional SEO suites. It replaces the patchwork of inadequate diagnostic options that small business owners currently use.
+
+### What AImpactScanner Replaces
+
+| Current Alternative | What It Provides | What It Lacks | What We Do Instead |
+|---|---|---|---|
+| **Manual ChatGPT analysis** | Free, instant page assessment | No consistent framework, different results every time, no historical tracking, no prioritisation | Standardised 27-factor analysis with published methodology, consistent scoring, and prioritised recommendations |
+| **Enterprise brand monitoring (Profound, AthenaHQ)** | Ongoing brand visibility tracking across AI platforms | Priced for enterprise ($99-$599+/month), brand-level not page-level, built for teams not solopreneurs | Page-level diagnostics at $9.95-$39.95/month, built for individual business owners with 4-20 strategic pages |
+| **Traditional SEO tools (Semrush, Ahrefs, Yoast)** | Google search optimisation | Designed for traditional search signals, not AI search visibility factors; retrofitting AI features onto Google-era architecture | Purpose-built for AI search from the ground up; different engine, different signals, different diagnostic framework |
+| **Mid-market GEO tools (Cairrot, Otterly.AI)** | AI search monitoring and basic audits | Agency pricing ($24.99-$599/month), hidden methodology, diagnosis without optimisation tools | Published methodology, solopreneur pricing, and at Growth+ tiers the Diagnose-Optimize-Test-Repeat loop with LLM.txt Mastery included |
+| **Doing nothing** | No cost, no effort | Every month delayed is another month where competitors optimised for AI search build citation advantages that compound | Free tier with 3 scans/month removes the excuse. Zero cost to find out where you stand |
+
+### Competitive Positioning Map
 
 ```
-For solopreneurs and content creators
-who need to optimize their web pages for AI search engines like ChatGPT, Claude, Perplexity, and Gemini,
-I am a professional AI search optimization analysis platform
-that evaluates individual pages against the comprehensive 18-factor MASTERY-AI Framework
-and provides prioritized, actionable optimization recommendations.
-
-Unlike llmtxtmastery (which implements optimization by generating llms.txt files),
-manual ChatGPT analysis (which lacks framework consistency),
-or expensive enterprise brand monitoring tools ($99-$5,000/month),
-my approach provides automated 18-factor analysis in under 15 seconds
-at accessible solopreneur pricing ($4.95-$29.95/month).
+                        PUBLISHED METHODOLOGY
+                                |
+      Enterprise Monitoring     |         AImpactScanner
+      (Profound, AthenaHQ)      |         (page-level, published
+       brand-level, $99+/mo,    |          framework, $9.95-$39.95/mo,
+       hidden methodology)      |          solopreneur-built)
+                                |
+  ENTERPRISE ------------------- + ------------------- SOLOPRENEUR
+  FOCUS                         |                      FOCUS
+                                |
+      Mid-Market GEO Tools      |         Manual ChatGPT
+      (Cairrot, Otterly)        |         Analysis
+      (agency-priced,           |         (free, no framework,
+       hidden methodology)      |          inconsistent)
+                                |
+                        NO METHODOLOGY
 ```
 
----
-
-## Extended Positioning Framework
-
-### Customer Profile
-
-**Who:** Solopreneurs with $50K-$250K annual revenue, 2-5 years established
-- Solo content creators and digital entrepreneurs
-- Tech-savvy, cost-conscious, value actionable insights
-- Concerned about AI search visibility as AI-powered search becomes the primary discovery channel
-- Currently using free tools but recognize limitations
-
-**Problem:** Need to optimize web pages for AI search engines, but:
-- AI search optimization is a black box—don't know exactly what gaps exist
-- Manual ChatGPT analysis is inconsistent and time-consuming
-- Don't know which MASTERY-AI Framework factors matter most
-- Traditional SEO tools focus on Google, not AI search engines
-- Enterprise tools ($99-$5,000/month) are unaffordable overkill
-
-**Context:** AI search adoption curve entering early majority phase (2025-2026)
-- Monthly budget: $50-$500 for ALL tools
-- Decision cycle: 7-14 days (fast, low friction)
-- Value clear ROI, educational frameworks, and actionable next steps
-- Losing 10-50 qualified buyers weekly to competitors who appear in AI search
-
-**Decision Criteria:**
-1. Affordable (<$30/month for primary tier)
-2. Fast and simple (<15 seconds to get results)
-3. Framework-based (consistent methodology, not random)
-4. Actionable recommendations (specific fixes, not vague suggestions)
-5. Educational (understand WHY, not just WHAT to fix)
-
-### Your Position
-
-**Category:** AI Search Optimization Analysis Platform for Solopreneurs
-
-**Role:** Pre-optimization diagnostic tool providing page-level AI search readiness analysis
-
-**Outcome:** Individual web pages evaluated against the 18-factor MASTERY-AI Framework in under 15 seconds with prioritized, actionable optimization recommendations
-
-**Timeframe:**
-- Immediate (seconds): Analysis complete with specific recommendations
-- Short-term (30 days): Implement fixes, validate improvements
-- Medium-term (90 days): Re-analyze to measure optimization impact and track improvements
-
-### Competitive Context
-
-**Primary Alternative:** Manual ChatGPT Analysis (FREE)
-- What they do: Paste URL into ChatGPT and ask for analysis
-- Why they choose it: Free, instant, no commitment
-- **Why we win:** Framework consistency (18-factor MASTERY-AI), historical tracking, prioritized recommendations, evolving methodology (18 factors now → 148 factors future)
-
-**Direct Competitor:** Ayzeo ($15/month)
-- What they offer: AI search optimization with 10,000+ websites analyzed (proven traction)
-- Why they choose it: Established platform, broader feature set
-- **Why we win:** Superior MASTERY-AI Framework (18 factors evolving to 148), price leadership ($14.95 Growth tier), ecosystem integration with llmtxtmastery, framework as teaching tool
-
-**New Competitor:** Score My Geo (Waitlist)
-- What they offer: AI search optimization (not yet launched)
-- Why they choose it: Anticipated features
-- **Why we win:** Production-ready NOW with first-mover window, proven infrastructure (99.9% uptime, under 15-second analysis)
-
-**Indirect Competitors:** Enterprise Brand Monitoring (Profound $99+, AthenaHQ $295+)
-- What they offer: Ongoing brand visibility tracking across AI platforms
-- Why they choose it: Comprehensive dashboards, competitive intelligence, brand-level insights
-- **Why we win:** Page-level diagnostics (not brand monitoring), 85-99% cheaper, right-sized for solopreneurs with 4-20 strategic pages
-
-**Substitutes:** Traditional SEO Tools (Yoast, RankMath, Semrush)
-- Limitation: Optimize for Google search, not AI search engines
-- **Why we win:** AI-native analysis, forward-looking optimization factors specific to AI engines
-
-### Value Proposition
-
-**Functional Benefit:**
-Automated analysis of individual web pages against the comprehensive 18-factor MASTERY-AI Framework (8 pillars: AI, Authority, Machine Readability, Semantic, Engagement, Topical, Reference, Yield), delivered in under 15 seconds with prioritized, actionable optimization recommendations.
-
-**Emotional Benefit:**
-- Confidence: "I know exactly what's blocking my visibility to ready-to-buy customers"
-- Clarity: "I understand which MASTERY-AI Framework factors matter most for my pages"
-- Control: "I'm not guessing—frameworks transform anxiety into revenue"
-- Peace of Mind: "AI search readiness analysis is as standard as SEO audits"
-
-**Economic Benefit:**
-- Time savings: Under 15 seconds per analysis vs 15+ minutes manual ChatGPT analysis
-- Cost savings: $4.95-$29.95/month vs $99-$5,000 enterprise tools (85-99% cheaper)
-- Revenue protection: Stop losing 10-50 qualified buyers weekly to competitors who appear in AI search
-- Risk mitigation: Professional framework-based analysis prevents costly optimization mistakes
-
-**Tier Structure:**
-- **Starter (FREE):** 1 analysis/month - Lead generation and framework validation
-- **Solo ($4.95/month):** 10 analyses/month - Individual creators optimizing key pages
-- **Growth ($14.95/month):** 40 analyses/month - PRIMARY TIER (70% target, serious optimizers)
-- **Scale ($29.95/month):** 100 analyses/month - Agencies and teams managing portfolios
+AImpactScanner occupies the upper-right quadrant: published methodology combined with solopreneur focus. No current alternative holds this position.
 
 ---
 
-## Value Ladder Messaging
+## 4. Unique Differentiators
 
-*Based on LLMtxtMastery pattern + Doug Hall Marketing Physics + "So What?" test*
-*Implemented: December 13, 2025 (Sprint 5)*
+These are the specific, defensible attributes that separate AImpactScanner from every alternative in the competitive frame.
 
-**Key Insight**: Customers don't care about AI - they care about losing customers and revenue. All messaging reframed around real customer outcomes.
+### Differentiator 1: Published 27-Factor MASTERY-AI Framework
 
-### Tier Taglines (Overarching Benefit)
+AImpactScanner evaluates pages against 27 specific factors across 8 pillars (AI, Authority, Machine Readability, Semantic, Engagement, Topical, Reference, Yield). The framework is published. Users can read the methodology, understand the weighting, and evaluate whether the framework makes sense for their situation before spending a dollar.
 
-| Tier | Tagline | Customer Question Answered |
-|------|---------|---------------------------|
-| **Free** | "Am I losing customers?" | Discovery - find out if there's a problem |
-| **Solo** | "Stop losing customers" | Action - fix the problems you found |
-| **Growth** | "Never lose a customer to AI" | System - complete optimization workflow |
-| **Scale** | "Never say no to a client" | Agency - handle any project, any client |
+**Why this matters**: Every competitor hides their methodology. "We analyse your AI visibility" is a claim. "Here are the 27 specific factors we check, here is how they are weighted, and here is why" is a verifiable system. Published methodology invites scrutiny because the framework holds up to it.
 
-### Tier-by-Tier Value Ladder
+### Differentiator 2: Diagnose-Optimize-Test-Repeat Loop
 
----
+At Growth ($19.95/month) and Scale ($39.95/month) tiers, AImpactScanner includes LLM.txt Mastery features at no additional cost. This creates a complete loop: diagnose gaps with AImpactScanner, optimise the most common gap (llms.txt quality) with the included LLM.txt Mastery tools, re-scan to measure improvement, and repeat.
 
-#### FREE TIER (Starter)
+**Why this matters**: Competitors stop at diagnosis. They hand you a list of problems and leave you to find separate tools to fix them. The loop means AImpactScanner users can act on their diagnostic results immediately, measure the impact, and compound improvements over time.
 
-**OB Headline**: "Discover where you're losing customers to AI"
+### Differentiator 3: Solopreneur Pricing with No Compromise on Depth
 
-**OB Bullets**:
-- 27-factor scan across 9 AI visibility pillars
-- No credit card required
+The full 27-factor diagnostic is available at Solo ($9.95/month). The complete Diagnose-Optimize-Test-Repeat loop is available at Growth ($19.95/month). The nearest competitor with comparable diagnostic depth starts at $24.99/month for diagnosis only.
 
-**FOMO Box** (Yellow - Upgrade Prompt → Solo):
-> **What you're missing:**
-> Free finds the problem - but then you're stuck. Fix something? That's scan 2. Verify it worked? Scan 3. You're done. No more pages, no more progress. Solo gives you 10 scans to actually move forward.
->
-> → Upgrade to Solo for just $4.95/month
+**Why this matters**: AI search optimisation should not require an enterprise budget. The pricing reflects a lean cost structure, not a loss leader. The free tier (3 scans/month) proves value before asking for money. The 3 Gaps Guarantee removes remaining risk: if your first paid scan does not reveal at least 3 specific AI visibility gaps you did not know about, full refund within 30 days.
 
-**What You Get with FREE**:
-1. ★ **Find out if you're losing customers right now** (highlighted)
-2. See what AI sees (and what it misses)
-3. Pinpoint your biggest visibility gap
-4. No commitment - just answers
+### Differentiator 4: Page-Level Focus
 
-**Volume**: 3 free analyses per month
+AImpactScanner analyses individual pages, not entire brands. A solopreneur with 4-20 strategic pages gets specific, actionable recommendations for each page that matters. This is the right granularity for small business: fix the pages that drive revenue, not monitor a brand dashboard.
 
----
+**Why this matters**: Brand-level monitoring is valuable for enterprises managing hundreds of pages. For a solopreneur, page-level diagnostics with specific fix recommendations are more useful and more actionable. The tool matches the user's actual workflow.
 
-#### SOLO TIER ($4.95/month)
+### Differentiator 5: Ecosystem Integration with Independent Validation
 
-**OB Headline**: "Fix the problems that are costing you customers"
+AImpactScanner is part of the AI Search Mastery ecosystem alongside LLM.txt Mastery (optimisation tool) and AISearchArena (independent benchmark). The products are designed to work together, but each stands on its own.
 
-**OB Bullets**:
-- Scan → Fix → Verify → Move to next page
-- Keep your results for 30 days
+AISearchArena evaluates AImpactScanner under the same standardised methodology it applies to every other tool in the market. This means AImpactScanner's performance claims are independently tested and published monthly. If AImpactScanner scores well, the evidence is documented. If it scores poorly in a category, that score publishes. No exceptions.
 
-**FOMO Box** (Yellow - Upgrade Prompt → Growth):
-> **More than a side project?**
-> You'll need to work across pages and sites, track your progress, and keep AI finding you after every change. Growth is built for that.
->
-> → Upgrade to Growth for $14.95/month
+**Why this matters**: Most tool ecosystems mark their own homework. AImpactScanner is evaluated by an independent benchmark operated by the same parent company -- with the conflict of interest disclosed, the methodology published, and the scores earned, not assigned.
 
-**What You Get with SOLO**:
-1. ★ **10 scans to fix your key pages** (highlighted)
-2. 30-day history proves your fixes worked
-3. PDF reports to share with clients or your team
-4. Email support when you get stuck
+### Differentiator 6: JavaScript Rendering
 
-**Volume**: 10 analyses per month
+AImpactScanner uses Playwright-based rendering to see pages the way AI search engines see them. Sites built with Framer, Webflow, React, and other JavaScript-heavy frameworks render fully. Basic crawlers see blank pages. AImpactScanner sees what the user's customers see.
+
+**Why this matters**: A growing percentage of small business websites use JavaScript-heavy builders. A diagnostic tool that cannot render JavaScript is diagnosing a blank page. Playwright-based rendering is not a feature to list -- it is a requirement for accurate analysis.
 
 ---
 
-#### GROWTH TIER ($14.95/month) ⭐ PRIMARY
+## 5. Core Positioning Statement
 
-**OB Headline**: "The complete system: scan, plan, track, get found"
+### April Dunford Format
 
-**OB Bullets**:
-- Know exactly what to fix, in what order
-- Track your progress across 90 days
+**For** solopreneurs and small business owners who need to understand how AI search engines see their web pages,
 
-**FOMO Box** (Yellow - Upgrade Prompt → Scale):
-> **Working with clients?**
-> 40 scans won't cover their sites plus yours. Scale gives you 100 scans, unlimited LLMS.txt, and unlimited history - never say no to a project.
->
-> → Upgrade to Scale for $29.95/month
+**who are frustrated by** inconsistent manual ChatGPT analysis, enterprise diagnostic tools priced at $99-$599+/month, and traditional SEO tools that do not address AI search visibility,
 
-**What You Get with GROWTH**:
-1. ★ **Know exactly what to fix, in what order** (highlighted)
-2. 40 scans to cover everything
-3. Track your progress over 90 days
-4. Generate LLMS.txt after every change
-5. Priority support when you need help
+**AImpactScanner is** an AI search diagnostic analysis tool
 
-**Volume**: 40 analyses per month
+**that provides** page-level evaluation against a published 27-factor framework with prioritised, actionable optimisation recommendations -- and at Growth and Scale tiers, includes the optimisation tools to fix what the diagnostic finds.
+
+**Unlike** enterprise brand monitors, agency-priced GEO tools, and manual AI analysis,
+
+**AImpactScanner** publishes its complete diagnostic methodology, prices for solopreneur budgets ($9.95-$39.95/month), and completes the Diagnose-Optimize-Test-Repeat loop in a single subscription -- because small business owners deserve diagnostic tools built for how they actually work.
 
 ---
 
-#### SCALE TIER ($29.95/month)
+## 6. Condensed Positioning (One Paragraph)
 
-**OB Headline**: "100 scans, unlimited LLMS.txt, unlimited history - take on any project"
-
-**OB Bullets**:
-- Cover every client site from one account
-- Regenerate LLMS.txt after every change, on every site
-
-**FOMO Box** (Green - Top Tier Confirmation):
-> **No limits**
-> Take on any project. Cover any site. Never run out of scans or history.
-
-**What You Get with SCALE**:
-1. ★ **Never say no to a project** (highlighted)
-2. 100 scans to cover every client site
-3. Unlimited LLMS.txt after every change
-4. Unlimited history - your data forever
-5. 5-page comparisons for client reports
-
-**Volume**: 100 analyses per month
+AImpactScanner is a page-level AI search diagnostic tool that evaluates individual web pages against the published 27-factor MASTERY-AI Framework and delivers prioritised, actionable optimisation recommendations. It is built for solopreneurs and small business owners at $9.95-$39.95/month -- not enterprise brand monitoring at $99-$599+. At Growth and Scale tiers, it includes LLM.txt Mastery features to create a complete Diagnose-Optimize-Test-Repeat loop. The diagnostic methodology is published, the pricing is permanent, and AImpactScanner is independently evaluated every month by AISearchArena under the same standardised benchmark applied to every other tool in the market.
 
 ---
 
-### Real Reasons to Believe (All Tiers)
+## 7. One-Line Positioning
 
-Trust indicators displayed on every tier:
+**The published-methodology AI search diagnostic built for small business -- find your gaps, fix them, prove it worked.**
 
-| RTB | Purpose |
-|-----|---------|
-| **30-Day Money Back Guarantee** | Risk reversal - try with confidence |
-| **Cancel in 10 Seconds** | No lock-in anxiety |
-| **Built by Solopreneur for Solopreneurs** | Authenticity - we understand you |
+---
 
-### Feature Comparison Matrix
+## 8. Key Messages by Audience
 
-| Feature | Free | Solo | Growth | Scale |
-|---------|------|------|--------|-------|
-| **Analyses/month** | 3 | 10 | 40 | 100 |
-| **27-factor analysis** | ✓ | ✓ | ✓ | ✓ |
-| **History** | 7 days | 30 days | 90 days | Unlimited |
-| **PDF export** | - | ✓ | ✓ | ✓ |
-| **CSV export** | - | - | ✓ | ✓ |
-| **Comparison reports** | - | - | 2 pages | 5 pages |
-| **LLMS.txt generation** | - | - | 25/month | Unlimited |
-| **Remediation planner** | - | - | ✓ | ✓ |
-| **Progress tracking** | - | - | ✓ | ✓ |
-| **Support** | Docs | 48hr email | 24hr priority | 24hr priority |
+### For Solopreneurs (Primary)
 
-### Value Ladder Progression Logic
+**Primary message**: See exactly how AI search sees your business -- across 27 specific, published factors -- and know precisely what to fix first.
 
-Each tier comparison points ONLY to the next tier up (not skipping):
+**Supporting messages**:
+- Every recommendation is prioritised. Fix the three things that matter most before worrying about the rest.
+- The framework is published. You can read the methodology before you spend a dollar. If the factors do not make sense for your business, you have not lost anything.
+- Growth tier ($19.95/month) includes LLM.txt Mastery free -- diagnose, optimise, re-scan, and measure the improvement in a single subscription.
+- Free tier gives you 3 scans per month. No credit card. If the first scan shows you something about your AI visibility you did not already know, the tool has proven itself.
+
+**Call to action**: Scan your most important page for free. See what AI search sees. Decide from there.
+
+### For Small Agency Owners (Tertiary)
+
+**Primary message**: Give your clients structured AI search diagnostics with white-label reports, API access, and a published methodology you can reference in proposals.
+
+**Supporting messages**:
+- Scale tier ($39.95/month) includes 100 analyses, API access, white-label reports, and LLM.txt Scale features free.
+- The published MASTERY-AI Framework gives you a defensible methodology to reference when clients ask "why should we optimise for AI search?"
+- At $39.95/month for 100 analyses, the per-site cost makes AI search diagnostics a viable service line, not a cost centre.
+- AISearchArena independently benchmarks AImpactScanner monthly. If your clients check, the evaluation data is public.
+
+**Call to action**: Start with the free tier to evaluate the diagnostic depth. Scale when you are ready to offer it to clients.
+
+### For Transition Professionals (Secondary)
+
+**Primary message**: The MASTERY-AI Framework gives you a structured, published methodology to learn, reference, and build your AI search consulting practice around.
+
+**Supporting messages**:
+- The 27-factor framework is educational by design. It teaches you what matters for AI search visibility and why -- not just what to fix.
+- Solo tier ($9.95/month) gives you full diagnostic depth to learn the framework. Growth ($19.95/month) adds the tools to start delivering results.
+- Clean PDF reports at Solo tier and above let you present professional AI search assessments to prospective clients.
+- The published methodology means you are building expertise on a framework you can verify and explain, not a black box you have to take on faith.
+
+**Call to action**: Run a free scan on your own site. Learn what the framework measures. Use that understanding to evaluate whether AI search consulting fits your practice.
+
+---
+
+## 9. What We Say / What We Don't Say
+
+Vocabulary guidance for all AImpactScanner communications. Consistent with AI Search Mastery brand voice: clear, direct, honest about limitations, practitioner-grounded.
+
+### We Say
+
+| Term | Why |
+|---|---|
+| **Diagnostic** | Accurate description of what the tool does: identifies specific conditions and recommends specific actions |
+| **Published methodology** | Factual description of the MASTERY-AI Framework's transparency |
+| **27 factors across 8 pillars** | Specific, verifiable scope claim |
+| **Page-level analysis** | Accurately describes the unit of analysis (individual pages, not brands) |
+| **Prioritised recommendations** | Describes the output format: ranked by impact, not a flat list |
+| **Diagnose-Optimize-Test-Repeat** | Describes the complete loop available at Growth and Scale tiers |
+| **Solopreneur pricing** | Describes the target market the pricing is designed for |
+| **Published, not hidden** | Our methodology is available for inspection. Competitors do not publish theirs |
+| **We built this for small business** | Factual statement about the design decisions and pricing structure |
+| **The free scan shows you where you stand** | Accurate description of the free tier's purpose |
+| **We don't know yet** | Used when data is insufficient or a feature is in development |
+| **Independently evaluated** | AISearchArena benchmarks AImpactScanner under standardised methodology |
+
+### We Don't Say
+
+| Avoid | Why | Say Instead |
+|---|---|---|
+| **Game-changing** / **Revolutionary** | Hype language violates parent brand value of Honesty Over Hype | "Purpose-built for AI search" or describe the specific capability |
+| **The best** / **The most comprehensive** | Superlatives invite skepticism and overstate what any single tool can deliver | "Evaluates 27 factors across 8 pillars" (specific, verifiable) |
+| **Guaranteed rankings** / **Guaranteed visibility** | No tool can guarantee AI search recommendations. Too many variables outside any tool's control | "Identifies specific gaps and provides prioritised recommendations" |
+| **AI-powered insights** | Vague. Every tool claims AI. It communicates nothing specific | Describe the actual capability: "27-factor framework analysis" or "prioritised fix recommendations" |
+| **Trusted by thousands** | We have not verified this claim. Trust language belongs in testimonials, not our own copy | Let users describe their experience. We describe our process |
+| **Disrupting** / **Disruption** | Overused, positions us as antagonists to a market we serve | "Built for a market segment that existing tools do not serve well" |
+| **Just** / **Simply** / **Easy** | Minimising language that undersells the complexity of AI search optimisation | Be specific about what the user will get and what effort is required |
+| **Unbiased** | We operate within an ecosystem that includes related products. Claiming unbiased is inaccurate | "Published methodology" or "independently evaluated by AISearchArena" |
+| **Comprehensive** (as absolute claim) | 27 factors is extensive but not exhaustive. The framework evolves | "Evaluates 27 factors across 8 pillars" (specific and honest) |
+| **Enterprise-grade** (for solopreneur tiers) | Misrepresents the target market and creates expectations we do not intend to meet | "Professional diagnostic depth at solopreneur pricing" |
+
+### Tone Principles (Inherited from AI Search Mastery)
+
+| Principle | In Practice at AImpactScanner |
+|---|---|
+| **Clarity Over Cleverness** | State what the tool does, how it works, and what it costs. No clever taglines that obscure meaning. If we cannot explain it plainly, we have not understood it well enough |
+| **Honesty Over Hype** | Publish the methodology. Show the pricing. State what we do not do (brand monitoring, competitive intelligence, ranking guarantees). Name the limitations |
+| **Action Over Analysis** | Every scan ends with prioritised recommendations. The tool exists to help users fix pages, not just score them. Every touchpoint should end with a clear next step |
+| **Accessibility Is The Mission** | $9.95/month is not a promotional price. It is the price. Free tier requires no credit card. The framework is educational, not just evaluative. The tool works at 9pm on a phone |
+| **Build To Evolve** | The framework started at 18 factors. It is now 27. It will continue to evolve. Version the changes. Do not pretend the current state is the final form |
+
+---
+
+## 10. Brand Architecture Alignment
+
+### Position Within Brand Architecture
 
 ```
-Free → Solo: "You found 3 problems but can only verify 3 fixes total"
-Solo → Growth: "You need to work across pages and track progress"
-Growth → Scale: "40 scans won't cover clients plus your own sites"
-Scale → (none): "No limits - take on any project" (confirmation, not upgrade)
+AI Search Mastery (Parent Hub) -- aisearchmastery.com
+  |-- aimpactscanner.com      -- Diagnostic tool (product)
+  |-- llmtxtmastery.com       -- Optimization tool (product)
+  |-- aisearcharena.com        -- Independent benchmark (evaluation)
 ```
 
-This creates a natural progression where each tier solves the limitation of the previous tier.
+### Architectural Role
+
+AImpactScanner is the **diagnostic engine** of the AI Search Mastery ecosystem. It answers the question "where do I stand?" LLM.txt Mastery answers "how do I fix the most common gap?" AISearchArena answers "how does this tool compare to alternatives?"
+
+Together, the three properties form a natural user journey:
+1. **AISearchArena** -- Practitioner evaluates tools, including AImpactScanner, through independent benchmark data
+2. **AImpactScanner** -- Practitioner diagnoses their own pages against the MASTERY-AI Framework
+3. **LLM.txt Mastery** -- Practitioner optimises the most common gap (llms.txt quality)
+4. **AImpactScanner** -- Practitioner re-scans to measure improvement
+5. **Repeat** -- Improvement compounds over time
+
+This journey is not forced. Each property stands alone. A user can use AImpactScanner without ever visiting AISearchArena or LLM.txt Mastery. The ecosystem creates value when the pieces connect, but no piece requires the others.
+
+### Brand Consistency
+
+AImpactScanner inherits the full AI Search Mastery visual identity: Mastery Blue and Signal Blue primary palette, Inter typeface, Clarity Teal as the lead accent colour for diagnostic elements (score displays, progress bars, data visualisation). Footer attribution reads "Part of AI Search Mastery."
+
+The visitor experience across properties should feel like the same brand with a different focus -- not like three separate companies.
+
+### AISearchArena Relationship
+
+AISearchArena evaluates AImpactScanner monthly under the same standardised methodology it applies to every other tool. This relationship is disclosed prominently on both properties. AImpactScanner does not reference AISearchArena scores in marketing unless those scores are presented with full context (methodology link, confidence tags, disclosure statement). We do not cherry-pick favourable scores.
+
+If AISearchArena identifies weaknesses in AImpactScanner, those findings inform product development. The benchmark drives improvement. That is a feature, not an awkward side effect.
 
 ---
 
-## Key Differentiators
+## 11. Revenue Model Compatibility
 
-1. **MASTERY-AI Framework Authority**
-   - Only tool with comprehensive 18-factor AI optimization framework (evolving to 148 factors)
-   - Proprietary IP competitors would need years to develop
-   - Teaching framework, not just checklist—customers understand WHY, not just WHAT
+### Pricing Philosophy
 
-2. **Actionable Diagnostic Clarity**
-   - Identifies specific gaps with concrete remediation steps
-   - Not vague scores—tells you exactly what to fix and how
-   - Prioritized recommendations: fix these 3 things first for biggest impact
+Every tier delivers genuine value. Paid tiers are earned through demonstrated value, not manufactured limitation. The product proves itself before asking for money.
 
-3. **Speed + Depth**
-   - Under 15 seconds comprehensive analysis
-   - Maintains depth with 18-factor evaluation
-   - Instant actionability vs lengthy reports
+| Tier | Monthly | Annual (per mo) | Scans/Month | Core Value |
+|---|---|---|---|---|
+| **Free** | $0 | -- | 3 | First look at AI visibility. Proves the diagnostic before asking for money |
+| **Solo** | $9.95 | $7.46 | 10 | Full 27-factor depth. Clean reports. Educational insights |
+| **Growth** | $19.95 | $14.96 | 40 | Complete Diagnose-Optimize-Test-Repeat loop. LLM.txt Mastery Growth included free |
+| **Scale** | $39.95 | $29.96 | 100 | API access, white-label reports, team collaboration. LLM.txt Mastery Scale included free |
 
-4. **Bootstrap Pricing Economics**
-   - Solopreneur pricing: $4.95-$29.95/month
-   - 85-99% cheaper than enterprise tools ($99-$5,000/month)
-   - Free tier proves value before purchase (1 analysis/month)
+**Annual discount**: 25% across all paid tiers, framed as "3 months free." The discount is permanent, not promotional. No countdown timers. No expiring offers.
 
-5. **Ecosystem Integration**
-   - Part of AI Search Mastery portfolio
-   - Complements llmtxtmastery.com (llms.txt file generation)
-   - Platform-agnostic: Works with any CMS or website builder
+**Risk reversal**: No credit card for free tier. 30-day money-back guarantee on all paid tiers. 3 Gaps Guarantee: if your first paid scan does not reveal at least 3 specific AI visibility gaps you did not know about, full refund within 30 days.
+
+### Pricing Positioning Principles
+
+- **Accessibility over extraction** -- every tier is priced for solopreneur budgets, not enterprise procurement
+- **Value before gate** -- the free tier delivers a genuine diagnostic, not a crippled teaser
+- **Transparency as trust** -- pricing is visible on the website, methodology is published, no hidden costs
+- **Growth as gravity well** -- the complete loop at $19.95/month is where the product becomes indispensable
+- **No manufactured urgency** -- no countdown timers, no limited spots, no expiring discounts
 
 ---
 
-## Brand Promise
+## 12. Positioning Validation Criteria
 
-**What We Commit To:**
-- **Clarity:** Understand exactly what to improve and why
-- **Speed:** Every analysis in under 15 seconds, guaranteed
-- **Affordability:** Professional insights at solopreneur pricing
-- **Consistency:** Framework-based analysis every time
-- **Actionability:** Recommendations you can implement immediately
+How we know the positioning is working.
 
-**What We Don't Promise:**
-- Not guaranteeing #1 AI search rankings (too many variables)
-- Not monitoring entire brand (focused page-level tool)
-- Not analyzing hundreds of pages simultaneously (right-sized)
-- Not providing consulting implementation (DIY model)
-
----
-
-## Positioning Validation Checklist
-
-### Clarity Test
-- [x] **12-Year-Old Test:** "It checks your web pages and tells you how to make them better for AI search like ChatGPT"
-- [x] **Repeatable Test:** "Page analysis for AI search optimization using a proven framework, faster and cheaper than alternatives"
-- [x] **Problem/Solution Fit:** Clear problem (need AI optimization) + solution (fast framework-based analysis)
-
-### Differentiation Test
-- [x] **vs Manual ChatGPT:** Framework consistency, speed, historical tracking
-- [x] **vs Ayzeo:** Superior MASTERY-AI Framework, competitive pricing, laser focus
-- [x] **vs Enterprise:** 95% cost savings, page-level vs brand monitoring
-
-### Market Research Alignment
-- [x] **Customer Segment:** Solopreneurs ($50K-$250K revenue) per market research
-- [x] **Competitive Context:** Ayzeo primary competitor ($15/month), manual ChatGPT biggest threat
-- [x] **Pricing:** $14.95 Growth tier validated by market, free tier for validation
-
-### Product Truth Test
-- [x] **Accurate Description:** Page-level analysis (NOT competitive scanning) - CORRECTED
-- [x] **18-Factor Framework:** Accurate capability
-- [x] **Under 15 Second Speed:** Accurate performance
-- [x] **Tier Structure:** Starter (1), Solo (10), Growth (40), Scale (100) - accurate
+| Signal | Measurement | Target |
+|---|---|---|
+| Users describe the tool as "diagnostic" or "analysis" (not "monitor" or "tracker") | Support conversations, social listening, review language | 70%+ of organic user descriptions align with diagnostic positioning |
+| Published methodology is cited as a reason for choosing AImpactScanner | Post-scan survey, social listening | 40%+ of surveyed users reference methodology transparency |
+| Free-to-paid conversion occurs within 14 days | Funnel analytics | 8-12% free-to-paid conversion rate |
+| Growth tier is the most popular paid tier | Subscription distribution | 50%+ of paid subscribers on Growth |
+| Users complete the Diagnose-Optimize-Test-Repeat loop | Product analytics (scan, optimise, re-scan pattern) | 30%+ of Growth/Scale users re-scan after optimisation |
+| AISearchArena benchmark evaluation does not create positioning confusion | Support tickets, social sentiment | <10% of users confuse AImpactScanner's role with AISearchArena's role |
+| Solopreneurs and small business owners represent the primary user base | User demographics, support conversations | 70%+ of users fit primary/secondary audience profiles |
 
 ---
 
-## Document Control
+## 13. Positioning Risks and Mitigation
 
-**Version History:**
-- v1.0 (2024-10-16): INCORRECT - Described as competitive intelligence platform
-- v2.0 (2025-10-18): CORRECTED - Page-level diagnostic analysis platform
-- v2.1 (2025-12-13): Added Value Ladder Messaging section (Sprint 5) with tier taglines, OB headlines, FOMO boxes, RTBs
-
-**Next Review:** March 13, 2026 (Quarterly)
-
-**Related Documents:**
-- `/documents/foundation/Vision and Mission.md` - Strategic foundation
-- `/documents/foundation/AImpactScanner Comprehensive Market Research Report (Revised).md` - Market validation
-- `/documents/foundation/Client Success Blueprint.md` - Customer profiles
+| Risk | Severity | Mitigation |
+|---|---|---|
+| **Confused with AISearchArena** -- users may not understand the difference between a diagnostic tool and a benchmark | Medium | Clear property descriptions on both sites. AImpactScanner diagnoses YOUR pages. AISearchArena evaluates THE TOOLS. Different verbs, different objects, different value |
+| **Ecosystem perception as self-serving** -- users may view the AI Search Mastery ecosystem (diagnostic + optimisation + benchmark) as a closed loop designed to validate its own products | High | AISearchArena maintains editorial independence with published methodology. AImpactScanner scores are earned, not assigned. The conflict is disclosed, not hidden. If the perception persists, consider external methodology audits |
+| **Enterprise tools add solopreneur tiers** -- Semrush, Ahrefs, or similar platforms launch affordable AI search diagnostic features | Medium | Maintain differentiation through published methodology, page-level focus, and the complete Diagnose-Optimize-Test-Repeat loop. Retrofitted AI features on Google-era architecture are structurally different from purpose-built AI search diagnostics |
+| **Manual ChatGPT analysis improves** -- AI models become better at structured, consistent page analysis when prompted | Medium | The framework itself is the moat. ChatGPT can analyse a page, but it cannot apply the same 27 factors consistently, track history, compare against baselines, or generate prioritised remediation plans. If manual analysis becomes genuinely equivalent, the positioning must evolve |
+| **"Published methodology" is replicated** -- a competitor publishes their own framework | Low-Medium | First-mover advantage in methodology transparency. The MASTERY-AI Framework has a head start and evolves with each version. Competition in methodology transparency is good for practitioners and validates our approach |
+| **Pricing pressure from free AI tools** -- free AI search analysis tools emerge that are good enough | Medium | Free tier ensures AImpactScanner always has a free option. The value gap between free and paid is demonstrated, not claimed. If free alternatives match the diagnostic depth, the loop (optimisation + re-scan) remains the differentiator |
 
 ---
 
-**Owner:** Strategic Leadership
-**Last Updated:** October 18, 2025
-**Distribution:** All marketing, product, and customer-facing teams
+## 14. Document Governance
+
+### Review Cadence
+
+This document is reviewed quarterly or when triggered by:
+- Significant pricing changes
+- MASTERY-AI Framework version updates (factor count, pillar structure)
+- New ecosystem properties launching
+- Competitive landscape shifts (new entrant, major competitor pivot)
+- AISearchArena benchmark findings that affect positioning claims
+
+### Change Authority
+
+Changes require explicit decision by strategic leadership. Material changes (audience definition, category definition, core positioning statement) are versioned in the document header. Minor updates (competitive data, pricing confirmation) are tracked in revision history.
+
+### Related Documents
+
+| Document | Location | Relationship |
+|---|---|---|
+| Unified Brand Style Guide v2.0 | `documents/foundation/brand-style-guide.md` | Visual identity, voice, and tone standards |
+| AIS Pricing v2.0 | `documents/foundation/AIS-pricing.md` | Pricing tiers, value ladder, competitive pricing |
+| AISearchArena Positioning v1.0 | `aisearcharena/docs/foundation/positioning-statement.md` | Sibling property positioning and conflict disclosure |
+| Vision & Mission v5.0 | `documents/foundation/vision-mission.md` | Strategic foundation and purpose |
+| Client Success Blueprint | `documents/foundation/client-success-blueprint.md` | Customer profiles and success metrics |
+| Market Research Report | `documents/foundation/market-research.md` | Market validation and competitive intelligence |
+
+---
+
+## Document Revision History
+
+| Date | Version | Change | Author |
+|---|---|---|---|
+| 2024-10-16 | 1.0 | Initial positioning statement. Incorrectly described as competitive intelligence platform | @brand-strategy |
+| 2025-10-18 | 2.0 | Corrected to page-level diagnostic analysis platform. Updated competitive context, pricing ($4.95-$29.95), 18-factor framework | @brand-strategy |
+| 2026-03-01 | 3.0 | Full rewrite for ecosystem alignment. Updated to 27-factor MASTERY-AI Framework, new pricing ($9.95-$39.95), integrated AISearchArena sibling property context, added Diagnose-Optimize-Test-Repeat loop positioning, aligned vocabulary and structure with AI Search Mastery branded house standard, added LLM.txt Mastery inclusion at Growth/Scale tiers | @brand-strategy |
+
+---
+
+*Part of AI Search Mastery -- the AI search optimisation company built by small business, for small business.*
