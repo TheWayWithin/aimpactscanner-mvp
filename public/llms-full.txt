@@ -1,0 +1,145 @@
+# AImpactScanner — Full Documentation
+
+> AImpactScanner is an AI search visibility analysis tool that scans any webpage against 27 factors across 8 pillars using the MASTERY-AI Framework v3.1.1. It shows exactly how AI search engines like ChatGPT, Claude, Perplexity, and Gemini see your site, with a prioritised action plan to improve visibility.
+
+## What AImpactScanner Does
+
+AImpactScanner analyses how AI search engines perceive your website. Unlike traditional SEO tools that focus on Google rankings, AImpactScanner evaluates the specific factors that determine whether AI platforms like ChatGPT, Claude, Perplexity, and Gemini will cite, recommend, or reference your content.
+
+Key capabilities:
+- Scan any webpage for AI search visibility in under 60 seconds
+- Score against 27 factors across 8 pillars using the MASTERY-AI Framework v3.1.1
+- Generate a prioritised action plan showing what to fix first
+- Export detailed PDF reports with full factor breakdowns
+- Track score changes over time with historical data
+- Compare your AI visibility against competitors
+
+## Who It's For
+
+- **Solopreneurs**: Check if AI search engines recommend your business
+- **Freelancers**: Ensure your services appear in AI-generated search results
+- **Small agencies**: Assess and improve client AI visibility at scale
+- **Content creators**: Optimise content for AI citation and recommendation
+- **Marketing teams**: Understand and improve AI search presence alongside traditional SEO
+
+## How It Works
+
+1. **Enter a URL**: Paste any webpage URL into the scanner
+2. **Analysis runs**: AImpactScanner evaluates the page against all 27 factors
+3. **Get your score**: Receive an overall AI Visibility Score (0-100) with 8-pillar breakdown
+4. **Review findings**: See which factors score well and which need improvement
+5. **Follow the action plan**: A prioritised list of specific improvements ranked by impact
+
+## The MASTERY-AI Framework v3.1.1
+
+The MASTERY-AI Framework is a published, transparent methodology for evaluating AI search visibility. Every factor is documented and every score is reproducible. The framework evaluates 27 factors across 8 pillars:
+
+### Pillar 1: AI Readiness (4 factors)
+How prepared your content is for AI consumption. Evaluates whether your content is structured and formatted in ways that AI models can easily parse, understand, and cite. Includes factors like llms.txt presence, AI-friendly content formatting, direct answer structures, and knowledge graph readiness.
+
+### Pillar 2: Authority (3 factors)
+Trust signals and credibility indicators that AI models use to determine source reliability. Covers author expertise signals, citation patterns, and domain authority indicators that influence whether AI platforms treat your content as trustworthy enough to reference.
+
+### Pillar 3: Machine Readability (4 factors)
+Technical accessibility for AI crawlers and content extractors. Evaluates schema markup, structured data, metadata completeness, and markup quality that helps AI systems accurately extract and interpret your content.
+
+### Pillar 4: Semantic Structure (3 factors)
+How well your content is organised to convey meaning. Assesses heading hierarchy, content organisation, topic clustering, and whether the semantic structure helps AI models understand relationships between concepts on your page.
+
+### Pillar 5: Engagement (3 factors)
+User interaction and content quality signals that indicate value. Includes content freshness, depth of coverage, and multimedia integration that signal to AI models that your content provides comprehensive, current, and engaging information.
+
+### Pillar 6: Technical (4 factors)
+Site performance and infrastructure fundamentals. Evaluates page speed, mobile responsiveness, HTTPS security, and core web vitals that affect whether AI crawlers can efficiently access and process your content.
+
+### Pillar 7: Reference (3 factors)
+Citations, links, and external validation. Assesses internal linking structure, external link quality, and cross-referencing patterns that help AI models understand your content's relationship to the broader web and its authority within your topic domain.
+
+### Pillar 8: Yield (3 factors)
+Conversion and business outcome indicators. Evaluates calls to action, value proposition clarity, and user journey optimisation that determine whether AI platforms view your content as providing actionable, useful outcomes for users.
+
+## Pricing
+
+### Free Plan — $0/forever
+- 3 scans per month
+- Overall AI Visibility Score
+- Top 3 gaps to fix
+- Basic recommendations
+- No signup or credit card required
+
+### Solo Plan — $9.95/month
+- 10 scans per month
+- Full 27-factor breakdown across all 8 pillars
+- PDF report exports
+- Historical score tracking
+- Priority recommendations
+
+### Growth Plan — $19.95/month (Most Popular)
+- 40 scans per month
+- Everything in Solo
+- LLM.txt Mastery included (generate and validate llms.txt files)
+- Remediation Planner
+- Competitive benchmarking
+- Priority support
+
+### Scale Plan — $39.95/month
+- 100 scans per month
+- Everything in Growth
+- API access and webhooks
+- White-label reports
+- Team collaboration tools
+
+### Guarantees
+- 3 Gaps Guarantee: We find at least 3 actionable improvements or refund
+- 30-day money-back guarantee, no questions asked
+- Free tier available forever, no credit card required
+
+## Key Pages
+
+- [Home](https://aimpactscanner.com/): Free AI search visibility scanner — enter any URL and get scored in 60 seconds
+- [Pricing](https://aimpactscanner.com/#pricing): Compare all plans and features
+- [Methodology](https://aimpactscanner.com/#methodology): Complete documentation of every scoring factor in the MASTERY-AI Framework
+- [How It Works](https://aimpactscanner.com/#how-it-works): Step-by-step scanning process explained
+- [Sample Report](https://aimpactscanner.com/#sample-report): Example scan showing the full 27-factor breakdown
+- [The Suite](https://aimpactscanner.com/#suite): Overview of all AI Search Mastery products
+- [FAQ](https://aimpactscanner.com/#faq): Frequently asked questions
+- [About](https://aimpactscanner.com/#about): About the team and mission
+- [Privacy Policy](https://aimpactscanner.com/#privacy): How we handle your data
+- [Terms of Service](https://aimpactscanner.com/#terms): Usage terms and conditions
+- [Contact](https://aimpactscanner.com/#contact): Get in touch with the team
+
+## Part of AI Search Mastery
+
+AImpactScanner is one product in the AI Search Mastery suite. The ecosystem helps businesses diagnose, optimise, and monitor their AI search visibility:
+
+### Diagnose — AImpactScanner
+Scan your website against 27 factors to identify exactly where AI search engines struggle with your content. Get specific, prioritised recommendations to fix visibility gaps.
+- Website: https://aimpactscanner.com
+
+### Optimise — LLM.txt Mastery
+Generate and validate llms.txt files that tell AI models what your site is about. Supports standard, full, and mini formats with deployment guidance and compliance scoring.
+- Website: https://llmtxtmastery.com
+
+### Benchmark — AI Search Arena
+Compare AI search optimization tools side by side across multiple evaluation dimensions. See how different tools perform on real-world AI visibility tasks.
+- Website: https://aisearcharena.com
+
+### AI Search Mastery Hub
+The central knowledge platform for AI search optimization. Frameworks, guides, case studies, and resources for understanding and improving how AI search engines interact with your content.
+- Website: https://aisearchmastery.com
+
+## Technical Details
+
+- **Framework version**: MASTERY-AI Framework v3.1.1
+- **Factors evaluated**: 27 across 8 pillars
+- **Scan time**: Under 60 seconds per page
+- **Platform**: Web application, no installation required
+- **API**: Available on Scale plan ($39.95/mo) with 100 calls/day
+- **Data retention**: Historical scan data retained for active subscribers
+- **Supported content**: Any publicly accessible webpage
+
+## Contact
+
+- Website: https://aimpactscanner.com
+- Parent company: AI Search Mastery (https://aisearchmastery.com)
+- Building in Public: https://jamiewatters.work

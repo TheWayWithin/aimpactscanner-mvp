@@ -9,6 +9,13 @@ import { globalRateLimiter } from './middleware/rate-limit';
 import analyzeRoutes from './routes/analyze';
 import llmstxtRoutes from './routes/llmstxt';
 import apiKeysRoutes from './routes/apiKeys';
+import apiV1Routes from './routes/apiV1';
+import webhooksRoutes from './routes/webhooks';
+import monitorRoutes from './routes/monitor';
+import compareRoutes from './routes/compare';
+import roiRoutes from './routes/roi';
+import competitiveRoutes from './routes/competitive';
+import integrationsRoutes from './routes/integrations';
 
 // Load environment variables
 config();
@@ -43,6 +50,13 @@ app.get('/health', (_req: Request, res: Response) => {
 app.use('/api/analyze', analyzeRoutes);
 app.use('/api/llmstxt', llmstxtRoutes);
 app.use('/api/keys', apiKeysRoutes);
+app.use('/api/v1', apiV1Routes);
+app.use('/api/webhooks', webhooksRoutes);
+app.use('/api/monitor', monitorRoutes);
+app.use('/api/compare', compareRoutes);
+app.use('/api/roi', roiRoutes);
+app.use('/api/competitive', competitiveRoutes);
+app.use('/api/integrations', integrationsRoutes);
 
 // Error handling (must be last)
 app.use(errorHandler);

@@ -32,5 +32,8 @@ Allow: /
 User-agent: Claude-Web
 Allow: /
 
+# LLM-readable content
+Llms-Txt: https://aimpactscanner.com/llms.txt
+
 # Sitemap location
 Sitemap: https://aimpactscanner.com/sitemap.xml

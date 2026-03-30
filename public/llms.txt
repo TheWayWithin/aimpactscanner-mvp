@@ -1,31 +1,41 @@
-# aimpactscanner.com
+# AImpactScanner
 
-> AImpactScanner is a free AI search visibility analysis tool. It scans websites against 18 AI readiness factors and 9 SEO foundation factors to show exactly how AI search engines like ChatGPT, Claude, and Perplexity see your site. Built for solopreneurs and small businesses who need to understand their AI visibility without enterprise pricing.
-
-## What AImpactScanner Does
-
-- Scans any website for AI search visibility in 60 seconds
-- Scores against 27 factors (18 AI readiness + 9 SEO foundation)
-- Uses the MASTERY-AI Framework v3.1.1 (8 pillars, 27 factors)
-- Generates a prioritised action plan to improve AI visibility
-- Free tier available with no signup required
-- Full reports from $9.95/month
-
-## Who It's For
-
-- Solopreneurs checking if AI recommends their business
-- Freelancers who want to appear in AI search results
-- Small agencies assessing client AI visibility
-- Anyone wondering "does ChatGPT know I exist?"
+> AImpactScanner is an AI search visibility analysis tool that scans any webpage against 27 factors across 8 pillars using the MASTERY-AI Framework v3.1.1. It shows exactly how AI search engines like ChatGPT, Claude, Perplexity, and Gemini see your site, with a prioritised action plan to improve visibility. Free tier available with no signup required.
 
 ## Key Pages
 
-- [Home](https://aimpactscanner.com/): Free AI search visibility scanner
-- [Pricing](https://aimpactscanner.com/pricing): Free, Growth ($9.95/mo), and Pro plans
+- [Home](https://aimpactscanner.com/): Free AI search visibility scanner — enter any URL and get your score in 60 seconds
+- [Pricing](https://aimpactscanner.com/#pricing): Free, Solo ($9.95/mo), Growth ($19.95/mo), and Scale ($39.95/mo) plans
+- [Methodology](https://aimpactscanner.com/#methodology): Full documentation of the MASTERY-AI Framework and all 27 scoring factors
+- [How It Works](https://aimpactscanner.com/#how-it-works): Step-by-step explanation of the scanning process
+- [Sample Report](https://aimpactscanner.com/#sample-report): Example scan results showing the full 27-factor breakdown
+- [FAQ](https://aimpactscanner.com/#faq): Frequently asked questions about AI search visibility
+- [About](https://aimpactscanner.com/#about): About AI Search Mastery and the team behind AImpactScanner
+
+## MASTERY-AI Framework v3.1.1
+
+The scanner evaluates 27 factors across 8 pillars:
+
+- **AI Readiness** (4 factors): How prepared your content is for AI consumption
+- **Authority** (3 factors): Trust signals and credibility indicators
+- **Machine Readability** (4 factors): Technical accessibility for AI crawlers
+- **Semantic Structure** (3 factors): Content organisation and meaning
+- **Engagement** (3 factors): User interaction and content quality signals
+- **Technical** (4 factors): Site performance and infrastructure
+- **Reference** (3 factors): Citations, links, and external validation
+- **Yield** (3 factors): Conversion and business outcome indicators
+
+## Pricing
+
+- **Free**: $0/forever — 3 scans/month, overall score, top 3 gaps
+- **Solo**: $9.95/month — 10 scans, full 27-factor breakdown, PDF reports, historical tracking
+- **Growth**: $19.95/month — 40 scans, LLM.txt Mastery included, remediation planner, competitive benchmarking
+- **Scale**: $39.95/month — 100 scans, API access, white-label reports, team collaboration
 
 ## Part of AI Search Mastery
 
-AImpactScanner is one of two tools in the AI Search Mastery suite. The other is LLM.txt Mastery, which generates and validates llms.txt files. Together they diagnose and fix AI visibility gaps.
+AImpactScanner is part of the AI Search Mastery product suite:
 
-- AI Search Mastery: https://aisearchmastery.com
-- LLM.txt Mastery: https://llmtxtmastery.com
+- [AI Search Mastery](https://aisearchmastery.com): AI search optimization platform and knowledge hub
+- [LLM.txt Mastery](https://llmtxtmastery.com): Generate and validate llms.txt files for AI discoverability
+- [AI Search Arena](https://aisearcharena.com): Benchmark and compare AI search optimization tools

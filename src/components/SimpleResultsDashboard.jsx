@@ -5,6 +5,8 @@ import { addToHistory } from '../utils/analysisHistory';
 import LazyTierPDFButton from './LazyTierPDFButton';
 import LLMsTxtPanel from './LLMsTxtPanel';
 import CriticalIssuesBanner from './CriticalIssuesBanner';
+import ActionItemsPanel from './ActionItemsPanel';
+import ReadabilityPanel from './ReadabilityPanel';
 import { hasFeatureAccess, getMinimumTierForFeature } from '../lib/tierUtils';
 
 function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user, onNavigate }) {
@@ -708,6 +710,23 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
 
       {/* Critical Issues Banner - Show blockers/warnings prominently */}
       <CriticalIssuesBanner factors={results.factors} />
+
+      {/* Fix This — Action Items Panel (AS-1 + AS-2) */}
+      {isRealAnalysis && (
+        <div className="mb-6">
+          <ActionItemsPanel
+            actionItems={analysisData?.action_items || []}
+            schemaAnalysis={analysisData?.schema_analysis || null}
+          />
+        </div>
+      )}
+
+      {/* AI Readability Score (AS-3) */}
+      {isRealAnalysis && (
+        <div className="mb-6">
+          <ReadabilityPanel readability={analysisData?.readability || null} />
+        </div>
+      )}
 
       {/* Pillar Scores */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" data-testid="pillar-grid">

@@ -1,0 +1,1020 @@
+openapi: 3.0.3
+info:
+  title: AImpactScanner API
+  version: 1.0.0
+  description: |
+    Analyze websites for AI search visibility using the MASTERY-AI Framework v3.1.1.
+
+    ## Authentication
+
+    All endpoints require authentication via one of:
+    - **Bearer token**: JWT obtained from Supabase Auth (`Authorization: Bearer <token>`)
+    - **API key**: Passed in the `X-API-Key` header
+
+    ## Rate Limits
+
+    Rate limits are per-day and vary by subscription tier:
+
+    | Tier   | Calls/day |
+    |--------|-----------|
+    | Free   | 10        |
+    | Coffee | 100       |
+    | Growth | 1,000     |
+    | Scale  | 10,000    |
+
+    Response headers on every request:
+    - `X-RateLimit-Limit` -- daily quota for your tier
+    - `X-RateLimit-Remaining` -- approximate remaining calls
+    - `X-RateLimit-Reset` -- Unix timestamp when the limit resets
+
+    ## Monthly Analysis Limits
+
+    In addition to API rate limits, scan submissions (`POST /v1/scan`) are capped
+    per calendar month:
+
+    | Tier   | Scans/month |
+    |--------|-------------|
+    | Free   | 3           |
+    | Coffee | 10          |
+    | Growth | 40          |
+    | Scale  | 100         |
+  contact:
+    name: AI Search Mastery
+    url: https://aimpactscanner.com
+
+servers:
+  - url: https://aimpactscanner-backend-production.up.railway.app
+    description: Production
+  - url: http://localhost:3001
+    description: Local development
+
+security:
+  - BearerAuth: []
+  - ApiKeyAuth: []
+
+tags:
+  - name: Scan
+    description: Submit and retrieve AI visibility scans
+  - name: Schema
+    description: Structured data / schema markup analysis
+  - name: Monitor
+    description: Citation and ROI monitoring (coming soon)
+  - name: Webhooks
+    description: Manage webhook subscriptions for event notifications
+
+paths:
+  # --------------------------------------------------------------------------
+  # Scan endpoints
+  # --------------------------------------------------------------------------
+  /api/v1/scan:
+    post:
+      operationId: submitScan
+      tags: [Scan]
+      summary: Submit a URL for AI visibility analysis
+      description: |
+        Fetches the page, runs all MASTERY-AI Framework v3.1.1 factors, and
+        returns the complete scan result including scores, action items, schema
+        analysis, and readability metrics. Typical processing time is 5-15 seconds.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  example: https://example.com
+      responses:
+        "200":
+          description: Scan completed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      url:
+                        type: string
+                        format: uri
+                      status:
+                        type: string
+                        enum: [complete]
+                      overall_score:
+                        type: integer
+                        minimum: 0
+                        maximum: 100
+                      grade:
+                        $ref: "#/components/schemas/Grade"
+                      factors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/FactorResult"
+                      pillars:
+                        $ref: "#/components/schemas/PillarBreakdown"
+                      action_items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ActionItem"
+                      schema_analysis:
+                        $ref: "#/components/schemas/SchemaResult"
+                      readability:
+                        $ref: "#/components/schemas/ReadabilityResult"
+                      processing_time_ms:
+                        type: integer
+        "400":
+          description: Invalid or missing URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                missing:
+                  value: { success: false, error: "URL is required", code: "INVALID_REQUEST" }
+                invalid:
+                  value: { success: false, error: "Invalid URL format. Please provide a valid HTTP or HTTPS URL.", code: "INVALID_URL" }
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: Page could not be fetched
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "429":
+          description: Monthly analysis limit reached
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Error"
+                  - type: object
+                    properties:
+                      used:
+                        type: integer
+                      limit:
+                        type: integer
+                      tier:
+                        type: string
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /api/v1/scan/{id}:
+    get:
+      operationId: getScan
+      tags: [Scan]
+      summary: Retrieve scan results by ID
+      description: Returns a previously completed scan. Only scans owned by the authenticated user are accessible.
+      parameters:
+        - $ref: "#/components/parameters/ScanId"
+      responses:
+        "200":
+          description: Scan found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      url:
+                        type: string
+                        format: uri
+                      status:
+                        type: string
+                        enum: [processing, completed, failed]
+                      overall_score:
+                        type: integer
+                        nullable: true
+                      grade:
+                        $ref: "#/components/schemas/Grade"
+                      factors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/FactorResult"
+                      pillars:
+                        $ref: "#/components/schemas/PillarBreakdown"
+                      created_at:
+                        type: string
+                        format: date-time
+                      completed_at:
+                        type: string
+                        format: date-time
+                        nullable: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /api/v1/scan/{id}/actions:
+    get:
+      operationId: getScanActions
+      tags: [Scan]
+      summary: Get action items for a scan
+      description: |
+        Returns action items and schema data for a scan. Note: action items are
+        generated at scan time and included in the `POST /v1/scan` response.
+        For historical scans, this endpoint may return empty arrays unless the
+        items were persisted separately.
+      parameters:
+        - $ref: "#/components/parameters/ScanId"
+      responses:
+        "200":
+          description: Action items retrieved
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      scan_id:
+                        type: string
+                        format: uuid
+                      actions:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ActionItem"
+                      schema:
+                        $ref: "#/components/schemas/SchemaResult"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  # --------------------------------------------------------------------------
+  # Schema endpoint
+  # --------------------------------------------------------------------------
+  /api/v1/schema/generate:
+    post:
+      operationId: generateSchema
+      tags: [Schema]
+      summary: Generate schema markup for a URL
+      description: Fetches the page and analyzes existing structured data, identifies missing schemas, and generates JSON-LD recommendations.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  example: https://example.com
+      responses:
+        "200":
+          description: Schema analysis completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      url:
+                        type: string
+                        format: uri
+                      schema_analysis:
+                        $ref: "#/components/schemas/SchemaResult"
+        "400":
+          description: Invalid or missing URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: Page could not be fetched
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  # --------------------------------------------------------------------------
+  # Monitor endpoints (placeholders)
+  # --------------------------------------------------------------------------
+  /api/v1/monitor/citations:
+    get:
+      operationId: monitorCitations
+      tags: [Monitor]
+      summary: Track AI citations (not yet available)
+      description: Returns 501. Citation tracking is planned for a future release.
+      responses:
+        "501":
+          description: Not implemented
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                success: false
+                error: Citation tracking not yet available
+                code: NOT_IMPLEMENTED
+
+  /api/v1/monitor/roi:
+    get:
+      operationId: monitorRoi
+      tags: [Monitor]
+      summary: ROI attribution (not yet available)
+      description: Returns 501. ROI attribution is planned for a future release.
+      responses:
+        "501":
+          description: Not implemented
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                success: false
+                error: ROI attribution not yet available
+                code: NOT_IMPLEMENTED
+
+  # --------------------------------------------------------------------------
+  # Webhook management endpoints
+  # --------------------------------------------------------------------------
+  /api/webhooks:
+    post:
+      operationId: createWebhook
+      tags: [Webhooks]
+      summary: Create a new webhook
+      description: |
+        Register a URL to receive event notifications. The response includes
+        the webhook secret which is used to verify delivery signatures.
+        Save it immediately -- it will be masked in subsequent responses.
+        Maximum 10 webhooks per user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url, events]
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: HTTPS endpoint to receive events (HTTP allowed for localhost in development)
+                  example: https://api.example.com/webhooks/aimpact
+                events:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/WebhookEvent"
+                  minItems: 1
+                  example: [scan.complete]
+      responses:
+        "201":
+          description: Webhook created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhook:
+                    $ref: "#/components/schemas/WebhookConfig"
+                  warning:
+                    type: string
+                    example: Save the secret now. It will be masked in subsequent responses.
+        "400":
+          description: Validation error or limit reached
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    get:
+      operationId: listWebhooks
+      tags: [Webhooks]
+      summary: List your webhooks
+      description: Returns all webhooks for the authenticated user. Secrets are masked.
+      responses:
+        "200":
+          description: Webhook list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhooks:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/WebhookConfig"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /api/webhooks/{id}:
+    parameters:
+      - $ref: "#/components/parameters/WebhookId"
+
+    get:
+      operationId: getWebhook
+      tags: [Webhooks]
+      summary: Get a webhook with recent deliveries
+      description: Returns the webhook configuration (secret masked) and its 10 most recent delivery attempts.
+      responses:
+        "200":
+          description: Webhook details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhook:
+                    $ref: "#/components/schemas/WebhookConfig"
+                  recent_deliveries:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/WebhookDelivery"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    put:
+      operationId: updateWebhook
+      tags: [Webhooks]
+      summary: Update a webhook
+      description: Update URL, subscribed events, or active status. Provide only the fields you want to change.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+                events:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/WebhookEvent"
+                  minItems: 1
+                is_active:
+                  type: boolean
+      responses:
+        "200":
+          description: Webhook updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhook:
+                    $ref: "#/components/schemas/WebhookConfig"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    delete:
+      operationId: deleteWebhook
+      tags: [Webhooks]
+      summary: Delete a webhook
+      responses:
+        "200":
+          description: Webhook deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Webhook deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /api/webhooks/{id}/test:
+    parameters:
+      - $ref: "#/components/parameters/WebhookId"
+    post:
+      operationId: testWebhook
+      tags: [Webhooks]
+      summary: Send a test event to a webhook
+      description: Delivers a synthetic `scan.complete` event to the webhook endpoint so you can verify your integration.
+      responses:
+        "200":
+          description: Test result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  delivery_id:
+                    type: string
+                    format: uuid
+                  status_code:
+                    type: integer
+                  error:
+                    type: string
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /api/webhooks/{id}/deliveries:
+    parameters:
+      - $ref: "#/components/parameters/WebhookId"
+    get:
+      operationId: listWebhookDeliveries
+      tags: [Webhooks]
+      summary: Get delivery history for a webhook
+      description: Paginated list of delivery attempts, most recent first.
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        "200":
+          description: Delivery history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deliveries:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/WebhookDelivery"
+                  pagination:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      limit:
+                        type: integer
+                      offset:
+                        type: integer
+                      has_more:
+                        type: boolean
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+# ============================================================================
+# Components
+# ============================================================================
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase Auth JWT token
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key issued from your dashboard
+
+  parameters:
+    ScanId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Scan identifier
+    WebhookId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Webhook identifier
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid authentication
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            success: false
+            error: Unauthorized
+            code: UNAUTHORIZED
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            success: false
+            error: Not found
+            code: NOT_FOUND
+    InternalError:
+      description: Unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            success: false
+            error: An unexpected error occurred
+            code: INTERNAL_ERROR
+
+  schemas:
+    # -- Envelopes & common --------------------------------------------------
+
+    SuccessEnvelope:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+
+    Error:
+      type: object
+      required: [success, error]
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+        code:
+          type: string
+          description: Machine-readable error code
+
+    Grade:
+      type: string
+      enum: ["A+", A, "A-", "B+", B, "B-", "C+", C, "C-", "D+", D, F]
+
+    # -- Scan result types ----------------------------------------------------
+
+    FactorResult:
+      type: object
+      required:
+        - factor_id
+        - factor_name
+        - pillar
+        - score
+        - confidence
+        - weight
+        - evidence
+        - recommendations
+      properties:
+        factor_id:
+          type: string
+          example: schema_markup
+        factor_name:
+          type: string
+          example: Schema Markup Quality
+        pillar:
+          type: string
+          description: MASTERY-AI pillar code
+          enum: [M, A, S, T, E, R, Y, AI, P, TS]
+        phase:
+          type: string
+          enum: [instant, background]
+        score:
+          type: number
+          minimum: 0
+          maximum: 100
+        confidence:
+          type: integer
+          minimum: 0
+          maximum: 100
+        weight:
+          type: number
+          description: Factor weight within its pillar (0-1 range)
+          example: 0.85
+        evidence:
+          type: array
+          items:
+            type: string
+          example:
+            - "Found 2 JSON-LD blocks"
+            - "Organization schema detected"
+        recommendations:
+          type: array
+          items:
+            type: string
+          example:
+            - "Add FAQ schema for question-based content"
+        severity:
+          type: string
+          enum: [blocker, warning, info, ok]
+        processing_time_ms:
+          type: integer
+
+    PillarBreakdown:
+      type: object
+      description: Weighted scores grouped by MASTERY-AI pillar
+      additionalProperties:
+        type: object
+        properties:
+          score:
+            type: integer
+          factorCount:
+            type: integer
+      example:
+        AI: { score: 72, factorCount: 3 }
+        M: { score: 85, factorCount: 2 }
+
+    ActionItem:
+      type: object
+      required:
+        - id
+        - factor_id
+        - factor_name
+        - what
+        - why
+        - impact
+        - fix_type
+        - fix
+      properties:
+        id:
+          type: string
+        factor_id:
+          type: string
+        factor_name:
+          type: string
+        what:
+          type: string
+          description: Brief description of the issue
+        why:
+          type: string
+          description: Why this matters for AI visibility
+        impact:
+          type: string
+          enum: [high, medium, low]
+        fix_type:
+          type: string
+          enum: [code, content, config]
+        fix:
+          type: string
+          description: Step-by-step fix instructions
+        code_snippet:
+          type: string
+          description: Ready-to-use code when fix_type is "code"
+
+    # -- Schema analysis types ------------------------------------------------
+
+    SchemaResult:
+      type: object
+      required:
+        - detected
+        - missing
+        - generated
+        - validation
+        - completeness_score
+      properties:
+        detected:
+          type: array
+          items:
+            $ref: "#/components/schemas/DetectedSchema"
+        missing:
+          type: array
+          items:
+            $ref: "#/components/schemas/MissingSchema"
+        generated:
+          type: array
+          items:
+            $ref: "#/components/schemas/GeneratedSchema"
+        validation:
+          type: array
+          items:
+            $ref: "#/components/schemas/SchemaValidation"
+        completeness_score:
+          type: number
+          minimum: 0
+          maximum: 100
+
+    DetectedSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Organization
+        source:
+          type: string
+          enum: [json-ld, microdata, rdfa]
+        valid:
+          type: boolean
+        issues:
+          type: array
+          items:
+            type: string
+
+    MissingSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          example: FAQPage
+        reason:
+          type: string
+        priority:
+          type: string
+          enum: [high, medium, low]
+
+    GeneratedSchema:
+      type: object
+      properties:
+        type:
+          type: string
+        json_ld:
+          type: string
+          description: Complete JSON-LD block ready to embed
+        description:
+          type: string
+
+    SchemaValidation:
+      type: object
+      properties:
+        type:
+          type: string
+        field:
+          type: string
+        issue:
+          type: string
+        severity:
+          type: string
+          enum: [error, warning, info]
+
+    # -- Readability types ----------------------------------------------------
+
+    ReadabilityResult:
+      type: object
+      nullable: true
+      properties:
+        overall_score:
+          type: number
+          minimum: 0
+          maximum: 100
+        factors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReadabilityFactor"
+        top_improvements:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReadabilityImprovement"
+
+    ReadabilityFactor:
+      type: object
+      properties:
+        name:
+          type: string
+        key:
+          type: string
+        score:
+          type: number
+        description:
+          type: string
+        details:
+          type: string
+
+    ReadabilityImprovement:
+      type: object
+      properties:
+        factor:
+          type: string
+        issue:
+          type: string
+        original:
+          type: string
+        suggestion:
+          type: string
+        impact:
+          type: string
+          enum: [high, medium, low]
+
+    # -- Webhook types --------------------------------------------------------
+
+    WebhookEvent:
+      type: string
+      enum:
+        - scan.complete
+        - llmstxt.drift_detected
+        - monitor.citation_found
+        - monitor.citation_lost
+
+    WebhookConfig:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebhookEvent"
+        secret:
+          type: string
+          description: HMAC-SHA256 signing secret (masked after creation)
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    WebhookDelivery:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        webhook_id:
+          type: string
+          format: uuid
+        event:
+          $ref: "#/components/schemas/WebhookEvent"
+        payload:
+          type: object
+        status:
+          type: string
+          enum: [pending, success, failed]
+        status_code:
+          type: integer
+          nullable: true
+        response_body:
+          type: string
+          nullable: true
+        attempts:
+          type: integer
+        max_attempts:
+          type: integer
+        next_retry_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true

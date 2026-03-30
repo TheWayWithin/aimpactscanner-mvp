@@ -11,6 +11,9 @@ import { authenticateUser, optionalAuth, AuthenticatedRequest } from '../middlew
 import { createTierRateLimiter } from '../middleware/rate-limit';
 import { supabaseAdmin } from '../lib/supabase';
 import { analyzeAllFactors, getAnalysisSummary } from '../services/analyzer';
+import { generateActionItems } from '../services/analyzer/actionItems';
+import { analyzeAndGenerateSchema } from '../services/analyzer/schemaGenerator';
+import { analyzeReadability } from '../services/analyzer/readabilityScorer';
 import { createJob, getJobById, getUserJobs } from '../services/jobQueue';
 import { v4 as uuidv4 } from 'uuid';
 import { Database } from '../types/database.types';
@@ -304,6 +307,11 @@ router.post('/', optionalAuth, async (req: Request, res: Response) => {
     // Run analysis
     const result = await analyzeAllFactors(url, pageContent, userTier, progressCallback);
 
+    // Generate action items, schema analysis, and readability scoring (post-processing)
+    const actionItems = result.success ? generateActionItems(result.factors, url, pageContent) : [];
+    const schemaAnalysis = result.success ? analyzeAndGenerateSchema(url, pageContent) : null;
+    const readability = result.success ? analyzeReadability(pageContent) : null;
+
     if (!result.success) {
       if (!isAnonymous) {
         const failedUpdate: AnalysisUpdate = {
@@ -403,6 +411,9 @@ router.post('/', optionalAuth, async (req: Request, res: Response) => {
       factors: result.factors,
       pillars: summary.pillarBreakdown,
       top_issues: summary.topIssues,
+      action_items: actionItems,
+      schema_analysis: schemaAnalysis,
+      readability: readability,
       processing_time_ms: totalTime,
       success: true,
     });
