@@ -1,5 +1,94 @@
 # AImpactScanner MVP - Progress Log
 
+## [July 21, 2026] - ISS-24 Git Reconciliation + Webhook Secret Rotation
+
+**Context**: Local git history had diverged 560/560 from GitHub (agent-11 apply-upgrade.sh rewrote local history). GitHub was canonical (post-ISS-15 sanitised tip). Reconciled, then rotated the two credentials still exposed in public history.
+
+### Changes
+- **Git reconciled**: `main` and `develop` reset to origin (0/0). Backup bundle at `~/repo-backups/aimpactscanner-mvp-pre-iss24-20260721.bundle` + local `backup/pre-iss24-*` branches. Uncommitted progress entries preserved and recommitted.
+- **gitleaks baseline**: `.gitleaksignore` added — 233 history + 74 tip findings baselined (all verified dead/dummy/public-by-design; purge is T-210). `scripts/verify-git-sync.sh` re-checks everything in one command; new secrets still fail the scan.
+- **GitHub PAT (ghp_ in old .mcp.json commits)**: confirmed dead — TheWayWithin has zero classic tokens.
+- **Stripe webhook signing secret ROTATED** (was public in history, previously unrotated): rolled in Stripe with 2h grace on old secret; new value saved to Supabase Edge Function secret `STRIPE_WEBHOOK_SECRET`.
+- **Incident during rotation**: webhook secret was accidentally also saved into `STRIPE_SECRET_KEY` (identical digests in Supabase confirmed it), breaking production checkout for ~15 min. Fix: created a new Stripe standard secret key (`aimpactscanner-supabase`), saved to `STRIPE_SECRET_KEY`. Verified live: checkout.stripe.com loads from aimpactscanner.com pricing. LLMTxtMastery unaffected (holds its own copy of the previous key, which remains valid in Stripe).
+- **T-210 note**: both credentials flagged from public history are now handled — remaining T-210 scope is the history purge + stale-file sanitisation only.
+
+---
+
+## [July 21, 2026] - Stripe Key Rotation Verified
+
+**Context**: Stripe API keys rotated (API keys only, webhook signing secret unchanged). Verified the new keys work in production without charging anything.
+
+### Verification
+- **STRIPE_SECRET_KEY (new)**: Confirmed working. Invoked production `create-checkout-session` Edge Function in registration mode (no userId, no DB writes) and received a valid live `checkout.stripe.com` session URL. Session left to auto-expire (24h).
+- **Webhook endpoint**: Registered and enabled in Stripe (`we_1RmlkYIiC84gpR8H9LEu3sWQ` → `stripe-webhook` Edge Function); rejects unsigned requests with 401, confirming deployment and secret loaded. Signing secret unchanged by rotation, so no further test needed.
+- **Not applicable**: `VITE_STRIPE_PUBLISHABLE_KEY` is unused in `src/` (redirect to Stripe-hosted Checkout), so nothing to verify frontend-side.
+- **Environment note**: staging Supabase project (`isgzvwpjokcmtizstwru`) no longer exists (DNS gone, API returns "resource removed"). Any future payment testing is production-only until staging is rebuilt.
+- **Follow-up raised**: ISS-23 (Mission Control, cross-cutting) — check LLMTxtMastery and Evolve-7 backends, which share this Stripe account, in case they used the rotated key.
+
+---
+
+## [March 28, 2026] - Repo Cleanup & Suite Page Fix
+
+**Context**: Production bug fix, suite page correction, and full repo cleanup to commit ~3 months of accumulated changes.
+
+### Changes
+- **Error handling fix**: Backend now returns user-friendly messages when URL fetch fails (DNS, timeout, SSL, connection refused) instead of vague "fetch failed"
+- **Suite page updated**: Removed AISearchArena (independent benchmark). Now shows correct flow: AImpactScanner → LLM.txt Mastery + AImpactBooster (Coming Soon) + AImpactContent (Coming Soon) → AImpactMonitor (Coming Soon)
+- **Repo cleanup**: Committed all accumulated changes in logical groups (backend, frontend, docs, AGENT-11, config, templates)
+- **Branch sync**: `develop` synced with `main`
+
+---
+
+## [March 1, 2026] - Site Modernisation Complete (Audit v3 Blueprint)
+
+**Context**: Full site modernisation per Audit Report v3 blueprint. Brand alignment, conversion engine, site architecture, and polish.
+
+### Changes
+- **Brand alignment**: Registered brand colors with Tailwind v4 `@theme` directive, applied brand palette across all components
+- **Pricing v2**: Updated Stripe price IDs to v2 pricing ($9.95/$19.95/$39.95), updated signup/pricing pages
+- **Ecosystem section**: Added AI Search Mastery ecosystem section to landing page (Diagnose → Optimize → Monitor)
+- **LLMs.txt tier messaging**: Differentiated messaging by tier
+- **Sprint 9**: Ecosystem entity alignment for AI search
+
+---
+
+## [February 2026] - Infrastructure & Analytics
+
+**Context**: Production hardening, analytics, and build fixes.
+
+### Changes
+- **Plausible Analytics**: Added privacy-friendly analytics
+- **llms.txt**: Added llms.txt file and Netlify redirect exception for AI search visibility
+- **Pillar weights fix**: Backend was returning uppercase keys (AI, A, M) but frontend only checked lowercase; also fixed missing weight/factorCount in API response
+- **Build fixes**: Node 22 LTS for Netlify, disabled crashing Lighthouse plugin, added missing lucide-react dependency
+
+---
+
+## [January 2026] - App Refactor & GDPR
+
+**Context**: Major App.jsx refactor, GDPR compliance, and OAuth fixes.
+
+### Changes
+- **App.jsx refactor**: Extracted hooks, reduced from 2313 to 475 lines (then reverted to original due to issues)
+- **GDPR integration**: Removed Enzuzo ($9/mo savings), built custom consent management
+- **OAuth fixes**: Fixed Google PKCE flow detection, added missing oauth-callback view, restored original Signup page routing
+- **Password login routing**: Fixed routing for password-based login
+
+---
+
+## [Late December 2025] - Railway Production Migration & Landing Page
+
+**Context**: Railway backend went live in production, landing page overhauled.
+
+### Changes
+- **Railway production**: Enabled Railway backend for production (previously only staging)
+- **Anonymous scans**: Fixed FK constraints by skipping DB persistence for anonymous scans, using valid UUIDs
+- **Landing page overhaul**: Removed fake social proof, added honest pricing section
+- **Paywall hardening**: Closed all `allowed:true` fallbacks, added server-side usage enforcement
+- **Playwright tests**: Added OAT/UAT tiered test suite
+
+---
+
 ## [December 19, 2025] - Sprint 6 Phase 6: Enhanced LLMs.txt API Integration ✅
 
 **Context**: Integrated LLMtxtMastery API v1.2.0 with tiered access control, JavaScript rendering for CSR sites (Scale tier), and validation endpoints.
