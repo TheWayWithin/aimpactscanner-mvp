@@ -63,7 +63,7 @@ export type ProgressCallback = (
  * - M: Machine Readability & Technical Infrastructure
  * - A: Authority & Trust Signals
  * - S: Semantic Content Quality
- * - T: Technical SEO & Foundation (formerly Topic)
+ * - T: Topical Expertise & Experience
  * - E: Engagement & User Experience
  * - R: Reference Networks & Citations
  * - Y: Yield Optimization & Freshness
@@ -77,7 +77,7 @@ export const PILLAR_WEIGHTS: Record<string, { weight: number; name: string }> = 
   M: { weight: 14.6, name: "Machine Readability & Technical Infrastructure" },
   S: { weight: 13.9, name: "Semantic Content Quality" },
   E: { weight: 10.9, name: "Engagement & User Experience" },
-  T: { weight: 8.9, name: "Technical SEO & Foundation" },
+  T: { weight: 8.9, name: "Topical Expertise & Experience" },
   R: { weight: 5.9, name: "Reference Networks & Citations" },
   Y: { weight: 4.1, name: "Yield Optimization & Freshness" },
   P: { weight: 7.5, name: "Performance & Speed" },

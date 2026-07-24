@@ -1,5 +1,21 @@
 # AImpactScanner MVP - Progress Log
 
+## [July 24, 2026] - T-256 Scanner Accuracy Fixes (AIS-ISS-2/3/4) — branch t256-scanner-accuracy, pending review
+
+**Context**: Dogfooding on jamiewatters.work exposed three accuracy bugs: http:// input scored 69 vs 72 for https:// on the same site (M.1.1 HTTPS 0/100 despite a 301 to https), TS.1.4 recommended "create XML sitemap" for a site with a live submitted sitemap, and the report showed "Topical Expertise & Experience 0/100 at 0% weight" while its factor T.1.1 scored 55.
+
+### Changes
+- **AIS-ISS-2 (score the final URL)**: `backend/src/worker.ts` and `backend/src/routes/analyze.ts` now pass `fetchResult.finalUrl` (redirects followed) to `analyzeAllFactors`; the resolved URL is persisted to `analyses.url` and returned as `url` (input echoed as `submitted_url`). `analyzeHTTPS` gains redirect evidence ("HTTP input redirected to HTTPS — HTTPS is enforced").
+- **AIS-ISS-3 (fetch reality)**: new `backend/src/services/siteProbes.ts` fetches robots.txt (parsing `Sitemap:` declarations and blanket `Disallow: /`) and discovers/validates the XML sitemap (declared URLs first, then /sitemap.xml, /sitemap_index.xml; guards against HTML-at-200). TS.1.4 and TS.2.4 now score the fetched files; the HTML-grep heuristic survives only as a low-confidence fallback on network failure, with honest evidence. One probe per analysis (paid tiers).
+- **AIS-ISS-4 (truthful pillar display)**: new `src/lib/pillarDisplay.js` is the single source of pillar naming/weights/grouping; PDF report and dashboard now show real score/weight/factor-count per pillar, give Traditional SEO (TS) and Performance (P) their own groups instead of dumping them into Machine Readability, and exclude unanalysed pillars rather than rendering fabricated 0-score cards. Backend T pillar renamed to its official "Topical Expertise & Experience".
+- **Bonus fix**: TS.1.1 no longer penalises a canonical without trailing slash vs the slashed page URL (equivalent URLs).
+- **Tests**: backend gets vitest (24 tests: http/https equivalence, sitemap true/false/invalid, robots fetched/missing/blocking, redirect evidence); frontend `tests/unit/pillar-display.test.js` (7 tests) runs DB-free via `vitest.pure.config.js` (`npm run test:pure`). Pre-existing frontend vitest suite is environmentally broken (global setup requires the deleted staging Supabase) — unrelated to this change.
+- **E2E evidence**: `backend/scripts/scan.ts` run against both http:// and https://jamiewatters.work — identical 72/100, M.1.1 100/100, TS.1.4 100/100 ("Fetched https://jamiewatters.work/sitemap.xml: HTTP 200, valid XML sitemap with 222 URLs"), TS.2.4 100/100.
+- **Not changed**: legacy Supabase Edge Function copy of the analyzer (production routes to Railway backend via VITE_USE_RAILWAY_BACKEND).
+- **Post-deploy step**: re-scan jamiewatters.work via the live product with http:// input to confirm parity in production.
+
+---
+
 ## [July 21, 2026] - ISS-24 Git Reconciliation + Webhook Secret Rotation
 
 **Context**: Local git history had diverged 560/560 from GitHub (agent-11 apply-upgrade.sh rewrote local history). GitHub was canonical (post-ISS-15 sanitised tip). Reconciled, then rotated the two credentials still exposed in public history.

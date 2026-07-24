@@ -97,9 +97,13 @@ async function processJob(): Promise<boolean> {
       }
 
       const content = fetchResult.html;
+      // Score the FINAL URL after redirects (AIS-ISS-2): http:// input to an
+      // HTTPS-enforcing site must produce the same result as https:// input.
+      const finalUrl = fetchResult.finalUrl || job.url;
       console.log(
         `[Worker ${WORKER_ID}] Fetched ${job.url} via ${fetchResult.method} ` +
-        `(${content.length} bytes, ${fetchResult.fetchTimeMs}ms)`
+        `(${content.length} bytes, ${fetchResult.fetchTimeMs}ms)` +
+        (finalUrl !== job.url ? ` — resolved to ${finalUrl}` : '')
       );
 
       // Log CSR detection results if available
@@ -110,8 +114,10 @@ async function processJob(): Promise<boolean> {
         );
       }
 
-      // Run analysis
-      const result = await analyzeAllFactors(job.url, content, userTier);
+      // Run analysis against the resolved URL
+      const result = await analyzeAllFactors(finalUrl, content, userTier, undefined, {
+        requestedUrl: job.url,
+      });
 
       if (!result.success) {
         throw new Error(result.error || 'Analysis failed');
@@ -145,6 +151,18 @@ async function processJob(): Promise<boolean> {
           .from('analyses')
           .update({ status: 'completed', overall_score: roundedScore } as never)
           .eq('id', job.analysis_id);
+      }
+
+      // Record the resolved URL so reports show what was actually scored
+      if (finalUrl !== job.url) {
+        try {
+          await supabaseAdmin
+            .from('analyses')
+            .update({ url: finalUrl } as never)
+            .eq('id', job.analysis_id);
+        } catch (urlUpdateError) {
+          console.error(`[Worker ${WORKER_ID}] Failed to record resolved URL:`, urlUpdateError);
+        }
       }
 
       // Store factor results with rounded scores

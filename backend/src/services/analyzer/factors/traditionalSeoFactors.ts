@@ -11,6 +11,7 @@
  */
 
 import { FactorResult, FactorSeverity } from '../types';
+import { SiteProbeResult } from '../../siteProbes';
 
 /**
  * Determine severity based on score and factor criticality
@@ -115,7 +116,12 @@ export function analyzeIndexability(content: string, url: string): FactorResult 
     );
     if (canonicalMatch) {
       const canonicalUrl = canonicalMatch[1];
-      if (canonicalUrl !== url && !canonicalUrl.startsWith(url)) {
+      // Compare normalised (trailing-slash-insensitive) URLs: the canonical
+      // "https://site.com" is the same page as "https://site.com/"
+      const normalise = (value: string) => value.replace(/\/+$/, '').toLowerCase();
+      const isSamePage = normalise(canonicalUrl) === normalise(url) ||
+        canonicalUrl.startsWith(url);
+      if (!isSamePage) {
         score = Math.max(score - 15, 0);
         evidence.push(`Canonical URL points elsewhere: ${canonicalUrl}`);
         recommendations.push('Verify canonical URL is correct - this page may be treated as duplicate content');
@@ -443,49 +449,92 @@ export function analyzeBrokenLinksBasic(content: string, url: string): FactorRes
 }
 
 /**
- * Factor 23: TS.1.4 - Sitemap Presence (Basic Detection - Weight: 0.60)
+ * Factor 23: TS.1.4 - Sitemap Presence (Weight: 0.60)
+ *
+ * Scores against the actually-fetched sitemap (via siteProbes) rather than
+ * grepping the page HTML for a "sitemap.xml" mention (AIS-ISS-3). The HTML
+ * heuristic remains only as a low-confidence fallback when the probe could
+ * not run (network failure).
  */
-export function analyzeSitemapPresence(content: string, url: string): FactorResult {
+export function analyzeSitemapPresence(
+  content: string,
+  url: string,
+  probe?: SiteProbeResult | null
+): FactorResult {
   const startTime = Date.now();
   const evidence: string[] = [];
   const recommendations: string[] = [];
   let score = 0;
-  let confidence = 70;
+  let confidence = 95;
 
   try {
     const baseUrl = new URL(url).origin;
-    let sitemapFound = false;
 
     const sitemapLinkMatch = content.match(
       /<link[^>]*rel=["']sitemap["'][^>]*href=["']([^"']+)["']/i
     );
 
-    if (sitemapLinkMatch) {
-      sitemapFound = true;
-      score = 100;
-      evidence.push(`Sitemap link found in HTML: ${sitemapLinkMatch[1]}`);
-    }
+    // The probe is authoritative when the sitemap was found or the server
+    // answered with a real HTTP status; pure network failures fall through
+    // to the low-confidence HTML heuristic below.
+    if (probe?.sitemap.attempted && (probe.sitemap.found || probe.sitemap.status !== undefined || !probe.sitemap.error)) {
+      const { sitemap, robots } = probe;
+      const declaredInRobots = robots.fetched && robots.sitemapUrls.length > 0;
 
-    if (content.includes('sitemap.xml')) {
-      if (!sitemapFound) {
-        score = 80;
-        sitemapFound = true;
+      if (sitemap.found && sitemap.isValid) {
+        score = 100;
+        evidence.push(
+          `Fetched ${sitemap.url}: HTTP 200, valid XML ${sitemap.isIndex ? 'sitemap index' : 'sitemap'} with ${sitemap.urlCount} ${sitemap.isIndex ? 'child sitemaps' : 'URLs'}`
+        );
+        if (declaredInRobots) {
+          evidence.push('Sitemap is declared in robots.txt (good for discoverability)');
+        } else {
+          recommendations.push('Declare the sitemap in robots.txt: Sitemap: ' + sitemap.url);
+        }
+      } else if (sitemap.found && !sitemap.isValid) {
+        score = 40;
+        evidence.push(`Fetched ${sitemap.url}: HTTP 200 but content is not a valid XML sitemap`);
+        recommendations.push('Fix the sitemap so it contains a valid <urlset> or <sitemapindex> root element');
+      } else {
+        score = 0;
+        evidence.push(
+          `No sitemap found: checked ${declaredInRobots ? 'robots.txt declarations and ' : ''}${baseUrl}/sitemap.xml` +
+          (sitemap.status ? ` (HTTP ${sitemap.status})` : '')
+        );
+        recommendations.push(`Create XML sitemap at ${baseUrl}/sitemap.xml`);
+        recommendations.push('Declare it in robots.txt with a Sitemap: line');
+        recommendations.push('Submit sitemap to Google Search Console and Bing Webmaster Tools');
       }
-      evidence.push('sitemap.xml referenced in page content');
-    }
 
-    if (content.includes('robots.txt')) {
-      evidence.push('robots.txt referenced (may contain sitemap location)');
-    }
-
-    if (!sitemapFound) {
-      score = 0;
-      evidence.push('No sitemap references found in page content');
-      recommendations.push('Add sitemap.xml link: <link rel="sitemap" type="application/xml" href="/sitemap.xml" />');
-      recommendations.push(`Create XML sitemap at ${baseUrl}/sitemap.xml`);
-      recommendations.push('Submit sitemap to Google Search Console and Bing Webmaster Tools');
+      if (sitemapLinkMatch) {
+        evidence.push(`Sitemap link also present in HTML: ${sitemapLinkMatch[1]}`);
+      }
     } else {
-      recommendations.push('Full sitemap validation (XML parsing, URL testing) available in Phase 3');
+      // Probe unavailable (network failure) - fall back to HTML references only
+      confidence = 40;
+      let sitemapReferenced = false;
+
+      if (sitemapLinkMatch) {
+        sitemapReferenced = true;
+        score = 60;
+        evidence.push(`Sitemap link found in HTML: ${sitemapLinkMatch[1]}`);
+      } else if (content.includes('sitemap.xml')) {
+        sitemapReferenced = true;
+        score = 50;
+        evidence.push('sitemap.xml referenced in page content');
+      }
+
+      evidence.push(
+        `Could not fetch ${baseUrl}/sitemap.xml to verify it exists` +
+        (probe?.sitemap.error ? ` (${probe.sitemap.error})` : '') +
+        ' - score based on HTML references only'
+      );
+
+      if (!sitemapReferenced) {
+        score = 0;
+        recommendations.push(`Verify an XML sitemap exists at ${baseUrl}/sitemap.xml`);
+        recommendations.push('Submit sitemap to Google Search Console and Bing Webmaster Tools');
+      }
     }
 
     evidence.push('Sitemaps help search engines discover and crawl all pages efficiently');
@@ -881,9 +930,17 @@ export function analyzeDuplicateVersions(content: string, url: string): FactorRe
 }
 
 /**
- * Factor 27: TS.2.4 - Robots.txt Configuration (HTML meta analysis)
+ * Factor 27: TS.2.4 - Robots.txt Configuration
+ *
+ * Fetches and evaluates the actual robots.txt file (via siteProbes) in
+ * addition to the page's meta robots directives (AIS-ISS-3). Meta-only
+ * analysis remains as a lower-confidence fallback when the probe failed.
  */
-export function analyzeRobotsTxt(content: string, _url: string): FactorResult {
+export function analyzeRobotsTxt(
+  content: string,
+  _url: string,
+  probe?: SiteProbeResult | null
+): FactorResult {
   const startTime = Date.now();
   const evidence: string[] = [];
   const recommendations: string[] = [];
@@ -892,6 +949,41 @@ export function analyzeRobotsTxt(content: string, _url: string): FactorResult {
 
   try {
     let hasBlockingIssues = false;
+
+    // Real robots.txt file analysis (fetched by siteProbes)
+    if (probe?.robots.attempted && !probe.robots.error) {
+      confidence = 95;
+      const { robots } = probe;
+
+      if (robots.fetched) {
+        evidence.push(`Fetched robots.txt: HTTP 200 (${robots.content?.length ?? 0} bytes)`);
+
+        if (robots.disallowAll) {
+          score -= 60;
+          hasBlockingIssues = true;
+          evidence.push('robots.txt blocks all crawlers ("User-agent: *" with "Disallow: /")');
+          recommendations.push('Remove the blanket "Disallow: /" rule so search engines and AI crawlers can access the site');
+        }
+
+        if (robots.sitemapUrls.length > 0) {
+          evidence.push(`robots.txt declares ${robots.sitemapUrls.length} sitemap(s): ${robots.sitemapUrls.join(', ')}`);
+        } else {
+          score -= 10;
+          recommendations.push('Declare your sitemap in robots.txt with a "Sitemap:" line for better discoverability');
+        }
+      } else {
+        score -= 20;
+        evidence.push(`No robots.txt file found${probe.robots.status ? ` (HTTP ${probe.robots.status})` : ''} - crawlers assume full access`);
+        recommendations.push('Add a robots.txt file with a Sitemap declaration (optional but recommended)');
+      }
+    } else {
+      evidence.push(
+        'Could not fetch robots.txt' +
+        (probe?.robots.error ? ` (${probe.robots.error})` : '') +
+        ' - analysis based on HTML meta tags only'
+      );
+      confidence = 50;
+    }
 
     const metaRobotsMatch = content.match(
       /<meta\s+name=["']robots["']\s+content=["']([^"']+)["']/i
@@ -943,19 +1035,10 @@ export function analyzeRobotsTxt(content: string, _url: string): FactorResult {
       }
     }
 
-    const hasSitemapRef = content.toLowerCase().includes('sitemap.xml') ||
-      /<link[^>]*rel=["']sitemap["']/i.test(content);
-
-    if (hasSitemapRef) {
-      score += 10;
-      evidence.push('Sitemap reference found (aids discoverability)');
-    }
-
     if (!hasBlockingIssues) {
-      evidence.push('No robot blocking directives detected in HTML');
+      evidence.push('No robot blocking directives detected');
     }
 
-    evidence.push('Analysis based on HTML meta tags (actual robots.txt file not fetched)');
     score = Math.min(Math.max(score, 0), 100);
   } catch (error) {
     evidence.push(`Error analyzing robot directives: ${(error as Error).message}`);
@@ -984,7 +1067,8 @@ export function analyzeRobotsTxt(content: string, _url: string): FactorResult {
 export function analyzeAllTraditionalSeoFactors(
   content: string,
   url: string,
-  userTier: string = 'free'
+  userTier: string = 'free',
+  probe?: SiteProbeResult | null
 ): FactorResult[] {
   const results: FactorResult[] = [];
 
@@ -996,11 +1080,11 @@ export function analyzeAllTraditionalSeoFactors(
     results.push(analyzeMobileFriendly(content));
     results.push(analyzePageSpeedStub(content));
     results.push(analyzeBrokenLinksBasic(content, url));
-    results.push(analyzeSitemapPresence(content, url));
+    results.push(analyzeSitemapPresence(content, url, probe));
     results.push(analyzeCanonicalTags(content, url));
     results.push(analyzeInternalLinking(content, url));
     results.push(analyzeDuplicateVersions(content, url));
-    results.push(analyzeRobotsTxt(content, url));
+    results.push(analyzeRobotsTxt(content, url, probe));
   }
 
   return results;
