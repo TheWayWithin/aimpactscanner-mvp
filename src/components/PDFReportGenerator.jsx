@@ -11,6 +11,7 @@
  */
 
 import React, { useRef, useState } from 'react';
+import { buildPillarGroups, PILLAR_META } from '../lib/pillarDisplay';
 
 // Dynamic PDF library loading
 let jsPDF = null;
@@ -33,26 +34,8 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
 
   // Helper function to get display name for pillar codes
   const getPillarDisplayName = (pillarCode) => {
-    const pillarNames = {
-      'M': 'Machine Readability',
-      'AI': 'AI Response Optimization',
-      'A': 'Authority & Trust',
-      'S': 'Semantic Content',
-      'E': 'Engagement & UX',
-      'T': 'Topical Expertise',
-      'R': 'Reference Networks',
-      'Y': 'Yield Optimization',
-      // Also handle lowercase keys for pillars
-      'machine_readability': 'Machine Readability',
-      'ai': 'AI Response Optimization',
-      'authority': 'Authority & Trust',
-      'semantic': 'Semantic Content',
-      'engagement': 'Engagement & UX',
-      'topical': 'Topical Expertise',
-      'reference': 'Reference Networks',
-      'yield': 'Yield Optimization'
-    };
-    return pillarNames[pillarCode] || pillarCode;
+    const meta = PILLAR_META.find(m => m.code === pillarCode || m.key === pillarCode);
+    return meta ? meta.name : pillarCode;
   };
 
   // Extract data from analysisData - handles both real and mock data
@@ -64,75 +47,19 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
     const reportData = {
       analysisId: analysisId || `AISC-${Date.now()}`,
       url: url || analysisData.url || 'No URL provided',
+      // URL the user typed, when it differs from the (resolved) analyzed URL
+      submittedUrl: analysisData.submitted_url || analysisData.requested_url || null,
       overallScore: analysisData.overall_score || 0,
       generatedAt: new Date(),
       factors: analysisData.factors || [],
       pillars: analysisData.pillars || {}
     };
 
-    // Group factors by pillar for organized display
-    const groupedFactors = {};
-    const pillarOrder = [
-      { key: 'ai', name: 'AI Response Optimization & Citation', icon: '🤖', color: '#1E3A5F' },
-      { key: 'authority', name: 'Authority & Trust Signals', icon: '🔐', color: '#7C3AED' },
-      { key: 'machine_readability', name: 'Machine Readability & Technical Infrastructure', icon: '⚙️', color: '#059669' },
-      { key: 'semantic', name: 'Semantic Content Quality', icon: '📝', color: '#EA580C' },
-      { key: 'engagement', name: 'Engagement & User Experience', icon: '👥', color: '#EAB308' },
-      { key: 'topical', name: 'Topical Expertise & Experience', icon: '🎯', color: '#6366F1' },
-      { key: 'reference', name: 'Reference Networks & Citations', icon: '🔗', color: '#6B7280' },
-      { key: 'yield', name: 'Yield Optimization & Freshness', icon: '📈', color: '#0D9488' }
-    ];
+    // Truthful pillar grouping (AIS-ISS-4): real score/weight/factor count per
+    // pillar, only for pillars that were actually analysed.
+    const pillarGroups = buildPillarGroups(reportData.pillars, reportData.factors);
 
-    // Initialize groups
-    pillarOrder.forEach(pillar => {
-      const pillarData = reportData.pillars[pillar.key] || {};
-      groupedFactors[pillar.key] = {
-        name: pillar.name,
-        icon: pillar.icon,
-        color: pillar.color,
-        score: pillarData.score || 0,
-        weight: pillarData.weight || 0,
-        factors: []
-      };
-    });
-
-    // Group factors by pillar
-    reportData.factors.forEach(factor => {
-      // Map pillar codes from Edge Function (e.g., 'M', 'AI', 'A')
-      const pillarCodeMapping = {
-        'M': 'machine_readability',
-        'AI': 'ai',
-        'A': 'authority',
-        'S': 'semantic',
-        'E': 'engagement',
-        'T': 'topical',
-        'R': 'reference',
-        'Y': 'yield'
-      };
-      
-      // Map factor pillar names to keys (for backward compatibility with mock data)
-      const pillarMappings = {
-        'AI Response Optimization': 'ai',
-        'Authority & Trust': 'authority',
-        'Machine Readability': 'machine_readability',
-        'Semantic Content': 'semantic',
-        'Engagement': 'engagement',
-        'Topical Expertise': 'topical',
-        'Reference Networks': 'reference',
-        'Yield Optimization': 'yield'
-      };
-      
-      // Try pillar codes first (real data), then pillar names (mock data), then default
-      const pillarKey = pillarCodeMapping[factor.pillar] || 
-                       pillarMappings[factor.pillar] || 
-                       'machine_readability';
-      
-      if (groupedFactors[pillarKey]) {
-        groupedFactors[pillarKey].factors.push(factor);
-      }
-    });
-
-    return { ...reportData, groupedFactors };
+    return { ...reportData, pillarGroups };
   };
 
   // Generate score interpretation
@@ -314,7 +241,10 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
       checkPageBreak(30);
       addText('Analyzed Website', margin, currentY, { fontSize: 16, fontStyle: 'bold', color: '#1E3A5F' });
       addText(reportData.url, margin, currentY, { fontSize: 12, maxWidth: contentWidth - 50 });
-      
+      if (reportData.submittedUrl && reportData.submittedUrl !== reportData.url) {
+        addText(`Entered as ${reportData.submittedUrl} — redirected to the URL above, which was scored`, margin, currentY, { fontSize: 9, color: '#6B7280', maxWidth: contentWidth - 50 });
+      }
+
       // Overall Score Box
       const scoreBoxY = currentY;
       // Convert hex color to RGB with light background
@@ -385,16 +315,15 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
       currentY = margin;
       
       addText('MASTERY-AI Framework Results', margin, currentY, { fontSize: 18, fontStyle: 'bold', color: '#1E3A5F' });
-      addText('8-Pillar Optimization Framework Analysis', margin, currentY, { fontSize: 12, color: '#6B7280' });
-      
+      addText(`${reportData.pillarGroups.length}-Pillar Optimization Framework Analysis`, margin, currentY, { fontSize: 12, color: '#6B7280' });
+
       currentY += 5;
 
-      // Pillar Scores Grid - Show all 8 pillars
-      const pillarKeys = Object.keys(reportData.groupedFactors); // Show all pillars, even with 0 factors
-      
-      pillarKeys.forEach((key, index) => {
-        const pillar = reportData.groupedFactors[key];
-        
+      // Pillar Scores Grid - only pillars that were actually analysed
+      const pillarGroups = reportData.pillarGroups;
+
+      pillarGroups.forEach((pillar, index) => {
+
         if (index % 2 === 0) {
           checkPageBreak(25);
         }
@@ -430,23 +359,22 @@ const PDFReportGenerator = ({ analysisId, url, analysisData, onReportGenerated, 
         pdf.setFontSize(9);
         pdf.setFont('helvetica', 'normal');
         pdf.setTextColor('#6B7280');
-        pdf.text(`Weight: ${pillar.weight}% | ${pillar.factors.length} factors`, margin + xOffset + 3, yPos + 19);
+        pdf.text(`Weight: ${pillar.weight}% | ${pillar.factorCount} factors`, margin + xOffset + 3, yPos + 19);
       });
-      
-      currentY += Math.ceil(pillarKeys.length / 2) * 25 + 10;
+
+      currentY += Math.ceil(pillarGroups.length / 2) * 25 + 10;
 
       // === PAGE 3+: FACTOR ANALYSIS DETAILS ===
       setProgress(80);
-      
-      if (pillarKeys.length > 0) {
+
+      if (pillarGroups.length > 0) {
         pdf.addPage();
         currentY = margin;
-        
+
         addText('Detailed Factor Analysis', margin, currentY, { fontSize: 18, fontStyle: 'bold', color: '#1E3A5F' });
-        
-        pillarKeys.forEach(key => {
-          const pillar = reportData.groupedFactors[key];
-          
+
+        pillarGroups.forEach(pillar => {
+
           checkPageBreak(20);
           
           // Pillar section header

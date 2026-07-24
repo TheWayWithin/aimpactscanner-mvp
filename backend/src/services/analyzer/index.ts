@@ -9,6 +9,7 @@
  */
 
 import { FactorResult, AnalysisResult, PILLAR_WEIGHTS, PageData, ProgressCallback } from './types';
+import { probeSiteFiles, SiteProbeResult } from '../siteProbes';
 
 // Core Factors (1-15)
 import {
@@ -157,19 +158,28 @@ const EDUCATIONAL_CONTENT = {
   'performance': 'Fast-loading pages provide better user experience and are more likely to be successfully crawled and indexed.',
 };
 
+export interface AnalyzeOptions {
+  /** The URL as the user entered it, before redirects were followed */
+  requestedUrl?: string;
+  /** Pre-fetched robots.txt/sitemap probe; pass null to skip probing (tests) */
+  siteProbes?: SiteProbeResult | null;
+}
+
 /**
  * Run all 27 factor analyses
  *
- * @param url - The URL being analyzed
+ * @param url - The FINAL URL being analyzed (after redirects were followed)
  * @param htmlContent - The HTML content of the page
  * @param userTier - The user's subscription tier (affects which factors run)
  * @param onProgress - Optional progress callback for real-time updates
+ * @param options - Requested (pre-redirect) URL and optional injected site probes
  */
 export async function analyzeAllFactors(
   url: string,
   htmlContent: string,
   userTier: string = 'free',
-  onProgress?: ProgressCallback
+  onProgress?: ProgressCallback,
+  options: AnalyzeOptions = {}
 ): Promise<AnalysisResult> {
   const startTime = Date.now();
   const factors: FactorResult[] = [];
@@ -183,7 +193,7 @@ export async function analyzeAllFactors(
       await onProgress('metadata', 5, 'Analyzing page metadata...', EDUCATIONAL_CONTENT.metadata);
     }
 
-    factors.push(analyzeHTTPS(url));
+    factors.push(analyzeHTTPS(url, options.requestedUrl));
     factors.push(analyzeTitle(pageData.title));
     factors.push(analyzeMetaDescription(pageData.metaDescription));
 
@@ -242,14 +252,20 @@ export async function analyzeAllFactors(
 
     // Remaining SEO factors for paid tiers (Factors 20-27)
     if (userTier !== 'free') {
+      // Fetch robots.txt + sitemap once so TS.1.4/TS.2.4 score reality
+      // (AIS-ISS-3). undefined = not injected -> probe now; null = skip.
+      const siteProbes = options.siteProbes !== undefined
+        ? options.siteProbes
+        : await probeSiteFiles(url).catch(() => null);
+
       factors.push(analyzeMobileFriendly(htmlContent));
       factors.push(analyzePageSpeedStub(htmlContent));
       factors.push(analyzeBrokenLinksBasic(htmlContent, url));
-      factors.push(analyzeSitemapPresence(htmlContent, url));
+      factors.push(analyzeSitemapPresence(htmlContent, url, siteProbes));
       factors.push(analyzeCanonicalTags(htmlContent, url));
       factors.push(analyzeInternalLinking(htmlContent, url));
       factors.push(analyzeDuplicateVersions(htmlContent, url));
-      factors.push(analyzeRobotsTxt(htmlContent, url));
+      factors.push(analyzeRobotsTxt(htmlContent, url, siteProbes));
     }
 
     // Calculate final score

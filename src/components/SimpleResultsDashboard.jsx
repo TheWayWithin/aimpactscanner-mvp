@@ -165,45 +165,49 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
     factors: analysisData?.factors 
   });
   
-  // Transform pillars from Edge Function format to dashboard format
+  // Transform pillars from backend format to dashboard format
   // Known pillar weights (must match backend PILLAR_WEIGHTS)
   const PILLAR_WEIGHTS = {
-    AI: 23.8, A: 17.9, M: 14.6, S: 13.9, E: 10.9, T: 8.9, R: 5.9, Y: 4.1, P: 7.5
+    AI: 23.8, A: 17.9, M: 14.6, S: 13.9, E: 10.9, T: 8.9, R: 5.9, Y: 4.1, P: 7.5, TS: 7.0
   };
 
   const transformPillars = (pillarsData) => {
     if (!pillarsData) return null;
-    
-    // Backend returns { score, name } without weight — merge with known weights
-    const merge = (key, fallbackScore, fallbackName, fallbackFactors) => {
-      const data = pillarsData[key];
-      if (data) {
-        return { 
-          score: data.score, 
-          weight: data.weight || PILLAR_WEIGHTS[key] || 0,
-          factors: data.factorCount || data.factors || fallbackFactors,
-          name: data.name || fallbackName
-        };
-      }
-      return { score: fallbackScore, weight: PILLAR_WEIGHTS[key] || 0, factors: fallbackFactors, name: fallbackName };
-    };
 
-    return {
-      ai: merge('AI', pillarScores.ai, "AI Response Optimization & Citation", 3),
-      authority: merge('A', pillarScores.authority, "Authority & Trust Signals", 2),
-      machine_readability: merge('M', pillarScores.machine_readability, "Machine Readability & Technical Infrastructure", 4),
-      semantic: merge('S', pillarScores.semantic, "Semantic Content Quality", 2),
-      engagement: merge('E', pillarScores.engagement, "Engagement & User Experience", 1),
-      technical: merge('T', pillarScores.technical, "Technical SEO & Foundation", 4),
-      reference: merge('R', pillarScores.reference, "Reference Networks & Citations", 0),
-      yield: merge('Y', pillarScores.yield, "Yield Optimization & Freshness", 0),
-      performance: merge('P', pillarScores.performance, "Performance & Speed", 1)
-    };
+    // Backend may return { score, name } without weight — merge with known
+    // weights. Pillars absent from the data were not analysed and are
+    // OMITTED so displays never show a fabricated 0-score card (AIS-ISS-4).
+    const entries = [
+      ['ai', 'AI', 'AI Response Optimization & Citation'],
+      ['authority', 'A', 'Authority & Trust Signals'],
+      ['machine_readability', 'M', 'Machine Readability & Technical Infrastructure'],
+      ['semantic', 'S', 'Semantic Content Quality'],
+      ['engagement', 'E', 'Engagement & User Experience'],
+      ['technical', 'T', 'Topical Expertise & Experience'],
+      ['reference', 'R', 'Reference Networks & Citations'],
+      ['yield', 'Y', 'Yield Optimization & Freshness'],
+      ['performance', 'P', 'Performance & Speed'],
+      ['traditional_seo', 'TS', 'Traditional SEO']
+    ];
+
+    const result = {};
+    for (const [key, code, fallbackName] of entries) {
+      const data = pillarsData[code] || pillarsData[key];
+      if (!data) continue;
+      result[key] = {
+        score: data.score,
+        weight: data.weight || PILLAR_WEIGHTS[code] || 0,
+        factors: data.factorCount || data.factors || 0,
+        name: data.name || fallbackName
+      };
+    }
+    return Object.keys(result).length > 0 ? result : null;
   };
   
   const results = isRealAnalysis ? {
     overall_score: analysisData.overall_score,
     url: analysisData.url || url,
+    submitted_url: analysisData.submitted_url || null,
     created_at: analysisData.created_at || new Date().toISOString(),
     pillars: transformPillars(analysisData.pillars) || {
       ai: { score: pillarScores.ai, weight: 23.8, factors: 3, name: "AI Response Optimization & Citation" },
@@ -211,7 +215,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
       machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 4, name: "Machine Readability & Technical Infrastructure" },
       semantic: { score: pillarScores.semantic, weight: 13.9, factors: 2, name: "Semantic Content Quality" },
       engagement: { score: pillarScores.engagement, weight: 10.9, factors: 1, name: "Engagement & User Experience" },
-      technical: { score: pillarScores.technical, weight: 8.9, factors: 4, name: "Technical SEO & Foundation" },
+      technical: { score: pillarScores.technical, weight: 8.9, factors: 4, name: "Topical Expertise & Experience" },
       reference: { score: pillarScores.reference, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
       yield: { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" },
       performance: { score: pillarScores.performance, weight: 5.0, factors: 1, name: "Performance & Speed" }
@@ -227,7 +231,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
       machine_readability: { score: pillarScores.machine_readability, weight: 14.6, factors: 4, name: "Machine Readability & Technical Infrastructure" },
       semantic: { score: pillarScores.semantic, weight: 13.9, factors: 2, name: "Semantic Content Quality" },
       engagement: { score: pillarScores.engagement, weight: 10.9, factors: 1, name: "Engagement & User Experience" },
-      technical: { score: pillarScores.technical, weight: 8.9, factors: 4, name: "Technical SEO & Foundation" },
+      technical: { score: pillarScores.technical, weight: 8.9, factors: 4, name: "Topical Expertise & Experience" },
       reference: { score: pillarScores.reference, weight: 5.9, factors: 0, name: "Reference Networks & Citations" },
       yield: { score: pillarScores.yield, weight: 4.1, factors: 0, name: "Yield Optimization & Freshness" },
       performance: { score: pillarScores.performance, weight: 5.0, factors: 1, name: "Performance & Speed" }
@@ -331,7 +335,8 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
       { key: 'M', name: 'Machine Readability & Technical Infrastructure', icon: <Settings className="w-5 h-5" /> },
       { key: 'S', name: 'Semantic Content Quality', icon: <FileText className="w-5 h-5" /> },
       { key: 'E', name: 'Engagement & User Experience', icon: <Users className="w-5 h-5" /> },
-      { key: 'T', name: 'Technical SEO & Foundation', icon: <Wrench className="w-5 h-5" /> },
+      { key: 'T', name: 'Topical Expertise & Experience', icon: <Lightbulb className="w-5 h-5" /> },
+      { key: 'TS', name: 'Traditional SEO', icon: <Wrench className="w-5 h-5" /> },
       { key: 'R', name: 'Reference Networks & Citations', icon: <Link className="w-5 h-5" /> },
       { key: 'Y', name: 'Yield Optimization & Freshness', icon: <TrendingUp className="w-5 h-5" /> },
       { key: 'P', name: 'Performance & Speed', icon: <Zap className="w-5 h-5" /> }
@@ -355,13 +360,13 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         'M': 'Machine Readability & Technical Infrastructure',
         'S': 'Semantic Content Quality',
         'E': 'Engagement & User Experience',
-        'T': 'Technical SEO & Foundation',
-        'TS': 'Technical SEO & Foundation', // Traditional SEO factors
+        'T': 'Topical Expertise & Experience',
+        'TS': 'Traditional SEO',
         'R': 'Reference Networks & Citations',
         'Y': 'Yield Optimization & Freshness',
         'P': 'Performance & Speed'
       };
-      
+
       // Also support legacy full names for mock data
       const pillarNameMapping = {
         'AI Response Optimization': 'AI Response Optimization & Citation',
@@ -369,9 +374,9 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
         'Machine Readability': 'Machine Readability & Technical Infrastructure',
         'Semantic Content': 'Semantic Content Quality',
         'Engagement': 'Engagement & User Experience',
-        'Topical Expertise': 'Technical SEO & Foundation',
-        'Topical Expertise & Experience': 'Technical SEO & Foundation',
-        'Technical SEO': 'Technical SEO & Foundation',
+        'Topical Expertise': 'Topical Expertise & Experience',
+        'Technical SEO & Foundation': 'Topical Expertise & Experience',
+        'Technical SEO': 'Traditional SEO',
         'Reference Networks': 'Reference Networks & Citations',
         'Yield Optimization': 'Yield Optimization & Freshness',
         'Performance': 'Performance & Speed'
@@ -398,6 +403,7 @@ function SimpleResultsDashboard({ analysisId, url, analysisData, userEmail, user
           'S': 'semantic',
           'E': 'engagement',
           'T': 'technical',
+          'TS': 'traditional_seo',
           'R': 'reference',
           'Y': 'yield',
           'P': 'performance'

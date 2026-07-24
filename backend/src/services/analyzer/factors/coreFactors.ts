@@ -10,11 +10,23 @@ import { FactorResult } from '../types';
 /**
  * Factor 1: HTTPS Security (M.1.1)
  */
-export function analyzeHTTPS(url: string): FactorResult {
+export function analyzeHTTPS(url: string, requestedUrl?: string): FactorResult {
   const startTime = Date.now();
+  // url is the FINAL URL after redirects were followed (AIS-ISS-2): a site
+  // that 301s http -> https serves over HTTPS and must score accordingly,
+  // however the user typed the URL.
   const isHTTPS = url.startsWith('https://');
   const score = isHTTPS ? 100 : 0;
-  
+  const redirectedToHTTPS = isHTTPS && !!requestedUrl && requestedUrl.startsWith('http://');
+
+  const evidence = [
+    isHTTPS ? 'Site uses HTTPS protocol' : 'Site uses HTTP protocol',
+    isHTTPS ? 'Secure connection established' : 'Insecure connection detected'
+  ];
+  if (redirectedToHTTPS) {
+    evidence.push(`HTTP input redirected to HTTPS (${requestedUrl} → ${url}) - HTTPS is enforced`);
+  }
+
   return {
     factor_id: 'M.1.1',
     factor_name: 'HTTPS Security',
@@ -23,10 +35,7 @@ export function analyzeHTTPS(url: string): FactorResult {
     score,
     confidence: 100,
     weight: 0.73,
-    evidence: [
-      isHTTPS ? 'Site uses HTTPS protocol' : 'Site uses HTTP protocol',
-      isHTTPS ? 'Secure connection established' : 'Insecure connection detected'
-    ],
+    evidence,
     recommendations: isHTTPS ? [] : [
       'Enable HTTPS for improved security and SEO',
       'Configure SSL/TLS certificate',

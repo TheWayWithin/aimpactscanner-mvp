@@ -35,7 +35,7 @@ router.use(createTierRateLimiter());
 /**
  * Fetch page content from URL
  */
-async function fetchPageContent(url: string): Promise<{ content: string; statusCode: number }> {
+async function fetchPageContent(url: string): Promise<{ content: string; statusCode: number; finalUrl: string }> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 30000);
 
@@ -59,7 +59,9 @@ async function fetchPageContent(url: string): Promise<{ content: string; statusC
     }
 
     const content = await response.text();
-    return { content, statusCode: response.status };
+    // response.url is the post-redirect URL — the page that was actually analyzed.
+    // Scoring must use this, not the user's typed URL (AIS-ISS-2).
+    return { content, statusCode: response.status, finalUrl: response.url || url };
   } catch (error) {
     clearTimeout(timeout);
     // Provide user-friendly error messages for common fetch failures
@@ -266,10 +268,15 @@ router.post('/', optionalAuth, async (req: Request, res: Response) => {
 
     // Fetch page content
     let pageContent: string;
+    let analyzedUrl = url;
     try {
-      const { content, statusCode } = await fetchPageContent(url);
+      const { content, statusCode, finalUrl } = await fetchPageContent(url);
       pageContent = content;
-      console.log(`[Analysis] Fetched ${url} (${statusCode}, ${content.length} bytes)`);
+      analyzedUrl = finalUrl;
+      if (analyzedUrl !== url) {
+        console.log(`[Analysis] ${url} redirected to ${analyzedUrl} — scoring the final URL`);
+      }
+      console.log(`[Analysis] Fetched ${analyzedUrl} (${statusCode}, ${content.length} bytes)`);
     } catch (fetchError) {
       const errorMessage = fetchError instanceof Error ? fetchError.message : 'Unknown error';
 
@@ -304,12 +311,14 @@ router.post('/', optionalAuth, async (req: Request, res: Response) => {
       }
     };
 
-    // Run analysis
-    const result = await analyzeAllFactors(url, pageContent, userTier, progressCallback);
+    // Run analysis (requestedUrl lets M.1.1 explain http->https redirects)
+    const result = await analyzeAllFactors(analyzedUrl, pageContent, userTier, progressCallback, {
+      requestedUrl: url,
+    });
 
     // Generate action items, schema analysis, and readability scoring (post-processing)
-    const actionItems = result.success ? generateActionItems(result.factors, url, pageContent) : [];
-    const schemaAnalysis = result.success ? analyzeAndGenerateSchema(url, pageContent) : null;
+    const actionItems = result.success ? generateActionItems(result.factors, analyzedUrl, pageContent) : [];
+    const schemaAnalysis = result.success ? analyzeAndGenerateSchema(analyzedUrl, pageContent) : null;
     const readability = result.success ? analyzeReadability(pageContent) : null;
 
     if (!result.success) {
@@ -349,18 +358,24 @@ router.post('/', optionalAuth, async (req: Request, res: Response) => {
           console.error('Failed to update analysis via RPC:', updateError);
           const { error: fallbackError } = await supabaseAdmin
             .from('analyses')
-            .update({ status: 'completed', overall_score: roundedScore } as never)
+            .update({ status: 'completed', overall_score: roundedScore, url: analyzedUrl } as never)
             .eq('id', analysisId);
 
           if (fallbackError) {
             console.error('Fallback update also failed:', fallbackError);
           }
+        } else if (analyzedUrl !== url) {
+          // RPC only writes the score; record the resolved URL separately
+          await supabaseAdmin
+            .from('analyses')
+            .update({ url: analyzedUrl } as never)
+            .eq('id', analysisId);
         }
       } catch (rpcError) {
         console.error('RPC call failed:', rpcError);
         const { error: fallbackError } = await supabaseAdmin
           .from('analyses')
-          .update({ status: 'completed', overall_score: roundedScore } as never)
+          .update({ status: 'completed', overall_score: roundedScore, url: analyzedUrl } as never)
           .eq('id', analysisId);
 
         if (fallbackError) {
@@ -404,7 +419,8 @@ router.post('/', optionalAuth, async (req: Request, res: Response) => {
 
     res.json({
       id: analysisId,
-      url,
+      url: analyzedUrl,
+      submitted_url: url,
       overall_score: result.overall_score,
       grade: summary.grade,
       factor_count: summary.factorCount,

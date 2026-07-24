@@ -11,7 +11,9 @@
     "worker:dev": "tsx watch src/worker.ts",
     "start:worker": "node dist/worker.js",
     "type-check": "tsc --noEmit",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [
     "ai",
@@ -43,7 +45,8 @@
     "@typescript-eslint/parser": "^6.15.0",
     "eslint": "^8.56.0",
     "tsx": "^4.7.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^2.1.9"
   },
   "engines": {
     "node": ">=20.0.0"
