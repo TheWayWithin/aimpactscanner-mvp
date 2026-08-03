@@ -1,3 +1,7 @@
+# CLAUDE.md — AImpact Scanner (product layer)
+
+Framework rules (Karpathy constitution, mission routing, tracking-file protocols, MCP, hooks, security) live in `.claude/CLAUDE.md`. Read both. This file is the product layer.
+
 ## Communication Guidelines
 
 **User has ADHD** - adapt communication style accordingly:
