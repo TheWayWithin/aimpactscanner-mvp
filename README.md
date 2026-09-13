@@ -1,3 +1,9 @@
+> ## Killed: AImpactScanner, August 2026
+>
+> This was a scanner that scored any web page against the MASTERY-AI framework for how AI search would read it. I retired the SaaS model in May 2026. The scanner also could not take money: three routing bugs sent six of the eight sign-up paths past the checkout, an estimated one-hour fix that was never made. The site was deleted on 25 to 26 August 2026 and the backend was scheduled for deletion on 25 August.
+>
+> The code stays public under the MIT licence as the record of what was built. No support, no updates. What follows is the README as it was left.
+
 # AImpactScanner MVP
 ## Professional AI Optimization Analysis in Under 15 Seconds
 
