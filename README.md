@@ -278,7 +278,9 @@ npx supabase functions deploy analyze-page
 
 ## 📄 License
 
-This project is proprietary software developed by AI Search Mastery. All rights reserved.
+This project is licensed under the MIT License: see the [LICENSE](LICENSE) file.
+
+AImpactScanner ran as a paid product and was switched off in August 2026. aimpactscanner.com no longer serves. The code is here so it can be read, run or forked; the hosted service and its support channels are gone. The pricing tiers, revenue projections and roadmap elsewhere in this README are a record of what it was, not an offer.
 
 ## 🆘 Support
 
